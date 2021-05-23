@@ -3,8 +3,10 @@ using Shogi.Bussiness.Domain.Model.Boards;
 using Shogi.Bussiness.Domain.Model.Komas;
 using Shogi.Bussiness.Domain.Model.Moves;
 using Shogi.Bussiness.Domain.Model.Players;
+using Shogi.Bussiness.Domain.Model.Games;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Shogi.Business.Domain.GameFactory
@@ -233,7 +235,7 @@ namespace Shogi.Business.Domain.GameFactory
                     },
                     Player.FirstPlayer
                     ),
-                    new Rule(1));
+                    new CustomRule(1, new List<CustomRule.ProhibitedMoveChecker>()));
             }else if(gameType == GameType.FiveFiveShogi)
             {
                 return new Game(
@@ -256,7 +258,44 @@ namespace Shogi.Business.Domain.GameFactory
                     },
                     Player.FirstPlayer
                     ),
-                    new Rule(1));
+                    new CustomRule(1,
+                        new List<CustomRule.ProhibitedMoveChecker>()
+                        {
+                            // [二歩]
+                            (moveCommand, game) =>
+                            {
+                                return (moveCommand is HandKomaMoveCommand) && 
+                                       game.State.KomaList.Any(x =>
+                                                        x.Player == moveCommand.Player &&
+                                                        x.KomaType == KomaHu &&
+                                                        !x.IsTransformed &&
+                                                        (x.Position is BoardPosition) &&
+                                                        ((BoardPosition)x.Position).X == moveCommand.ToPosition.X);
+                            },
+                            // [打ち歩詰め]
+                            (moveCommand, game) =>
+                            {
+                                return (moveCommand is HandKomaMoveCommand) &&
+                                       ((HandKomaMoveCommand)moveCommand).KomaType == KomaHu &&
+                                       game.Clone().Play(moveCommand).DoCheckmate(moveCommand.Player);
+                                       //game.IsOte(new Koma(moveCommand.ToPosition, moveCommand.Player, KomaHu));
+                            },
+                            // [行き所のない駒]
+                            (moveCommand, game) =>
+                            {
+                                var fromKoma = moveCommand.FindFromKoma(game.State);
+                                // [その駒以外に他の駒が一つもないボードで動けるところが何もない場合は、行き場のない駒]
+                                return new Koma(moveCommand.ToPosition, moveCommand.Player, moveCommand.FindFromKoma(game.State).KomaType, (moveCommand.DoTransform || fromKoma.IsTransformed))
+                                            .GetMovableBoardPositions(game.Board, new BoardPositions(), new BoardPositions())
+                                            .Positions.Count == 0;
+                            },
+                            // [王手放置]
+                            (moveCommand, game) =>
+                            {
+                                return game.Clone().Play(moveCommand).DoOte(moveCommand.Player.Opponent);
+                            },
+                        })
+                    );
             }
 
             return null;

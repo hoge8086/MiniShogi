@@ -22,6 +22,13 @@ namespace Shogi.Bussiness.Domain.Model.Komas
             KomaType = komaType;
             IsTransformed = false;
         }
+        public Koma(IPosition position, Player player, KomaType komaType, bool isTransformed)
+        {
+            Position = position;
+            Player = player;
+            KomaType = komaType;
+            IsTransformed = isTransformed;
+        }
 
         public override string ToString()
         {
@@ -64,6 +71,11 @@ namespace Shogi.Bussiness.Domain.Model.Komas
                                         board,
                                         turnPlayerKomaPositions,
                                         iopponentKomaPositions);
+        }
+
+        public Koma Clone()
+        {
+            return new Koma(Position, Player, KomaType, IsTransformed);
         }
     }
 }

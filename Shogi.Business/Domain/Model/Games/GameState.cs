@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Shogi.Bussiness.Domain.Model
+namespace Shogi.Bussiness.Domain.Model.Games
 {
     public class GameState
     {
@@ -22,6 +22,11 @@ namespace Shogi.Bussiness.Domain.Model
             GameResult = null;
         }
 
+        public Koma FindKing(Player player)
+        {
+            // [MEMO:プレイヤーの王は盤上に1つのみあることを前提]
+            return KomaList.FirstOrDefault(x => x.Player == player && x.KomaType.IsKing && x.Position is BoardPosition);
+        }
         public Koma FindBoardKoma(BoardPosition fromPosition)
         {
             return KomaList.FirstOrDefault(x => x.Position.Equals(fromPosition));
@@ -36,13 +41,18 @@ namespace Shogi.Bussiness.Domain.Model
             return new BoardPositions(KomaList.Where(x => x.Player == player && x.Position is BoardPosition).Select(x => (BoardPosition)x.Position).ToList());
         }
 
+        public List<Koma> GetBoardKomaList(Player player)
+        {
+            return KomaList.Where(x => x.Player == player && x.Position is BoardPosition).ToList();
+        }
+
         public void FowardTurnPlayer()
         {
             TurnPlayer = TurnPlayer.Opponent;
         }
         public bool ExistKing(Player player)
         {
-            return KomaList.Any(x => (x.Player == player) && (x.Position is BoardPosition) && (x.KomaType.IsKing));
+            return FindKing(player) != null;
         }
 
         public bool IsTurnPlayer(Player player)
@@ -56,6 +66,11 @@ namespace Shogi.Bussiness.Domain.Model
                 GameResult = new GameResult(Player.SecondPlayer);
             else if (!ExistKing(Player.SecondPlayer))
                 GameResult = new GameResult(Player.FirstPlayer);
+        }
+
+        public GameState Clone()
+        {
+            return new GameState(KomaList.Select(x => x.Clone()).ToList(), TurnPlayer);
         }
     }
 }

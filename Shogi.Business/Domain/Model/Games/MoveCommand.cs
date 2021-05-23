@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Shogi.Bussiness.Domain.Model
+namespace Shogi.Bussiness.Domain.Model.Games
 {
     public abstract class MoveCommand
     {

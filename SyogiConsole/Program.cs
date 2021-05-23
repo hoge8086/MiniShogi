@@ -36,10 +36,10 @@ namespace SyogiConsole
                         break;
                     }
 
-                    var moves = game.GetAvailableMoveCommand();
+                    var moves = game.CreateAvailableMoveCommand();
                     for (int i = 0; i < moves.Count; i++)
                     {
-                        Console.WriteLine(i.ToString() + ":" + moves[i].ToString());
+                        Console.WriteLine(i.ToString() + ":" + moves[i].FindFromKoma(game.State).KomaType.Id + ":" + moves[i].ToString());
                     }
                     Console.Write(">");
                     var cmd = Console.ReadLine();

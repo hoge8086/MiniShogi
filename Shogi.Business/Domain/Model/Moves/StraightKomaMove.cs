@@ -37,7 +37,7 @@ namespace Shogi.Bussiness.Domain.Model.Moves
                 if (turnPlayerKomaPositions.Contains(toPos))
                     break;
 
-                positions.Add(toPos);
+                positions = positions.Add(toPos);
 
                 // [相手の駒があったらその先は移動できない]
                 if (opponentKomaPositions.Contains(toPos))

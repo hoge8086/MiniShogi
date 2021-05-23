@@ -12,9 +12,11 @@ namespace Shogi.Bussiness.Domain.Model.Boards
         {
             Height = height;
             Width = width;
+            var positions = new List<BoardPosition>();
             for (int y = 0; y < Height; y++)
                 for (int x = 0; x < Width; x++)
-                    Positions.Add(new BoardPosition(x, y));
+                    positions.Add(new BoardPosition(x, y));
+            Positions = new BoardPositions(positions);
 
         }
         public BoardPositions Positions { get; } = new BoardPositions();

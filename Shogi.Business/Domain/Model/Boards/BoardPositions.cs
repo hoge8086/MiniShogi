@@ -30,9 +30,9 @@ namespace Shogi.Bussiness.Domain.Model.Boards
 
         public BoardPositions Add(BoardPosition position)
         {
-            var positions = new BoardPositions(Positions);
-            positions.Positions.Add(position);
-            return positions;
+            var sum = new List<BoardPosition>(Positions);
+            sum.Add(position);
+            return new BoardPositions(sum.Distinct().ToList());
         }
 
         public bool Contains(BoardPosition position)

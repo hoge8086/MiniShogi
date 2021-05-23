@@ -18,7 +18,7 @@ namespace Shogi.Bussiness.Domain.Model.Tests
         {
             var factory = new GameFactory();
             var game = factory.Create(GameType.AnimalShogi);
-            var cmd = game.GetAvailableMoveCommand(Player.FirstPlayer);
+            var cmd = game.CreateAvailableMoveCommand(Player.FirstPlayer);
 
         }
     }

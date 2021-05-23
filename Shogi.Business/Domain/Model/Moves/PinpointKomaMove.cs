@@ -30,7 +30,7 @@ namespace Shogi.Bussiness.Domain.Model.Moves
             var toPos = position.Add(toRelativePos);
             if(board.Positions.Contains(toPos))
                 if(!turnPlayerKomaPositions.Contains(toPos))
-                    positions.Add(toPos);
+                    positions = positions.Add(toPos);
 
             return positions;
         }
