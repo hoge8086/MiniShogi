@@ -18,7 +18,7 @@ namespace Shogi.Bussiness.Domain.Model
             }
             else
             {
-                return (board.Height - position.Y) < PositionBoundary;
+                return ((board.Height - 1) - position.Y) < PositionBoundary;
             }
         }
 

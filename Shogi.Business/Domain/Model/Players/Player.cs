@@ -10,6 +10,11 @@ namespace Shogi.Bussiness.Domain.Model.Players
         private Player(string id) { Id = id; }
         public static Player FirstPlayer = new Player("先手");
         public static Player SecondPlayer = new Player("後手");
+
+        public override string ToString()
+        {
+            return Id;
+        }
         public Player Opponent
         {
             get {

@@ -21,7 +21,6 @@ namespace Shogi.Bussiness.Domain.Model
             Rule = rule;
         }
 
-
         public void Play(MoveCommand moveCommand)
         {
             if(!State.IsTurnPlayer(moveCommand.Player))
@@ -44,6 +43,8 @@ namespace Shogi.Bussiness.Domain.Model
             }
 
             State.FowardTurnPlayer();
+            State.CheckEnd();
+
         }
         public override string ToString()
         {
@@ -72,14 +73,31 @@ namespace Shogi.Bussiness.Domain.Model
                 }
                 game += "\n";
             }
+            game += HandToString(Player.FirstPlayer) + "\n";
+            game += HandToString(Player.SecondPlayer);
             return game;
+
+            string HandToString(Player player)
+            {
+                return player.ToString() + ":" + string.Join(',', State.KomaList.Where(x => x.Position is HandPosition && x.Player == player).Select(x => x.KomaType.Id));
+            }
         }
 
+        public List<MoveCommand> GetAvailableMoveCommand()
+        {
+            return GetAvailableMoveCommand(State.TurnPlayer);
+        }
         public List<MoveCommand> GetAvailableMoveCommand(Player player)
         {
             var moveCommandList = new List<MoveCommand>();
             foreach(var koma in State.KomaList.Where(x => x.Player == player).ToList())
             {
+
+                // [持ち駒の場合で、同じ駒が複数ある場合は、2回目以降はスキップする]
+                if (koma.Position is HandPosition)
+                    if (moveCommandList.Where(x => x is HandKomaMoveCommand).Any(x => ((HandKomaMoveCommand)x).KomaType == koma.KomaType))
+                        continue;
+
                 moveCommandList.AddRange(GetAvailableMoveCommand(koma));
             }
 
@@ -110,9 +128,7 @@ namespace Shogi.Bussiness.Domain.Model
                 }
                 else if (koma.Position is HandPosition)
                 {
-                    // [持ち駒に同じコマが複数ある場合は、1回だけ着手可能手に加える]
-                    if(!moveCommandList.Where(x => x is HandKomaMoveCommand).Any(x => ((HandKomaMoveCommand)x).KomaType == koma.KomaType))
-                        moveCommandList.Add(new HandKomaMoveCommand(koma.Player, toPos, koma.KomaType));
+                    moveCommandList.Add(new HandKomaMoveCommand(koma.Player, toPos, koma.KomaType));
                 }
             }
             return moveCommandList;

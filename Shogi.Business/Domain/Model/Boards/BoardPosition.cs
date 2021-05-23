@@ -51,7 +51,7 @@ namespace Shogi.Bussiness.Domain.Model.Boards
         }
         public override string ToString()
         {
-            return string.Format("({0},{1})", Y.ToString(), X.ToString());
+            return string.Format("(Y={0},X={1})", Y.ToString(), X.ToString());
         }
     }
 

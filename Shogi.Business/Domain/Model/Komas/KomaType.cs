@@ -12,16 +12,19 @@ namespace Shogi.Bussiness.Domain.Model.Komas
         public string Id { get; private set; }
         private KomaMoves Moves;
         private KomaMoves TransformedMoves;
+        public bool IsKing { get; private set; }
         public bool CanBeTransformed { get => TransformedMoves != null; }
 
         public KomaType(
             string id,
             KomaMoves moves,
-            KomaMoves transformedMoves)
+            KomaMoves transformedMoves,
+            bool isKing)
         {
             Id = id;
             Moves = moves;
             TransformedMoves = transformedMoves;
+            IsKing = isKing;
         }
         public BoardPositions GetMovableBoardPositions(
             Player player,
