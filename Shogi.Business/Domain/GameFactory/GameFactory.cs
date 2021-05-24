@@ -221,21 +221,24 @@ namespace Shogi.Business.Domain.GameFactory
             {
                 return new Game(
                     new Board(4, 3),
-                    new GameState( new List<Koma>()
-                    {
-                        new Koma(new BoardPosition(0,0), Player.SecondPlayer, KomaKirin),
-                        new Koma(new BoardPosition(1,0), Player.SecondPlayer, KomaRaion),
-                        new Koma(new BoardPosition(2,0), Player.SecondPlayer, KomaZou),
-                        new Koma(new BoardPosition(1,1), Player.SecondPlayer, KomaHiyoko),
-                        new Koma(new BoardPosition(2,3), Player.FirstPlayer, KomaKirin),
-                        new Koma(new BoardPosition(1,3), Player.FirstPlayer, KomaRaion),
-                        new Koma(new BoardPosition(0,3), Player.FirstPlayer, KomaZou),
-                        new Koma(new BoardPosition(1,2), Player.FirstPlayer, KomaHiyoko),
+                    new GameState(new List<Koma>()
+                        {
+                            new Koma(new BoardPosition(0,0), Player.SecondPlayer, KomaKirin),
+                            new Koma(new BoardPosition(1,0), Player.SecondPlayer, KomaRaion),
+                            new Koma(new BoardPosition(2,0), Player.SecondPlayer, KomaZou),
+                            new Koma(new BoardPosition(1,1), Player.SecondPlayer, KomaHiyoko),
+                            new Koma(new BoardPosition(2,3), Player.FirstPlayer, KomaKirin),
+                            new Koma(new BoardPosition(1,3), Player.FirstPlayer, KomaRaion),
+                            new Koma(new BoardPosition(0,3), Player.FirstPlayer, KomaZou),
+                            new Koma(new BoardPosition(1,2), Player.FirstPlayer, KomaHiyoko),
 
-                    },
-                    Player.FirstPlayer
+                        },
+                        Player.FirstPlayer
                     ),
-                    new CustomRule(1, new List<CustomRule.ProhibitedMoveChecker>()));
+                    new CustomRule(1, new List<CustomRule.ProhibitedMoveChecker>()),
+                    new NoKingWinningChecker()
+                    ) ;
+                    
             }else if(gameType == GameType.FiveFiveShogi)
             {
                 return new Game(
@@ -277,7 +280,7 @@ namespace Shogi.Business.Domain.GameFactory
                             {
                                 return (moveCommand is HandKomaMoveCommand) &&
                                        ((HandKomaMoveCommand)moveCommand).KomaType == KomaHu &&
-                                       game.Clone().Play(moveCommand).DoCheckmate(moveCommand.Player);
+                                       game.Clone().PlayWithoutCheck(moveCommand).DoCheckmateWithoutHandMove(moveCommand.Player);
                                        //game.IsOte(new Koma(moveCommand.ToPosition, moveCommand.Player, KomaHu));
                             },
                             // [行き所のない駒]
@@ -292,9 +295,10 @@ namespace Shogi.Business.Domain.GameFactory
                             // [王手放置]
                             (moveCommand, game) =>
                             {
-                                return game.Clone().Play(moveCommand).DoOte(moveCommand.Player.Opponent);
+                                return game.Clone().PlayWithoutCheck(moveCommand).DoOte(moveCommand.Player.Opponent);
                             },
-                        })
+                        }),
+                    new CheckmateWinningChecker()
                     );
             }
 

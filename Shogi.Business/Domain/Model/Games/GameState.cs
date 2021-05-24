@@ -12,14 +12,11 @@ namespace Shogi.Bussiness.Domain.Model.Games
     {
         public List<Koma> KomaList;
         public Player TurnPlayer;
-        public GameResult GameResult { get; private set; }
-        public bool IsEnd => GameResult != null;
 
         public GameState(List<Koma> komaList, Player turnPlayer)
         {
             KomaList = komaList;
             TurnPlayer = turnPlayer;
-            GameResult = null;
         }
 
         public Koma FindKing(Player player)
@@ -58,14 +55,6 @@ namespace Shogi.Bussiness.Domain.Model.Games
         public bool IsTurnPlayer(Player player)
         {
             return TurnPlayer == player;
-        }
-
-        public void CheckEnd()
-        {
-            if (!ExistKing(Player.FirstPlayer))
-                GameResult = new GameResult(Player.SecondPlayer);
-            else if (!ExistKing(Player.SecondPlayer))
-                GameResult = new GameResult(Player.FirstPlayer);
         }
 
         public GameState Clone()

@@ -1,8 +1,7 @@
 {
   "profiles": {
     "SyogiConsole": {
-      "commandName": "Project",
-      "commandLineArgs": "55"
+      "commandName": "Project"
     }
   }
 }
