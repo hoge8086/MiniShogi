@@ -6,6 +6,9 @@
              xmlns:local="clr-namespace:MiniShogiApp.Presentation.View"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <local:IsNullConverter x:Key="isNullConverter"/>
+    </UserControl.Resources>
     <ItemsControl x:Name="board" ItemsSource="{Binding Board}" Margin="5">
         <ItemsControl.Template>
             <!--ボードの枠-->
@@ -38,13 +41,21 @@
                             <Button x:Name="button" Height="50" Width="50" BorderThickness=".3" Background="Cornsilk"
                                     Command="{Binding Path=DataContext.MoveCommand, ElementName=board}"
                                     local:ButtonHelper.CommandParameter="{Binding .}">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <!--背景-->
+                                        <Grid>
+                                            <Border BorderBrush="Black" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" />
+                                            <ContentPresenter/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Button.Template>
                                 <Grid>
                                     <!--置いてあるとき-->
                                     <TextBlock x:Name="koma" FontSize="32" TextAlignment="Center" Text="{Binding KomaName}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible"/>
                                     <!--置けるとき-->
                                     <Ellipse x:Name="ellipse"  Height="10" Width="10" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden"
-                                            StrokeDashArray="2,2" Fill="Pink"
-                                            StrokeThickness="3">
+                                             Fill="Pink" Stroke="Transparent">
                                     </Ellipse>
                                 </Grid>
                             </Button>
@@ -52,20 +63,36 @@
                             <DataTemplate.Triggers>
                                 <!--【空のセル】-->
                                 <DataTrigger Binding="{Binding Koma}" Value="{x:Null}">
-                                    <Setter TargetName="ellipse" Property="Visibility" Value="Hidden"/>
+                                    <Setter TargetName="koma" Property="Visibility" Value="Hidden"/>
                                 </DataTrigger>
                                 <!--【成りの駒】-->
-                                <DataTrigger Binding="{Binding IsTransformed}" Value="True">
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Koma, Converter={StaticResource isNullConverter}}" Value="False"/>
+                                        <Condition Binding="{Binding Koma.IsTransformed}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
                                     <Setter TargetName="koma" Property="Foreground" Value="Red"/>
-                                </DataTrigger>
+                                </MultiDataTrigger>
                                 <!--【後手の駒】-->
-                                <DataTrigger Binding="{Binding Player}" Value="SecondPlayer">
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Koma, Converter={StaticResource isNullConverter}}" Value="False"/>
+                                        <Condition Binding="{Binding Koma.Player}" Value="SecondPlayer"/>
+                                    </MultiDataTrigger.Conditions>
                                     <Setter TargetName="koma" Property="RenderTransformOrigin" Value="0.5,0.5"/>
                                     <Setter TargetName="koma" Property="RenderTransform">
                                         <Setter.Value>
                                             <ScaleTransform ScaleY="-1" />
                                         </Setter.Value>
                                     </Setter>
+                                </MultiDataTrigger>
+                                <!--【成りの駒】-->
+                                <DataTrigger Binding="{Binding CanMove}" Value="True">
+                                    <Setter TargetName="ellipse" Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                                <!--【選択中の駒の背景を変える】-->
+                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                    <Setter TargetName="button" Property="Background" Value="Pink"/>
                                 </DataTrigger>
                                 <!--【空で移動先として指定可能なセル】
                                 <MultiDataTrigger>

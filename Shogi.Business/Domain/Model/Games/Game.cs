@@ -115,7 +115,7 @@ namespace Shogi.Bussiness.Domain.Model.Games
                 });
             return moveCommandList;
         }
-        private List<MoveCommand> CreateAvailableMoveCommand(Koma koma)
+        public List<MoveCommand> CreateAvailableMoveCommand(Koma koma)
         {
 
             var moveCommandList = new List<MoveCommand>();

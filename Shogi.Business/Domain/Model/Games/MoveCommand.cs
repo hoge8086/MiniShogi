@@ -27,7 +27,7 @@ namespace Shogi.Bussiness.Domain.Model.Games
     }
     public class BoardKomaMoveCommand : MoveCommand
     {
-        public BoardPosition FromPosition;
+        public BoardPosition FromPosition { get; set; }
         public override bool DoTransform { get; }
 
         public BoardKomaMoveCommand(Player player, BoardPosition toPosition, BoardPosition fromPosition, bool doTransform) : base(player, toPosition)
@@ -72,7 +72,7 @@ namespace Shogi.Bussiness.Domain.Model.Games
 
     public class HandKomaMoveCommand : MoveCommand
     {
-        public KomaType KomaType;
+        public KomaType KomaType { get; set; }
 
         public HandKomaMoveCommand(Player player, BoardPosition toPosition, KomaType komaType) : base(player, toPosition)
         {
