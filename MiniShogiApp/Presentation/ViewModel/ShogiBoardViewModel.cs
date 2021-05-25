@@ -9,6 +9,7 @@ using Shogi.Bussiness.Domain.Model.Boards;
 using Shogi.Business.Domain.GameFactory;
 using System.Linq;
 using Shogi.Bussiness.Domain.Model.Komas;
+using Prism.Mvvm;
 
 namespace MiniShogiApp.Presentation.ViewModel
 {
@@ -20,18 +21,19 @@ namespace MiniShogiApp.Presentation.ViewModel
         Wait,
     };
 
-    public class ShogiBoardViewModel : INotifyPropertyChanged
+    public class ShogiBoardViewModel : BindableBase
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void RaisePropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
         public DelegateCommand<object> MoveCommand { get; set; }
         public ObservableCollection<ObservableCollection<CellViewModel>> Board { get; set; } = new ObservableCollection<ObservableCollection<CellViewModel>>();
-        public ObservableCollection<HandKomaViewModel> SecondPlayerHand { get; set; } = new ObservableCollection<HandKomaViewModel>();
 
+        private Player _foregroundPlayer;
+        public Player ForegroundPlayer
+        {
+            get { return _foregroundPlayer; }
+            set { SetProperty(ref _foregroundPlayer, value); }
+        }
+        public PlayerViewModel FirstPlayer { get; set; }
+        public PlayerViewModel SecondPlayer { get; set; }
         public OperationMode OperationMode { get; private set; }
         // [★後で直す]
         private ISelectable selectedMoveFrom;
@@ -39,6 +41,7 @@ namespace MiniShogiApp.Presentation.ViewModel
         private Game game;
         public ShogiBoardViewModel()
         {
+            ForegroundPlayer = Player.FirstPlayer;
             //game = new GameFactory().Create(GameType.AnimalShogi);
             game = new GameFactory().Create(GameType.FiveFiveShogi);
             OperationMode = OperationMode.SelectMoveFrom;
@@ -117,13 +120,16 @@ namespace MiniShogiApp.Presentation.ViewModel
                     return false;
                 }
                 );
+            FirstPlayer = new PlayerViewModel(MoveCommand);
+            SecondPlayer = new PlayerViewModel(MoveCommand);
             Update();
         }
 
         public void Update()
         {
             Board.Clear();
-            SecondPlayerHand.Clear();
+            FirstPlayer.Hands.Clear();
+            SecondPlayer.Hands.Clear();
 
             for (int y = 0; y < game.Board.Height; y++)
             {
@@ -152,8 +158,10 @@ namespace MiniShogiApp.Presentation.ViewModel
 
                 if (handPos != null)
                 {
-                    if (koma.Player == Shogi.Bussiness.Domain.Model.Players.Player.SecondPlayer)
-                        SecondPlayerHand.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.SecondPlayer });
+                    if (koma.Player == Shogi.Bussiness.Domain.Model.Players.Player.FirstPlayer)
+                        FirstPlayer.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.FirstPlayer});
+                    else
+                        SecondPlayer.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.SecondPlayer });
                 }
             }
         }

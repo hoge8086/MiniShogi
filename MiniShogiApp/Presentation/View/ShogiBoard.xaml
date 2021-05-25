@@ -15,54 +15,25 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <ItemsControl Grid.Column="0"
-                      MinHeight="100"
-                      Width="100"
-                      ItemsSource="{Binding SecondPlayerHand}"
-                      Margin="5"
-                      VerticalAlignment="Top"
-                      HorizontalAlignment="Stretch"
-                      RenderTransformOrigin="0.5,0.5">
-            <ItemsControl.RenderTransform>
+        <local:PlayerView Grid.Column="0"
+                          VerticalAlignment="Top"
+                          HorizontalAlignment="Stretch"
+                          RenderTransformOrigin="0.5,0.5"
+                          DataContext="{Binding SecondPlayer, Mode=TwoWay}">
+            <local:PlayerView.RenderTransform>
                 <RotateTransform Angle="180"/>
-            </ItemsControl.RenderTransform>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Background="Cornsilk"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <!--セルの定義(ボタン)-->
-                    <Button x:Name="button" Height="35" Width="35" 
-                            Command="{Binding Path=DataContext.MoveCommand, ElementName=board}" Margin="5,5,0,0"
-                            local:ButtonHelper.CommandParameter="{Binding .}" >
-                        <Button.Style>
-                            <Style TargetType="{x:Type Button}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                        <Setter Property="Background" Value="Pink"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                                <Setter Property="Background" Value="Cornsilk"/>
-                            </Style>
-                        </Button.Style>
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Grid>
-                                    <!--<Border  BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" />-->
-                                    <ContentPresenter/>
-                                </Grid>
-                            </ControlTemplate>
-                        </Button.Template>
-                        <Grid>
-                            <TextBlock x:Name="koma" FontSize="22" TextAlignment="Center" Text="{Binding KomaName}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible"/>
-                        </Grid>
-                    </Button>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-        <ItemsControl Grid.Column="1" x:Name="board" ItemsSource="{Binding Board}" Margin="5">
+            </local:PlayerView.RenderTransform>
+        </local:PlayerView>
+        <local:PlayerView Grid.Column="2"
+                          VerticalAlignment="Bottom"
+                          HorizontalAlignment="Stretch"
+                          DataContext="{Binding FirstPlayer, Mode=TwoWay}">
+        </local:PlayerView>
+        <ItemsControl Grid.Column="1"
+                      x:Name="board"
+                      ItemsSource="{Binding Board}"
+                      Margin="5">
+
             <ItemsControl.Template>
                 <!--ボードの枠-->
                 <ControlTemplate>

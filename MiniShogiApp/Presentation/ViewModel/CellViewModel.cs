@@ -1,6 +1,5 @@
 ﻿using Prism.Mvvm;
 using Shogi.Bussiness.Domain.Model.Boards;
-using Shogi.Bussiness.Domain.Model.Komas;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -51,20 +50,6 @@ namespace MiniShogiApp.Presentation.ViewModel
             get { return _canMove; }
             set { SetProperty(ref _canMove, value); }
         }
-
-        private bool _isSelected = false;
-        public bool IsSelected
-        {
-            get { return _isSelected; }
-            set { SetProperty(ref _isSelected, value); }
-        }
-    }
-
-    public class HandKomaViewModel : BindableBase, ISelectable
-    {
-        public KomaType KomaType { get; set; }
-        public Player Player { get; set; }
-        public string KomaName { get; set; }
 
         private bool _isSelected = false;
         public bool IsSelected
