@@ -15,14 +15,16 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
+        <!--上手の持ち駒-->
         <local:PlayerView Grid.Column="0"
                           VerticalAlignment="Top"
                           HorizontalAlignment="Stretch"
                           RenderTransformOrigin="0.5,0.5">
-                        <!--DataContext="{Binding SecondPlayerHands, Mode=TwoWay}">-->
+            <!--向きを逆にする-->
             <local:PlayerView.RenderTransform>
                 <RotateTransform Angle="180"/>
             </local:PlayerView.RenderTransform>
+            <!--盤面の向きでバインドするプレイヤーを変える-->
             <local:PlayerView.Style>
                 <Style TargetType="local:PlayerView">
                     <Setter Property="DataContext" Value="{Binding DataContext.SecondPlayerHands, ElementName=board, Mode=TwoWay}"/>
@@ -34,9 +36,11 @@
                 </Style>
             </local:PlayerView.Style>
         </local:PlayerView>
+        <!--下手の持ち駒-->
         <local:PlayerView Grid.Column="2"
                           VerticalAlignment="Bottom"
                           HorizontalAlignment="Stretch">
+            <!--盤面の向きでバインドするプレイヤーを変える-->
             <local:PlayerView.Style>
                 <Style TargetType="local:PlayerView">
                     <Setter Property="DataContext" Value="{Binding DataContext.FirstPlayerHands, ElementName=board, Mode=TwoWay}"/>
@@ -48,6 +52,7 @@
                 </Style>
             </local:PlayerView.Style>
         </local:PlayerView>
+        <!--盤-->
         <ItemsControl Grid.Column="1"
                       x:Name="board"
                       ItemsSource="{Binding Board}"
@@ -67,10 +72,10 @@
                 </Style>
             </ItemsControl.Style>
             <ItemsControl.Template>
-                <!--ボードの枠-->
+                <!--盤の外枠-->
                 <ControlTemplate>
                     <Border BorderThickness="8" BorderBrush="Cornsilk">
-                        <!--ボード-->
+                        <!--盤の中身-->
                         <ItemsPresenter/>
                     </Border>
                 </ControlTemplate>
@@ -99,7 +104,7 @@
                                         local:ButtonHelper.CommandParameter="{Binding .}">
                                     <Button.Template>
                                         <ControlTemplate TargetType="Button">
-                                            <!--背景-->
+                                            <!--ControlTemplateでマウスをオーバーラップしたときに反転しまうのを無効にする-->
                                             <Grid>
                                                 <Border BorderBrush="Black" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" />
                                                 <ContentPresenter/>
@@ -107,9 +112,9 @@
                                         </ControlTemplate>
                                     </Button.Template>
                                     <Grid>
-                                        <!--置いてあるとき-->
+                                        <!--駒-->
                                         <TextBlock x:Name="koma" FontSize="32" TextAlignment="Center" Text="{Binding KomaName}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible"/>
-                                        <!--置けるとき-->
+                                        <!--空のセルで駒が置けるときのマーク-->
                                         <Ellipse x:Name="ellipse"  Height="10" Width="10" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden"
                                                  Fill="Pink" Stroke="Transparent">
                                         </Ellipse>

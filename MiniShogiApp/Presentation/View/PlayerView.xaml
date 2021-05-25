@@ -7,24 +7,26 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+        <!--持ち駒のリスト-->
         <ItemsControl x:Name="hands" MinHeight="100"
                       Width="100"
                       ItemsSource="{Binding Hands}"
                       Margin="5">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
+                    <!--駒の並べ方-->
                     <WrapPanel Background="Cornsilk"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <!--セルの定義(ボタン)-->
+                    <!--駒-->
                     <Button x:Name="button" Height="35" Width="35" 
                             Command="{Binding Path=DataContext.MoveCommand, ElementName=hands}" Margin="5,5,0,0" 
                             local:ButtonHelper.CommandParameter="{Binding .}" >
-                            <!--="{Binding Path=DataContext.MoveCommand, ElementName=board}" Margin="5,5,0,0"-->
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">
+                                <!--【選択中の駒の背景を変える】-->
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsSelected}" Value="True">
                                         <Setter Property="Background" Value="Pink"/>
@@ -34,6 +36,7 @@
                             </Style>
                         </Button.Style>
                         <Button.Template>
+                            <!--ControlTemplateでマウスをオーバーラップしたときに反転しまうのを無効にする-->
                             <ControlTemplate TargetType="Button">
                                 <Grid>
                                     <Border  BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" />
