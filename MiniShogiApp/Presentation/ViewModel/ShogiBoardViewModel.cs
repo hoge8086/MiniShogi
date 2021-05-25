@@ -73,9 +73,19 @@ namespace MiniShogiApp.Presentation.ViewModel
 
                             if(selectedMoveFrom is CellViewModel)
                             {
-                                // [★成るかならないか選べるようにする]
+
                                 var cellFrom = selectedMoveFrom as CellViewModel;
-                                move = new BoardKomaMoveCommand(cellFrom.Koma.Player.ToDomain(), cell.Position, cellFrom.Position, false);
+
+                                // [★成り判定(無理やりな実装なので見直す)]
+                                bool doTransform = false;
+                                var koma = game.State.FindBoardKoma(cellFrom.Position);
+                                var moves = game.CreateAvailableMoveCommand(koma);
+                                if(moves.Where(x => x is BoardKomaMoveCommand && x.ToPosition == cell.Position && cellFrom.Position == ((BoardKomaMoveCommand)x).FromPosition).Count() > 1)
+                                {
+                                    doTransform = Message.MessageYesNo("成りますか?");
+                                }
+
+                                move = new BoardKomaMoveCommand(cellFrom.Koma.Player.ToDomain(), cell.Position, cellFrom.Position, doTransform);
                             }
                             else if(selectedMoveFrom is HandKomaViewModel)
                             {
