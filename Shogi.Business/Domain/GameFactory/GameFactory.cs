@@ -268,6 +268,7 @@ namespace Shogi.Business.Domain.GameFactory
                             (moveCommand, game) =>
                             {
                                 return (moveCommand is HandKomaMoveCommand) && 
+                                        ((HandKomaMoveCommand)moveCommand).KomaType == KomaHu &&
                                        game.State.KomaList.Any(x =>
                                                         x.Player == moveCommand.Player &&
                                                         x.KomaType == KomaHu &&

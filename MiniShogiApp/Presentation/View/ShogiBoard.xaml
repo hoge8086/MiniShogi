@@ -9,113 +9,150 @@
     <UserControl.Resources>
         <local:IsNullConverter x:Key="isNullConverter"/>
     </UserControl.Resources>
-    <ItemsControl x:Name="board" ItemsSource="{Binding Board}" Margin="5">
-        <ItemsControl.Template>
-            <!--ボードの枠-->
-            <ControlTemplate>
-                <Border BorderThickness="8" BorderBrush="Cornsilk">
-                    <!--ボード-->
-                    <ItemsPresenter/>
-                </Border>
-            </ControlTemplate>
-        </ItemsControl.Template>
-        <ItemsControl.ItemsPanel>
-            <!--行-->
-            <ItemsPanelTemplate>
-                <StackPanel Orientation="Vertical"/>
-            </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-        <ItemsControl.ItemTemplate>
-            <DataTemplate>
-                <!--1行の中の列-->
-                <ItemsControl ItemsSource="{Binding}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal">
-                            </StackPanel>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <!--セルの定義(ボタン)-->
-                            <Button x:Name="button" Height="50" Width="50" BorderThickness=".3" Background="Cornsilk"
-                                    Command="{Binding Path=DataContext.MoveCommand, ElementName=board}"
-                                    local:ButtonHelper.CommandParameter="{Binding .}">
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                        <!--背景-->
-                                        <Grid>
-                                            <Border BorderBrush="Black" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" />
-                                            <ContentPresenter/>
-                                        </Grid>
-                                    </ControlTemplate>
-                                </Button.Template>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <ItemsControl Grid.Column="0"
+                      MinHeight="100"
+                      Width="100"
+                      ItemsSource="{Binding SecondPlayerHand}"
+                      Margin="5"
+                      VerticalAlignment="Top"
+                      HorizontalAlignment="Stretch"
+                      RenderTransformOrigin="0.5,0.5">
+            <ItemsControl.RenderTransform>
+                <RotateTransform Angle="180"/>
+            </ItemsControl.RenderTransform>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Background="Cornsilk"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <!--セルの定義(ボタン)-->
+                    <Button x:Name="button" Height="35" Width="35" 
+                            Command="{Binding Path=DataContext.MoveCommand, ElementName=board}" Margin="5,5,0,0"
+                            local:ButtonHelper.CommandParameter="{Binding .}" >
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                        <Setter Property="Background" Value="Pink"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                                <Setter Property="Background" Value="Cornsilk"/>
+                            </Style>
+                        </Button.Style>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
                                 <Grid>
-                                    <!--置いてあるとき-->
-                                    <TextBlock x:Name="koma" FontSize="32" TextAlignment="Center" Text="{Binding KomaName}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible"/>
-                                    <!--置けるとき-->
-                                    <Ellipse x:Name="ellipse"  Height="10" Width="10" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden"
-                                             Fill="Pink" Stroke="Transparent">
-                                    </Ellipse>
+                                    <!--<Border  BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" />-->
+                                    <ContentPresenter/>
                                 </Grid>
-                            </Button>
-                            <!--データトリガーを使用し、セルの状態で見せ方を変える-->
-                            <DataTemplate.Triggers>
-                                <!--【空のセル】-->
-                                <DataTrigger Binding="{Binding Koma}" Value="{x:Null}">
-                                    <Setter TargetName="koma" Property="Visibility" Value="Hidden"/>
-                                </DataTrigger>
-                                <!--【成りの駒】-->
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding Koma, Converter={StaticResource isNullConverter}}" Value="False"/>
-                                        <Condition Binding="{Binding Koma.IsTransformed}" Value="True"/>
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter TargetName="koma" Property="Foreground" Value="Red"/>
-                                </MultiDataTrigger>
-                                <!--【後手の駒】-->
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding Koma, Converter={StaticResource isNullConverter}}" Value="False"/>
-                                        <Condition Binding="{Binding Koma.Player}" Value="SecondPlayer"/>
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter TargetName="koma" Property="RenderTransformOrigin" Value="0.5,0.5"/>
-                                    <Setter TargetName="koma" Property="RenderTransform">
-                                        <Setter.Value>
-                                            <ScaleTransform ScaleY="-1" />
-                                        </Setter.Value>
-                                    </Setter>
-                                </MultiDataTrigger>
-                                <!--【成りの駒】-->
-                                <DataTrigger Binding="{Binding CanMove}" Value="True">
-                                    <Setter TargetName="ellipse" Property="Visibility" Value="Visible"/>
-                                </DataTrigger>
-                                <!--【選択中の駒の背景を変える】-->
-                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                    <Setter TargetName="button" Property="Background" Value="Pink"/>
-                                </DataTrigger>
-                                <!--【空で移動先として指定可能なセル】
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding Koma}" Value="{x:Null}"/>
-                                        <Condition Binding="{Binding ElementName=button, Path=IsMouseOver}" Value="False"/>
-                                    </MultiDataTrigger.Conditions>
-                                    点線を表示する
-                                    <Setter TargetName="ellipse" Property="Visibility" Value="Visible"/>
-                                </MultiDataTrigger>
-                                -->
-                                <!--【石が置いてあるセル】
-                                <DataTrigger Binding="{Binding CellType}" Value="PutStone">
-                                    石を表示して所有するプレイヤーの色で塗る
-                                    <Setter TargetName="stone" Property="Color" Value="{Binding StoneType, Converter={StaticResource playerToColor}}"/>
-                                    <Setter TargetName="stone" Property="Visibility" Value="Visible"/>
-                                </DataTrigger>
-                                -->
-                            </DataTemplate.Triggers>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <Grid>
+                            <TextBlock x:Name="koma" FontSize="22" TextAlignment="Center" Text="{Binding KomaName}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible"/>
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <ItemsControl Grid.Column="1" x:Name="board" ItemsSource="{Binding Board}" Margin="5">
+            <ItemsControl.Template>
+                <!--ボードの枠-->
+                <ControlTemplate>
+                    <Border BorderThickness="8" BorderBrush="Cornsilk">
+                        <!--ボード-->
+                        <ItemsPresenter/>
+                    </Border>
+                </ControlTemplate>
+            </ItemsControl.Template>
+            <ItemsControl.ItemsPanel>
+                <!--行-->
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <!--1行の中の列-->
+                    <ItemsControl ItemsSource="{Binding}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                </StackPanel>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!--セルの定義(ボタン)-->
+                                <Button x:Name="button" Height="50" Width="50" BorderThickness=".3" Background="Cornsilk"
+                                        Command="{Binding Path=DataContext.MoveCommand, ElementName=board}"
+                                        local:ButtonHelper.CommandParameter="{Binding .}">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <!--背景-->
+                                            <Grid>
+                                                <Border BorderBrush="Black" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" />
+                                                <ContentPresenter/>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                    <Grid>
+                                        <!--置いてあるとき-->
+                                        <TextBlock x:Name="koma" FontSize="32" TextAlignment="Center" Text="{Binding KomaName}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible"/>
+                                        <!--置けるとき-->
+                                        <Ellipse x:Name="ellipse"  Height="10" Width="10" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden"
+                                                 Fill="Pink" Stroke="Transparent">
+                                        </Ellipse>
+                                    </Grid>
+                                </Button>
+                                <!--データトリガーを使用し、セルの状態で見せ方を変える-->
+                                <DataTemplate.Triggers>
+                                    <!--【空のセル】-->
+                                    <DataTrigger Binding="{Binding Koma}" Value="{x:Null}">
+                                        <Setter TargetName="koma" Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                    <!--【成り駒の色を変える】-->
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Koma, Converter={StaticResource isNullConverter}}" Value="False"/>
+                                            <Condition Binding="{Binding Koma.IsTransformed}" Value="True"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter TargetName="koma" Property="Foreground" Value="Red"/>
+                                    </MultiDataTrigger>
+                                    <!--【後手の駒を反転する】-->
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Koma, Converter={StaticResource isNullConverter}}" Value="False"/>
+                                            <Condition Binding="{Binding Koma.Player}" Value="SecondPlayer"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter TargetName="koma" Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                                        <Setter TargetName="koma" Property="RenderTransform">
+                                            <Setter.Value>
+                                                <RotateTransform Angle="180"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </MultiDataTrigger>
+                                    <!--【移動可能なセルを表示】-->
+                                    <DataTrigger Binding="{Binding CanMove}" Value="True">
+                                        <Setter TargetName="ellipse" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <!--【選択中の駒の背景を変える】-->
+                                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                        <Setter TargetName="button" Property="Background" Value="Pink"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
 </UserControl>
