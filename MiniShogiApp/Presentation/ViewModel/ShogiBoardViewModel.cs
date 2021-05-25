@@ -14,6 +14,7 @@ using Prism.Mvvm;
 namespace MiniShogiApp.Presentation.ViewModel
 {
 
+    // [★条件分岐が多いのでStateパターンか何か使えないか]
     public enum OperationMode
     {
         SelectMoveSource,
@@ -187,6 +188,7 @@ namespace MiniShogiApp.Presentation.ViewModel
                 }
             }
 
+            // [★このコードはゴミすぎるので直す]
             if (game.State.TurnPlayer == Shogi.Bussiness.Domain.Model.Players.Player.FirstPlayer)
             {
                 FirstPlayerHands.IsCurrentTurn = true;

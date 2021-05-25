@@ -236,7 +236,7 @@ namespace Shogi.Business.Domain.GameFactory
                         Player.FirstPlayer
                     ),
                     new CustomRule(1, new List<CustomRule.ProhibitedMoveChecker>()),
-                    new NoKingWinningAndEnterEnemyPositionTeChecker()
+                    new TakeKingOrEnterOpponentTerritoryWinningChecker()
                     ) ;
                     
             }else if(gameType == GameType.FiveFiveShogi)

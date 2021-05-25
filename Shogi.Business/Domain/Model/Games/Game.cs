@@ -128,8 +128,8 @@ namespace Shogi.Bussiness.Domain.Model.Games
                     moveCommandList.Add(new BoardKomaMoveCommand(koma.Player, toPos, (BoardPosition)koma.Position, false));
                     if (!koma.IsTransformed &&
                         koma.KomaType.CanBeTransformed &&
-                        (Rule.IsEnemyPosition(koma.Player, toPos, Board) ||
-                         Rule.IsEnemyPosition(koma.Player, (BoardPosition)koma.Position, Board)))
+                        (Rule.IsPlayerTerritory(koma.Player.Opponent, toPos, Board) ||
+                         Rule.IsPlayerTerritory(koma.Player.Opponent, (BoardPosition)koma.Position, Board)))
                     {
                         moveCommandList.Add(new BoardKomaMoveCommand(koma.Player, toPos, (BoardPosition)koma.Position, true));
                     }
@@ -235,7 +235,7 @@ namespace Shogi.Bussiness.Domain.Model.Games
         }
         public bool KingEnterOpponentTerritory(Player player)
         {
-            return Rule.IsEnemyPosition(player, (BoardPosition)State.FindKing(player).Position, Board);
+            return Rule.IsPlayerTerritory(player.Opponent, (BoardPosition)State.FindKing(player).Position, Board);
         }
         public override string ToString()
         {

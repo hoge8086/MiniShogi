@@ -6,7 +6,7 @@ namespace Shogi.Bussiness.Domain.Model.Games
     {
         bool IsWinning(Game game, Player player);
     }
-    public class NoKingWinningAndEnterEnemyPositionTeChecker : IWinningChecker
+    public class TakeKingOrEnterOpponentTerritoryWinningChecker : IWinningChecker
     {
         public bool IsWinning(Game game, Player player)
         {

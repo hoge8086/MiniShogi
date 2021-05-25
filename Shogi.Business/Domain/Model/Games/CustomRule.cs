@@ -20,15 +20,15 @@ namespace Shogi.Bussiness.Domain.Model.Games
             PositionBoundary = positionBoundary;
             ProhibitedMoveCheckers = prohibitedMoveCheckers;
         }
-        public bool IsEnemyPosition(Player player, BoardPosition position, Board board)
+        public bool IsPlayerTerritory(Player player, BoardPosition position, Board board)
         {
             if (player == Player.FirstPlayer)
             {
-                return position.Y < PositionBoundary;
+                return ((board.Height - 1) - position.Y) < PositionBoundary;
             }
             else
             {
-                return ((board.Height - 1) - position.Y) < PositionBoundary;
+                return position.Y < PositionBoundary;
             }
         }
 
