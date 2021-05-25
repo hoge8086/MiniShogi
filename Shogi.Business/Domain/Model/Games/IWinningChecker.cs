@@ -6,11 +6,11 @@ namespace Shogi.Bussiness.Domain.Model.Games
     {
         bool IsWinning(Game game, Player player);
     }
-    public class NoKingWinningChecker : IWinningChecker
+    public class NoKingWinningAndEnterEnemyPositionTeChecker : IWinningChecker
     {
         public bool IsWinning(Game game, Player player)
         {
-            return !game.State.ExistKing(player.Opponent);
+            return game.KingEnterOpponentTerritory(player) || !game.State.ExistKing(player.Opponent);
         }
     }
     public class CheckmateWinningChecker : IWinningChecker

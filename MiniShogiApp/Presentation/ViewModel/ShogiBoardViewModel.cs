@@ -45,8 +45,8 @@ namespace MiniShogiApp.Presentation.ViewModel
         public ShogiBoardViewModel(IMessage message)
         {
             Message = message;
-            //game = new GameFactory().Create(GameType.AnimalShogi);
-            game = new GameFactory().Create(GameType.FiveFiveShogi);
+            game = new GameFactory().Create(GameType.AnimalShogi);
+            //game = new GameFactory().Create(GameType.FiveFiveShogi);
             OperationMode = OperationMode.SelectMoveSource;
 
             MoveCommand = new DelegateCommand<object>(
@@ -80,7 +80,12 @@ namespace MiniShogiApp.Presentation.ViewModel
                                 bool doTransform = false;
                                 var koma = game.State.FindBoardKoma(cellFrom.Position);
                                 var moves = game.CreateAvailableMoveCommand(koma);
-                                if(moves.Where(x => x is BoardKomaMoveCommand && x.ToPosition == cell.Position && cellFrom.Position == ((BoardKomaMoveCommand)x).FromPosition).Count() > 1)
+                                var targetMoves = moves.Where(x => x is BoardKomaMoveCommand && x.ToPosition == cell.Position && cellFrom.Position == ((BoardKomaMoveCommand)x).FromPosition).ToList();
+                                if(targetMoves.Count() == 1)
+                                {
+                                    doTransform = targetMoves[0].DoTransform;
+                                }
+                                else
                                 {
                                     doTransform = Message.MessageYesNo("成りますか?");
                                 }

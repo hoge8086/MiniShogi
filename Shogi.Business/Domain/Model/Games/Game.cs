@@ -13,6 +13,7 @@ namespace Shogi.Bussiness.Domain.Model.Games
     {
         public Board Board { get; private set; }
         public GameState State { get; private set; }
+
         public CustomRule Rule { get; private set; }
         public IWinningChecker WinningChecker { get; private set; }
 
@@ -67,7 +68,9 @@ namespace Shogi.Bussiness.Domain.Model.Games
 
             PlayWithoutCheck(moveCommand);
 
+ 
             CheckGameEnd();
+            State.FowardTurnPlayer();
 
             return this;
         }
@@ -89,8 +92,6 @@ namespace Shogi.Bussiness.Domain.Model.Games
             {
                 toKoma.Taken();
             }
-
-            State.FowardTurnPlayer();
 
             return this;
         }
@@ -190,7 +191,6 @@ namespace Shogi.Bussiness.Domain.Model.Games
 
         public bool DoCheckmate(Player player)
         {
-            // [★チェックメイトの判定になっていない相打ちとか取り返すとか]
             if (IsEnd)
                 throw new InvalidProgramException("すでに決着済みです.");
 
@@ -212,7 +212,6 @@ namespace Shogi.Bussiness.Domain.Model.Games
         /// <returns></returns>
         public bool DoCheckmateWithoutHandMove(Player player)
         {
-            // [★チェックメイトの判定になっていない相打ちとか取り返すとか]
             if (IsEnd)
                 throw new InvalidProgramException("すでに決着済みです.");
 
@@ -233,6 +232,10 @@ namespace Shogi.Bussiness.Domain.Model.Games
             var movablePositions = MovablePosition(State.GetBoardKomaList(player));
             var kingPosition = State.FindKing(player.Opponent).Position as BoardPosition;
             return movablePositions.Contains(kingPosition);
+        }
+        public bool KingEnterOpponentTerritory(Player player)
+        {
+            return Rule.IsEnemyPosition(player, (BoardPosition)State.FindKing(player).Position, Board);
         }
         public override string ToString()
         {
