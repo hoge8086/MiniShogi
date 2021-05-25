@@ -14,9 +14,9 @@ namespace MiniShogiApp.Presentation.ViewModel
 
         public DelegateCommand TurnBoardCommand{ get; set; }
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(IMessage message)
         {
-            Board = new ShogiBoardViewModel();
+            Board = new ShogiBoardViewModel(message);
             TurnBoardCommand = new DelegateCommand(() =>
             {
                 Board.ForegroundPlayer = Board.ForegroundPlayer == Player.FirstPlayer ? Player.SecondPlayer: Player.FirstPlayer;

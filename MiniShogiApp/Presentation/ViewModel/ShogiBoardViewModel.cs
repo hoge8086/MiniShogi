@@ -18,7 +18,7 @@ namespace MiniShogiApp.Presentation.ViewModel
     {
         SelectMoveFrom,
         SelectMoveTo,
-        Wait,
+        GameEnd,
     };
 
     public class ShogiBoardViewModel : BindableBase
@@ -40,8 +40,11 @@ namespace MiniShogiApp.Presentation.ViewModel
         private ISelectable selectedMoveFrom;
 
         private Game game;
-        public ShogiBoardViewModel()
+
+        private IMessage Message;
+        public ShogiBoardViewModel(IMessage message)
         {
+            Message = message;
             //game = new GameFactory().Create(GameType.AnimalShogi);
             game = new GameFactory().Create(GameType.FiveFiveShogi);
             OperationMode = OperationMode.SelectMoveFrom;
@@ -93,6 +96,9 @@ namespace MiniShogiApp.Presentation.ViewModel
                 (param) =>
                 {
                     if (param == null)
+                        return false;
+
+                    if (OperationMode == OperationMode.GameEnd)
                         return false;
 
                     if (OperationMode == OperationMode.SelectMoveFrom)
@@ -164,6 +170,12 @@ namespace MiniShogiApp.Presentation.ViewModel
                     else
                         SecondPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.SecondPlayer });
                 }
+            }
+
+            if(game.IsEnd)
+            {
+                OperationMode = OperationMode.GameEnd;
+                Message.Message("勝者: " + game.GameResult.Winner.ToString());
             }
         }
         public void UpdateCanMove()

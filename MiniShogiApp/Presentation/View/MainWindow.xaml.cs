@@ -22,7 +22,20 @@ namespace MiniShogiApp.Presentation.View
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
+            DataContext = new MainWindowViewModel(new MyMessageBox());
+        }
+    }
+
+    public class MyMessageBox : IMessage
+    {
+        public void Message(string msg)
+        {
+            MessageBox.Show(msg, "ミニ将棋");
+        }
+
+        public bool MessageYesNo(string msg)
+        {
+            return MessageBox.Show(msg, "ミニ将棋", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
         }
     }
 }
