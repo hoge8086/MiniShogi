@@ -6,7 +6,12 @@
         xmlns:local="clr-namespace:MiniShogiApp.Presentation.View"
         mc:Ignorable="d"
         Title="MainWindow" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
-    <Grid>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="メニュー">
+                <MenuItem Header="盤面反転" Command="{Binding TurnBoardCommand}"/>
+            </MenuItem>
+        </Menu>
         <local:ShogiBoard x:Name="board" DataContext="{Binding Board}"/>
-    </Grid>
+    </DockPanel>
 </Window>

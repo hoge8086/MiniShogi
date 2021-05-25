@@ -32,16 +32,16 @@ namespace MiniShogiApp.Presentation.ViewModel
             get { return _foregroundPlayer; }
             set { SetProperty(ref _foregroundPlayer, value); }
         }
-        public PlayerViewModel FirstPlayer { get; set; }
-        public PlayerViewModel SecondPlayer { get; set; }
+        public PlayerViewModel FirstPlayerHands { get; set; }
+        public PlayerViewModel SecondPlayerHands { get; set; }
         public OperationMode OperationMode { get; private set; }
+
         // [★後で直す]
         private ISelectable selectedMoveFrom;
 
         private Game game;
         public ShogiBoardViewModel()
         {
-            ForegroundPlayer = Player.FirstPlayer;
             //game = new GameFactory().Create(GameType.AnimalShogi);
             game = new GameFactory().Create(GameType.FiveFiveShogi);
             OperationMode = OperationMode.SelectMoveFrom;
@@ -120,16 +120,17 @@ namespace MiniShogiApp.Presentation.ViewModel
                     return false;
                 }
                 );
-            FirstPlayer = new PlayerViewModel(MoveCommand);
-            SecondPlayer = new PlayerViewModel(MoveCommand);
+            FirstPlayerHands = new PlayerViewModel(MoveCommand);
+            SecondPlayerHands = new PlayerViewModel(MoveCommand);
+            ForegroundPlayer = Player.FirstPlayer;
             Update();
         }
 
         public void Update()
         {
             Board.Clear();
-            FirstPlayer.Hands.Clear();
-            SecondPlayer.Hands.Clear();
+            FirstPlayerHands.Hands.Clear();
+            SecondPlayerHands.Hands.Clear();
 
             for (int y = 0; y < game.Board.Height; y++)
             {
@@ -159,9 +160,9 @@ namespace MiniShogiApp.Presentation.ViewModel
                 if (handPos != null)
                 {
                     if (koma.Player == Shogi.Bussiness.Domain.Model.Players.Player.FirstPlayer)
-                        FirstPlayer.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.FirstPlayer});
+                        FirstPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.FirstPlayer});
                     else
-                        SecondPlayer.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.SecondPlayer });
+                        SecondPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.SecondPlayer });
                 }
             }
         }

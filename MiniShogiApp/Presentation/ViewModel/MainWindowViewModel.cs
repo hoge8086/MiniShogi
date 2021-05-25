@@ -2,32 +2,25 @@
 using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
+using Prism.Mvvm;
+using Prism.Commands;
 
 namespace MiniShogiApp.Presentation.ViewModel
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : BindableBase
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void RaisePropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
 
-        public ShogiBoardViewModel _board;
-        public ShogiBoardViewModel Board
-        {
-            get { return _board; }
-            set
-            {
-                _board = value;
-                RaisePropertyChanged(nameof(Board));
-            }
-        }
+        public ShogiBoardViewModel Board { get; set; }
+
+        public DelegateCommand TurnBoardCommand{ get; set; }
 
         public MainWindowViewModel()
         {
             Board = new ShogiBoardViewModel();
+            TurnBoardCommand = new DelegateCommand(() =>
+            {
+                Board.ForegroundPlayer = Board.ForegroundPlayer == Player.FirstPlayer ? Player.SecondPlayer: Player.FirstPlayer;
+            });
         }
     }
 }
