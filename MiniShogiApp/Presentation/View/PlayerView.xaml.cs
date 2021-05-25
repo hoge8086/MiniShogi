@@ -22,5 +22,18 @@ namespace MiniShogiApp.Presentation.View
         {
             InitializeComponent();
         }
+
+        public static DependencyProperty TurnKomaDaiProperty
+            = DependencyProperty.Register(
+                nameof(TurnKomaDai),
+                typeof(bool),
+                typeof(PlayerView),
+                new PropertyMetadata(false)
+            );
+
+        public bool TurnKomaDai {
+            get { return (bool)GetValue(TurnKomaDaiProperty); }
+            set { SetValue(TurnKomaDaiProperty, value); }
+        }
     }
 }

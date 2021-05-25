@@ -12,5 +12,12 @@ namespace MiniShogiApp.Presentation.ViewModel
         public Player Player { get; set; }
         public ObservableCollection<HandKomaViewModel> Hands { get; set; } = new ObservableCollection<HandKomaViewModel>();
 
+        private bool _isCurrentTurn = false;
+        public bool IsCurrentTurn
+        {
+            get { return _isCurrentTurn; }
+            set { SetProperty(ref _isCurrentTurn, value); }
+        }
+
     }
 }

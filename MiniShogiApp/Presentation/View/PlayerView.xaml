@@ -5,13 +5,53 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MiniShogiApp.Presentation.View"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             x:Name="player">
     <Grid>
-        <!--持ち駒のリスト-->
-        <ItemsControl x:Name="hands" MinHeight="100"
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <!--プレイヤー情報-->
+        <TextBlock Grid.Row="0" FontSize="22" Margin="5,0,0,0" HorizontalAlignment="Left">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsCurrentTurn}" Value="True">
+                            <Setter Property="Background" Value="Pink"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Player}" Value="FirstPlayer">
+                            <Setter Property="Text" Value="先手"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Player}" Value="SecondPlayer">
+                            <Setter Property="Text" Value="後手"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <!--駒台-->
+        <ItemsControl x:Name="hands"
+                      Grid.Row="1"
+                      MinHeight="100"
                       Width="100"
                       ItemsSource="{Binding Hands}"
                       Margin="5">
+            <ItemsControl.Style>
+                <Style TargetType="{x:Type ItemsControl}">
+                    <!--依存関係プロパティ(TurnKomaDai)に応じて駒台の向きを逆にする-->
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding TurnKomaDai, ElementName=player}" Value="True">
+                            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                            <Setter Property="RenderTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="180"/>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ItemsControl.Style>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <!--駒の並べ方-->

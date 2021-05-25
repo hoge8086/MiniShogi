@@ -136,8 +136,8 @@ namespace MiniShogiApp.Presentation.ViewModel
                     return false;
                 }
                 );
-            FirstPlayerHands = new PlayerViewModel();
-            SecondPlayerHands = new PlayerViewModel();
+            FirstPlayerHands = new PlayerViewModel() { Player = Player.FirstPlayer };
+            SecondPlayerHands = new PlayerViewModel() { Player = Player.SecondPlayer };
             ForegroundPlayer = Player.FirstPlayer;
             Update();
         }
@@ -181,6 +181,18 @@ namespace MiniShogiApp.Presentation.ViewModel
                         SecondPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.SecondPlayer });
                 }
             }
+
+            if (game.State.TurnPlayer == Shogi.Bussiness.Domain.Model.Players.Player.FirstPlayer)
+            {
+                FirstPlayerHands.IsCurrentTurn = true;
+                SecondPlayerHands.IsCurrentTurn = false;
+            }
+            else
+            {
+                FirstPlayerHands.IsCurrentTurn = false;
+                SecondPlayerHands.IsCurrentTurn = true;
+            }
+
 
             if(game.IsEnd)
             {
