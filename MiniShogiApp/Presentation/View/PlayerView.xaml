@@ -22,7 +22,7 @@
                 <DataTemplate>
                     <!--駒-->
                     <Button x:Name="button" Height="35" Width="35" 
-                            Command="{Binding Path=DataContext.MoveCommand, ElementName=hands}" Margin="5,5,0,0" 
+                            Command="{Binding Path=DataContext.MoveCommand, RelativeSource={RelativeSource  FindAncestor, AncestorType={x:Type local:ShogiBoard}}, Mode=TwoWay}" Margin="5,5,0,0"
                             local:ButtonHelper.CommandParameter="{Binding .}" >
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">

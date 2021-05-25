@@ -9,13 +9,8 @@ namespace MiniShogiApp.Presentation.ViewModel
 {
     public class PlayerViewModel : BindableBase
     {
+        public Player Player { get; set; }
         public ObservableCollection<HandKomaViewModel> Hands { get; set; } = new ObservableCollection<HandKomaViewModel>();
-
-        public DelegateCommand<object> MoveCommand { get; set; }
-        public PlayerViewModel(DelegateCommand<object> moveCommand)
-        {
-            MoveCommand = moveCommand;
-        }
 
     }
 }
