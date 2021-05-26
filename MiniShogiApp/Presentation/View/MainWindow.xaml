@@ -9,7 +9,8 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="メニュー">
-                <MenuItem Header="盤面反転" Command="{Binding TurnBoardCommand}"/>
+                <MenuItem Header="開始" Command="{Binding Board.StartCommand}"/>
+                <MenuItem Header="盤反転" Command="{Binding TurnBoardCommand}"/>
             </MenuItem>
         </Menu>
         <local:ShogiBoard x:Name="board" DataContext="{Binding Board}"/>

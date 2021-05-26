@@ -18,6 +18,7 @@ namespace Shogi.Business.Domain.Model.AI
     {
         public override MoveCommand SelectMove(List<MoveCommand> moveCommands)
         {
+            System.Threading.Thread.Sleep(1000);
             return moveCommands[new System.Random().Next(0, moveCommands.Count)];
         }
 

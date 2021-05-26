@@ -13,6 +13,7 @@ using Prism.Mvvm;
 using Shogi.Business.Application;
 using Shogi.Business.Domain.Model.Users;
 using Shogi.Business.Domain.Model.AI;
+using System.Threading.Tasks;
 
 namespace MiniShogiApp.Presentation.ViewModel
 {
@@ -22,12 +23,14 @@ namespace MiniShogiApp.Presentation.ViewModel
     {
         SelectMoveSource,
         SelectMoveDestination,
+        AIThinking,
         GameEnd,
     };
 
     public class ShogiBoardViewModel : BindableBase, GameListener
     {
         public DelegateCommand<object> MoveCommand { get; set; }
+        public DelegateCommand StartCommand { get; set; }
         public ObservableCollection<ObservableCollection<CellViewModel>> Board { get; set; } = new ObservableCollection<ObservableCollection<CellViewModel>>();
 
         private Player _foregroundPlayer;
@@ -38,7 +41,16 @@ namespace MiniShogiApp.Presentation.ViewModel
         }
         public PlayerViewModel FirstPlayerHands { get; set; }
         public PlayerViewModel SecondPlayerHands { get; set; }
-        public OperationMode OperationMode { get; private set; }
+        private OperationMode _operationMode;
+        public OperationMode OperationMode
+        {
+            get { return _operationMode; }
+            set {
+                SetProperty(ref _operationMode, value);
+                MoveCommand?.RaiseCanExecuteChanged();
+                StartCommand?.RaiseCanExecuteChanged();
+            }
+        }
 
         private GameService gameService;
 
@@ -50,8 +62,26 @@ namespace MiniShogiApp.Presentation.ViewModel
 
             OperationMode = OperationMode.SelectMoveSource;
 
+            StartCommand = new DelegateCommand(
+                async () =>
+                {
+                    OperationMode = OperationMode.AIThinking;
+                    await Task.Run(() =>
+                    {
+                        //this.gameService.Start(new RandomAI(), new Human(), GameType.FiveFiveShogi, this);
+                        this.gameService.Start(new RandomAI(), new RandomAI(), GameType.FiveFiveShogi, this);
+                        //this.gameService.Start(new Human(), new Human(), GameType.FiveFiveShogi, this);
+                    });
+                    // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
+                    UpdateOperationModeOnTaskFinished();
+                },
+                () =>
+                {
+                    return OperationMode != OperationMode.AIThinking;
+                });
+
             MoveCommand = new DelegateCommand<object>(
-                (param) =>
+                async (param) =>
                 {
                     if (param == null)
                         return;
@@ -66,7 +96,6 @@ namespace MiniShogiApp.Presentation.ViewModel
                     }
                     else if(OperationMode == OperationMode.SelectMoveDestination)
                     {
-                        OperationMode = OperationMode.SelectMoveSource;
 
                         var cell = param as CellViewModel;
 
@@ -83,11 +112,15 @@ namespace MiniShogiApp.Presentation.ViewModel
                                 move = cell.MoveCommands.FirstOrDefault(x => x.DoTransform == doTransform);
                             }
                             //game.Play(move);
-                            this.gameService.Play(move);
+                            OperationMode = OperationMode.AIThinking;
+                            await Task.Run(() => this.gameService.Play(move));
+                            // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
+                            UpdateOperationModeOnTaskFinished();
                         }
                         else
                         {
                             // [動けない位置の場合はキャンセルしすべて更新]
+                            OperationMode = OperationMode.SelectMoveSource;
                             Update();
                         }
                     }
@@ -121,7 +154,8 @@ namespace MiniShogiApp.Presentation.ViewModel
                     {
                         return true;
                     }
-
+                    
+                    // [OperationMode.AIThinking]
                     return false;
                 }
                 );
@@ -129,10 +163,15 @@ namespace MiniShogiApp.Presentation.ViewModel
             SecondPlayerHands = new PlayerViewModel() { Player = Player.SecondPlayer };
             ForegroundPlayer = Player.FirstPlayer;
 
-
             //this.gameService.Start(new Human(), new RandomAI(), GameType.FiveFiveShogi, this);
-            this.gameService.Start(new RandomAI(), new Human(), GameType.FiveFiveShogi, this);
             //Update();
+        }
+        public void UpdateOperationModeOnTaskFinished()
+        {
+            // [タスクが終わったというこは、自分のターンかゲーム終了かのどちらか]
+            if(gameService.GetGame().IsEnd)
+                OperationMode = OperationMode.GameEnd;
+            OperationMode = OperationMode.SelectMoveSource;
         }
 
         public void Update()
@@ -205,18 +244,26 @@ namespace MiniShogiApp.Presentation.ViewModel
         }
         public void OnStarted()
         {
-            Update();
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                Update();
+            });
         }
         public void OnPlayed()
         {
-            Update();
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                Update();
+            });
         }
 
         public void OnEnded()
         {
-            OperationMode = OperationMode.GameEnd;
-            Messenger.Message("勝者: " + this.gameService.GetGame().GameResult.Winner.ToString());
-            MoveCommand.RaiseCanExecuteChanged();
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                Messenger.Message("勝者: " + this.gameService.GetGame().GameResult.Winner.ToString());
+                MoveCommand.RaiseCanExecuteChanged();
+            });
         }
 
     }
