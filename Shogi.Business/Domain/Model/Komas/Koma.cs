@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Shogi.Bussiness.Domain.Model.Boards;
-using Shogi.Bussiness.Domain.Model.Komas;
-using Shogi.Bussiness.Domain.Model.Players;
+using Shogi.Business.Domain.Model.Boards;
+using Shogi.Business.Domain.Model.Komas;
+using Shogi.Business.Domain.Model.Players;
 
-namespace Shogi.Bussiness.Domain.Model.Komas
+namespace Shogi.Business.Domain.Model.Komas
 {
 
     public class Koma

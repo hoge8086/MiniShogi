@@ -1,11 +1,11 @@
-﻿using Shogi.Bussiness.Domain.Model.Boards;
-using Shogi.Bussiness.Domain.Model.Komas;
-using Shogi.Bussiness.Domain.Model.Players;
+﻿using Shogi.Business.Domain.Model.Boards;
+using Shogi.Business.Domain.Model.Komas;
+using Shogi.Business.Domain.Model.Players;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Shogi.Bussiness.Domain.Model.Games
+namespace Shogi.Business.Domain.Model.Games
 {
     public abstract class MoveCommand
     {

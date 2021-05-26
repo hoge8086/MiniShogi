@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Shogi.Bussiness.Domain.Model.Boards
+namespace Shogi.Business.Domain.Model.Boards
 {
     public class BoardPositions
     {

@@ -1,8 +1,8 @@
-﻿using Shogi.Bussiness.Domain.Model.Boards;
-using Shogi.Bussiness.Domain.Model.Players;
+﻿using Shogi.Business.Domain.Model.Boards;
+using Shogi.Business.Domain.Model.Players;
 using System.Collections.Generic;
 
-namespace Shogi.Bussiness.Domain.Model.Games
+namespace Shogi.Business.Domain.Model.Games
 {
 
     public class CustomRule

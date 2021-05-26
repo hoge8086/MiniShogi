@@ -1,8 +1,8 @@
 ﻿using System;
-using Shogi.Bussiness.Domain.Model.Boards;
-using Shogi.Bussiness.Domain.Model.Players;
+using Shogi.Business.Domain.Model.Boards;
+using Shogi.Business.Domain.Model.Players;
 
-namespace Shogi.Bussiness.Domain.Model.Moves
+namespace Shogi.Business.Domain.Model.Moves
 {
     public class PinpointKomaMove : IKomaMove
     {

@@ -1,14 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Shogi.Bussiness.Domain.Model.Komas;
-using Shogi.Bussiness.Domain.Model.Moves;
-using Shogi.Bussiness.Domain.Model.Boards;
-using Shogi.Bussiness.Domain.Model.Players;
+using Shogi.Business.Domain.Model.Komas;
+using Shogi.Business.Domain.Model.Moves;
+using Shogi.Business.Domain.Model.Boards;
+using Shogi.Business.Domain.Model.Players;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Shogi.Business.Domain.GameFactory;
+using Shogi.Business.Domain.Model.GameFactorys;
 
-namespace Shogi.Bussiness.Domain.Model.Tests
+namespace Shogi.Business.Domain.Model.Tests
 {
     [TestClass()]
     public class GameTests

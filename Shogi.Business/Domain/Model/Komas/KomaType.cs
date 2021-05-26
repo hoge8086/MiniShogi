@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Shogi.Bussiness.Domain.Model.Boards;
-using Shogi.Bussiness.Domain.Model.Moves;
-using Shogi.Bussiness.Domain.Model.Players;
+using Shogi.Business.Domain.Model.Boards;
+using Shogi.Business.Domain.Model.Moves;
+using Shogi.Business.Domain.Model.Players;
 
-namespace Shogi.Bussiness.Domain.Model.Komas
+namespace Shogi.Business.Domain.Model.Komas
 {
     public class KomaType
     {

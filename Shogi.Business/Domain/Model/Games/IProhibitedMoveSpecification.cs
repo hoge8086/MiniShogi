@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Shogi.Bussiness.Domain.Model.Games
+namespace Shogi.Business.Domain.Model.Games
 {
     public interface IProhibitedMoveSpecification
     {

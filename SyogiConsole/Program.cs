@@ -1,4 +1,4 @@
-﻿using Shogi.Business.Domain.GameFactory;
+﻿using Shogi.Business.Domain.Model.GameFactorys;
 using System;
 
 namespace SyogiConsole

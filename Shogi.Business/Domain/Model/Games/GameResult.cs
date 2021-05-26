@@ -1,6 +1,6 @@
-﻿using Shogi.Bussiness.Domain.Model.Players;
+﻿using Shogi.Business.Domain.Model.Players;
 
-namespace Shogi.Bussiness.Domain.Model.Games
+namespace Shogi.Business.Domain.Model.Games
 {
     public class GameResult
     {

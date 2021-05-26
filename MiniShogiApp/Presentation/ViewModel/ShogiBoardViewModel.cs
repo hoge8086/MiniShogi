@@ -4,11 +4,11 @@ using System.Text;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using Prism.Commands;
-using Shogi.Bussiness.Domain.Model.Games;
-using Shogi.Bussiness.Domain.Model.Boards;
-using Shogi.Business.Domain.GameFactory;
+using Shogi.Business.Domain.Model.Games;
+using Shogi.Business.Domain.Model.Boards;
+using Shogi.Business.Domain.Model.GameFactorys;
 using System.Linq;
-using Shogi.Bussiness.Domain.Model.Komas;
+using Shogi.Business.Domain.Model.Komas;
 using Prism.Mvvm;
 
 namespace MiniShogiApp.Presentation.ViewModel
@@ -147,20 +147,20 @@ namespace MiniShogiApp.Presentation.ViewModel
                     {
                         IsTransformed = koma.IsTransformed,
                         Name = koma.KomaType.Id,
-                        Player = koma.Player == Shogi.Bussiness.Domain.Model.Players.Player.FirstPlayer ? Player.FirstPlayer : Player.SecondPlayer,
+                        Player = koma.Player == Shogi.Business.Domain.Model.Players.Player.FirstPlayer ? Player.FirstPlayer : Player.SecondPlayer,
                     };
                 }
                 else
                 {
-                    if (koma.Player == Shogi.Bussiness.Domain.Model.Players.Player.FirstPlayer)
+                    if (koma.Player == Shogi.Business.Domain.Model.Players.Player.FirstPlayer)
                         FirstPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.FirstPlayer});
                     else
                         SecondPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.SecondPlayer });
                 }
             }
             
-            FirstPlayerHands.IsCurrentTurn = game.State.TurnPlayer == Shogi.Bussiness.Domain.Model.Players.Player.FirstPlayer;
-            SecondPlayerHands.IsCurrentTurn = game.State.TurnPlayer == Shogi.Bussiness.Domain.Model.Players.Player.SecondPlayer;
+            FirstPlayerHands.IsCurrentTurn = game.State.TurnPlayer == Shogi.Business.Domain.Model.Players.Player.FirstPlayer;
+            SecondPlayerHands.IsCurrentTurn = game.State.TurnPlayer == Shogi.Business.Domain.Model.Players.Player.SecondPlayer;
 
 
             if(game.IsEnd)

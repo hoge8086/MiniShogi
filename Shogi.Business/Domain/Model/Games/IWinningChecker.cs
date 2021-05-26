@@ -1,7 +1,7 @@
-﻿using Shogi.Bussiness.Domain.Model.Players;
+﻿using Shogi.Business.Domain.Model.Players;
 using System.Collections.Generic;
 
-namespace Shogi.Bussiness.Domain.Model.Games
+namespace Shogi.Business.Domain.Model.Games
 {
     public interface IWinningChecker
     {

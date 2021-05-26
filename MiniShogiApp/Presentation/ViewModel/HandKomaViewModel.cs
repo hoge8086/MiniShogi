@@ -1,6 +1,6 @@
 ﻿using Prism.Mvvm;
-using Shogi.Bussiness.Domain.Model.Games;
-using Shogi.Bussiness.Domain.Model.Komas;
+using Shogi.Business.Domain.Model.Games;
+using Shogi.Business.Domain.Model.Komas;
 
 namespace MiniShogiApp.Presentation.ViewModel
 {

@@ -1,7 +1,7 @@
 ﻿using Prism.Mvvm;
-using Shogi.Bussiness.Domain.Model.Boards;
-using Shogi.Bussiness.Domain.Model.Games;
-using Shogi.Bussiness.Domain.Model.Komas;
+using Shogi.Business.Domain.Model.Boards;
+using Shogi.Business.Domain.Model.Games;
+using Shogi.Business.Domain.Model.Komas;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,13 +22,13 @@ namespace MiniShogiApp.Presentation.ViewModel
     }
     public static partial class PlayerExtend
     {
-        public static Shogi.Bussiness.Domain.Model.Players.Player ToDomain(this Player player)
+        public static Shogi.Business.Domain.Model.Players.Player ToDomain(this Player player)
         {
             switch (player) {
                 case Player.FirstPlayer:
-                    return Shogi.Bussiness.Domain.Model.Players.Player.FirstPlayer;
+                    return Shogi.Business.Domain.Model.Players.Player.FirstPlayer;
                 case Player.SecondPlayer:
-                    return Shogi.Bussiness.Domain.Model.Players.Player.SecondPlayer;
+                    return Shogi.Business.Domain.Model.Players.Player.SecondPlayer;
             }
             return null;
         }

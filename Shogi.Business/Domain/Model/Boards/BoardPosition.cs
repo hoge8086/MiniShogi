@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Shogi.Bussiness.Domain.Model.Boards
+namespace Shogi.Business.Domain.Model.Boards
 {
     /// <summary>
     /// 先手から見たボート位置

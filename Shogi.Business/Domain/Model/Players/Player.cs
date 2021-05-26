@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Shogi.Bussiness.Domain.Model.Players
+namespace Shogi.Business.Domain.Model.Players
 {
     public class Player
     {
