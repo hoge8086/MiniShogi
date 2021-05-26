@@ -6,21 +6,11 @@ namespace Shogi.Business.Domain.Model.AI
 {
     public abstract class AI : User
     {
-        public abstract MoveCommand SelectMove(List<MoveCommand> moveCommands);
+        public abstract MoveCommand SelectMove(Game game);
         public void Play(Game game)
         {
-            var moveCommands = game.CreateAvailableMoveCommand();
-            var move = SelectMove(moveCommands);
+            var move = SelectMove(game);
             game.Play(move);
         }
-    }
-    public class RandomAI : AI
-    {
-        public override MoveCommand SelectMove(List<MoveCommand> moveCommands)
-        {
-            System.Threading.Thread.Sleep(1000);
-            return moveCommands[new System.Random().Next(0, moveCommands.Count)];
-        }
-
     }
 }

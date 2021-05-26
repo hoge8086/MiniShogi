@@ -37,7 +37,7 @@ namespace Shogi.Business.Domain.Model.Games
     {
         public bool IsWinning(Game game, Player player)
         {
-            return game.KingEnterOpponentTerritory(player);
+            return game.KingEnterOpponentTerritory(player) && !game.DoOte(player.Opponent);
         }
     }
     public class CheckmateWinningChecker : IWinningChecker

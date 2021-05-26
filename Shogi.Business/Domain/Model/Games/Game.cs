@@ -33,11 +33,17 @@ namespace Shogi.Business.Domain.Model.Games
             Rule = rule;
             GameResult = gameResult;
         }
+
+        public bool IsWinning(Player player)
+        {
+            return Rule.WinningChecker.IsWinning(this, player);
+        }
+
         public void CheckGameEnd()
         {
-            if (Rule.WinningChecker.IsWinning(this, State.TurnPlayer))
+            if (IsWinning(State.TurnPlayer))
                 GameResult = new GameResult(State.TurnPlayer);
-            else if (Rule.WinningChecker.IsWinning(this, State.TurnPlayer.Opponent))
+            else if (IsWinning(State.TurnPlayer.Opponent))
                 GameResult =  new GameResult(State.TurnPlayer.Opponent);
         }
 
@@ -67,7 +73,6 @@ namespace Shogi.Business.Domain.Model.Games
 
  
             CheckGameEnd();
-            State.FowardTurnPlayer();
 
             return this;
         }
@@ -90,6 +95,7 @@ namespace Shogi.Business.Domain.Model.Games
                 toKoma.Taken();
             }
 
+            State.FowardTurnPlayer();
             return this;
         }
 
@@ -210,7 +216,10 @@ namespace Shogi.Business.Domain.Model.Games
         }
         public bool KingEnterOpponentTerritory(Player player)
         {
-            return Rule.IsPlayerTerritory(player.Opponent, (BoardPosition)State.FindKingOnBoard(player).BoardPosition, Board);
+            var king = State.FindKingOnBoard(player);
+            if (king == null)
+                return false;
+            return Rule.IsPlayerTerritory(player.Opponent, king.BoardPosition, Board);
         }
         public override string ToString()
         {

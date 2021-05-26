@@ -10,8 +10,8 @@ namespace Shogi.Business.Domain.Model.Komas
     public class KomaType
     {
         public string Id { get; private set; }
-        private KomaMoves Moves;
-        private KomaMoves TransformedMoves;
+        public KomaMoves Moves { get; private set; }
+        public KomaMoves TransformedMoves { get; private set; }
         public bool IsKing { get; private set; }
         public bool CanBeTransformed { get => TransformedMoves != null; }
 

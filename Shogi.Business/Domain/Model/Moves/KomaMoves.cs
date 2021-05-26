@@ -6,7 +6,7 @@ namespace Shogi.Business.Domain.Model.Moves
 {
     public class KomaMoves
     {
-        private List<IKomaMove> Moves;
+        public List<IKomaMove> Moves { get; private set; }
 
         public KomaMoves(List<IKomaMove> moves)
         {
