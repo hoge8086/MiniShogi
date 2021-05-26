@@ -21,7 +21,7 @@ namespace Shogi.Business.Domain.GameFactory
 
     public class GameFactory
     {
-        public readonly KomaType KomaHiyoko = new KomaType(
+        public static readonly KomaType KomaHiyoko = new KomaType(
             "ひ",
             new KomaMoves(new List<IKomaMove>()
             {
@@ -40,7 +40,7 @@ namespace Shogi.Business.Domain.GameFactory
             }
             ),
             false);
-        public readonly KomaType KomaZou = new KomaType(
+        public static readonly KomaType KomaZou = new KomaType(
             "ぞ",
             new KomaMoves(new List<IKomaMove>()
             {
@@ -52,7 +52,7 @@ namespace Shogi.Business.Domain.GameFactory
             ),
             null,
             false);
-        public readonly KomaType KomaKirin = new KomaType(
+        public static readonly KomaType KomaKirin = new KomaType(
             "き",
             new KomaMoves(new List<IKomaMove>()
             {
@@ -64,7 +64,7 @@ namespace Shogi.Business.Domain.GameFactory
             ),
             null,
             false);
-        public readonly KomaType KomaRaion = new KomaType(
+        public static readonly KomaType KomaRaion = new KomaType(
             "ラ",
             new KomaMoves(new List<IKomaMove>()
             {
@@ -82,7 +82,7 @@ namespace Shogi.Business.Domain.GameFactory
             true);
 
 
-        public readonly KomaType KomaHu = new KomaType(
+        public static readonly KomaType KomaHu = new KomaType(
             "歩",
             new KomaMoves(new List<IKomaMove>()
             {
@@ -99,7 +99,7 @@ namespace Shogi.Business.Domain.GameFactory
             }
             ),
             false);
-        public readonly KomaType KomaOu = new KomaType(
+        public static readonly KomaType KomaOu = new KomaType(
             "王",
             new KomaMoves(new List<IKomaMove>()
             {
@@ -115,7 +115,7 @@ namespace Shogi.Business.Domain.GameFactory
             ),
             null,
             true);
-        public readonly KomaType KomaKin = new KomaType(
+        public static readonly KomaType KomaKin = new KomaType(
             "金",
             new KomaMoves(new List<IKomaMove>()
             {
@@ -129,7 +129,7 @@ namespace Shogi.Business.Domain.GameFactory
             ),
             null,
             false);
-        public readonly KomaType KomaGin = new KomaType(
+        public static readonly KomaType KomaGin = new KomaType(
             "銀",
             new KomaMoves(new List<IKomaMove>()
             {
@@ -151,7 +151,7 @@ namespace Shogi.Business.Domain.GameFactory
             }
             ),
             false);
-        public readonly KomaType KomaHisya= new KomaType(
+        public static readonly KomaType KomaHisya= new KomaType(
             "飛",
             new KomaMoves(new List<IKomaMove>()
             {
@@ -174,7 +174,7 @@ namespace Shogi.Business.Domain.GameFactory
             }
             ),
             false);
-        public readonly KomaType KomaKaku = new KomaType(
+        public static readonly KomaType KomaKaku = new KomaType(
             "角",
             new KomaMoves(new List<IKomaMove>()
             {
@@ -198,7 +198,7 @@ namespace Shogi.Business.Domain.GameFactory
             ),
             false);
 
-        public readonly KomaType KomaKyousya = new KomaType(
+        public static readonly KomaType KomaKyousya = new KomaType(
             "香",
             new KomaMoves(new List<IKomaMove>()
             {
@@ -215,6 +215,7 @@ namespace Shogi.Business.Domain.GameFactory
             }
             ),
             false);
+
         public Game Create(GameType gameType)
         {
             if(gameType == GameType.AnimalShogi)
@@ -235,9 +236,15 @@ namespace Shogi.Business.Domain.GameFactory
                         },
                         Player.FirstPlayer
                     ),
-                    new CustomRule(1, new List<CustomRule.ProhibitedMoveChecker>()),
-                    new TakeKingOrEnterOpponentTerritoryWinningChecker()
-                    ) ;
+                    new CustomRule(
+                        1,
+                        new NullProhibitedMoveSpecification(),
+                        new MultiWinningChecker(new List<IWinningChecker>()
+                        {
+                            new TakeKingWinningChecker(),
+                            new EnterOpponentTerritoryWinningChecker(),
+                        })
+                    )) ;
                     
             }else if(gameType == GameType.FiveFiveShogi)
             {
@@ -261,50 +268,78 @@ namespace Shogi.Business.Domain.GameFactory
                     },
                     Player.FirstPlayer
                     ),
-                    new CustomRule(1,
-                        new List<CustomRule.ProhibitedMoveChecker>()
+                    new CustomRule(
+                        1,
+                        new MultiProhibitedMoveSpecification(new List<IProhibitedMoveSpecification>()
                         {
-                            // [二歩]
-                            (moveCommand, game) =>
-                            {
-                                return (moveCommand is HandKomaMoveCommand) && 
-                                        ((HandKomaMoveCommand)moveCommand).KomaType == KomaHu &&
-                                       game.State.KomaList.Any(x =>
-                                                        x.Player == moveCommand.Player &&
-                                                        x.KomaType == KomaHu &&
-                                                        !x.IsTransformed &&
-                                                        x.IsOnBoard &&
-                                                        x.BoardPosition.X == moveCommand.ToPosition.X);
-                            },
-                            // [打ち歩詰め]
-                            (moveCommand, game) =>
-                            {
-                                return (moveCommand is HandKomaMoveCommand) &&
-                                       ((HandKomaMoveCommand)moveCommand).KomaType == KomaHu &&
-                                       game.Clone().PlayWithoutCheck(moveCommand).DoCheckmateWithoutHandMove(moveCommand.Player);
-                                       //game.IsOte(new Koma(moveCommand.ToPosition, moveCommand.Player, KomaHu));
-                            },
-                            // [行き所のない駒]
-                            (moveCommand, game) =>
-                            {
-                                var fromKoma = moveCommand.FindFromKoma(game.State);
-                                // [その駒以外に他の駒が一つもないボードで動けるところが何もない場合は、行き場のない駒]
-                                return new Koma( moveCommand.Player, moveCommand.FindFromKoma(game.State).KomaType, new OnBoard(moveCommand.ToPosition,(moveCommand.DoTransform || fromKoma.IsTransformed)))
-                                            .GetMovableBoardPositions(game.Board, new BoardPositions(), new BoardPositions())
-                                            .Positions.Count == 0;
-                            },
-                            // [王手放置]
-                            (moveCommand, game) =>
-                            {
-                                return game.Clone().PlayWithoutCheck(moveCommand).DoOte(moveCommand.Player.Opponent);
-                            },
+                            new NiHu(),
+                            new CheckmateByHandHu(),
+                            new KomaCannotMove(),
+                            new LeaveOte()
+
                         }),
-                    new CheckmateWinningChecker()
-                    );
+                        new CheckmateWinningChecker()
+                    ));
             }
 
             return null;
 
+        }
+
+        /// <summary>
+        /// 禁じ手：二歩
+        /// </summary>
+        public class NiHu : IProhibitedMoveSpecification
+        {
+            public bool IsSatisfiedBy(MoveCommand moveCommand, Game game)
+            {
+                return (moveCommand is HandKomaMoveCommand) && 
+                        ((HandKomaMoveCommand)moveCommand).KomaType == GameFactory.KomaHu &&
+                       game.State.KomaList.Any(x =>
+                                        x.Player == moveCommand.Player &&
+                                        x.KomaType == KomaHu &&
+                                        !x.IsTransformed &&
+                                        x.IsOnBoard &&
+                                        x.BoardPosition.X == moveCommand.ToPosition.X);
+            }
+        }
+        /// <summary>
+        /// 禁じ手：打ち歩詰め
+        /// </summary>
+        public class CheckmateByHandHu : IProhibitedMoveSpecification
+        {
+            public bool IsSatisfiedBy(MoveCommand moveCommand, Game game)
+            {
+
+                return (moveCommand is HandKomaMoveCommand) &&
+                       ((HandKomaMoveCommand)moveCommand).KomaType == KomaHu &&
+                       game.Clone().PlayWithoutCheck(moveCommand).DoCheckmateWithoutHandMove(moveCommand.Player);
+            }
+        }
+        /// <summary>
+        /// 禁じ手：動かせない駒
+        /// </summary>
+        public class KomaCannotMove : IProhibitedMoveSpecification
+        {
+            public bool IsSatisfiedBy(MoveCommand moveCommand, Game game)
+            {
+
+                var fromKoma = moveCommand.FindFromKoma(game.State);
+                // [その駒以外に他の駒が一つもないボードで動けるところが何もない場合は、行き場のない駒]
+                return new Koma( moveCommand.Player, moveCommand.FindFromKoma(game.State).KomaType, new OnBoard(moveCommand.ToPosition,(moveCommand.DoTransform || fromKoma.IsTransformed)))
+                            .GetMovableBoardPositions(game.Board, new BoardPositions(), new BoardPositions())
+                            .Positions.Count == 0;
+            }
+        }
+        /// <summary>
+        /// 禁じ手：王手放置
+        /// </summary>
+        public class LeaveOte: IProhibitedMoveSpecification
+        {
+            public bool IsSatisfiedBy(MoveCommand moveCommand, Game game)
+            {
+                return game.Clone().PlayWithoutCheck(moveCommand).DoOte(moveCommand.Player.Opponent);
+            }
         }
     }
 }

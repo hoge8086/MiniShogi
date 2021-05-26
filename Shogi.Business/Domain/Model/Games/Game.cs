@@ -15,38 +15,35 @@ namespace Shogi.Bussiness.Domain.Model.Games
         public GameState State { get; private set; }
 
         public CustomRule Rule { get; private set; }
-        public IWinningChecker WinningChecker { get; private set; }
 
         public GameResult GameResult { get; private set; }
         public bool IsEnd => GameResult != null;
-        public Game(Board board, GameState state, CustomRule rule, IWinningChecker winningChecker)
+        public Game(Board board, GameState state, CustomRule rule)
         {
             Board = board;
             State = state;
             Rule = rule;
-            WinningChecker = winningChecker;
             CheckGameEnd();
         }
 
-        private Game(Board board, GameState state, CustomRule rule, IWinningChecker winningChecker, GameResult gameResult)
+        private Game(Board board, GameState state, CustomRule rule, GameResult gameResult)
         {
             Board = board;
             State = state;
             Rule = rule;
-            WinningChecker = winningChecker;
             GameResult = gameResult;
         }
         public void CheckGameEnd()
         {
-            if (WinningChecker.IsWinning(this, State.TurnPlayer))
+            if (Rule.WinningChecker.IsWinning(this, State.TurnPlayer))
                 GameResult = new GameResult(State.TurnPlayer);
-            else if (WinningChecker.IsWinning(this, State.TurnPlayer.Opponent))
+            else if (Rule.WinningChecker.IsWinning(this, State.TurnPlayer.Opponent))
                 GameResult =  new GameResult(State.TurnPlayer.Opponent);
         }
 
         public Game Clone()
         {
-            return new Game(Board, State.Clone(), Rule, WinningChecker, GameResult);
+            return new Game(Board, State.Clone(), Rule, GameResult);
         }
 
         public Game Play(MoveCommand moveCommand)
@@ -159,7 +156,7 @@ namespace Shogi.Bussiness.Domain.Model.Games
             var result = new List<MoveCommand>();
             foreach(var move in moveCommands)
             {
-                if (!Rule.IsProhibitedMove(move, this))
+                if (!Rule.ProhibitedMoveSpecification.IsSatisfiedBy(move, this))
                     result.Add(move);
             }
             return result;

@@ -43,8 +43,8 @@ namespace MiniShogiApp.Presentation.ViewModel
         public ShogiBoardViewModel(IMessage message)
         {
             Message = message;
-            //game = new GameFactory().Create(GameType.AnimalShogi);
-            game = new GameFactory().Create(GameType.FiveFiveShogi);
+            game = new GameFactory().Create(GameType.AnimalShogi);
+            //game = new GameFactory().Create(GameType.FiveFiveShogi);
             OperationMode = OperationMode.SelectMoveSource;
 
             MoveCommand = new DelegateCommand<object>(

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Shogi.Bussiness.Domain.Model.Games
 {
+
     public class CustomRule
     {
         // [Gameクラスとの循環参照が発生しているがここではGameクラスの内部実装には依存しないため、許容する]
@@ -11,34 +12,26 @@ namespace Shogi.Bussiness.Domain.Model.Games
         // [     禁じ手というルールが、基本のルールより上位の(メタな)ルールに属しているからである(歩を打てるけど、実は打っちゃダメのように).]
         // [     上記概念を、GameクラスをGameBaseクラス(打ち歩詰めを許容する)とGameWithRuleクラス(打ち歩詰めを許容しない)]の2層に]
         // [     分けることで循環参照なしに表現できるかもしれないが、過剰設計と思われるのでやらない]
-        public delegate bool ProhibitedMoveChecker(MoveCommand moveCommand, Game game);
 
-        private int PositionBoundary;
-        private List<ProhibitedMoveChecker> ProhibitedMoveCheckers;
-        public CustomRule(int positionBoundary, List<ProhibitedMoveChecker> prohibitedMoveCheckers)
+        private int TerritoryBoundary;
+        public IProhibitedMoveSpecification ProhibitedMoveSpecification { get; private set; }
+        public IWinningChecker WinningChecker { get; private set; }
+        public CustomRule(int positionBoundary, IProhibitedMoveSpecification prohibitedMoveSpecification, IWinningChecker winningChecker)
         {
-            PositionBoundary = positionBoundary;
-            ProhibitedMoveCheckers = prohibitedMoveCheckers;
+            TerritoryBoundary = positionBoundary;
+            ProhibitedMoveSpecification = prohibitedMoveSpecification;
+            WinningChecker = winningChecker;
         }
         public bool IsPlayerTerritory(Player player, BoardPosition position, Board board)
         {
             if (player == Player.FirstPlayer)
             {
-                return ((board.Height - 1) - position.Y) < PositionBoundary;
+                return ((board.Height - 1) - position.Y) < TerritoryBoundary;
             }
             else
             {
-                return position.Y < PositionBoundary;
+                return position.Y < TerritoryBoundary;
             }
-        }
-
-        public bool IsProhibitedMove(MoveCommand moveCommand, Game game)
-        {
-            foreach (var cheker in ProhibitedMoveCheckers)
-                if (cheker(moveCommand, game))
-                    return true;
-
-            return false;
         }
     }
 }
