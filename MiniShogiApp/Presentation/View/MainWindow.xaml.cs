@@ -26,7 +26,7 @@ namespace MiniShogiApp.Presentation.View
         }
     }
 
-    public class MyMessageBox : IMessage
+    public class MyMessageBox : IMessenger
     {
         public void Message(string msg)
         {

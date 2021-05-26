@@ -10,6 +10,8 @@ using Shogi.Business.Domain.Model.GameFactorys;
 using System.Linq;
 using Shogi.Business.Domain.Model.Komas;
 using Prism.Mvvm;
+using Shogi.Business.Application;
+using Shogi.Business.Domain.Model.Users;
 
 namespace MiniShogiApp.Presentation.ViewModel
 {
@@ -37,14 +39,15 @@ namespace MiniShogiApp.Presentation.ViewModel
         public PlayerViewModel SecondPlayerHands { get; set; }
         public OperationMode OperationMode { get; private set; }
 
-        private Game game;
+        private GameService gameService;
 
-        private IMessage Message;
-        public ShogiBoardViewModel(IMessage message)
+        private IMessenger Messenger;
+        public ShogiBoardViewModel(GameService gameService, IMessenger messenger)
         {
-            Message = message;
-            game = new GameFactory().Create(GameType.AnimalShogi);
-            //game = new GameFactory().Create(GameType.FiveFiveShogi);
+            Messenger = messenger;
+            this.gameService = gameService;
+            this.gameService.Start(new Human(), new Human(), GameType.FiveFiveShogi, null);
+
             OperationMode = OperationMode.SelectMoveSource;
 
             MoveCommand = new DelegateCommand<object>(
@@ -74,10 +77,11 @@ namespace MiniShogiApp.Presentation.ViewModel
                             }
                             else
                             {
-                                var doTransform = Message.MessageYesNo("成りますか?");
+                                var doTransform = Messenger.MessageYesNo("成りますか?");
                                 move = cell.MoveCommands.FirstOrDefault(x => x.DoTransform == doTransform);
                             }
-                            game.Play(move);
+                            //game.Play(move);
+                            this.gameService.Play(move);
                         }
 
                         // [動けない位置の場合はキャンセルしすべて更新]
@@ -101,13 +105,13 @@ namespace MiniShogiApp.Presentation.ViewModel
                             if (cell.Koma == null)
                                 return false;
 
-                            return game.State.TurnPlayer == cell.Koma.Player.ToDomain();
+                            return this.gameService.GetGame().State.TurnPlayer == cell.Koma.Player.ToDomain();
                         }
 
                         var hand = param as HandKomaViewModel;
                         if(hand != null)
                         {
-                            return game.State.TurnPlayer == hand.Player.ToDomain();
+                            return this.gameService.GetGame().State.TurnPlayer == hand.Player.ToDomain();
                         }
                     }
                     else if (OperationMode == OperationMode.SelectMoveDestination)
@@ -130,15 +134,15 @@ namespace MiniShogiApp.Presentation.ViewModel
             FirstPlayerHands.Hands.Clear();
             SecondPlayerHands.Hands.Clear();
 
-            for (int y = 0; y < game.Board.Height; y++)
+            for (int y = 0; y < this.gameService.GetGame().Board.Height; y++)
             {
                 var row = new ObservableCollection<CellViewModel>();
-                for (int x = 0; x < game.Board.Width; x++)
+                for (int x = 0; x < this.gameService.GetGame().Board.Width; x++)
                     row.Add(new CellViewModel() { Koma = null, Position = new BoardPosition(x, y), MoveCommands = null});
                 Board.Add(row);
             }
 
-            foreach (var koma in game.State.KomaList)
+            foreach (var koma in this.gameService.GetGame().State.KomaList)
             {
                 if (koma.BoardPosition != null)
                 {
@@ -159,14 +163,14 @@ namespace MiniShogiApp.Presentation.ViewModel
                 }
             }
             
-            FirstPlayerHands.IsCurrentTurn = game.State.TurnPlayer == Shogi.Business.Domain.Model.Players.Player.FirstPlayer;
-            SecondPlayerHands.IsCurrentTurn = game.State.TurnPlayer == Shogi.Business.Domain.Model.Players.Player.SecondPlayer;
+            FirstPlayerHands.IsCurrentTurn = this.gameService.GetGame().State.TurnPlayer == Shogi.Business.Domain.Model.Players.Player.FirstPlayer;
+            SecondPlayerHands.IsCurrentTurn = this.gameService.GetGame().State.TurnPlayer == Shogi.Business.Domain.Model.Players.Player.SecondPlayer;
 
 
-            if(game.IsEnd)
+            if(this.gameService.GetGame().IsEnd)
             {
                 OperationMode = OperationMode.GameEnd;
-                Message.Message("勝者: " + game.GameResult.Winner.ToString());
+                Messenger.Message("勝者: " + this.gameService.GetGame().GameResult.Winner.ToString());
             }
 
             MoveCommand.RaiseCanExecuteChanged();
@@ -177,9 +181,9 @@ namespace MiniShogiApp.Presentation.ViewModel
             if (OperationMode != OperationMode.SelectMoveDestination)
                 return;
 
-            Koma koma = selectedMoveSource.GetKoma(game);
+            Koma koma = selectedMoveSource.GetKoma(this.gameService.GetGame());
 
-            var moves = game.CreateAvailableMoveCommand(koma);
+            var moves = this.gameService.GetGame().CreateAvailableMoveCommand(koma);
             foreach(var row in Board)
             {
                 foreach(var cell in row)

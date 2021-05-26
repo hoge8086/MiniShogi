@@ -59,14 +59,14 @@ namespace Shogi.Business.Application
         public void Play(MoveCommand moveCommand)
         {
             GameSet.Game.Play(moveCommand);
-            GameListener.OnPlayed();
+            GameListener?.OnPlayed();
             Next();
         }
         public void Next()
         {
             if(GameSet.Game.IsEnd)
             {
-                GameListener.OnGameEnd();
+                GameListener?.OnGameEnd();
                 return;
             }
 
@@ -80,7 +80,7 @@ namespace Shogi.Business.Application
                 // [AI]
                 var ai = GameSet.Users[GameSet.Game.State.TurnPlayer] as AI;
                 ai.Play(GameSet.Game);
-                GameListener.OnPlayed();
+                GameListener?.OnPlayed();
             }
 
             Next();
