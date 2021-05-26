@@ -14,4 +14,12 @@ namespace Shogi.Business.Domain.Model.AI
             game.Play(move);
         }
     }
+    public class RandomAI : AI
+    {
+        public override MoveCommand SelectMove(List<MoveCommand> moveCommands)
+        {
+            return moveCommands[new System.Random().Next(0, moveCommands.Count)];
+        }
+
+    }
 }

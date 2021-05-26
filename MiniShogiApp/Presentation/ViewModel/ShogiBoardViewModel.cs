@@ -12,6 +12,7 @@ using Shogi.Business.Domain.Model.Komas;
 using Prism.Mvvm;
 using Shogi.Business.Application;
 using Shogi.Business.Domain.Model.Users;
+using Shogi.Business.Domain.Model.AI;
 
 namespace MiniShogiApp.Presentation.ViewModel
 {
@@ -129,7 +130,8 @@ namespace MiniShogiApp.Presentation.ViewModel
             ForegroundPlayer = Player.FirstPlayer;
 
 
-            this.gameService.Start(new Human(), new Human(), GameType.FiveFiveShogi, this);
+            //this.gameService.Start(new Human(), new RandomAI(), GameType.FiveFiveShogi, this);
+            this.gameService.Start(new RandomAI(), new Human(), GameType.FiveFiveShogi, this);
             //Update();
         }
 
