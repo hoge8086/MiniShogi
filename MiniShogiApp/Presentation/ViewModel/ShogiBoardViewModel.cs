@@ -158,18 +158,9 @@ namespace MiniShogiApp.Presentation.ViewModel
                         SecondPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.SecondPlayer });
                 }
             }
-
-            // [★このコードはゴミすぎるので直す]
-            if (game.State.TurnPlayer == Shogi.Bussiness.Domain.Model.Players.Player.FirstPlayer)
-            {
-                FirstPlayerHands.IsCurrentTurn = true;
-                SecondPlayerHands.IsCurrentTurn = false;
-            }
-            else
-            {
-                FirstPlayerHands.IsCurrentTurn = false;
-                SecondPlayerHands.IsCurrentTurn = true;
-            }
+            
+            FirstPlayerHands.IsCurrentTurn = game.State.TurnPlayer == Shogi.Bussiness.Domain.Model.Players.Player.FirstPlayer;
+            SecondPlayerHands.IsCurrentTurn = game.State.TurnPlayer == Shogi.Bussiness.Domain.Model.Players.Player.SecondPlayer;
 
 
             if(game.IsEnd)
@@ -186,15 +177,7 @@ namespace MiniShogiApp.Presentation.ViewModel
             if (OperationMode != OperationMode.SelectMoveDestination)
                 return;
 
-            var selectedCell = selectedMoveSource as CellViewModel;
-            var selectedHand = selectedMoveSource as HandKomaViewModel;
-
-            // [★少し気持ち悪い、任意の駒(盤上/手持ち)を示すためのオブジェクトを用意したほうが良い?]
-            Koma koma = null;
-            if(selectedCell != null)
-                koma = game.State.FindBoardKoma(selectedCell.Position);
-            if(selectedHand != null)
-                koma = game.State.FindHandKoma(selectedHand.Player.ToDomain(), selectedHand.KomaType);
+            Koma koma = selectedMoveSource.GetKoma(game);
 
             var moves = game.CreateAvailableMoveCommand(koma);
             foreach(var row in Board)

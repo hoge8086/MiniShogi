@@ -1,4 +1,5 @@
 ﻿using Prism.Mvvm;
+using Shogi.Bussiness.Domain.Model.Games;
 using Shogi.Bussiness.Domain.Model.Komas;
 
 namespace MiniShogiApp.Presentation.ViewModel
@@ -14,6 +15,10 @@ namespace MiniShogiApp.Presentation.ViewModel
         {
             get { return _isSelected; }
             set { SetProperty(ref _isSelected, value); }
+        }
+        public Koma GetKoma(Game game)
+        {
+            return game.State.FindHandKoma(Player.ToDomain(), KomaType);
         }
     }
 }

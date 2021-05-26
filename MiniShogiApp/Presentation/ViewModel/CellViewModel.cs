@@ -1,6 +1,7 @@
 ﻿using Prism.Mvvm;
 using Shogi.Bussiness.Domain.Model.Boards;
 using Shogi.Bussiness.Domain.Model.Games;
+using Shogi.Bussiness.Domain.Model.Komas;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +12,7 @@ namespace MiniShogiApp.Presentation.ViewModel
     public interface ISelectable
     {
         bool IsSelected { get; set; }
+        Koma GetKoma(Game game);
 
     }
     public enum Player
@@ -59,6 +61,11 @@ namespace MiniShogiApp.Presentation.ViewModel
         {
             get { return _isSelected; }
             set { SetProperty(ref _isSelected, value); }
+        }
+
+        public Koma GetKoma(Game game)
+        {
+            return game.State.FindBoardKoma(Position);
         }
     }
 }
