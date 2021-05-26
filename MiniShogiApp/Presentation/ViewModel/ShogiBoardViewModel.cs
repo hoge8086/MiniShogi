@@ -24,7 +24,7 @@ namespace MiniShogiApp.Presentation.ViewModel
         GameEnd,
     };
 
-    public class ShogiBoardViewModel : BindableBase
+    public class ShogiBoardViewModel : BindableBase, GameListener
     {
         public DelegateCommand<object> MoveCommand { get; set; }
         public ObservableCollection<ObservableCollection<CellViewModel>> Board { get; set; } = new ObservableCollection<ObservableCollection<CellViewModel>>();
@@ -46,7 +46,6 @@ namespace MiniShogiApp.Presentation.ViewModel
         {
             Messenger = messenger;
             this.gameService = gameService;
-            this.gameService.Start(new Human(), new Human(), GameType.FiveFiveShogi, null);
 
             OperationMode = OperationMode.SelectMoveSource;
 
@@ -66,6 +65,8 @@ namespace MiniShogiApp.Presentation.ViewModel
                     }
                     else if(OperationMode == OperationMode.SelectMoveDestination)
                     {
+                        OperationMode = OperationMode.SelectMoveSource;
+
                         var cell = param as CellViewModel;
 
                         if(cell != null && cell.CanMove)
@@ -83,10 +84,11 @@ namespace MiniShogiApp.Presentation.ViewModel
                             //game.Play(move);
                             this.gameService.Play(move);
                         }
-
-                        // [動けない位置の場合はキャンセルしすべて更新]
-                        OperationMode = OperationMode.SelectMoveSource;
-                        Update();
+                        else
+                        {
+                            // [動けない位置の場合はキャンセルしすべて更新]
+                            Update();
+                        }
                     }
                 },
                 (param) =>
@@ -125,7 +127,10 @@ namespace MiniShogiApp.Presentation.ViewModel
             FirstPlayerHands = new PlayerViewModel() { Player = Player.FirstPlayer };
             SecondPlayerHands = new PlayerViewModel() { Player = Player.SecondPlayer };
             ForegroundPlayer = Player.FirstPlayer;
-            Update();
+
+
+            this.gameService.Start(new Human(), new Human(), GameType.FiveFiveShogi, this);
+            //Update();
         }
 
         public void Update()
@@ -167,11 +172,11 @@ namespace MiniShogiApp.Presentation.ViewModel
             SecondPlayerHands.IsCurrentTurn = this.gameService.GetGame().State.TurnPlayer == Shogi.Business.Domain.Model.Players.Player.SecondPlayer;
 
 
-            if(this.gameService.GetGame().IsEnd)
-            {
-                OperationMode = OperationMode.GameEnd;
-                Messenger.Message("勝者: " + this.gameService.GetGame().GameResult.Winner.ToString());
-            }
+            //if(this.gameService.GetGame().IsEnd)
+            //{
+            //    OperationMode = OperationMode.GameEnd;
+            //    Messenger.Message("勝者: " + this.gameService.GetGame().GameResult.Winner.ToString());
+            //}
 
             MoveCommand.RaiseCanExecuteChanged();
         }
@@ -196,5 +201,21 @@ namespace MiniShogiApp.Presentation.ViewModel
 
             MoveCommand.RaiseCanExecuteChanged();
         }
+        public void OnStarted()
+        {
+            Update();
+        }
+        public void OnPlayed()
+        {
+            Update();
+        }
+
+        public void OnEnded()
+        {
+            OperationMode = OperationMode.GameEnd;
+            Messenger.Message("勝者: " + this.gameService.GetGame().GameResult.Winner.ToString());
+            MoveCommand.RaiseCanExecuteChanged();
+        }
+
     }
 }

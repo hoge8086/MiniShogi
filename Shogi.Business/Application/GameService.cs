@@ -31,8 +31,9 @@ namespace Shogi.Business.Application
     }
     public interface GameListener
     {
+        void OnStarted();
         void OnPlayed();
-        void OnGameEnd();
+        void OnEnded();
     }
 
     public class GameService
@@ -43,6 +44,7 @@ namespace Shogi.Business.Application
         {
             GameSet = new GameSet(firstPlayer, secondPlayer, gameType);
             GameListener = gameListener;
+            GameListener?.OnStarted();
             Next();
         }
         public void Restart()
@@ -66,7 +68,7 @@ namespace Shogi.Business.Application
         {
             if(GameSet.Game.IsEnd)
             {
-                GameListener?.OnGameEnd();
+                GameListener?.OnEnded();
                 return;
             }
 
