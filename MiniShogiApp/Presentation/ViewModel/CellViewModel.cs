@@ -1,5 +1,6 @@
 ﻿using Prism.Mvvm;
 using Shogi.Bussiness.Domain.Model.Boards;
+using Shogi.Bussiness.Domain.Model.Games;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -44,12 +45,14 @@ namespace MiniShogiApp.Presentation.ViewModel
         public KomaViewModel Koma { get; set; }
         public string KomaName => Koma == null ? "" : Koma.Name;
 
-        private bool _canMove = false;
-        public bool CanMove
+
+        private List<MoveCommand> moveCommands = null;
+        public List<MoveCommand> MoveCommands
         {
-            get { return _canMove; }
-            set { SetProperty(ref _canMove, value); }
+            get { return moveCommands; }
+            set { moveCommands = value; RaisePropertyChanged(nameof(CanMove)); }
         }
+        public bool CanMove => MoveCommands != null;
 
         private bool _isSelected = false;
         public bool IsSelected

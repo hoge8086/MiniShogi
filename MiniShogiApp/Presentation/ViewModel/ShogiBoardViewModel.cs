@@ -37,9 +37,6 @@ namespace MiniShogiApp.Presentation.ViewModel
         public PlayerViewModel SecondPlayerHands { get; set; }
         public OperationMode OperationMode { get; private set; }
 
-        // [★後で直す]
-        private ISelectable selectedMoveSource;
-
         private Game game;
 
         private IMessage Message;
@@ -58,11 +55,11 @@ namespace MiniShogiApp.Presentation.ViewModel
 
                     if (OperationMode == OperationMode.SelectMoveSource)
                     {
-                        selectedMoveSource = param as ISelectable;
+                        var selectedMoveSource = param as ISelectable;
                         selectedMoveSource.IsSelected = true;
                         OperationMode = OperationMode.SelectMoveDestination;
 
-                        UpdateCanMove();
+                        UpdateCanMove(selectedMoveSource);
                     }
                     else if(OperationMode == OperationMode.SelectMoveDestination)
                     {
@@ -71,41 +68,20 @@ namespace MiniShogiApp.Presentation.ViewModel
                         if(cell != null && cell.CanMove)
                         {
                             MoveCommand move = null;
-
-                            if(selectedMoveSource is CellViewModel)
+                            if(cell.MoveCommands.Count() == 1)
                             {
-
-                                var cellFrom = selectedMoveSource as CellViewModel;
-
-                                // [★成り判定(無理やりな実装なので見直す)]
-                                bool doTransform = false;
-                                var koma = game.State.FindBoardKoma(cellFrom.Position);
-                                var moves = game.CreateAvailableMoveCommand(koma);
-                                var targetMoves = moves.Where(x => x is BoardKomaMoveCommand && x.ToPosition == cell.Position && cellFrom.Position == ((BoardKomaMoveCommand)x).FromPosition).ToList();
-                                if(targetMoves.Count() == 1)
-                                {
-                                    doTransform = targetMoves[0].DoTransform;
-                                }
-                                else
-                                {
-                                    doTransform = Message.MessageYesNo("成りますか?");
-                                }
-
-                                move = new BoardKomaMoveCommand(cellFrom.Koma.Player.ToDomain(), cell.Position, cellFrom.Position, doTransform);
+                                move = cell.MoveCommands[0];
                             }
-                            else if(selectedMoveSource is HandKomaViewModel)
+                            else
                             {
-                                var hand = selectedMoveSource as HandKomaViewModel;
-                                move = new HandKomaMoveCommand(hand.Player.ToDomain(), cell.Position, hand.KomaType);
-
+                                var doTransform = Message.MessageYesNo("成りますか?");
+                                move = cell.MoveCommands.FirstOrDefault(x => x.DoTransform == doTransform);
                             }
-
                             game.Play(move);
                         }
 
-                        // [動けない位置の場合はキャンセルしすべて更新
+                        // [動けない位置の場合はキャンセルしすべて更新]
                         OperationMode = OperationMode.SelectMoveSource;
-                        selectedMoveSource = null;
                         Update();
                     }
                 },
@@ -158,7 +134,7 @@ namespace MiniShogiApp.Presentation.ViewModel
             {
                 var row = new ObservableCollection<CellViewModel>();
                 for (int x = 0; x < game.Board.Width; x++)
-                    row.Add(new CellViewModel() { Koma = null, Position = new BoardPosition(x, y), CanMove = false });
+                    row.Add(new CellViewModel() { Koma = null, Position = new BoardPosition(x, y), MoveCommands = null});
                 Board.Add(row);
             }
 
@@ -204,7 +180,7 @@ namespace MiniShogiApp.Presentation.ViewModel
 
             MoveCommand.RaiseCanExecuteChanged();
         }
-        public void UpdateCanMove()
+        public void UpdateCanMove(ISelectable selectedMoveSource)
         {
             // [MEMO:ここでUpdate()(つまり、Board.Clear())してしまうと、持ち駒で同じ種類がある場合にどれをハイライトすべきか判別できなくなる]
             if (OperationMode != OperationMode.SelectMoveDestination)
@@ -225,7 +201,9 @@ namespace MiniShogiApp.Presentation.ViewModel
             {
                 foreach(var cell in row)
                 {
-                    cell.CanMove = moves.Any(x => x.ToPosition == cell.Position);
+                    var cellMoves = moves.Where(x => x.ToPosition == cell.Position).ToList();
+                    if(cellMoves.Count() > 0)
+                        cell.MoveCommands = cellMoves;
                 }
             }
 
