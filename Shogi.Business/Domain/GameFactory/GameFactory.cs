@@ -223,14 +223,14 @@ namespace Shogi.Business.Domain.GameFactory
                     new Board(4, 3),
                     new GameState(new List<Koma>()
                         {
-                            new Koma(new BoardPosition(0,0), Player.SecondPlayer, KomaKirin),
-                            new Koma(new BoardPosition(1,0), Player.SecondPlayer, KomaRaion),
-                            new Koma(new BoardPosition(2,0), Player.SecondPlayer, KomaZou),
-                            new Koma(new BoardPosition(1,1), Player.SecondPlayer, KomaHiyoko),
-                            new Koma(new BoardPosition(2,3), Player.FirstPlayer, KomaKirin),
-                            new Koma(new BoardPosition(1,3), Player.FirstPlayer, KomaRaion),
-                            new Koma(new BoardPosition(0,3), Player.FirstPlayer, KomaZou),
-                            new Koma(new BoardPosition(1,2), Player.FirstPlayer, KomaHiyoko),
+                            new Koma(Player.SecondPlayer, KomaKirin, new OnBoard(new BoardPosition(0,0))),
+                            new Koma(Player.SecondPlayer, KomaRaion, new OnBoard(new BoardPosition(1,0))),
+                            new Koma(Player.SecondPlayer, KomaZou, new OnBoard(new BoardPosition(2,0))),
+                            new Koma(Player.SecondPlayer, KomaHiyoko, new OnBoard(new BoardPosition(1,1))),
+                            new Koma(Player.FirstPlayer, KomaKirin, new OnBoard(new BoardPosition(2,3))),
+                            new Koma(Player.FirstPlayer, KomaRaion, new OnBoard(new BoardPosition(1,3))),
+                            new Koma(Player.FirstPlayer, KomaZou, new OnBoard(new BoardPosition(0,3))),
+                            new Koma(Player.FirstPlayer, KomaHiyoko, new OnBoard(new BoardPosition(1,2))),
 
                         },
                         Player.FirstPlayer
@@ -245,18 +245,18 @@ namespace Shogi.Business.Domain.GameFactory
                     new Board(5, 5),
                     new GameState( new List<Koma>()
                     {
-                        new Koma(new BoardPosition(0,0), Player.SecondPlayer, KomaHisya),
-                        new Koma(new BoardPosition(1,0), Player.SecondPlayer, KomaKaku),
-                        new Koma(new BoardPosition(2,0), Player.SecondPlayer, KomaGin),
-                        new Koma(new BoardPosition(3,0), Player.SecondPlayer, KomaKin),
-                        new Koma(new BoardPosition(4,0), Player.SecondPlayer, KomaOu),
-                        new Koma(new BoardPosition(4,1), Player.SecondPlayer, KomaHu),
-                        new Koma(new BoardPosition(4,4), Player.FirstPlayer, KomaHisya),
-                        new Koma(new BoardPosition(3,4), Player.FirstPlayer, KomaKaku),
-                        new Koma(new BoardPosition(2,4), Player.FirstPlayer, KomaGin),
-                        new Koma(new BoardPosition(1,4), Player.FirstPlayer, KomaKin),
-                        new Koma(new BoardPosition(0,4), Player.FirstPlayer, KomaOu),
-                        new Koma(new BoardPosition(0,3), Player.FirstPlayer, KomaHu),
+                        new Koma(Player.SecondPlayer, KomaHisya, new OnBoard(new BoardPosition(0,0))),
+                        new Koma(Player.SecondPlayer, KomaKaku, new OnBoard(new BoardPosition(1,0))),
+                        new Koma(Player.SecondPlayer, KomaGin, new OnBoard(new BoardPosition(2,0))),
+                        new Koma(Player.SecondPlayer, KomaKin, new OnBoard(new BoardPosition(3,0))),
+                        new Koma(Player.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(4,0))),
+                        new Koma(Player.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(4,1))),
+                        new Koma(Player.FirstPlayer, KomaHisya, new OnBoard(new BoardPosition(4,4))),
+                        new Koma(Player.FirstPlayer, KomaKaku, new OnBoard(new BoardPosition(3,4))),
+                        new Koma(Player.FirstPlayer, KomaGin, new OnBoard(new BoardPosition(2,4))),
+                        new Koma(Player.FirstPlayer, KomaKin, new OnBoard(new BoardPosition(1,4))),
+                        new Koma(Player.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,4))),
+                        new Koma(Player.FirstPlayer, KomaHu, new OnBoard(new BoardPosition(0,3))),
 
                     },
                     Player.FirstPlayer
@@ -273,8 +273,8 @@ namespace Shogi.Business.Domain.GameFactory
                                                         x.Player == moveCommand.Player &&
                                                         x.KomaType == KomaHu &&
                                                         !x.IsTransformed &&
-                                                        (x.Position is BoardPosition) &&
-                                                        ((BoardPosition)x.Position).X == moveCommand.ToPosition.X);
+                                                        x.IsOnBoard &&
+                                                        x.BoardPosition.X == moveCommand.ToPosition.X);
                             },
                             // [打ち歩詰め]
                             (moveCommand, game) =>
@@ -289,7 +289,7 @@ namespace Shogi.Business.Domain.GameFactory
                             {
                                 var fromKoma = moveCommand.FindFromKoma(game.State);
                                 // [その駒以外に他の駒が一つもないボードで動けるところが何もない場合は、行き場のない駒]
-                                return new Koma(moveCommand.ToPosition, moveCommand.Player, moveCommand.FindFromKoma(game.State).KomaType, (moveCommand.DoTransform || fromKoma.IsTransformed))
+                                return new Koma( moveCommand.Player, moveCommand.FindFromKoma(game.State).KomaType, new OnBoard(moveCommand.ToPosition,(moveCommand.DoTransform || fromKoma.IsTransformed)))
                                             .GetMovableBoardPositions(game.Board, new BoardPositions(), new BoardPositions())
                                             .Positions.Count == 0;
                             },

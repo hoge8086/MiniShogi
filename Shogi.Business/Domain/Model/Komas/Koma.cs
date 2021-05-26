@@ -6,76 +6,71 @@ using Shogi.Bussiness.Domain.Model.Players;
 
 namespace Shogi.Bussiness.Domain.Model.Komas
 {
+
     public class Koma
     {
-        public IPosition Position { get; private set; }
         public Player Player { get;  private set;}
         public KomaType KomaType { get;  private set;}
 
-        // [TODO:手持ちの駒は成りの概念がないので、ちょっと違和感あり]
-        public bool IsTransformed { get;  private set;}
+        public IKomaState State { get; private set; }
 
-        public Koma(IPosition position, Player player, KomaType komaType)
+
+        public Koma(Player player, KomaType komaType, IKomaState state)
         {
-            Position = position;
             Player = player;
             KomaType = komaType;
-            IsTransformed = false;
-        }
-        public Koma(IPosition position, Player player, KomaType komaType, bool isTransformed)
-        {
-            Position = position;
-            Player = player;
-            KomaType = komaType;
-            IsTransformed = isTransformed;
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0}:player={1},position={2},IsTransformed={3}", KomaType.ToString(), Player.ToString(), Position.ToString(), IsTransformed);
+            State = state;
         }
 
         public void Move(BoardPosition toPosition, bool doTransform)
         {
-
-            var oldPosition = Position;
-            Position = toPosition;
             if(doTransform)
             {
-                if(oldPosition == HandPosition.Hand)
-                    throw new InvalidOperationException("打ち駒は成ることができません.");
+                if(State is InHand)
+                    throw new InvalidProgramException("打ち駒は成ることができません.");
                 if(!KomaType.CanBeTransformed)
-                    throw new InvalidOperationException("この駒は成ることができません.");
-                if(IsTransformed)
-                    throw new InvalidOperationException("すでに成っているので成れません.");
-
-                IsTransformed = true;
+                    throw new InvalidProgramException("この駒は成ることができません.");
+                if((State is OnBoard) && ((OnBoard)State).IsTransformed)
+                    throw new InvalidProgramException("すでに成っているので成れません.");
             }
+
+            State = new OnBoard(toPosition, doTransform);
+
         }
         public void Taken()
         {
-            Position = HandPosition.Hand;
+            if(State is InHand)
+                throw new InvalidProgramException("持ち駒を取ることはできません.");
+
             Player = Player.Opponent;
-            IsTransformed = false;
+            State = InHand.State;
         }
 
         public BoardPositions GetMovableBoardPositions(
             Board board,
-            BoardPositions turnPlayerKomaPositions,
-            BoardPositions iopponentKomaPositions)
+            BoardPositions playerKomaPositions,
+            BoardPositions opponentPlayerKomaPositions)
         {
-            return KomaType.GetMovableBoardPositions(
+            return State.GetMovableBoardPositions(
+                                        KomaType,
                                         Player,
-                                        Position,
-                                        IsTransformed,
                                         board,
-                                        turnPlayerKomaPositions,
-                                        iopponentKomaPositions);
+                                        playerKomaPositions,
+                                        opponentPlayerKomaPositions);
         }
+        public BoardPosition BoardPosition => (State as OnBoard)?.Position;
+        public bool IsOnBoard => State is OnBoard;
+        public bool IsInHand => State is InHand;
 
+        public bool IsTransformed => (State is OnBoard) && ((OnBoard)State).IsTransformed;
         public Koma Clone()
         {
-            return new Koma(Position, Player, KomaType, IsTransformed);
+            return new Koma(Player, KomaType, State);
         }
+        public override string ToString()
+        {
+            return string.Format("{0}:player={1},state={2},IsTransformed={3}", KomaType.ToString(), Player.ToString(), State.ToString());
+        }
+
     }
 }

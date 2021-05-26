@@ -19,28 +19,28 @@ namespace Shogi.Bussiness.Domain.Model.Games
             TurnPlayer = turnPlayer;
         }
 
-        public Koma FindKing(Player player)
+        public Koma FindKingOnBoard(Player player)
         {
             // [MEMO:プレイヤーの王は盤上に1つのみあることを前提]
-            return KomaList.FirstOrDefault(x => x.Player == player && x.KomaType.IsKing && x.Position is BoardPosition);
+            return KomaList.FirstOrDefault(x => x.Player == player && x.KomaType.IsKing && x.IsOnBoard);
         }
         public Koma FindBoardKoma(BoardPosition fromPosition)
         {
-            return KomaList.FirstOrDefault(x => x.Position.Equals(fromPosition));
+            return KomaList.FirstOrDefault(x => x.BoardPosition == fromPosition);
         }
         public Koma FindHandKoma(Player player, KomaType komaType)
         {
-            return KomaList.FirstOrDefault(x => x.Player == player && x.Position == HandPosition.Hand && x.KomaType == komaType);
+            return KomaList.FirstOrDefault(x => x.Player == player && x.IsInHand && x.KomaType == komaType);
         }
 
         public BoardPositions BoardPositions(Player player)
         {
-            return new BoardPositions(KomaList.Where(x => x.Player == player && x.Position is BoardPosition).Select(x => (BoardPosition)x.Position).ToList());
+            return new BoardPositions(KomaList.Where(x => x.Player == player && x.IsOnBoard).Select(x => x.BoardPosition).ToList());
         }
 
         public List<Koma> GetBoardKomaList(Player player)
         {
-            return KomaList.Where(x => x.Player == player && x.Position is BoardPosition).ToList();
+            return KomaList.Where(x => x.Player == player && x.IsOnBoard).ToList();
         }
 
         public void FowardTurnPlayer()
@@ -49,7 +49,7 @@ namespace Shogi.Bussiness.Domain.Model.Games
         }
         public bool ExistKing(Player player)
         {
-            return FindKing(player) != null;
+            return FindKingOnBoard(player) != null;
         }
 
         public bool IsTurnPlayer(Player player)

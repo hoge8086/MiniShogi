@@ -15,36 +15,23 @@ namespace Shogi.Bussiness.Domain.Model.Moves
 
         public BoardPositions GetMovableBoardPositions(
             Player player,
-            IPosition position,
+            BoardPosition position,
             Board board,
             BoardPositions turnPlayerKomaPositions,
             BoardPositions opponentKomaPositions)
         {
-
-            if (position is HandPosition)
+            BoardPositions positions = new BoardPositions();
+            foreach(var move in Moves)
             {
-                // [手駒なら空き位置のどこでも置ける]
-                var positions = board.Positions;
-                positions = positions.Substract(turnPlayerKomaPositions);
-                positions = positions.Substract(opponentKomaPositions);
-                return positions;
+                positions = positions.Add(
+                    move.GetMovableBoardPositions(
+                                        player,
+                                        position as BoardPosition,
+                                        board,
+                                        turnPlayerKomaPositions,
+                                        opponentKomaPositions));
             }
-            else
-            {
-                BoardPositions positions = new BoardPositions();
-                foreach(var move in Moves)
-                {
-                    positions = positions.Add(
-                        move.GetMovableBoardPositions(
-                                            player,
-                                            position as BoardPosition,
-                                            board,
-                                            turnPlayerKomaPositions,
-                                            opponentKomaPositions));
-                }
-                return positions;
-
-            }
+            return positions;
         }
     }
 }

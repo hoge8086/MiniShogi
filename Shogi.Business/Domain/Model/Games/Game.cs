@@ -123,19 +123,19 @@ namespace Shogi.Bussiness.Domain.Model.Games
             var positions = MovablePosition(koma);
             foreach (var toPos in positions.Positions)
             {
-                if (koma.Position is BoardPosition)
+                if (koma.IsOnBoard)
                 {
-                    moveCommandList.Add(new BoardKomaMoveCommand(koma.Player, toPos, (BoardPosition)koma.Position, false));
+                    moveCommandList.Add(new BoardKomaMoveCommand(koma.Player, toPos, koma.BoardPosition, false));
                     if (!koma.IsTransformed &&
                         koma.KomaType.CanBeTransformed &&
                         (Rule.IsPlayerTerritory(koma.Player.Opponent, toPos, Board) ||
-                         Rule.IsPlayerTerritory(koma.Player.Opponent, (BoardPosition)koma.Position, Board)))
+                         Rule.IsPlayerTerritory(koma.Player.Opponent, koma.BoardPosition, Board)))
                     {
-                        moveCommandList.Add(new BoardKomaMoveCommand(koma.Player, toPos, (BoardPosition)koma.Position, true));
+                        moveCommandList.Add(new BoardKomaMoveCommand(koma.Player, toPos, koma.BoardPosition, true));
                     }
 
                 }
-                else if (koma.Position is HandPosition)
+                else if (koma.IsInHand)
                 {
                     moveCommandList.Add(new HandKomaMoveCommand(koma.Player, toPos, koma.KomaType));
                 }
@@ -180,7 +180,7 @@ namespace Shogi.Bussiness.Domain.Model.Games
             foreach(var koma in komaList)
             {
                 // [持ち駒の場合で、同じ駒が複数ある場合は、2回目以降はスキップする]
-                if (koma.Position is HandPosition)
+                if (koma.IsInHand)
                     if (finishedHandKomaList.Contains(koma.KomaType))
                         continue;
 
@@ -230,12 +230,12 @@ namespace Shogi.Bussiness.Domain.Model.Games
                 throw new InvalidProgramException("すでに決着済みです.");
 
             var movablePositions = MovablePosition(State.GetBoardKomaList(player));
-            var kingPosition = State.FindKing(player.Opponent).Position as BoardPosition;
+            var kingPosition = State.FindKingOnBoard(player.Opponent).BoardPosition;
             return movablePositions.Contains(kingPosition);
         }
         public bool KingEnterOpponentTerritory(Player player)
         {
-            return Rule.IsPlayerTerritory(player.Opponent, (BoardPosition)State.FindKing(player).Position, Board);
+            return Rule.IsPlayerTerritory(player.Opponent, (BoardPosition)State.FindKingOnBoard(player).BoardPosition, Board);
         }
         public override string ToString()
         {
@@ -270,7 +270,7 @@ namespace Shogi.Bussiness.Domain.Model.Games
 
             string HandToString(Player player)
             {
-                return player.ToString() + ":" + string.Join(',', State.KomaList.Where(x => x.Position is HandPosition && x.Player == player).Select(x => x.KomaType.Id));
+                return player.ToString() + ":" + string.Join(',', State.KomaList.Where(x => x.IsInHand && x.Player == player).Select(x => x.KomaType.Id));
             }
         }
     }

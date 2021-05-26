@@ -6,7 +6,7 @@ namespace Shogi.Bussiness.Domain.Model.Boards
     /// <summary>
     /// 先手から見たボート位置
     /// </summary>
-    public class BoardPosition : IPosition
+    public class BoardPosition
     {
         /// <summary>
         /// 左から0始まり(将棋の筋とは数え方が異なる)
@@ -55,7 +55,7 @@ namespace Shogi.Bussiness.Domain.Model.Boards
         }
     }
 
-    public class RelativeBoardPosition : IPosition
+    public class RelativeBoardPosition
     {
         public int dX;
         public int dY;

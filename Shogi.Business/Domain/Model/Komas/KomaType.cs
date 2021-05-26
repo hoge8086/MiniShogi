@@ -28,7 +28,7 @@ namespace Shogi.Bussiness.Domain.Model.Komas
         }
         public BoardPositions GetMovableBoardPositions(
             Player player,
-            IPosition position,
+            BoardPosition position,
             bool isTransformed,
             Board board,
             BoardPositions turnPlayerKomaPositions,

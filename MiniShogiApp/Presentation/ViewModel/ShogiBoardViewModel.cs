@@ -46,8 +46,8 @@ namespace MiniShogiApp.Presentation.ViewModel
         public ShogiBoardViewModel(IMessage message)
         {
             Message = message;
-            game = new GameFactory().Create(GameType.AnimalShogi);
-            //game = new GameFactory().Create(GameType.FiveFiveShogi);
+            //game = new GameFactory().Create(GameType.AnimalShogi);
+            game = new GameFactory().Create(GameType.FiveFiveShogi);
             OperationMode = OperationMode.SelectMoveSource;
 
             MoveCommand = new DelegateCommand<object>(
@@ -164,11 +164,9 @@ namespace MiniShogiApp.Presentation.ViewModel
 
             foreach (var koma in game.State.KomaList)
             {
-                var boardPos = koma.Position as BoardPosition;
-
-                if (boardPos != null)
+                if (koma.BoardPosition != null)
                 {
-                    var cell = Board[boardPos.Y][boardPos.X];
+                    var cell = Board[koma.BoardPosition.Y][koma.BoardPosition.X];
                     cell.Koma = new KomaViewModel()
                     {
                         IsTransformed = koma.IsTransformed,
@@ -176,10 +174,7 @@ namespace MiniShogiApp.Presentation.ViewModel
                         Player = koma.Player == Shogi.Bussiness.Domain.Model.Players.Player.FirstPlayer ? Player.FirstPlayer : Player.SecondPlayer,
                     };
                 }
-
-                var handPos = koma.Position as HandPosition;
-
-                if (handPos != null)
+                else
                 {
                     if (koma.Player == Shogi.Bussiness.Domain.Model.Players.Player.FirstPlayer)
                         FirstPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.FirstPlayer});
