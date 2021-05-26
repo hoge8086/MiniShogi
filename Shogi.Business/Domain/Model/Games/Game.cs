@@ -103,22 +103,33 @@ namespace Shogi.Bussiness.Domain.Model.Games
 
         public List<MoveCommand> CreateAvailableMoveCommand(Player player)
         {
-            return CreateAvailableMoveCommand(State.KomaList.Where(x => x.Player == player).ToList());
+            return CreateAvailableMoveCommand(State.GetKomaListDistinct(player));
+        }
+        public BoardPositions MovablePosition(List<Koma> komaList)
+        {
+            var movablePositions = new BoardPositions();
+            foreach(var koma in komaList)
+                movablePositions = movablePositions.Add(MovablePosition(koma));
+            return movablePositions;
         }
         public List<MoveCommand> CreateAvailableMoveCommand(List<Koma> komaList)
         {
             var moveCommandList = new List<MoveCommand>();
-            ForeachKomaWithoutDuplicatedHand(
-                komaList,
-                (koma) =>
-                {
-                    moveCommandList.AddRange(CreateAvailableMoveCommand(koma));
-                });
+            foreach(var koma in komaList)
+                moveCommandList.AddRange(CreateAvailableMoveCommand(koma));
             return moveCommandList;
         }
+
+        public BoardPositions MovablePosition(Koma koma)
+        {
+            return koma.GetMovableBoardPositions(
+                            Board,
+                            State.BoardPositions(koma.Player),
+                            State.BoardPositions(koma.Player.Opponent));
+        }
+
         public List<MoveCommand> CreateAvailableMoveCommand(Koma koma)
         {
-
             var moveCommandList = new List<MoveCommand>();
             var positions = MovablePosition(koma);
             foreach (var toPos in positions.Positions)
@@ -154,41 +165,6 @@ namespace Shogi.Bussiness.Domain.Model.Games
             return result;
         }
 
-        public BoardPositions MovablePosition(Koma koma)
-        {
-            return koma.GetMovableBoardPositions(
-                            Board,
-                            State.BoardPositions(koma.Player),
-                            State.BoardPositions(koma.Player.Opponent));
-        }
-
-        public BoardPositions MovablePosition(List<Koma> komaList)
-        {
-            var movablePositions = new BoardPositions();
-            ForeachKomaWithoutDuplicatedHand(
-                komaList,
-                (koma) =>
-                {
-                    movablePositions = movablePositions.Add(MovablePosition(koma));
-                });
-            return movablePositions;
-        }
-
-        public void ForeachKomaWithoutDuplicatedHand(List<Koma> komaList, Action<Koma> action)
-        {
-            var finishedHandKomaList = new List<KomaType>();
-            foreach(var koma in komaList)
-            {
-                // [持ち駒の場合で、同じ駒が複数ある場合は、2回目以降はスキップする]
-                if (koma.IsInHand)
-                    if (finishedHandKomaList.Contains(koma.KomaType))
-                        continue;
-
-                finishedHandKomaList.Add(koma.KomaType);
-                action(koma);
-            }
-        }
-
         public bool DoCheckmate(Player player)
         {
             if (IsEnd)
@@ -218,6 +194,7 @@ namespace Shogi.Bussiness.Domain.Model.Games
             if (!DoOte(player))
                 return false;
 
+            // [MEMO:盤上の駒に重複はないのでDistinct()する必要はない]
             var moveCommands = CreateAvailableMoveCommand(State.GetBoardKomaList(player.Opponent));
             if (moveCommands.Count == 0)
                 return true;
@@ -229,6 +206,7 @@ namespace Shogi.Bussiness.Domain.Model.Games
             if (IsEnd)
                 throw new InvalidProgramException("すでに決着済みです.");
 
+            // [MEMO:盤上の駒に重複はないのでDistinct()する必要はない]
             var movablePositions = MovablePosition(State.GetBoardKomaList(player));
             var kingPosition = State.FindKingOnBoard(player.Opponent).BoardPosition;
             return movablePositions.Contains(kingPosition);

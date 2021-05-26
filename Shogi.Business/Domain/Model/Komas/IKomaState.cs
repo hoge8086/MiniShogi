@@ -1,5 +1,7 @@
 ﻿using Shogi.Bussiness.Domain.Model.Boards;
 using Shogi.Bussiness.Domain.Model.Players;
+using System;
+using System.Collections.Generic;
 
 namespace Shogi.Bussiness.Domain.Model.Komas
 {
@@ -11,6 +13,7 @@ namespace Shogi.Bussiness.Domain.Model.Komas
             Board board,
             BoardPositions playerKomaPositions,
             BoardPositions opponentPlayerKomaPositions);
+        public IKomaState ToBoard(BoardPosition toPosition, bool doTransform);
 
     }
 
@@ -31,6 +34,17 @@ namespace Shogi.Bussiness.Domain.Model.Komas
             positions = positions.Substract(opponentPlayerKomaPositions);
             return positions;
         }
+
+
+        public IKomaState ToBoard(BoardPosition toPosition, bool doTransform)
+        {
+
+            if(doTransform)
+                throw new InvalidProgramException("打ち駒は成ることができません.");
+
+            return new OnBoard(toPosition);
+        }
+
         public override string ToString()
         {
             return "手駒";
@@ -51,6 +65,13 @@ namespace Shogi.Bussiness.Domain.Model.Komas
             Position = position;
             IsTransformed = isTransformed;
         }
+        public IKomaState ToBoard(BoardPosition toPosition, bool doTransform)
+        {
+            if(doTransform && IsTransformed)
+                throw new InvalidProgramException("すでに成っているので成れません.");
+
+            return new OnBoard(toPosition, IsTransformed || doTransform);
+        }
         public BoardPositions GetMovableBoardPositions(
             KomaType komaType,
             Player player,
@@ -70,6 +91,28 @@ namespace Shogi.Bussiness.Domain.Model.Komas
         public override string ToString()
         {
             return Position.ToString() + (IsTransformed ? "@" : "-");
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is OnBoard board &&
+                   EqualityComparer<BoardPosition>.Default.Equals(Position, board.Position) &&
+                   IsTransformed == board.IsTransformed;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Position, IsTransformed);
+        }
+
+        public static bool operator ==(OnBoard left, OnBoard right)
+        {
+            return EqualityComparer<OnBoard>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(OnBoard left, OnBoard right)
+        {
+            return !(left == right);
         }
     }
 

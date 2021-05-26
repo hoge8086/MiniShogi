@@ -14,7 +14,6 @@ namespace Shogi.Bussiness.Domain.Model.Komas
 
         public IKomaState State { get; private set; }
 
-
         public Koma(Player player, KomaType komaType, IKomaState state)
         {
             Player = player;
@@ -24,22 +23,14 @@ namespace Shogi.Bussiness.Domain.Model.Komas
 
         public void Move(BoardPosition toPosition, bool doTransform)
         {
-            if(doTransform)
-            {
-                if(State is InHand)
-                    throw new InvalidProgramException("打ち駒は成ることができません.");
-                if(!KomaType.CanBeTransformed)
-                    throw new InvalidProgramException("この駒は成ることができません.");
-                if((State is OnBoard) && ((OnBoard)State).IsTransformed)
-                    throw new InvalidProgramException("すでに成っているので成れません.");
-            }
+            if(doTransform && !KomaType.CanBeTransformed)
+                throw new InvalidProgramException("この駒は成ることができません.");
 
-            State = new OnBoard(toPosition, doTransform);
-
+            State = State.ToBoard(toPosition, doTransform);
         }
         public void Taken()
         {
-            if(State is InHand)
+            if(IsInHand)
                 throw new InvalidProgramException("持ち駒を取ることはできません.");
 
             Player = Player.Opponent;
@@ -72,5 +63,36 @@ namespace Shogi.Bussiness.Domain.Model.Komas
             return string.Format("{0}:player={1},state={2},IsTransformed={3}", KomaType.ToString(), Player.ToString(), State.ToString());
         }
 
+        /// <summary>
+        /// 値オブジェクトとしての比較(同自種類の持ち駒は同じ）
+        /// </summary>
+        public class ValueComparer : IEqualityComparer<Koma>
+        {
+            // Products are equal if their names and product numbers are equal.
+            public bool Equals(Koma x, Koma y)
+            {
+
+                //Check whether the compared objects reference the same data.
+                if (Object.ReferenceEquals(x, y)) return true;
+
+                //Check whether any of the compared objects is null.
+                if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null))
+                    return false;
+
+                //Check whether the products' properties are equal.
+                return x.Player == y.Player && x.KomaType == y.KomaType && x.State == y.State;
+            }
+
+            // If Equals() returns true for a pair of objects
+            // then GetHashCode() must return the same value for these objects.
+
+            public int GetHashCode(Koma koma)
+            {
+                //Check whether the object is null
+                if (Object.ReferenceEquals(koma, null)) return 0;
+
+                return HashCode.Combine(koma.KomaType, koma.Player, koma.State);
+            }
+        }
     }
 }

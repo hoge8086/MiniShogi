@@ -38,6 +38,15 @@ namespace Shogi.Bussiness.Domain.Model.Games
             return new BoardPositions(KomaList.Where(x => x.Player == player && x.IsOnBoard).Select(x => x.BoardPosition).ToList());
         }
 
+        public List<Koma> GetKomaList(Player player)
+        {
+            return KomaList.Where(x => x.Player == player).ToList();
+        }
+        public List<Koma> GetKomaListDistinct(Player player)
+        {
+            return GetKomaList(player).Distinct(new Koma.ValueComparer()).ToList();
+        }
+
         public List<Koma> GetBoardKomaList(Player player)
         {
             return KomaList.Where(x => x.Player == player && x.IsOnBoard).ToList();
