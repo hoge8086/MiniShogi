@@ -31,6 +31,7 @@ namespace MiniShogiApp.Presentation.ViewModel
     {
         public DelegateCommand<object> MoveCommand { get; set; }
         public DelegateCommand StartCommand { get; set; }
+        public DelegateCommand RestartCommand { get; set; }
         public ObservableCollection<ObservableCollection<CellViewModel>> Board { get; set; } = new ObservableCollection<ObservableCollection<CellViewModel>>();
 
         private Player _foregroundPlayer;
@@ -49,6 +50,7 @@ namespace MiniShogiApp.Presentation.ViewModel
                 SetProperty(ref _operationMode, value);
                 MoveCommand?.RaiseCanExecuteChanged();
                 StartCommand?.RaiseCanExecuteChanged();
+                RestartCommand?.RaiseCanExecuteChanged();
             }
         }
 
@@ -61,6 +63,7 @@ namespace MiniShogiApp.Presentation.ViewModel
             this.gameService = gameService;
 
             OperationMode = OperationMode.SelectMoveSource;
+            this.gameService.Subscribe(this);
 
             StartCommand = new DelegateCommand(
                 async () =>
@@ -71,11 +74,27 @@ namespace MiniShogiApp.Presentation.ViewModel
                     OperationMode = OperationMode.AIThinking;
                     await Task.Run(() =>
                     {
-                        this.gameService.Start(gameSet, this);
+                        this.gameService.Start(gameSet);
                         //this.gameService.Start(new NegaAlphaAI(9), new NegaAlphaAI(9), GameType.AnimalShogi, this);
                     });
                     // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
                     UpdateOperationModeOnTaskFinished();
+                },
+                () =>
+                {
+                    return OperationMode != OperationMode.AIThinking;
+                });
+            RestartCommand = new DelegateCommand(
+                async () =>
+                {
+                    OperationMode = OperationMode.AIThinking;
+                    await Task.Run(() =>
+                    {
+                        this.gameService.Restart();
+                    });
+                    // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
+                    UpdateOperationModeOnTaskFinished();
+
                 },
                 () =>
                 {
@@ -161,10 +180,15 @@ namespace MiniShogiApp.Presentation.ViewModel
                     return false;
                 }
                 );
-            FirstPlayerHands = new PlayerViewModel() { Player = Player.FirstPlayer };
-            SecondPlayerHands = new PlayerViewModel() { Player = Player.SecondPlayer };
+
+            var ai = new NegaAlphaAI(6);
+            var human = new Human();
+            FirstPlayerHands = new PlayerViewModel() { Player = Player.FirstPlayer , Name=human.Name};
+            SecondPlayerHands = new PlayerViewModel() { Player = Player.SecondPlayer , Name= ai.Name};
             ForegroundPlayer = Player.FirstPlayer;
 
+            // [MEMO:タスクで開始していない(コンストラクタなのできない)ので、必ず初手はHumanになるようにする]
+            this.gameService.Start(new GameSet(human, ai, GameType.AnimalShogi));
             //this.gameService.Start(new Human(), new RandomAI(), GameType.FiveFiveShogi, this);
             //Update();
         }

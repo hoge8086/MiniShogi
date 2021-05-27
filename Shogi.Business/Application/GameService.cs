@@ -39,17 +39,22 @@ namespace Shogi.Business.Application
     {
         private GameSet GameSet = null;
         private GameListener GameListener = null;
-        public void Start(GameSet gameSet, GameListener gameListener)
+
+        public void Subscribe(GameListener listener)
+        {
+            GameListener = listener;
+        }
+        public void Start(GameSet gameSet)
         {
             //GameSet = new GameSet(firstPlayer, secondPlayer, gameType);
             GameSet = gameSet;
-            GameListener = gameListener;
             GameListener?.OnStarted();
             Next();
         }
         public void Restart()
         {
             GameSet.Reset();
+            GameListener?.OnStarted();
             Next();
         }
 

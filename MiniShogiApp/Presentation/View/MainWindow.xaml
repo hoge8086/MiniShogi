@@ -10,6 +10,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="メニュー">
                 <MenuItem Header="開始" Command="{Binding Board.StartCommand}"/>
+                <MenuItem Header="リスタート" Command="{Binding Board.RestartCommand}"/>
                 <MenuItem Header="盤反転" Command="{Binding TurnBoardCommand}"/>
             </MenuItem>
         </Menu>
