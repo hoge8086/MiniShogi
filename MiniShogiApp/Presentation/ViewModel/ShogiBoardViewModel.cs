@@ -55,7 +55,7 @@ namespace MiniShogiApp.Presentation.ViewModel
         private GameService gameService;
 
         private IMessenger Messenger;
-        public ShogiBoardViewModel(GameService gameService, IMessenger messenger)
+        public ShogiBoardViewModel(GameService gameService, IMessenger messenger, Func<GameSet> gameSetGetter)
         {
             Messenger = messenger;
             this.gameService = gameService;
@@ -65,18 +65,12 @@ namespace MiniShogiApp.Presentation.ViewModel
             StartCommand = new DelegateCommand(
                 async () =>
                 {
+                    var gameSet = gameSetGetter();
                     OperationMode = OperationMode.AIThinking;
                     await Task.Run(() =>
                     {
-                        this.gameService.Start(new NegaAlphaAI(9), new NegaAlphaAI(9), GameType.AnimalShogi, this);
-                        //this.gameService.Start(new NegaAlphaAI(7), new NegaAlphaAI(7), GameType.AnimalShogi, this);
-                        //this.gameService.Start(new Human(), new NegaAlphaAI(7), GameType.AnimalShogi, this);
-                        //this.gameService.Start(new Human(), new NegaAlphaAI(7), GameType.AnimalShogi, this);
-                        //this.gameService.Start(new Human(), new RandomAI(), GameType.AnimalShogi, this);
-                        //this.gameService.Start(new Human(), new NegaAlphaAI(5), GameType.FiveFiveShogi, this);
-                        //this.gameService.Start(new RandomAI(), new RandomAI(), GameType.FiveFiveShogi, this);
-                        //this.gameService.Start(new Human(), new Human(), GameType.FiveFiveShogi, this);
-                        //this.gameService.Start(new Human(), new Human(), GameType.AnimalShogi, this);
+                        this.gameService.Start(gameSet, this);
+                        //this.gameService.Start(new NegaAlphaAI(9), new NegaAlphaAI(9), GameType.AnimalShogi, this);
                     });
                     // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
                     UpdateOperationModeOnTaskFinished();

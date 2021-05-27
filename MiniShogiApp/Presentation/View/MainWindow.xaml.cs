@@ -22,7 +22,15 @@ namespace MiniShogiApp.Presentation.View
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel(new MyMessageBox());
+            DataContext = new MainWindowViewModel(
+                new MyMessageBox(),
+                () =>
+                {
+                    var dialog = new StartGameWindow();
+                    dialog.ShowDialog();
+                    return dialog.ViewModel.CreateGameSet();
+                }
+                );
         }
     }
 

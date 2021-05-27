@@ -13,7 +13,9 @@ namespace Shogi.Business.Domain.Model.GameFactorys
 
     public enum GameType
     {
+        [System.ComponentModel.Description("どうぶつ将棋")]
         AnimalShogi,
+        [System.ComponentModel.Description("5五将棋")]
         FiveFiveShogi
     }
 

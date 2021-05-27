@@ -18,7 +18,6 @@ namespace Shogi.Business.Application
 
         public GameSet(User firstPlayer, User secondPlayer, GameType gameType)
         {
-
             Users = new Dictionary<Player, User>();
             Users.Add(Player.FirstPlayer, firstPlayer);
             Users.Add(Player.SecondPlayer, secondPlayer);
@@ -40,9 +39,10 @@ namespace Shogi.Business.Application
     {
         private GameSet GameSet = null;
         private GameListener GameListener = null;
-        public void Start(User firstPlayer, User secondPlayer, GameType gameType, GameListener gameListener)
+        public void Start(GameSet gameSet, GameListener gameListener)
         {
-            GameSet = new GameSet(firstPlayer, secondPlayer, gameType);
+            //GameSet = new GameSet(firstPlayer, secondPlayer, gameType);
+            GameSet = gameSet;
             GameListener = gameListener;
             GameListener?.OnStarted();
             Next();

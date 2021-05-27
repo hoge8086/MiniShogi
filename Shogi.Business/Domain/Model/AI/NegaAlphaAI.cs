@@ -2,6 +2,7 @@
 using Shogi.Business.Domain.Model.Moves;
 using Shogi.Business.Domain.Model.Players;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Shogi.Business.Domain.Model.AI
 {
@@ -74,6 +75,9 @@ namespace Shogi.Business.Domain.Model.AI
 
         public List<MoveCommand> SortByBetterMove(List<MoveCommand> moveCommands, Game game)
         {
+            // [MEMO:手の偏りを防ぐためランダムソートする]
+            moveCommands = moveCommands.OrderBy(i => System.Guid.NewGuid()).ToList();
+
             var sorted = new List<MoveCommand>();
             foreach(var move in moveCommands)
             {
