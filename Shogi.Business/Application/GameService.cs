@@ -57,6 +57,13 @@ namespace Shogi.Business.Application
         {
             return GameSet.Game;
         }
+        public User GetGameWinner()
+        {
+            if (!GameSet.Game.IsEnd)
+                return null;
+
+            return GameSet.Users[GameSet.Game.GameResult.Winner];
+        }
 
         public void Play(MoveCommand moveCommand)
         {

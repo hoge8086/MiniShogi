@@ -66,6 +66,8 @@ namespace MiniShogiApp.Presentation.ViewModel
                 async () =>
                 {
                     var gameSet = gameSetGetter();
+                    FirstPlayerHands.Name = gameSet.Users[Shogi.Business.Domain.Model.Players.Player.FirstPlayer].Name;
+                    SecondPlayerHands.Name = gameSet.Users[Shogi.Business.Domain.Model.Players.Player.SecondPlayer].Name;
                     OperationMode = OperationMode.AIThinking;
                     await Task.Run(() =>
                     {
@@ -261,7 +263,7 @@ namespace MiniShogiApp.Presentation.ViewModel
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
-                Messenger.Message("勝者: " + this.gameService.GetGame().GameResult.Winner.ToString());
+                Messenger.Message("勝者: " + this.gameService.GetGameWinner().Name + "(" + this.gameService.GetGame().GameResult.Winner.ToString() + ")");
                 MoveCommand.RaiseCanExecuteChanged();
             });
         }

@@ -8,6 +8,7 @@ namespace Shogi.Business.Domain.Model.AI
 {
     public class NegaAlphaAI : AI
     {
+        public override string Name => "AI (" + Depth.ToString() + "手読み)";
         private int Depth;
         private bool debug = true;
 

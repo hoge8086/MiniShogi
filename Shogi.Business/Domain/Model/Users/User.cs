@@ -6,11 +6,11 @@ namespace Shogi.Business.Domain.Model.Users
 {
     public abstract class User
     {
-        string Name { get; set; }
+        public abstract string Name { get; }
     }
 
     public class Human : User
     {
-
+        public override string Name => "あなた";
     }
 }

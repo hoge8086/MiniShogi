@@ -13,23 +13,26 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <!--プレイヤー情報-->
-        <TextBlock Grid.Row="0" FontSize="22" Margin="5,0,0,0" HorizontalAlignment="Left">
-            <TextBlock.Style>
-                <Style TargetType="{x:Type TextBlock}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsCurrentTurn}" Value="True">
-                            <Setter Property="Background" Value="Pink"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Player}" Value="FirstPlayer">
-                            <Setter Property="Text" Value="先手"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Player}" Value="SecondPlayer">
-                            <Setter Property="Text" Value="後手"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
+        <StackPanel Orientation="Horizontal" Margin="5,5,5,0">
+            <TextBlock Grid.Row="0" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsCurrentTurn}" Value="True">
+                                <Setter Property="Background" Value="Pink"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Player}" Value="FirstPlayer">
+                                <Setter Property="Text" Value="先手"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Player}" Value="SecondPlayer">
+                                <Setter Property="Text" Value="後手"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <TextBlock FontSize="16" Text="{Binding Name, StringFormat=：{0}}" VerticalAlignment="Center"/>
+        </StackPanel>
         <!--駒台-->
         <ItemsControl x:Name="hands"
                       Grid.Row="1"

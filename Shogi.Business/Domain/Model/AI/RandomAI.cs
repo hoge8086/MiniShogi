@@ -4,6 +4,8 @@ namespace Shogi.Business.Domain.Model.AI
 {
     public class RandomAI : AI
     {
+
+        public override string Name => "ランダムAI";
         public override MoveCommand SelectMove(Game game)
         {
             System.Threading.Thread.Sleep(1000);
