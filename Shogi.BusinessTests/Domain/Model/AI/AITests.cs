@@ -22,13 +22,13 @@ namespace Shogi.Business.Domain.Model.AI.Tests
                     new GameState(new List<Koma>()
                         {
                             new Koma(Player.SecondPlayer, GameFactory.KomaRaion, new OnBoard(new BoardPosition(1,0))),
-                            new Koma(Player.SecondPlayer, GameFactory.KomaZou, new OnBoard(new BoardPosition(1,1))),
-                            new Koma(Player.SecondPlayer, GameFactory.KomaZou, InHand.State),
-                            new Koma(Player.SecondPlayer, GameFactory.KomaHiyoko, new OnBoard(new BoardPosition(0,3), true)),
-                            new Koma(Player.SecondPlayer, GameFactory.KomaHiyoko, new OnBoard(new BoardPosition(2,2))),
+                            new Koma(Player.SecondPlayer, GameFactory.KomaKirin, new OnBoard(new BoardPosition(0,1))),
+                            new Koma(Player.SecondPlayer, GameFactory.KomaZou, new OnBoard(new BoardPosition(2,0))),
+                            new Koma(Player.SecondPlayer, GameFactory.KomaHiyoko, InHand.State),
+                            new Koma(Player.FirstPlayer, GameFactory.KomaHiyoko, InHand.State),
                             new Koma(Player.FirstPlayer, GameFactory.KomaRaion, new OnBoard(new BoardPosition(1,2))),
-                            new Koma(Player.SecondPlayer, GameFactory.KomaKirin, new OnBoard(new BoardPosition(2,3))),
-                            new Koma(Player.FirstPlayer, GameFactory.KomaKirin, new OnBoard(new BoardPosition(0,1))),
+                            new Koma(Player.FirstPlayer, GameFactory.KomaKirin, new OnBoard(new BoardPosition(2,3))),
+                            new Koma(Player.FirstPlayer, GameFactory.KomaZou, new OnBoard(new BoardPosition(0,3))),
                         },
                         Player.FirstPlayer
                     ),

@@ -52,8 +52,18 @@ namespace Shogi.Business.Domain.Model.AI
 
         private int Evaluation(Game game, Player player)
         {
+            // [どうぶつ将棋だと勝敗判定にチェックメイトがないので、]
+            // [最後の読みで玉の捨て身で相手の駒をとることが可能になってしまい]
+            // [1手浅い読みになってしまうのでここで評価する]
+            // [TODO:同様に入玉も考慮したほうが良い(次の手で入玉できる/されてしまうケース)]
+            if (game.DoOte(player) && game.State.TurnPlayer == player)
+                return InfiniteEvaluationValue;
+            if (game.DoOte(player.Opponent) && game.State.TurnPlayer == player.Opponent)
+                return -InfiniteEvaluationValue;
+
             // [駒得基準の判定]
             int evaluationValue = 0;
+
             foreach(var koma in game.State.KomaList)
             {
                 int movablePositionCount = Evaluation(koma.IsTransformed ? koma.KomaType.TransformedMoves : koma.KomaType.Moves);
@@ -140,6 +150,8 @@ namespace Shogi.Business.Domain.Model.AI
                 if(debug)
                     if(depth == this.Depth)
                         System.Diagnostics.Debug.WriteLine("評価値：" + moveCommands[i].ToString() + " -> " + val.ToString()) ;
+                        //System.Diagnostics.Debug.WriteLine((new string(' ', Depth- depth)) + "評価値：" + moveCommands[i].ToString() + " -> " + val.ToString()) ;
+
 
                 if(alpha >= beta){	// [より良い手がないと枝切りを行う]
                     return alpha;
