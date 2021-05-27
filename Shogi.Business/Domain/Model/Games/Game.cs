@@ -221,6 +221,7 @@ namespace Shogi.Business.Domain.Model.Games
                 return false;
             return Rule.IsPlayerTerritory(player.Opponent, king.BoardPosition, Board);
         }
+
         public override string ToString()
         {
             string game = "";
@@ -249,7 +250,8 @@ namespace Shogi.Business.Domain.Model.Games
                 game += "\n";
             }
             game += HandToString(Player.FirstPlayer) + "\n";
-            game += HandToString(Player.SecondPlayer);
+            game += HandToString(Player.SecondPlayer) + "\n";
+            game += "手番：" + State.TurnPlayer.ToString();
             return game;
 
             string HandToString(Player player)

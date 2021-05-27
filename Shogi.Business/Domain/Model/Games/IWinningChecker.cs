@@ -30,7 +30,7 @@ namespace Shogi.Business.Domain.Model.Games
     {
         public bool IsWinning(Game game, Player player)
         {
-            return !game.State.ExistKing(player.Opponent);
+            return !game.State.ExistKingOnBoard(player.Opponent);
         }
     }
     public class EnterOpponentTerritoryWinningChecker : IWinningChecker

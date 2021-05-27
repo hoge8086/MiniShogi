@@ -56,7 +56,7 @@ namespace Shogi.Business.Domain.Model.Games
         {
             TurnPlayer = TurnPlayer.Opponent;
         }
-        public bool ExistKing(Player player)
+        public bool ExistKingOnBoard(Player player)
         {
             return FindKingOnBoard(player) != null;
         }

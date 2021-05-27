@@ -66,6 +66,8 @@ namespace Shogi.Business.Application
         }
         public void Next()
         {
+            System.Diagnostics.Debug.WriteLine("----------------------");
+            System.Diagnostics.Debug.WriteLine(GameSet.Game.ToString());
             if(GameSet.Game.IsEnd)
             {
                 GameListener?.OnEnded();
