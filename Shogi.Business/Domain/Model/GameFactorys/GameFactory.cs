@@ -29,6 +29,8 @@ namespace Shogi.Business.Domain.Model.GameFactorys
         KyuMasuShogiLevel12, // [香と金]
         [System.ComponentModel.Description("9マス将棋(中級4)")]
         KyuMasuShogiLevel13, // [銀と持歩]
+        [System.ComponentModel.Description("9マス将棋(中級5)")]
+        KyuMasuShogiLevel14, // [角と飛車]
         [System.ComponentModel.Description("9マス将棋(上級1)")]
         KyuMasuShogiLevel21, // [角と飛車]
     }
@@ -421,6 +423,24 @@ namespace Shogi.Business.Domain.Model.GameFactorys
                         new Koma(Player.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
                         new Koma(Player.FirstPlayer, KomaHu, InHand.State),
                         new Koma(Player.FirstPlayer, KomaGin, new OnBoard(new BoardPosition(2,2))),
+                    },
+                    Player.FirstPlayer
+                    ),
+                    KyumasuShogiRule);
+            }
+            else if (gameType == GameType.KyuMasuShogiLevel14)
+            {
+                return new Game(
+                    new Board(3, 3),
+                    new GameState(new List<Koma>()
+                    {
+                        new Koma(Player.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(1,1))),
+                        new Koma(Player.SecondPlayer, KomaKin, InHand.State),
+                        new Koma(Player.SecondPlayer, KomaGin, InHand.State),
+                        new Koma(Player.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
+                        new Koma(Player.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
+                        new Koma(Player.FirstPlayer, KomaKin, InHand.State),
+                        new Koma(Player.FirstPlayer, KomaGin, InHand.State),
                     },
                     Player.FirstPlayer
                     ),
