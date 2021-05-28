@@ -173,12 +173,14 @@ namespace Shogi.Business.Domain.Model.Games
             if (IsEnd)
                 throw new InvalidProgramException("すでに決着済みです.");
 
-            if (!DoOte(player))
-                return false;
 
+            // [MEMO:今王手じゃなくても、着手可能な手が一つもない場合があるので、こちらを先にチェックする]
             var moveCommands = CreateAvailableMoveCommand(player.Opponent);
             if (moveCommands.Count == 0)
                 return true;
+
+            if (!DoOte(player))
+                return false;
 
             return moveCommands.All(x => Clone().PlayWithoutCheck(x).DoOte(player));
         }
