@@ -197,7 +197,8 @@ namespace MiniShogiApp.Presentation.ViewModel
             // [タスクが終わったというこは、自分のターンかゲーム終了かのどちらか]
             if(gameService.GetGame().IsEnd)
                 OperationMode = OperationMode.GameEnd;
-            OperationMode = OperationMode.SelectMoveSource;
+            else
+                OperationMode = OperationMode.SelectMoveSource;
         }
 
         public void Update()

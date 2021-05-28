@@ -14,18 +14,19 @@ namespace Shogi.Business.Application
     {
         public Dictionary<Player, User> Users;
         public Game Game;
-        public GameType gameType;
+        public GameType GameType;
 
         public GameSet(User firstPlayer, User secondPlayer, GameType gameType)
         {
             Users = new Dictionary<Player, User>();
             Users.Add(Player.FirstPlayer, firstPlayer);
             Users.Add(Player.SecondPlayer, secondPlayer);
-            Game = new GameFactory().Create(gameType);
+            GameType = gameType;
+            Game = new GameFactory().Create(GameType);
         }
         public void Reset()
         {
-            Game = new GameFactory().Create(gameType);
+            Game = new GameFactory().Create(GameType);
         }
     }
     public interface GameListener
