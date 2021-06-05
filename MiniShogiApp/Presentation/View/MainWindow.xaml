@@ -9,9 +9,11 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="メニュー">
-                <MenuItem Header="開始" Command="{Binding Board.StartCommand}"/>
-                <MenuItem Header="リスタート" Command="{Binding Board.RestartCommand}"/>
-                <MenuItem Header="盤反転" Command="{Binding TurnBoardCommand}"/>
+                <MenuItem Header="新しく始める" Command="{Binding Board.StartCommand}"/>
+                <MenuItem Header="新しくやり直す" Command="{Binding Board.RestartCommand}"/>
+                <MenuItem Header="盤面を反転" Command="{Binding TurnBoardCommand}"/>
+                <MenuItem Header="AI思考停止" Command="{Binding Board.StopAIThinkingCommand}"/>
+                <MenuItem Header="AI思考再開" Command="{Binding Board.ResumeAIThinkingCommand}"/>
             </MenuItem>
         </Menu>
         <local:ShogiBoard x:Name="board" DataContext="{Binding Board}"/>

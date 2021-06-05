@@ -14,16 +14,20 @@ using Shogi.Business.Application;
 using Shogi.Business.Domain.Model.Users;
 using Shogi.Business.Domain.Model.AI;
 using System.Threading.Tasks;
+using DomainPlayer = Shogi.Business.Domain.Model.Players.Player;
+using System.Threading;
 
 namespace MiniShogiApp.Presentation.ViewModel
 {
 
     // [★条件分岐が多いのでStateパターンか何か使えないか]
+    // [★TOOD:基本的にゲーム状態から取ってくるようにするる]
     public enum OperationMode
     {
-        SelectMoveSource,
-        SelectMoveDestination,
-        AIThinking,
+        SelectMoveSource,       // [人ターン(移動駒選択)]
+        SelectMoveDestination,  // [人ターン(移動先選択)]
+        AIThinking,             // [AIターン][別スレッドが動作中のためユーザの操作は制限される]
+        StopAIThinking,         // [AIターン][別スレッドが動作中のためユーザの操作は制限される]
         GameEnd,
     };
 
@@ -32,6 +36,8 @@ namespace MiniShogiApp.Presentation.ViewModel
         public DelegateCommand<object> MoveCommand { get; set; }
         public DelegateCommand StartCommand { get; set; }
         public DelegateCommand RestartCommand { get; set; }
+        public DelegateCommand StopAIThinkingCommand { get; set; }
+        public DelegateCommand ResumeAIThinkingCommand { get; set; }
         public ObservableCollection<ObservableCollection<CellViewModel>> Board { get; set; } = new ObservableCollection<ObservableCollection<CellViewModel>>();
 
         private Player _foregroundPlayer;
@@ -51,8 +57,12 @@ namespace MiniShogiApp.Presentation.ViewModel
                 MoveCommand?.RaiseCanExecuteChanged();
                 StartCommand?.RaiseCanExecuteChanged();
                 RestartCommand?.RaiseCanExecuteChanged();
+                StopAIThinkingCommand?.RaiseCanExecuteChanged();
+                ResumeAIThinkingCommand?.RaiseCanExecuteChanged();
             }
+
         }
+        private CancellationTokenSource cancelTokenSource;
 
         private GameService gameService;
 
@@ -72,11 +82,13 @@ namespace MiniShogiApp.Presentation.ViewModel
                     FirstPlayerHands.Name = gameSet.Users[Shogi.Business.Domain.Model.Players.Player.FirstPlayer].Name;
                     SecondPlayerHands.Name = gameSet.Users[Shogi.Business.Domain.Model.Players.Player.SecondPlayer].Name;
                     OperationMode = OperationMode.AIThinking;
+                    cancelTokenSource = new CancellationTokenSource();
                     await Task.Run(() =>
                     {
-                        this.gameService.Start(gameSet);
+                        this.gameService.Start(gameSet, cancelTokenSource.Token);
                         //this.gameService.Start(new NegaAlphaAI(9), new NegaAlphaAI(9), GameType.AnimalShogi, this);
                     });
+                    cancelTokenSource = null;
                     // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
                     UpdateOperationModeOnTaskFinished();
                 },
@@ -88,10 +100,12 @@ namespace MiniShogiApp.Presentation.ViewModel
                 async () =>
                 {
                     OperationMode = OperationMode.AIThinking;
+                    cancelTokenSource = new CancellationTokenSource();
                     await Task.Run(() =>
                     {
-                        this.gameService.Restart();
+                        this.gameService.Restart(cancelTokenSource.Token);
                     });
+                    cancelTokenSource = null;
                     // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
                     UpdateOperationModeOnTaskFinished();
 
@@ -134,7 +148,9 @@ namespace MiniShogiApp.Presentation.ViewModel
                             }
                             //game.Play(move);
                             OperationMode = OperationMode.AIThinking;
-                            await Task.Run(() => this.gameService.Play(move));
+                            cancelTokenSource = new CancellationTokenSource();
+                            await Task.Run(() => this.gameService.Play(move, cancelTokenSource.Token));
+                            cancelTokenSource = null;
                             // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
                             UpdateOperationModeOnTaskFinished();
                         }
@@ -181,6 +197,33 @@ namespace MiniShogiApp.Presentation.ViewModel
                 }
                 );
 
+            StopAIThinkingCommand = new DelegateCommand(
+                () =>
+                {
+                    cancelTokenSource?.Cancel();
+                },
+                () =>
+                {
+                    return OperationMode == OperationMode.AIThinking;
+                });
+            ResumeAIThinkingCommand = new DelegateCommand(
+                async () =>
+                {
+                    OperationMode = OperationMode.AIThinking;
+                    cancelTokenSource = new CancellationTokenSource();
+                    await Task.Run(() =>
+                    {
+                        this.gameService.Resume(cancelTokenSource.Token);
+                    });
+                    cancelTokenSource = null;
+                    // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
+                    UpdateOperationModeOnTaskFinished();
+
+                },
+                () =>
+                {
+                    return OperationMode == OperationMode.StopAIThinking;
+                });
             var ai = new NegaAlphaAI(6);
             var human = new Human();
             FirstPlayerHands = new PlayerViewModel() { Player = Player.FirstPlayer , Name=human.Name};
@@ -188,17 +231,28 @@ namespace MiniShogiApp.Presentation.ViewModel
             ForegroundPlayer = Player.FirstPlayer;
 
             // [MEMO:タスクで開始していない(コンストラクタなのできない)ので、必ず初手はHumanになるようにする]
-            this.gameService.Start(new GameSet(human, ai, GameType.AnimalShogi));
-            //this.gameService.Start(new Human(), new RandomAI(), GameType.FiveFiveShogi, this);
-            //Update();
+            cancelTokenSource = new CancellationTokenSource();
+            this.gameService.Start(new GameSet(human, ai, GameType.AnimalShogi), cancelTokenSource.Token);
+            cancelTokenSource = null;
         }
         public void UpdateOperationModeOnTaskFinished()
         {
             // [タスクが終わったというこは、自分のターンかゲーム終了かのどちらか]
             if(gameService.GetGame().IsEnd)
+            {
                 OperationMode = OperationMode.GameEnd;
+                return;
+            }
+            if(gameService.IsTurnPlayerAI())
+            {
+                // [AI思考停止中]
+                OperationMode = OperationMode.StopAIThinking;
+            }
             else
+            {
+                // [人の駒選択]
                 OperationMode = OperationMode.SelectMoveSource;
+            }
         }
 
         public void Update()
@@ -283,15 +337,14 @@ namespace MiniShogiApp.Presentation.ViewModel
                 Update();
             });
         }
-
-        public void OnEnded()
+        public void OnEnded(DomainPlayer winner)
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
-                Messenger.Message("勝者: " + this.gameService.GetGameWinner().Name + "(" + this.gameService.GetGame().GameResult.Winner.ToString() + ")");
+                var winnerName = winner == DomainPlayer.FirstPlayer ? FirstPlayerHands.Name : SecondPlayerHands.Name;
+                Messenger.Message("勝者: " + winnerName + "(" + winner.ToString() + ")");
                 MoveCommand.RaiseCanExecuteChanged();
             });
         }
-
     }
 }

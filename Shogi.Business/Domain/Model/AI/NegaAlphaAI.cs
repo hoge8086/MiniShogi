@@ -3,6 +3,7 @@ using Shogi.Business.Domain.Model.Moves;
 using Shogi.Business.Domain.Model.Players;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Shogi.Business.Domain.Model.AI
 {
@@ -18,15 +19,16 @@ namespace Shogi.Business.Domain.Model.AI
         {
             this.Depth = depth;
         }
-        public override MoveCommand SelectMove(Game game)
+        public override MoveCommand SelectMove(Game game, CancellationToken cancellation)
         {
             // [MEMO:アルファベータ法は枝刈りを行うので複数の最善手を得られない?]
             var bestMoveCommands = new List<MoveCommand>();
-            Search(game, game.State.TurnPlayer, -InfiniteEvaluationValue-1, InfiniteEvaluationValue+1, Depth, bestMoveCommands);
+            Search(game, game.State.TurnPlayer, -InfiniteEvaluationValue-1, InfiniteEvaluationValue+1, Depth, bestMoveCommands, cancellation);
 
             if (bestMoveCommands.Count == 0)
             {
-                System.Diagnostics.Debug.WriteLine("★★★★★★★おかしい★★★★★★★");
+                System.Diagnostics.Debug.WriteLine("キャンセル") ;
+                return null;
             }
 
             if(debug)
@@ -93,8 +95,11 @@ namespace Shogi.Business.Domain.Model.AI
             return sorted;
         }
 
-        private int Search(Game game, Player player, int alpha, int beta, int depth, List<MoveCommand> bestMoveCommands)
+        private int Search(Game game, Player player, int alpha, int beta, int depth, List<MoveCommand> bestMoveCommands, CancellationToken cancellation)
         {
+            if (cancellation.IsCancellationRequested)
+                return 0;
+
             if (game.IsWinning(player.Opponent))
                 return -InfiniteEvaluationValue;
             if (game.IsWinning(player))
@@ -139,12 +144,17 @@ namespace Shogi.Business.Domain.Model.AI
 
                 // [MEMO:枝刈りした場合、最善手と同じ評価値を返しているのでα値と同じ値が返っても、]
                 // [最善手ではないので注意(相手側がより最善の手があるので)]
-                int val = -Search(gameTmp, player.Opponent, -beta, -alpha, depth - 1, null);
+                int val = -Search(gameTmp, player.Opponent, -beta, -alpha, depth - 1, null, cancellation);
+
+                // [MEMO:キャンセルした場合は、候補手一覧は空にするため、ここでリターンする]
+                if (cancellation.IsCancellationRequested)
+                    return 0;
 
                 // [最善手(MAX)を求める]
                 if(alpha < val)
                 {
                     alpha = val;		// [α値の更新]
+
                     if (bestMoveCommands != null)
                     {
                         bestMoveCommands.Clear();

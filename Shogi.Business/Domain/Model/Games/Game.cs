@@ -18,6 +18,9 @@ namespace Shogi.Business.Domain.Model.Games
 
         public GameResult GameResult { get; private set; }
         public bool IsEnd => GameResult != null;
+
+        private Object thisLock = new Object();
+
         public Game(Board board, GameState state, CustomRule rule)
         {
             Board = board;
@@ -36,153 +39,192 @@ namespace Shogi.Business.Domain.Model.Games
 
         public bool IsWinning(Player player)
         {
-            return Rule.WinningChecker.IsWinning(this, player);
+            lock(thisLock)
+            {
+                return Rule.WinningChecker.IsWinning(this, player);
+            }
         }
 
         public void CheckGameEnd()
         {
-            if (IsWinning(State.TurnPlayer))
-                GameResult = new GameResult(State.TurnPlayer);
-            else if (IsWinning(State.TurnPlayer.Opponent))
-                GameResult =  new GameResult(State.TurnPlayer.Opponent);
+            lock(thisLock)
+            {
+                if (IsWinning(State.TurnPlayer))
+                    GameResult = new GameResult(State.TurnPlayer);
+                else if (IsWinning(State.TurnPlayer.Opponent))
+                    GameResult = new GameResult(State.TurnPlayer.Opponent);
+            }
         }
 
         public Game Clone()
         {
-            return new Game(Board, State.Clone(), Rule, GameResult);
+            lock(thisLock)
+            {
+                return new Game(Board, State.Clone(), Rule, GameResult);
+            }
         }
 
         public Game Play(MoveCommand moveCommand)
         {
-            if(!State.IsTurnPlayer(moveCommand.Player))
-                throw new InvalidOperationException("プレイヤーのターンではありません.");
+            lock (thisLock)
+            {
+                if (!State.IsTurnPlayer(moveCommand.Player))
+                    throw new InvalidOperationException("プレイヤーのターンではありません.");
 
-            var fromKoma = moveCommand.FindFromKoma(State);
-            if(!State.IsTurnPlayer(fromKoma.Player))
-                throw new InvalidOperationException("プレイヤーの駒ではないため動かせません.");
+                var fromKoma = moveCommand.FindFromKoma(State);
+                if (!State.IsTurnPlayer(fromKoma.Player))
+                    throw new InvalidOperationException("プレイヤーの駒ではないため動かせません.");
 
-            var availableMoveCommand = CreateAvailableMoveCommand(fromKoma);
-            if(!availableMoveCommand.Contains(moveCommand))
-                throw new InvalidOperationException("この動きは不正です.");
+                var availableMoveCommand = CreateAvailableMoveCommand(fromKoma);
+                if (!availableMoveCommand.Contains(moveCommand))
+                    throw new InvalidOperationException("この動きは不正です.");
 
-            var toKoma = State.FindBoardKoma(moveCommand.ToPosition);
-            if(toKoma != null && toKoma.Player == State.TurnPlayer)
-                throw new InvalidOperationException("移動先にあなたの駒があるため動かせません.");
+                var toKoma = State.FindBoardKoma(moveCommand.ToPosition);
+                if (toKoma != null && toKoma.Player == State.TurnPlayer)
+                    throw new InvalidOperationException("移動先にあなたの駒があるため動かせません.");
 
-            PlayWithoutCheck(moveCommand);
+                PlayWithoutCheck(moveCommand);
 
- 
-            CheckGameEnd();
 
-            return this;
+                CheckGameEnd();
+
+                return this;
+            }
         }
 
         public Game PlayWithoutCheck(MoveCommand moveCommand)
         {
-            var fromKoma = moveCommand.FindFromKoma(State);
-            if(fromKoma.Player != moveCommand.Player)
-                throw new InvalidOperationException("差し手の駒ではありません.");
-
-            var toKoma = State.FindBoardKoma(moveCommand.ToPosition);
-            if(toKoma != null && toKoma.Player == fromKoma.Player)
-                throw new InvalidOperationException("移動先にあなたの駒があるため動かせません.");
-
-
-            fromKoma.Move(moveCommand.ToPosition, moveCommand.DoTransform);
-            
-            if(toKoma != null)
+            lock (thisLock)
             {
-                toKoma.Taken();
-            }
+                var fromKoma = moveCommand.FindFromKoma(State);
+                if (fromKoma.Player != moveCommand.Player)
+                    throw new InvalidOperationException("差し手の駒ではありません.");
 
-            State.FowardTurnPlayer();
-            return this;
+                var toKoma = State.FindBoardKoma(moveCommand.ToPosition);
+                if (toKoma != null && toKoma.Player == fromKoma.Player)
+                    throw new InvalidOperationException("移動先にあなたの駒があるため動かせません.");
+
+
+                fromKoma.Move(moveCommand.ToPosition, moveCommand.DoTransform);
+
+                if (toKoma != null)
+                {
+                    toKoma.Taken();
+                }
+
+                State.FowardTurnPlayer();
+                return this;
+            }
         }
 
         public List<MoveCommand> CreateAvailableMoveCommand()
         {
-            return CreateAvailableMoveCommand(State.TurnPlayer);
+            lock (thisLock)
+            {
+                return CreateAvailableMoveCommand(State.TurnPlayer);
+            }
         }
 
         public List<MoveCommand> CreateAvailableMoveCommand(Player player)
         {
-            return CreateAvailableMoveCommand(State.GetKomaListDistinct(player));
+            lock (thisLock)
+            {
+                return CreateAvailableMoveCommand(State.GetKomaListDistinct(player));
+            }
         }
         public BoardPositions MovablePosition(List<Koma> komaList)
         {
-            var movablePositions = new BoardPositions();
-            foreach(var koma in komaList)
-                movablePositions = movablePositions.Add(MovablePosition(koma));
-            return movablePositions;
+            lock (thisLock)
+            {
+                var movablePositions = new BoardPositions();
+                foreach (var koma in komaList)
+                    movablePositions = movablePositions.Add(MovablePosition(koma));
+                return movablePositions;
+            }
         }
         public List<MoveCommand> CreateAvailableMoveCommand(List<Koma> komaList)
         {
-            var moveCommandList = new List<MoveCommand>();
-            foreach(var koma in komaList)
-                moveCommandList.AddRange(CreateAvailableMoveCommand(koma));
-            return moveCommandList;
+            lock (thisLock)
+            {
+                var moveCommandList = new List<MoveCommand>();
+                foreach (var koma in komaList)
+                    moveCommandList.AddRange(CreateAvailableMoveCommand(koma));
+                return moveCommandList;
+            }
         }
 
         public BoardPositions MovablePosition(Koma koma)
         {
-            return koma.GetMovableBoardPositions(
-                            Board,
-                            State.BoardPositions(koma.Player),
-                            State.BoardPositions(koma.Player.Opponent));
+            lock (thisLock)
+            {
+                return koma.GetMovableBoardPositions(
+                                Board,
+                                State.BoardPositions(koma.Player),
+                                State.BoardPositions(koma.Player.Opponent));
+            }
         }
 
         public List<MoveCommand> CreateAvailableMoveCommand(Koma koma)
         {
-            var moveCommandList = new List<MoveCommand>();
-            var positions = MovablePosition(koma);
-            foreach (var toPos in positions.Positions)
+            lock (thisLock)
             {
-                if (koma.IsOnBoard)
+                var moveCommandList = new List<MoveCommand>();
+                var positions = MovablePosition(koma);
+                foreach (var toPos in positions.Positions)
                 {
-                    moveCommandList.Add(new BoardKomaMoveCommand(koma.Player, toPos, koma.BoardPosition, false));
-                    if (!koma.IsTransformed &&
-                        koma.KomaType.CanBeTransformed &&
-                        (Rule.IsPlayerTerritory(koma.Player.Opponent, toPos, Board) ||
-                         Rule.IsPlayerTerritory(koma.Player.Opponent, koma.BoardPosition, Board)))
+                    if (koma.IsOnBoard)
                     {
-                        moveCommandList.Add(new BoardKomaMoveCommand(koma.Player, toPos, koma.BoardPosition, true));
-                    }
+                        moveCommandList.Add(new BoardKomaMoveCommand(koma.Player, toPos, koma.BoardPosition, false));
+                        if (!koma.IsTransformed &&
+                            koma.KomaType.CanBeTransformed &&
+                            (Rule.IsPlayerTerritory(koma.Player.Opponent, toPos, Board) ||
+                             Rule.IsPlayerTerritory(koma.Player.Opponent, koma.BoardPosition, Board)))
+                        {
+                            moveCommandList.Add(new BoardKomaMoveCommand(koma.Player, toPos, koma.BoardPosition, true));
+                        }
 
+                    }
+                    else if (koma.IsInHand)
+                    {
+                        moveCommandList.Add(new HandKomaMoveCommand(koma.Player, toPos, koma.KomaType));
+                    }
                 }
-                else if (koma.IsInHand)
-                {
-                    moveCommandList.Add(new HandKomaMoveCommand(koma.Player, toPos, koma.KomaType));
-                }
+                return RemoveProhibitedMove(moveCommandList);
             }
-            return RemoveProhibitedMove(moveCommandList);
         }
 
         private List<MoveCommand> RemoveProhibitedMove(List<MoveCommand> moveCommands)
         {
-            var result = new List<MoveCommand>();
-            foreach(var move in moveCommands)
+            lock (thisLock)
             {
-                if (!Rule.ProhibitedMoveSpecification.IsSatisfiedBy(move, this))
-                    result.Add(move);
+                var result = new List<MoveCommand>();
+                foreach (var move in moveCommands)
+                {
+                    if (!Rule.ProhibitedMoveSpecification.IsSatisfiedBy(move, this))
+                        result.Add(move);
+                }
+                return result;
             }
-            return result;
         }
 
         public bool DoCheckmate(Player player)
         {
-            if (IsEnd)
-                throw new InvalidProgramException("すでに決着済みです.");
+            lock (thisLock)
+            {
+                if (IsEnd)
+                    throw new InvalidProgramException("すでに決着済みです.");
 
 
-            // [MEMO:今王手じゃなくても、着手可能な手が一つもない場合があるので、こちらを先にチェックする]
-            var moveCommands = CreateAvailableMoveCommand(player.Opponent);
-            if (moveCommands.Count == 0)
-                return true;
+                // [MEMO:今王手じゃなくても、着手可能な手が一つもない場合があるので、こちらを先にチェックする]
+                var moveCommands = CreateAvailableMoveCommand(player.Opponent);
+                if (moveCommands.Count == 0)
+                    return true;
 
-            if (!DoOte(player))
-                return false;
+                if (!DoOte(player))
+                    return false;
 
-            return moveCommands.All(x => Clone().PlayWithoutCheck(x).DoOte(player));
+                return moveCommands.All(x => Clone().PlayWithoutCheck(x).DoOte(player));
+            }
         }
 
         /// <summary>
@@ -193,35 +235,44 @@ namespace Shogi.Business.Domain.Model.Games
         /// <returns></returns>
         public bool DoCheckmateWithoutHandMove(Player player)
         {
-            if (IsEnd)
-                throw new InvalidProgramException("すでに決着済みです.");
+            lock (thisLock)
+            {
+                if (IsEnd)
+                    throw new InvalidProgramException("すでに決着済みです.");
 
-            if (!DoOte(player))
-                return false;
+                if (!DoOte(player))
+                    return false;
 
-            // [MEMO:盤上の駒に重複はないのでDistinct()する必要はない]
-            var moveCommands = CreateAvailableMoveCommand(State.GetBoardKomaList(player.Opponent));
-            if (moveCommands.Count == 0)
-                return true;
-            return moveCommands.All(x => Clone().PlayWithoutCheck(x).DoOte(player));
+                // [MEMO:盤上の駒に重複はないのでDistinct()する必要はない]
+                var moveCommands = CreateAvailableMoveCommand(State.GetBoardKomaList(player.Opponent));
+                if (moveCommands.Count == 0)
+                    return true;
+                return moveCommands.All(x => Clone().PlayWithoutCheck(x).DoOte(player));
+            }
         }
 
         public bool DoOte(Player player)
         {
-            if (IsEnd)
-                throw new InvalidProgramException("すでに決着済みです.");
+            lock (thisLock)
+            {
+                if (IsEnd)
+                    throw new InvalidProgramException("すでに決着済みです.");
 
-            // [MEMO:盤上の駒に重複はないのでDistinct()する必要はない]
-            var movablePositions = MovablePosition(State.GetBoardKomaList(player));
-            var kingPosition = State.FindKingOnBoard(player.Opponent).BoardPosition;
-            return movablePositions.Contains(kingPosition);
+                // [MEMO:盤上の駒に重複はないのでDistinct()する必要はない]
+                var movablePositions = MovablePosition(State.GetBoardKomaList(player));
+                var kingPosition = State.FindKingOnBoard(player.Opponent).BoardPosition;
+                return movablePositions.Contains(kingPosition);
+            }
         }
         public bool KingEnterOpponentTerritory(Player player)
         {
-            var king = State.FindKingOnBoard(player);
-            if (king == null)
-                return false;
-            return Rule.IsPlayerTerritory(player.Opponent, king.BoardPosition, Board);
+            lock (thisLock)
+            {
+                var king = State.FindKingOnBoard(player);
+                if (king == null)
+                    return false;
+                return Rule.IsPlayerTerritory(player.Opponent, king.BoardPosition, Board);
+            }
         }
 
         public override string ToString()
