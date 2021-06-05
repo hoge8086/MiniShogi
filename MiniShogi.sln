@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shogi.BusinessTests", "Shog
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyogiConsole", "SyogiConsole\SyogiConsole.csproj", "{8C9AE491-E2EA-47CD-BFA5-67D798A54056}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniShogiApp", "MiniShogiApp\MiniShogiApp.csproj", "{07FF27F5-E7B6-44E6-993A-8AA640838983}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniShogiApp", "MiniShogiApp\MiniShogiApp.csproj", "{07FF27F5-E7B6-44E6-993A-8AA640838983}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{899AB794-E302-48B6-814A-3284D361D3E6}"
+	ProjectSection(SolutionItems) = preProject
+		バックログ.txt = バックログ.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
