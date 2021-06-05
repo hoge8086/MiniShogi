@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Komas;
-using Shogi.Business.Domain.Model.Players;
+using Shogi.Business.Domain.Model.PlayerTypes;
 
 namespace Shogi.Business.Domain.Model.Komas
 {
 
     public class Koma
     {
-        public Player Player { get;  private set;}
+        public PlayerType Player { get;  private set;}
         public KomaType KomaType { get;  private set;}
 
         public IKomaState State { get; private set; }
 
-        public Koma(Player player, KomaType komaType, IKomaState state)
+        public Koma(PlayerType player, KomaType komaType, IKomaState state)
         {
             Player = player;
             KomaType = komaType;

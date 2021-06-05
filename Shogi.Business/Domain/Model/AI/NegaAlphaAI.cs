@@ -1,6 +1,6 @@
 ﻿using Shogi.Business.Domain.Model.Games;
 using Shogi.Business.Domain.Model.Moves;
-using Shogi.Business.Domain.Model.Players;
+using Shogi.Business.Domain.Model.PlayerTypes;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -54,7 +54,7 @@ namespace Shogi.Business.Domain.Model.AI
             return movablePositionCount;
         }
 
-        private int Evaluation(Game game, Player player)
+        private int Evaluation(Game game, PlayerType player)
         {
             // [どうぶつ将棋だと勝敗判定にチェックメイトがないので、]
             // [最後の読みで玉の捨て身で相手の駒をとることが可能になってしまい]
@@ -95,7 +95,7 @@ namespace Shogi.Business.Domain.Model.AI
             return sorted;
         }
 
-        private int Search(Game game, Player player, int alpha, int beta, int depth, List<MoveCommand> bestMoveCommands, CancellationToken cancellation)
+        private int Search(Game game, PlayerType player, int alpha, int beta, int depth, List<MoveCommand> bestMoveCommands, CancellationToken cancellation)
         {
             if (cancellation.IsCancellationRequested)
                 return 0;

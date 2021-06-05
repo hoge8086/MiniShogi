@@ -1,5 +1,5 @@
 ﻿using Shogi.Business.Domain.Model.Boards;
-using Shogi.Business.Domain.Model.Players;
+using Shogi.Business.Domain.Model.PlayerTypes;
 
 namespace Shogi.Business.Domain.Model.Moves
 {
@@ -13,7 +13,7 @@ namespace Shogi.Business.Domain.Model.Moves
         }
 
         public BoardPositions GetMovableBoardPositions(
-            Player player,
+            PlayerType player,
             BoardPosition position,
             Board board,
             BoardPositions turnPlayerKomaPositions,
@@ -23,7 +23,7 @@ namespace Shogi.Business.Domain.Model.Moves
 
             // [後手なら移動可能位置は反転される]
             var toRelativePos = RelativeBoardPosition;
-            if (player == Player.SecondPlayer)
+            if (player == PlayerType.SecondPlayer)
                 toRelativePos = toRelativePos.Reverse();
 
             for(var toPos = position.Add(toRelativePos); ; toPos = toPos.Add(toRelativePos))

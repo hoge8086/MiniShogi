@@ -11,11 +11,11 @@ using System.Linq;
 using Shogi.Business.Domain.Model.Komas;
 using Prism.Mvvm;
 using Shogi.Business.Application;
-using Shogi.Business.Domain.Model.Users;
+using Shogi.Business.Domain.Model.Players;
 using Shogi.Business.Domain.Model.AI;
 using System.Threading.Tasks;
-using DomainPlayer = Shogi.Business.Domain.Model.Players.Player;
 using System.Threading;
+using Shogi.Business.Domain.Model.PlayerTypes;
 
 namespace MiniShogiApp.Presentation.ViewModel
 {
@@ -79,8 +79,8 @@ namespace MiniShogiApp.Presentation.ViewModel
                 async () =>
                 {
                     var gameSet = gameSetGetter();
-                    FirstPlayerHands.Name = gameSet.Users[Shogi.Business.Domain.Model.Players.Player.FirstPlayer].Name;
-                    SecondPlayerHands.Name = gameSet.Users[Shogi.Business.Domain.Model.Players.Player.SecondPlayer].Name;
+                    FirstPlayerHands.Name = gameSet.Players[PlayerType.FirstPlayer].Name;
+                    SecondPlayerHands.Name = gameSet.Players[PlayerType.SecondPlayer].Name;
                     OperationMode = OperationMode.AIThinking;
                     cancelTokenSource = new CancellationTokenSource();
                     await Task.Run(() =>
@@ -278,27 +278,20 @@ namespace MiniShogiApp.Presentation.ViewModel
                     {
                         IsTransformed = koma.IsTransformed,
                         Name = koma.KomaType.Id,
-                        Player = koma.Player == Shogi.Business.Domain.Model.Players.Player.FirstPlayer ? Player.FirstPlayer : Player.SecondPlayer,
+                        Player = koma.Player == PlayerType.FirstPlayer ? Player.FirstPlayer : Player.SecondPlayer,
                     };
                 }
                 else
                 {
-                    if (koma.Player == Shogi.Business.Domain.Model.Players.Player.FirstPlayer)
+                    if (koma.Player == PlayerType.FirstPlayer)
                         FirstPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.FirstPlayer});
                     else
                         SecondPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.SecondPlayer });
                 }
             }
             
-            FirstPlayerHands.IsCurrentTurn = this.gameService.GetGame().State.TurnPlayer == Shogi.Business.Domain.Model.Players.Player.FirstPlayer;
-            SecondPlayerHands.IsCurrentTurn = this.gameService.GetGame().State.TurnPlayer == Shogi.Business.Domain.Model.Players.Player.SecondPlayer;
-
-
-            //if(this.gameService.GetGame().IsEnd)
-            //{
-            //    OperationMode = OperationMode.GameEnd;
-            //    Messenger.Message("勝者: " + this.gameService.GetGame().GameResult.Winner.ToString());
-            //}
+            FirstPlayerHands.IsCurrentTurn = this.gameService.GetGame().State.TurnPlayer == PlayerType.FirstPlayer;
+            SecondPlayerHands.IsCurrentTurn = this.gameService.GetGame().State.TurnPlayer == PlayerType.SecondPlayer;
 
             MoveCommand.RaiseCanExecuteChanged();
         }
@@ -337,11 +330,11 @@ namespace MiniShogiApp.Presentation.ViewModel
                 Update();
             });
         }
-        public void OnEnded(DomainPlayer winner)
+        public void OnEnded(PlayerType winner)
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
-                var winnerName = winner == DomainPlayer.FirstPlayer ? FirstPlayerHands.Name : SecondPlayerHands.Name;
+                var winnerName = winner == PlayerType.FirstPlayer ? FirstPlayerHands.Name : SecondPlayerHands.Name;
                 Messenger.Message("勝者: " + winnerName + "(" + winner.ToString() + ")");
                 MoveCommand.RaiseCanExecuteChanged();
             });

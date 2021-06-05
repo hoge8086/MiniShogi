@@ -1,6 +1,6 @@
 ﻿using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Komas;
-using Shogi.Business.Domain.Model.Players;
+using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +11,15 @@ namespace Shogi.Business.Domain.Model.Games
     public class GameState
     {
         public List<Koma> KomaList;
-        public Player TurnPlayer;
+        public PlayerType TurnPlayer;
 
-        public GameState(List<Koma> komaList, Player turnPlayer)
+        public GameState(List<Koma> komaList, PlayerType turnPlayer)
         {
             KomaList = komaList;
             TurnPlayer = turnPlayer;
         }
 
-        public Koma FindKingOnBoard(Player player)
+        public Koma FindKingOnBoard(PlayerType player)
         {
             // [MEMO:プレイヤーの王は盤上に1つのみあることを前提]
             return KomaList.FirstOrDefault(x => x.Player == player && x.KomaType.IsKing && x.IsOnBoard);
@@ -28,26 +28,26 @@ namespace Shogi.Business.Domain.Model.Games
         {
             return KomaList.FirstOrDefault(x => x.BoardPosition == fromPosition);
         }
-        public Koma FindHandKoma(Player player, KomaType komaType)
+        public Koma FindHandKoma(PlayerType player, KomaType komaType)
         {
             return KomaList.FirstOrDefault(x => x.Player == player && x.IsInHand && x.KomaType == komaType);
         }
 
-        public BoardPositions BoardPositions(Player player)
+        public BoardPositions BoardPositions(PlayerType player)
         {
             return new BoardPositions(KomaList.Where(x => x.Player == player && x.IsOnBoard).Select(x => x.BoardPosition).ToList());
         }
 
-        public List<Koma> GetKomaList(Player player)
+        public List<Koma> GetKomaList(PlayerType player)
         {
             return KomaList.Where(x => x.Player == player).ToList();
         }
-        public List<Koma> GetKomaListDistinct(Player player)
+        public List<Koma> GetKomaListDistinct(PlayerType player)
         {
             return GetKomaList(player).Distinct(new Koma.ValueComparer()).ToList();
         }
 
-        public List<Koma> GetBoardKomaList(Player player)
+        public List<Koma> GetBoardKomaList(PlayerType player)
         {
             return KomaList.Where(x => x.Player == player && x.IsOnBoard).ToList();
         }
@@ -56,12 +56,12 @@ namespace Shogi.Business.Domain.Model.Games
         {
             TurnPlayer = TurnPlayer.Opponent;
         }
-        public bool ExistKingOnBoard(Player player)
+        public bool ExistKingOnBoard(PlayerType player)
         {
             return FindKingOnBoard(player) != null;
         }
 
-        public bool IsTurnPlayer(Player player)
+        public bool IsTurnPlayer(PlayerType player)
         {
             return TurnPlayer == player;
         }

@@ -3,7 +3,7 @@ using Prism.Mvvm;
 using Shogi.Business.Application;
 using Shogi.Business.Domain.Model.AI;
 using Shogi.Business.Domain.Model.GameFactorys;
-using Shogi.Business.Domain.Model.Users;
+using Shogi.Business.Domain.Model.Players;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +11,7 @@ using System.Text;
 
 namespace MiniShogiApp.Presentation.ViewModel
 {
-    public enum PlayerType
+    public enum PlayerKind
     {
         [Description("人")]
         Human,
@@ -21,8 +21,8 @@ namespace MiniShogiApp.Presentation.ViewModel
 
     public class StartGameWindowViewModel : BindableBase
     {
-        private PlayerType _firstPlayerType = PlayerType.Human;
-        public PlayerType FirstPlayerType
+        private PlayerKind _firstPlayerType = PlayerKind.Human;
+        public PlayerKind FirstPlayerType
         {
             get { return _firstPlayerType; }
             set { SetProperty(ref _firstPlayerType, value); }
@@ -35,8 +35,8 @@ namespace MiniShogiApp.Presentation.ViewModel
             set { SetProperty(ref _firstAIThinkDepth, value); }
         }
 
-        private PlayerType _secondPlayer  = PlayerType.AI;
-        public PlayerType SecondPlayerType
+        private PlayerKind _secondPlayer  = PlayerKind.AI;
+        public PlayerKind SecondPlayerType
         {
             get { return _secondPlayer; }
             set { SetProperty(ref _secondPlayer, value); }
@@ -56,9 +56,9 @@ namespace MiniShogiApp.Presentation.ViewModel
             set { SetProperty(ref _gameType, value); }
         }
 
-        public Shogi.Business.Domain.Model.Users.User CreateUser(PlayerType playerType, int aiThinkDepth)
+        public Shogi.Business.Domain.Model.Players.Player CreatePlayer(PlayerKind playerType, int aiThinkDepth)
         {
-            if (playerType == PlayerType.Human)
+            if (playerType == PlayerKind.Human)
                 return new Human();
             else
                 return new NegaAlphaAI(aiThinkDepth);
@@ -66,8 +66,8 @@ namespace MiniShogiApp.Presentation.ViewModel
         public GameSet CreateGameSet()
         {
             return new GameSet(
-                CreateUser(FirstPlayerType, FirstAIThinkDepth),
-                CreateUser(SecondPlayerType, SecondAIThinkDepth),
+                CreatePlayer(FirstPlayerType, FirstAIThinkDepth),
+                CreatePlayer(SecondPlayerType, SecondAIThinkDepth),
                 GameType);
         }
     }

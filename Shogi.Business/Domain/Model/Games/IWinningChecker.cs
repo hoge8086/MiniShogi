@@ -1,11 +1,11 @@
-﻿using Shogi.Business.Domain.Model.Players;
+﻿using Shogi.Business.Domain.Model.PlayerTypes;
 using System.Collections.Generic;
 
 namespace Shogi.Business.Domain.Model.Games
 {
     public interface IWinningChecker
     {
-        bool IsWinning(Game game, Player player);
+        bool IsWinning(Game game, PlayerType player);
     }
 
     public class MultiWinningChecker : IWinningChecker
@@ -16,7 +16,7 @@ namespace Shogi.Business.Domain.Model.Games
             WinningCheckers = winningCheckers;
         }
 
-        public bool IsWinning(Game game, Player player)
+        public bool IsWinning(Game game, PlayerType player)
         {
             foreach (var checker in WinningCheckers)
                 if (checker.IsWinning(game, player))
@@ -28,21 +28,21 @@ namespace Shogi.Business.Domain.Model.Games
     }
     public class TakeKingWinningChecker : IWinningChecker
     {
-        public bool IsWinning(Game game, Player player)
+        public bool IsWinning(Game game, PlayerType player)
         {
             return !game.State.ExistKingOnBoard(player.Opponent);
         }
     }
     public class EnterOpponentTerritoryWinningChecker : IWinningChecker
     {
-        public bool IsWinning(Game game, Player player)
+        public bool IsWinning(Game game, PlayerType player)
         {
             return game.KingEnterOpponentTerritory(player) && !game.DoOte(player.Opponent);
         }
     }
     public class CheckmateWinningChecker : IWinningChecker
     {
-        public bool IsWinning(Game game, Player player)
+        public bool IsWinning(Game game, PlayerType player)
         {
             return game.DoCheckmate(player);
         }

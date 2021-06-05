@@ -2,6 +2,7 @@
 using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Games;
 using Shogi.Business.Domain.Model.Komas;
+using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,13 +23,13 @@ namespace MiniShogiApp.Presentation.ViewModel
     }
     public static partial class PlayerExtend
     {
-        public static Shogi.Business.Domain.Model.Players.Player ToDomain(this Player player)
+        public static PlayerType ToDomain(this Player player)
         {
             switch (player) {
                 case Player.FirstPlayer:
-                    return Shogi.Business.Domain.Model.Players.Player.FirstPlayer;
+                    return PlayerType.FirstPlayer;
                 case Player.SecondPlayer:
-                    return Shogi.Business.Domain.Model.Players.Player.SecondPlayer;
+                    return PlayerType.SecondPlayer;
             }
             return null;
         }

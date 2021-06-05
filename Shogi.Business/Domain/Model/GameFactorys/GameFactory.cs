@@ -1,7 +1,7 @@
 ﻿using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Komas;
 using Shogi.Business.Domain.Model.Moves;
-using Shogi.Business.Domain.Model.Players;
+using Shogi.Business.Domain.Model.PlayerTypes;
 using Shogi.Business.Domain.Model.Games;
 using System;
 using System.Collections.Generic;
@@ -272,17 +272,17 @@ namespace Shogi.Business.Domain.Model.GameFactorys
                     new Board(4, 3),
                     new GameState(new List<Koma>()
                         {
-                            new Koma(Player.SecondPlayer, KomaKirin, new OnBoard(new BoardPosition(0,0))),
-                            new Koma(Player.SecondPlayer, KomaRaion, new OnBoard(new BoardPosition(1,0))),
-                            new Koma(Player.SecondPlayer, KomaZou, new OnBoard(new BoardPosition(2,0))),
-                            new Koma(Player.SecondPlayer, KomaHiyoko, new OnBoard(new BoardPosition(1,1))),
-                            new Koma(Player.FirstPlayer, KomaKirin, new OnBoard(new BoardPosition(2,3))),
-                            new Koma(Player.FirstPlayer, KomaRaion, new OnBoard(new BoardPosition(1,3))),
-                            new Koma(Player.FirstPlayer, KomaZou, new OnBoard(new BoardPosition(0,3))),
-                            new Koma(Player.FirstPlayer, KomaHiyoko, new OnBoard(new BoardPosition(1,2))),
+                            new Koma(PlayerType.SecondPlayer, KomaKirin, new OnBoard(new BoardPosition(0,0))),
+                            new Koma(PlayerType.SecondPlayer, KomaRaion, new OnBoard(new BoardPosition(1,0))),
+                            new Koma(PlayerType.SecondPlayer, KomaZou, new OnBoard(new BoardPosition(2,0))),
+                            new Koma(PlayerType.SecondPlayer, KomaHiyoko, new OnBoard(new BoardPosition(1,1))),
+                            new Koma(PlayerType.FirstPlayer, KomaKirin, new OnBoard(new BoardPosition(2,3))),
+                            new Koma(PlayerType.FirstPlayer, KomaRaion, new OnBoard(new BoardPosition(1,3))),
+                            new Koma(PlayerType.FirstPlayer, KomaZou, new OnBoard(new BoardPosition(0,3))),
+                            new Koma(PlayerType.FirstPlayer, KomaHiyoko, new OnBoard(new BoardPosition(1,2))),
 
                         },
-                        Player.FirstPlayer
+                        PlayerType.FirstPlayer
                     ),
                     new CustomRule(
                         1,
@@ -300,21 +300,21 @@ namespace Shogi.Business.Domain.Model.GameFactorys
                     new Board(5, 5),
                     new GameState(new List<Koma>()
                     {
-                        new Koma(Player.SecondPlayer, KomaHisya, new OnBoard(new BoardPosition(0,0))),
-                        new Koma(Player.SecondPlayer, KomaKaku, new OnBoard(new BoardPosition(1,0))),
-                        new Koma(Player.SecondPlayer, KomaGin, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(Player.SecondPlayer, KomaKin, new OnBoard(new BoardPosition(3,0))),
-                        new Koma(Player.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(4,0))),
-                        new Koma(Player.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(4,1))),
-                        new Koma(Player.FirstPlayer, KomaHisya, new OnBoard(new BoardPosition(4,4))),
-                        new Koma(Player.FirstPlayer, KomaKaku, new OnBoard(new BoardPosition(3,4))),
-                        new Koma(Player.FirstPlayer, KomaGin, new OnBoard(new BoardPosition(2,4))),
-                        new Koma(Player.FirstPlayer, KomaKin, new OnBoard(new BoardPosition(1,4))),
-                        new Koma(Player.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,4))),
-                        new Koma(Player.FirstPlayer, KomaHu, new OnBoard(new BoardPosition(0,3))),
+                        new Koma(PlayerType.SecondPlayer, KomaHisya, new OnBoard(new BoardPosition(0,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaKaku, new OnBoard(new BoardPosition(1,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaGin, new OnBoard(new BoardPosition(2,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaKin, new OnBoard(new BoardPosition(3,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(4,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(4,1))),
+                        new Koma(PlayerType.FirstPlayer, KomaHisya, new OnBoard(new BoardPosition(4,4))),
+                        new Koma(PlayerType.FirstPlayer, KomaKaku, new OnBoard(new BoardPosition(3,4))),
+                        new Koma(PlayerType.FirstPlayer, KomaGin, new OnBoard(new BoardPosition(2,4))),
+                        new Koma(PlayerType.FirstPlayer, KomaKin, new OnBoard(new BoardPosition(1,4))),
+                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,4))),
+                        new Koma(PlayerType.FirstPlayer, KomaHu, new OnBoard(new BoardPosition(0,3))),
 
                     },
-                    Player.FirstPlayer
+                    PlayerType.FirstPlayer
                     ),
                     new CustomRule(
                         1,
@@ -335,14 +335,14 @@ namespace Shogi.Business.Domain.Model.GameFactorys
                     new Board(3, 3),
                     new GameState(new List<Koma>()
                     {
-                        new Koma(Player.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(0,0))),
-                        new Koma(Player.SecondPlayer, KomaGin, new OnBoard(new BoardPosition(1,0))),
-                        new Koma(Player.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(Player.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(Player.FirstPlayer, KomaGin, new OnBoard(new BoardPosition(1,2))),
-                        new Koma(Player.FirstPlayer, KomaHu, new OnBoard(new BoardPosition(2,2))),
+                        new Koma(PlayerType.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(0,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaGin, new OnBoard(new BoardPosition(1,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
+                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
+                        new Koma(PlayerType.FirstPlayer, KomaGin, new OnBoard(new BoardPosition(1,2))),
+                        new Koma(PlayerType.FirstPlayer, KomaHu, new OnBoard(new BoardPosition(2,2))),
                     },
-                    Player.FirstPlayer
+                    PlayerType.FirstPlayer
                     ),
                     KyumasuShogiRule);
             }
@@ -352,14 +352,14 @@ namespace Shogi.Business.Domain.Model.GameFactorys
                     new Board(3, 3),
                     new GameState(new List<Koma>()
                     {
-                        new Koma(Player.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(0,0))),
-                        new Koma(Player.SecondPlayer, KomaKaku, new OnBoard(new BoardPosition(1,0))),
-                        new Koma(Player.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(Player.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(Player.FirstPlayer, KomaHisya, new OnBoard(new BoardPosition(1,2))),
-                        new Koma(Player.FirstPlayer, KomaHu, new OnBoard(new BoardPosition(2,2))),
+                        new Koma(PlayerType.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(0,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaKaku, new OnBoard(new BoardPosition(1,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
+                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
+                        new Koma(PlayerType.FirstPlayer, KomaHisya, new OnBoard(new BoardPosition(1,2))),
+                        new Koma(PlayerType.FirstPlayer, KomaHu, new OnBoard(new BoardPosition(2,2))),
                     },
-                    Player.FirstPlayer
+                    PlayerType.FirstPlayer
                     ),
                     KyumasuShogiRule);
             }
@@ -369,13 +369,13 @@ namespace Shogi.Business.Domain.Model.GameFactorys
                     new Board(3, 3),
                     new GameState(new List<Koma>()
                     {
-                        new Koma(Player.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(1,1))),
-                        new Koma(Player.SecondPlayer, KomaKin, InHand.State),
-                        new Koma(Player.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(Player.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(Player.FirstPlayer, KomaKin, InHand.State),
+                        new Koma(PlayerType.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(1,1))),
+                        new Koma(PlayerType.SecondPlayer, KomaKin, InHand.State),
+                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
+                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
+                        new Koma(PlayerType.FirstPlayer, KomaKin, InHand.State),
                     },
-                    Player.FirstPlayer
+                    PlayerType.FirstPlayer
                     ),
                     KyumasuShogiRule);
             }
@@ -385,12 +385,12 @@ namespace Shogi.Business.Domain.Model.GameFactorys
                     new Board(3, 3),
                     new GameState(new List<Koma>()
                     {
-                        new Koma(Player.SecondPlayer, KomaHu, InHand.State),
-                        new Koma(Player.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(Player.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(Player.FirstPlayer, KomaHu, InHand.State),
+                        new Koma(PlayerType.SecondPlayer, KomaHu, InHand.State),
+                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
+                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
+                        new Koma(PlayerType.FirstPlayer, KomaHu, InHand.State),
                     },
-                    Player.FirstPlayer
+                    PlayerType.FirstPlayer
                     ),
                     KyumasuShogiRule);
             }
@@ -400,14 +400,14 @@ namespace Shogi.Business.Domain.Model.GameFactorys
                     new Board(3, 3),
                     new GameState(new List<Koma>()
                     {
-                        new Koma(Player.SecondPlayer, KomaKin, new OnBoard(new BoardPosition(0,0))),
-                        new Koma(Player.SecondPlayer, KomaKyousya, new OnBoard(new BoardPosition(1,0))),
-                        new Koma(Player.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(Player.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(Player.FirstPlayer, KomaKyousya, new OnBoard(new BoardPosition(1,2))),
-                        new Koma(Player.FirstPlayer, KomaKin, new OnBoard(new BoardPosition(2,2))),
+                        new Koma(PlayerType.SecondPlayer, KomaKin, new OnBoard(new BoardPosition(0,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaKyousya, new OnBoard(new BoardPosition(1,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
+                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
+                        new Koma(PlayerType.FirstPlayer, KomaKyousya, new OnBoard(new BoardPosition(1,2))),
+                        new Koma(PlayerType.FirstPlayer, KomaKin, new OnBoard(new BoardPosition(2,2))),
                     },
-                    Player.FirstPlayer
+                    PlayerType.FirstPlayer
                     ),
                     KyumasuShogiRule);
             }
@@ -417,14 +417,14 @@ namespace Shogi.Business.Domain.Model.GameFactorys
                     new Board(3, 3),
                     new GameState(new List<Koma>()
                     {
-                        new Koma(Player.SecondPlayer, KomaGin, new OnBoard(new BoardPosition(0,0))),
-                        new Koma(Player.SecondPlayer, KomaHu, InHand.State),
-                        new Koma(Player.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(Player.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(Player.FirstPlayer, KomaHu, InHand.State),
-                        new Koma(Player.FirstPlayer, KomaGin, new OnBoard(new BoardPosition(2,2))),
+                        new Koma(PlayerType.SecondPlayer, KomaGin, new OnBoard(new BoardPosition(0,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaHu, InHand.State),
+                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
+                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
+                        new Koma(PlayerType.FirstPlayer, KomaHu, InHand.State),
+                        new Koma(PlayerType.FirstPlayer, KomaGin, new OnBoard(new BoardPosition(2,2))),
                     },
-                    Player.FirstPlayer
+                    PlayerType.FirstPlayer
                     ),
                     KyumasuShogiRule);
             }
@@ -434,15 +434,15 @@ namespace Shogi.Business.Domain.Model.GameFactorys
                     new Board(3, 3),
                     new GameState(new List<Koma>()
                     {
-                        new Koma(Player.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(1,1))),
-                        new Koma(Player.SecondPlayer, KomaKin, InHand.State),
-                        new Koma(Player.SecondPlayer, KomaGin, InHand.State),
-                        new Koma(Player.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(Player.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(Player.FirstPlayer, KomaKin, InHand.State),
-                        new Koma(Player.FirstPlayer, KomaGin, InHand.State),
+                        new Koma(PlayerType.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(1,1))),
+                        new Koma(PlayerType.SecondPlayer, KomaKin, InHand.State),
+                        new Koma(PlayerType.SecondPlayer, KomaGin, InHand.State),
+                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
+                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
+                        new Koma(PlayerType.FirstPlayer, KomaKin, InHand.State),
+                        new Koma(PlayerType.FirstPlayer, KomaGin, InHand.State),
                     },
-                    Player.FirstPlayer
+                    PlayerType.FirstPlayer
                     ),
                     KyumasuShogiRule);
             }
@@ -452,14 +452,14 @@ namespace Shogi.Business.Domain.Model.GameFactorys
                     new Board(3, 3),
                     new GameState(new List<Koma>()
                     {
-                        new Koma(Player.SecondPlayer, KomaKema, new OnBoard(new BoardPosition(0,0))),
-                        new Koma(Player.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(1,0))),
-                        new Koma(Player.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(Player.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(Player.FirstPlayer, KomaHu, new OnBoard(new BoardPosition(1,2))),
-                        new Koma(Player.FirstPlayer, KomaKema, new OnBoard(new BoardPosition(2,2))),
+                        new Koma(PlayerType.SecondPlayer, KomaKema, new OnBoard(new BoardPosition(0,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(1,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
+                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
+                        new Koma(PlayerType.FirstPlayer, KomaHu, new OnBoard(new BoardPosition(1,2))),
+                        new Koma(PlayerType.FirstPlayer, KomaKema, new OnBoard(new BoardPosition(2,2))),
                     },
-                    Player.FirstPlayer
+                    PlayerType.FirstPlayer
                     ),
                     KyumasuShogiRule);
             }

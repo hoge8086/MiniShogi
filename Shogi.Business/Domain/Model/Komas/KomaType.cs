@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Moves;
-using Shogi.Business.Domain.Model.Players;
+using Shogi.Business.Domain.Model.PlayerTypes;
 
 namespace Shogi.Business.Domain.Model.Komas
 {
@@ -27,7 +27,7 @@ namespace Shogi.Business.Domain.Model.Komas
             IsKing = isKing;
         }
         public BoardPositions GetMovableBoardPositions(
-            Player player,
+            PlayerType player,
             BoardPosition position,
             bool isTransformed,
             Board board,

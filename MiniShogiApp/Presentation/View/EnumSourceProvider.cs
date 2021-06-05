@@ -28,6 +28,6 @@ namespace MiniShogiApp.Presentation.View
         public override object ProvideValue(IServiceProvider serviceProvider) => this;
     }
 
-    public class EnumPlayerTypeSourceProvider : EnumSourceProvider<PlayerType> { }
+    public class EnumPlayerTypeSourceProvider : EnumSourceProvider<PlayerKind> { }
     public class EnumGameTypeSourceProvider : EnumSourceProvider<GameType> { }
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using Shogi.Business.Domain.Model.Games;
-using Shogi.Business.Domain.Model.Players;
+using Shogi.Business.Domain.Model.PlayerTypes;
 using Shogi.Business.Domain.Model.GameFactorys;
-using Shogi.Business.Domain.Model.Users;
+using Shogi.Business.Domain.Model.Players;
 using Shogi.Business.Domain.Model.AI;
 using System.Threading;
 
@@ -13,15 +13,15 @@ namespace Shogi.Business.Application
 
     public class GameSet
     {
-        public Dictionary<Player, User> Users;
+        public Dictionary<PlayerType, Player> Players;
         public Game Game;
         public GameType GameType;
 
-        public GameSet(User firstPlayer, User secondPlayer, GameType gameType)
+        public GameSet(Player firstPlayer, Player secondPlayer, GameType gameType)
         {
-            Users = new Dictionary<Player, User>();
-            Users.Add(Player.FirstPlayer, firstPlayer);
-            Users.Add(Player.SecondPlayer, secondPlayer);
+            Players = new Dictionary<PlayerType, Player>();
+            Players.Add(PlayerType.FirstPlayer, firstPlayer);
+            Players.Add(PlayerType.SecondPlayer, secondPlayer);
             GameType = gameType;
             Game = new GameFactory().Create(GameType);
         }
@@ -34,7 +34,7 @@ namespace Shogi.Business.Application
     {
         void OnStarted();
         void OnPlayed();
-        void OnEnded(Player winner);
+        void OnEnded(PlayerType winner);
     }
 
     public class GameService
@@ -97,7 +97,7 @@ namespace Shogi.Business.Application
                 return;
             }
 
-            if(GameSet.Users[GameSet.Game.State.TurnPlayer] is Human)
+            if(GameSet.Players[GameSet.Game.State.TurnPlayer] is Human)
             {
                 // [人]
                 return;
@@ -105,7 +105,7 @@ namespace Shogi.Business.Application
             else
             {
                 // [AI]
-                var ai = GameSet.Users[GameSet.Game.State.TurnPlayer] as AI;
+                var ai = GameSet.Players[GameSet.Game.State.TurnPlayer] as AI;
                 ai.Play(GameSet.Game, cancellation);
                 if (cancellation.IsCancellationRequested)
                     return;
@@ -126,7 +126,7 @@ namespace Shogi.Business.Application
         // [TODO:リードモデルとしてGameSetをとれるようにして、このメソッドはなくす]
         public bool IsTurnPlayerAI()
         {
-            return GameSet.Users[GameSet.Game.State.TurnPlayer] is AI;
+            return GameSet.Players[GameSet.Game.State.TurnPlayer] is AI;
         }
     }
 }

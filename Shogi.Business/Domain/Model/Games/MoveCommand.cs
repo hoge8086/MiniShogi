@@ -1,6 +1,6 @@
 ﻿using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Komas;
-using Shogi.Business.Domain.Model.Players;
+using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,10 +9,10 @@ namespace Shogi.Business.Domain.Model.Games
 {
     public abstract class MoveCommand
     {
-        public Player Player;
+        public PlayerType Player;
         public BoardPosition ToPosition;
 
-        public MoveCommand(Player player, BoardPosition toPosition)
+        public MoveCommand(PlayerType player, BoardPosition toPosition)
         {
             Player = player;
             ToPosition = toPosition;
@@ -30,7 +30,7 @@ namespace Shogi.Business.Domain.Model.Games
         public BoardPosition FromPosition { get; set; }
         public override bool DoTransform { get; }
 
-        public BoardKomaMoveCommand(Player player, BoardPosition toPosition, BoardPosition fromPosition, bool doTransform) : base(player, toPosition)
+        public BoardKomaMoveCommand(PlayerType player, BoardPosition toPosition, BoardPosition fromPosition, bool doTransform) : base(player, toPosition)
         {
             FromPosition = fromPosition;
             DoTransform = doTransform;
@@ -47,7 +47,7 @@ namespace Shogi.Business.Domain.Model.Games
         public override bool Equals(object obj)
         {
             return obj is BoardKomaMoveCommand command &&
-                   EqualityComparer<Player>.Default.Equals(Player, command.Player) &&
+                   EqualityComparer<PlayerType>.Default.Equals(Player, command.Player) &&
                    EqualityComparer<BoardPosition>.Default.Equals(ToPosition, command.ToPosition) &&
                    DoTransform == command.DoTransform &&
                    EqualityComparer<BoardPosition>.Default.Equals(FromPosition, command.FromPosition) &&
@@ -74,7 +74,7 @@ namespace Shogi.Business.Domain.Model.Games
     {
         public KomaType KomaType { get; set; }
 
-        public HandKomaMoveCommand(Player player, BoardPosition toPosition, KomaType komaType) : base(player, toPosition)
+        public HandKomaMoveCommand(PlayerType player, BoardPosition toPosition, KomaType komaType) : base(player, toPosition)
         {
             KomaType = komaType;
         }
@@ -88,7 +88,7 @@ namespace Shogi.Business.Domain.Model.Games
         public override bool Equals(object obj)
         {
             return obj is HandKomaMoveCommand command &&
-                   EqualityComparer<Player>.Default.Equals(Player, command.Player) &&
+                   EqualityComparer<PlayerType>.Default.Equals(Player, command.Player) &&
                    EqualityComparer<BoardPosition>.Default.Equals(ToPosition, command.ToPosition) &&
                    DoTransform == command.DoTransform &&
                    EqualityComparer<KomaType>.Default.Equals(KomaType, command.KomaType) &&

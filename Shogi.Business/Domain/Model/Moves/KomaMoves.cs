@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Shogi.Business.Domain.Model.Boards;
-using Shogi.Business.Domain.Model.Players;
+using Shogi.Business.Domain.Model.PlayerTypes;
 
 namespace Shogi.Business.Domain.Model.Moves
 {
@@ -14,7 +14,7 @@ namespace Shogi.Business.Domain.Model.Moves
         }
 
         public BoardPositions GetMovableBoardPositions(
-            Player player,
+            PlayerType player,
             BoardPosition position,
             Board board,
             BoardPositions turnPlayerKomaPositions,

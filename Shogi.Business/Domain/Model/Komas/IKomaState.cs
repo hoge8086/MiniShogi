@@ -1,5 +1,5 @@
 ﻿using Shogi.Business.Domain.Model.Boards;
-using Shogi.Business.Domain.Model.Players;
+using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
 using System.Collections.Generic;
 
@@ -9,7 +9,7 @@ namespace Shogi.Business.Domain.Model.Komas
     {
         public BoardPositions GetMovableBoardPositions(
             KomaType koma,
-            Player player,
+            PlayerType player,
             Board board,
             BoardPositions playerKomaPositions,
             BoardPositions opponentPlayerKomaPositions);
@@ -23,7 +23,7 @@ namespace Shogi.Business.Domain.Model.Komas
         private InHand() { }
         public BoardPositions GetMovableBoardPositions(
             KomaType koma,
-            Player player,
+            PlayerType player,
             Board board,
             BoardPositions playerKomaPositions,
             BoardPositions opponentPlayerKomaPositions)
@@ -74,7 +74,7 @@ namespace Shogi.Business.Domain.Model.Komas
         }
         public BoardPositions GetMovableBoardPositions(
             KomaType komaType,
-            Player player,
+            PlayerType player,
             Board board,
             BoardPositions playerKomaPositions,
             BoardPositions opponentPlayerKomaPositions)

@@ -1,6 +1,6 @@
 ﻿using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Komas;
-using Shogi.Business.Domain.Model.Players;
+using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +37,7 @@ namespace Shogi.Business.Domain.Model.Games
             GameResult = gameResult;
         }
 
-        public bool IsWinning(Player player)
+        public bool IsWinning(PlayerType player)
         {
             lock(thisLock)
             {
@@ -125,7 +125,7 @@ namespace Shogi.Business.Domain.Model.Games
             }
         }
 
-        public List<MoveCommand> CreateAvailableMoveCommand(Player player)
+        public List<MoveCommand> CreateAvailableMoveCommand(PlayerType player)
         {
             lock (thisLock)
             {
@@ -207,7 +207,7 @@ namespace Shogi.Business.Domain.Model.Games
             }
         }
 
-        public bool DoCheckmate(Player player)
+        public bool DoCheckmate(PlayerType player)
         {
             lock (thisLock)
             {
@@ -233,7 +233,7 @@ namespace Shogi.Business.Domain.Model.Games
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
-        public bool DoCheckmateWithoutHandMove(Player player)
+        public bool DoCheckmateWithoutHandMove(PlayerType player)
         {
             lock (thisLock)
             {
@@ -251,7 +251,7 @@ namespace Shogi.Business.Domain.Model.Games
             }
         }
 
-        public bool DoOte(Player player)
+        public bool DoOte(PlayerType player)
         {
             lock (thisLock)
             {
@@ -264,7 +264,7 @@ namespace Shogi.Business.Domain.Model.Games
                 return movablePositions.Contains(kingPosition);
             }
         }
-        public bool KingEnterOpponentTerritory(Player player)
+        public bool KingEnterOpponentTerritory(PlayerType player)
         {
             lock (thisLock)
             {
@@ -288,7 +288,7 @@ namespace Shogi.Business.Domain.Model.Games
                         game += "____";
                     }else
                     {
-                        if (koma.Player == Player.FirstPlayer)
+                        if (koma.Player == PlayerType.FirstPlayer)
                             game += " ";
                         else
                             game += ">";
@@ -302,12 +302,12 @@ namespace Shogi.Business.Domain.Model.Games
                 }
                 game += "\n";
             }
-            game += HandToString(Player.FirstPlayer) + "\n";
-            game += HandToString(Player.SecondPlayer) + "\n";
+            game += HandToString(PlayerType.FirstPlayer) + "\n";
+            game += HandToString(PlayerType.SecondPlayer) + "\n";
             game += "手番：" + State.TurnPlayer.ToString();
             return game;
 
-            string HandToString(Player player)
+            string HandToString(PlayerType player)
             {
                 return player.ToString() + ":" + string.Join(',', State.KomaList.Where(x => x.IsInHand && x.Player == player).Select(x => x.KomaType.Id));
             }

@@ -1,5 +1,5 @@
 ﻿using Shogi.Business.Domain.Model.Boards;
-using Shogi.Business.Domain.Model.Players;
+using Shogi.Business.Domain.Model.PlayerTypes;
 using System.Collections.Generic;
 
 namespace Shogi.Business.Domain.Model.Games
@@ -22,9 +22,9 @@ namespace Shogi.Business.Domain.Model.Games
             ProhibitedMoveSpecification = prohibitedMoveSpecification;
             WinningChecker = winningChecker;
         }
-        public bool IsPlayerTerritory(Player player, BoardPosition position, Board board)
+        public bool IsPlayerTerritory(PlayerType player, BoardPosition position, Board board)
         {
-            if (player == Player.FirstPlayer)
+            if (player == PlayerType.FirstPlayer)
             {
                 return ((board.Height - 1) - position.Y) < TerritoryBoundary;
             }

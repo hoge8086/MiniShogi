@@ -2,7 +2,7 @@
 using Shogi.Business.Domain.Model.Komas;
 using Shogi.Business.Domain.Model.Moves;
 using Shogi.Business.Domain.Model.Boards;
-using Shogi.Business.Domain.Model.Players;
+using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,7 +18,7 @@ namespace Shogi.Business.Domain.Model.Tests
         {
             var factory = new GameFactory();
             var game = factory.Create(GameType.AnimalShogi);
-            var cmd = game.CreateAvailableMoveCommand(Player.FirstPlayer);
+            var cmd = game.CreateAvailableMoveCommand(PlayerType.FirstPlayer);
 
         }
     }

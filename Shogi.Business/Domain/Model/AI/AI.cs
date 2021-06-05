@@ -1,12 +1,12 @@
 ﻿using Shogi.Business.Domain.Model.Games;
-using Shogi.Business.Domain.Model.Users;
+using Shogi.Business.Domain.Model.Players;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 
 namespace Shogi.Business.Domain.Model.AI
 {
-    public abstract class AI : User
+    public abstract class AI : Player
     {
         public abstract MoveCommand SelectMove(Game game, CancellationToken cancellation);
 
