@@ -16,6 +16,31 @@
                 <MenuItem Header="AI思考再開" Command="{Binding Board.ResumeAIThinkingCommand}"/>
             </MenuItem>
         </Menu>
+        <StatusBar DockPanel.Dock="Bottom">
+            <TextBlock>
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Board.OperationMode}" Value="AIThinking">
+                                <Setter Property="Text" Value="AI考え中"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Board.OperationMode}" Value="SelectMoveSource">
+                                <Setter Property="Text" Value="移動する駒を選択してください"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Board.OperationMode}" Value="SelectMoveDestination">
+                                <Setter Property="Text" Value="移動先を選択してください"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Board.OperationMode}" Value="StopAIThinking">
+                                <Setter Property="Text" Value="ゲームは中断しています"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Board.OperationMode}" Value="GameEnd">
+                                <Setter Property="Text" Value="ゲームは終了しています"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StatusBar>
         <local:ShogiBoard x:Name="board" DataContext="{Binding Board}"/>
     </DockPanel>
 </Window>
