@@ -495,7 +495,7 @@ namespace Shogi.Business.Domain.Model.GameFactorys
 
                 return (moveCommand is HandKomaMoveCommand) &&
                        ((HandKomaMoveCommand)moveCommand).KomaType == KomaHu &&
-                       game.Clone().PlayWithoutCheck(moveCommand).DoCheckmateWithoutHandMove(moveCommand.Player);
+                       game.Clone().PlayWithoutRecord(moveCommand).DoCheckmateWithoutHandMove(moveCommand.Player);
             }
         }
         /// <summary>
@@ -520,7 +520,7 @@ namespace Shogi.Business.Domain.Model.GameFactorys
         {
             public bool IsSatisfiedBy(MoveCommand moveCommand, Game game)
             {
-                return game.Clone().PlayWithoutCheck(moveCommand).DoOte(moveCommand.Player.Opponent);
+                return game.Clone().PlayWithoutRecord(moveCommand).DoOte(moveCommand.Player.Opponent);
             }
         }
     }

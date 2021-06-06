@@ -89,7 +89,24 @@ namespace Shogi.Business.Domain.Model.Games
             }
         }
 
+        /// <summary>
+        /// ゲーム終了判定のためにこのメソッドを使用しないこと(PlayWithoutRecord()を使用すること)
+        /// このメソッド内でここでさらにゲーム終了判定をしているため無限ループに陥る
+        /// </summary>
+        /// <param name="moveCommand"></param>
+        /// <returns></returns>
         public Game PlayWithoutCheck(MoveCommand moveCommand)
+        {
+            lock (thisLock)
+            {
+                PlayWithoutRecord(moveCommand);
+                State.GameResult = CreateGameResult();
+                Record.Record(State);
+                return this;
+            }
+        }
+        // [★WithoutRecordというよりは終了判定のチェックなし版というのが正しい]
+        public Game PlayWithoutRecord(MoveCommand moveCommand)
         {
             lock (thisLock)
             {
@@ -110,9 +127,6 @@ namespace Shogi.Business.Domain.Model.Games
                 }
 
                 State.FowardTurnPlayer();
-                State.GameResult = CreateGameResult();
-
-                Record.Record(State);
                 return this;
             }
         }
@@ -245,7 +259,7 @@ namespace Shogi.Business.Domain.Model.Games
                 if (!DoOte(player))
                     return false;
 
-                return moveCommands.All(x => Clone().PlayWithoutCheck(x).DoOte(player));
+                return moveCommands.All(x => Clone().PlayWithoutRecord(x).DoOte(player));
             }
         }
 
@@ -269,7 +283,7 @@ namespace Shogi.Business.Domain.Model.Games
                 var moveCommands = CreateAvailableMoveCommand(State.GetBoardKomaList(player.Opponent));
                 if (moveCommands.Count == 0)
                     return true;
-                return moveCommands.All(x => Clone().PlayWithoutCheck(x).DoOte(player));
+                return moveCommands.All(x => Clone().PlayWithoutRecord(x).DoOte(player));
             }
         }
 
