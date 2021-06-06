@@ -99,11 +99,19 @@ namespace Shogi.Business.Domain.Model.AI
         {
             if (cancellation.IsCancellationRequested)
                 return 0;
+            
+            if(game.State.IsEnd)
+            {
+                if(game.State.GameResult.Winner == player)
+                    return InfiniteEvaluationValue;
+                else
+                    return -InfiniteEvaluationValue;
+            }
 
-            if (game.IsWinning(player.Opponent))
-                return -InfiniteEvaluationValue;
-            if (game.IsWinning(player))
-                return InfiniteEvaluationValue;
+            //if (game.IsWinning(player.Opponent))
+            //    return -InfiniteEvaluationValue;
+            //if (game.IsWinning(player))
+            //    return InfiniteEvaluationValue;
 
             if(depth <= 0){		// [深さが最大に達した]
                 return Evaluation(game, player);

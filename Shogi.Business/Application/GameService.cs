@@ -10,7 +10,6 @@ using System.Threading;
 
 namespace Shogi.Business.Application
 {
-
     public class GameSet
     {
         public Dictionary<PlayerType, Player> Players;
@@ -40,7 +39,6 @@ namespace Shogi.Business.Application
     public class GameService
     {
         private Object thisLock = new Object();
-
         private GameSet GameSet = null;
         private GameListener GameListener = null;
 
@@ -71,6 +69,14 @@ namespace Shogi.Business.Application
             }
         }
 
+        public void Undo(Game.UndoType undoType)
+        {
+            lock (thisLock)
+            {
+                GameSet.Game.Undo(undoType);
+            }
+        }
+
         public Game GetGame()
         {
             // [MEMO:クローンを返すことでマルチスレッドでアクセス可能とする]
@@ -91,9 +97,9 @@ namespace Shogi.Business.Application
         {
             System.Diagnostics.Debug.WriteLine("----------------------");
             System.Diagnostics.Debug.WriteLine(GameSet.Game.ToString());
-            if(GameSet.Game.IsEnd)
+            if(GameSet.Game.State.IsEnd)
             {
-                GameListener?.OnEnded(GameSet.Game.GameResult.Winner);
+                GameListener?.OnEnded(GameSet.Game.State.GameResult.Winner);
                 return;
             }
 

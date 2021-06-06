@@ -10,13 +10,22 @@ namespace Shogi.Business.Domain.Model.Games
 {
     public class GameState
     {
-        public List<Koma> KomaList;
-        public PlayerType TurnPlayer;
+        public List<Koma> KomaList { get; private set; }
+        public PlayerType TurnPlayer { get; private set; }
 
+        public GameResult GameResult { get; set; }
+        public bool IsEnd => GameResult != null;
         public GameState(List<Koma> komaList, PlayerType turnPlayer)
         {
             KomaList = komaList;
             TurnPlayer = turnPlayer;
+            GameResult = null;
+        }
+        public GameState(List<Koma> komaList, PlayerType turnPlayer, GameResult gameResult)
+        {
+            KomaList = komaList;
+            TurnPlayer = turnPlayer;
+            GameResult = gameResult;
         }
 
         public Koma FindKingOnBoard(PlayerType player)
@@ -68,7 +77,7 @@ namespace Shogi.Business.Domain.Model.Games
 
         public GameState Clone()
         {
-            return new GameState(KomaList.Select(x => x.Clone()).ToList(), TurnPlayer);
+            return new GameState(KomaList.Select(x => x.Clone()).ToList(), TurnPlayer, GameResult);
         }
     }
 }

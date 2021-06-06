@@ -16,8 +16,7 @@ namespace Shogi.Business.Domain.Model.Games
 
         public CustomRule Rule { get; private set; }
 
-        public GameResult GameResult { get; private set; }
-        public bool IsEnd => GameResult != null;
+        public GameRecord Record { get; private set; }
 
         private Object thisLock = new Object();
 
@@ -26,15 +25,16 @@ namespace Shogi.Business.Domain.Model.Games
             Board = board;
             State = state;
             Rule = rule;
-            CheckGameEnd();
+            Record = new GameRecord(State);
+            State.GameResult = CreateGameResult();
         }
 
-        private Game(Board board, GameState state, CustomRule rule, GameResult gameResult)
+        private Game(Board board, GameState state, CustomRule rule, GameRecord record)
         {
             Board = board;
             State = state;
             Rule = rule;
-            GameResult = gameResult;
+            Record = record;
         }
 
         public bool IsWinning(PlayerType player)
@@ -45,22 +45,22 @@ namespace Shogi.Business.Domain.Model.Games
             }
         }
 
-        public void CheckGameEnd()
+        private GameResult CreateGameResult()
         {
-            lock(thisLock)
-            {
-                if (IsWinning(State.TurnPlayer))
-                    GameResult = new GameResult(State.TurnPlayer);
-                else if (IsWinning(State.TurnPlayer.Opponent))
-                    GameResult = new GameResult(State.TurnPlayer.Opponent);
-            }
+            if (IsWinning(State.TurnPlayer))
+                return new GameResult(State.TurnPlayer);
+            else if (IsWinning(State.TurnPlayer.Opponent))
+                return new GameResult(State.TurnPlayer.Opponent);
+
+            return null;
+           
         }
 
         public Game Clone()
         {
             lock(thisLock)
             {
-                return new Game(Board, State.Clone(), Rule, GameResult);
+                return new Game(Board, State.Clone(), Rule, Record.Clone());
             }
         }
 
@@ -84,9 +84,6 @@ namespace Shogi.Business.Domain.Model.Games
                     throw new InvalidOperationException("移動先にあなたの駒があるため動かせません.");
 
                 PlayWithoutCheck(moveCommand);
-
-
-                CheckGameEnd();
 
                 return this;
             }
@@ -113,7 +110,35 @@ namespace Shogi.Business.Domain.Model.Games
                 }
 
                 State.FowardTurnPlayer();
+                State.GameResult = CreateGameResult();
+
+                Record.Record(State);
                 return this;
+            }
+        }
+
+        public enum UndoType
+        {
+            Undo = -1,
+            Redo = 1,
+        }
+
+        public bool CanUndo(UndoType undoType)
+        {
+            lock (thisLock)
+            {
+                return Record.CanUndo((int)undoType);
+            }
+        }
+
+        public void Undo(UndoType undoType)
+        {
+            lock (thisLock)
+            {
+                if (!CanUndo(undoType))
+                    throw new InvalidOperationException("Undoできません.");
+
+                State = Record.Undo((int)undoType).Clone();
             }
         }
 
@@ -195,23 +220,20 @@ namespace Shogi.Business.Domain.Model.Games
 
         private List<MoveCommand> RemoveProhibitedMove(List<MoveCommand> moveCommands)
         {
-            lock (thisLock)
+            var result = new List<MoveCommand>();
+            foreach (var move in moveCommands)
             {
-                var result = new List<MoveCommand>();
-                foreach (var move in moveCommands)
-                {
-                    if (!Rule.ProhibitedMoveSpecification.IsSatisfiedBy(move, this))
-                        result.Add(move);
-                }
-                return result;
+                if (!Rule.ProhibitedMoveSpecification.IsSatisfiedBy(move, this))
+                    result.Add(move);
             }
+            return result;
         }
 
         public bool DoCheckmate(PlayerType player)
         {
             lock (thisLock)
             {
-                if (IsEnd)
+                if (State.IsEnd)
                     throw new InvalidProgramException("すでに決着済みです.");
 
 
@@ -237,7 +259,7 @@ namespace Shogi.Business.Domain.Model.Games
         {
             lock (thisLock)
             {
-                if (IsEnd)
+                if (State.IsEnd)
                     throw new InvalidProgramException("すでに決着済みです.");
 
                 if (!DoOte(player))
@@ -255,7 +277,7 @@ namespace Shogi.Business.Domain.Model.Games
         {
             lock (thisLock)
             {
-                if (IsEnd)
+                if (State.IsEnd)
                     throw new InvalidProgramException("すでに決着済みです.");
 
                 // [MEMO:盤上の駒に重複はないのでDistinct()する必要はない]

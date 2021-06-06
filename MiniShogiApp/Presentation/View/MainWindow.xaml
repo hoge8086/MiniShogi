@@ -12,8 +12,8 @@
                 <MenuItem Header="新しく始める" Command="{Binding Board.StartCommand}"/>
                 <MenuItem Header="新しくやり直す" Command="{Binding Board.RestartCommand}"/>
                 <MenuItem Header="盤面を反転" Command="{Binding TurnBoardCommand}"/>
-                <MenuItem Header="AI思考停止" Command="{Binding Board.StopAIThinkingCommand}"/>
-                <MenuItem Header="AI思考再開" Command="{Binding Board.ResumeAIThinkingCommand}"/>
+                <MenuItem Header="停止(検討モード)" Command="{Binding Board.StopCommand}"/>
+                <MenuItem Header="再開" Command="{Binding Board.ResumeCommand}"/>
             </MenuItem>
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
@@ -30,8 +30,8 @@
                             <DataTrigger Binding="{Binding Board.OperationMode}" Value="SelectMoveDestination">
                                 <Setter Property="Text" Value="移動先を選択してください"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Board.OperationMode}" Value="StopAIThinking">
-                                <Setter Property="Text" Value="ゲームは中断しています"/>
+                            <DataTrigger Binding="{Binding Board.OperationMode}" Value="Stopping">
+                                <Setter Property="Text" Value="検討モード(ゲーム中断)"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding Board.OperationMode}" Value="GameEnd">
                                 <Setter Property="Text" Value="ゲームは終了しています"/>
@@ -41,6 +41,20 @@
                 </TextBlock.Style>
             </TextBlock>
         </StatusBar>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Board.OperationMode}" Value="Stopping">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+            </StackPanel.Style>
+            <Button FontSize="24" Width="60" Content="◀" BorderThickness="0" Command="{Binding Board.UndoCommand}"/>
+            <Button FontSize="24" Width="60" Content="▶" BorderThickness="0" Command="{Binding Board.RedoCommand}" Margin="10,0,0,0"/>
+        </StackPanel>
         <local:ShogiBoard x:Name="board" DataContext="{Binding Board}"/>
     </DockPanel>
 </Window>

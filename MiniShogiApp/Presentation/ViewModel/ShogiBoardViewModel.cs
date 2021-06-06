@@ -27,7 +27,7 @@ namespace MiniShogiApp.Presentation.ViewModel
         SelectMoveSource,       // [人ターン(移動駒選択)]
         SelectMoveDestination,  // [人ターン(移動先選択)]
         AIThinking,             // [AIターン][別スレッドが動作中のためユーザの操作は制限される]
-        StopAIThinking,         // [AIターン][別スレッドが動作中のためユーザの操作は制限される]
+        Stopping,         // [AIターン][別スレッドが動作中のためユーザの操作は制限される]
         GameEnd,
     };
 
@@ -36,8 +36,10 @@ namespace MiniShogiApp.Presentation.ViewModel
         public DelegateCommand<object> MoveCommand { get; set; }
         public DelegateCommand StartCommand { get; set; }
         public DelegateCommand RestartCommand { get; set; }
-        public DelegateCommand StopAIThinkingCommand { get; set; }
-        public DelegateCommand ResumeAIThinkingCommand { get; set; }
+        public DelegateCommand StopCommand { get; set; }
+        public DelegateCommand ResumeCommand { get; set; }
+        public DelegateCommand UndoCommand { get; set; }
+        public DelegateCommand RedoCommand { get; set; }
         public ObservableCollection<ObservableCollection<CellViewModel>> Board { get; set; } = new ObservableCollection<ObservableCollection<CellViewModel>>();
 
         private Player _foregroundPlayer;
@@ -57,8 +59,10 @@ namespace MiniShogiApp.Presentation.ViewModel
                 MoveCommand?.RaiseCanExecuteChanged();
                 StartCommand?.RaiseCanExecuteChanged();
                 RestartCommand?.RaiseCanExecuteChanged();
-                StopAIThinkingCommand?.RaiseCanExecuteChanged();
-                ResumeAIThinkingCommand?.RaiseCanExecuteChanged();
+                StopCommand?.RaiseCanExecuteChanged();
+                ResumeCommand?.RaiseCanExecuteChanged();
+                UndoCommand?.RaiseCanExecuteChanged();
+                RedoCommand?.RaiseCanExecuteChanged();
             }
 
         }
@@ -108,7 +112,6 @@ namespace MiniShogiApp.Presentation.ViewModel
                     cancelTokenSource = null;
                     // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
                     UpdateOperationModeOnTaskFinished();
-
                 },
                 () =>
                 {
@@ -167,9 +170,6 @@ namespace MiniShogiApp.Presentation.ViewModel
                     if (param == null)
                         return false;
 
-                    if (OperationMode == OperationMode.GameEnd)
-                        return false;
-
                     if (OperationMode == OperationMode.SelectMoveSource)
                     {
                         var cell = param as CellViewModel;
@@ -192,21 +192,26 @@ namespace MiniShogiApp.Presentation.ViewModel
                         return true;
                     }
                     
+                    // [OperationMode.GameEnd]
                     // [OperationMode.AIThinking]
+                    // [OperationMode.Stopping]
                     return false;
                 }
                 );
 
-            StopAIThinkingCommand = new DelegateCommand(
+            StopCommand = new DelegateCommand(
                 () =>
                 {
                     cancelTokenSource?.Cancel();
+                    // [MEMO:OperationModeを変更すると、この時点でタスクが裏で動いているのに、他の操作ができるようになってしまうが]
+                    // [     アプリケーションサービス層でロックしているので一応問題ない(タスクがキャンセルされるまで少し固まる可能性はあるが)]
+                    OperationMode = OperationMode.Stopping;
                 },
                 () =>
                 {
-                    return OperationMode == OperationMode.AIThinking;
+                    return OperationMode == OperationMode.AIThinking || OperationMode == OperationMode.SelectMoveSource || OperationMode == OperationMode.GameEnd;
                 });
-            ResumeAIThinkingCommand = new DelegateCommand(
+            ResumeCommand = new DelegateCommand(
                 async () =>
                 {
                     OperationMode = OperationMode.AIThinking;
@@ -222,8 +227,37 @@ namespace MiniShogiApp.Presentation.ViewModel
                 },
                 () =>
                 {
-                    return OperationMode == OperationMode.StopAIThinking;
+                    return OperationMode == OperationMode.Stopping;
                 });
+            UndoCommand = new DelegateCommand(
+                () =>
+                {
+                    this.gameService.Undo(Game.UndoType.Undo);
+                    Update();
+                    UndoCommand?.RaiseCanExecuteChanged();
+                    RedoCommand?.RaiseCanExecuteChanged();
+                },
+                () =>
+                {
+                    return OperationMode == OperationMode.Stopping &&
+                            this.gameService.GetGame().CanUndo(Game.UndoType.Undo);
+                });
+            RedoCommand = new DelegateCommand(
+                () =>
+                {
+                    this.gameService.Undo(Game.UndoType.Redo);
+                    Update();
+                    UndoCommand?.RaiseCanExecuteChanged();
+                    RedoCommand?.RaiseCanExecuteChanged();
+                },
+                () =>
+                {
+                    return OperationMode == OperationMode.Stopping &&
+                            this.gameService.GetGame().CanUndo(Game.UndoType.Redo);
+                });
+
+
+
             var ai = new NegaAlphaAI(6);
             var human = new Human();
             FirstPlayerHands = new PlayerViewModel() { Player = Player.FirstPlayer , Name=human.Name};
@@ -237,8 +271,12 @@ namespace MiniShogiApp.Presentation.ViewModel
         }
         public void UpdateOperationModeOnTaskFinished()
         {
+            if(OperationMode == OperationMode.Stopping)
+            {
+                return;
+            }
             // [タスクが終わったというこは、自分のターンかゲーム終了かのどちらか]
-            if(gameService.GetGame().IsEnd)
+            if(gameService.GetGame().State.IsEnd)
             {
                 OperationMode = OperationMode.GameEnd;
                 return;
@@ -246,7 +284,7 @@ namespace MiniShogiApp.Presentation.ViewModel
             if(gameService.IsTurnPlayerAI())
             {
                 // [AI思考停止中]
-                OperationMode = OperationMode.StopAIThinking;
+                OperationMode = OperationMode.Stopping;
             }
             else
             {

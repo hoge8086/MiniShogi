@@ -29,10 +29,10 @@ namespace SyogiConsole
                 {
                     Console.WriteLine(game.ToString());
 
-                    if (game.IsEnd)
+                    if (game.State.IsEnd)
                     {
                         Console.WriteLine("--------------");
-                        Console.WriteLine("勝者:" + game.GameResult.Winner.ToString());
+                        Console.WriteLine("勝者:" + game.State.GameResult.Winner.ToString());
                         break;
                     }
 

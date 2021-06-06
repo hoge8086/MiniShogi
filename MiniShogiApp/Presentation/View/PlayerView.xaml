@@ -37,7 +37,7 @@
         <ItemsControl x:Name="hands"
                       Grid.Row="1"
                       MinHeight="100"
-                      Width="100"
+                      Width="140"
                       ItemsSource="{Binding Hands}"
                       Margin="5">
             <ItemsControl.Style>
