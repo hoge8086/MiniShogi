@@ -345,7 +345,7 @@ namespace Shogi.Business.Domain.Model.Games
 
             string HandToString(PlayerType player)
             {
-                return player.ToString() + ":" + string.Join(',', State.KomaList.Where(x => x.IsInHand && x.Player == player).Select(x => x.KomaType.Id));
+                return player.ToString() + ":" + string.Join(",", State.KomaList.Where(x => x.IsInHand && x.Player == player).Select(x => x.KomaType.Id));
             }
         }
     }

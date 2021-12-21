@@ -7,13 +7,13 @@ namespace Shogi.Business.Domain.Model.Komas
 {
     public interface IKomaState
     {
-        public BoardPositions GetMovableBoardPositions(
+        BoardPositions GetMovableBoardPositions(
             KomaType koma,
             PlayerType player,
             Board board,
             BoardPositions playerKomaPositions,
             BoardPositions opponentPlayerKomaPositions);
-        public IKomaState ToBoard(BoardPosition toPosition, bool doTransform);
+        IKomaState ToBoard(BoardPosition toPosition, bool doTransform);
 
     }
 

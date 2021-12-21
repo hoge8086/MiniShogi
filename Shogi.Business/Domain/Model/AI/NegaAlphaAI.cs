@@ -34,7 +34,7 @@ namespace Shogi.Business.Domain.Model.AI
             if(debug)
             {
                 System.Diagnostics.Debug.WriteLine("---------ベスト手------------") ;
-                System.Diagnostics.Debug.WriteLine(string.Join('\n', bestMoveCommands)) ;
+                System.Diagnostics.Debug.WriteLine(string.Join("\n", bestMoveCommands)) ;
             }
             return bestMoveCommands[new System.Random().Next(0, bestMoveCommands.Count)];
         }
@@ -128,7 +128,7 @@ namespace Shogi.Business.Domain.Model.AI
                   System.Diagnostics.Debug.WriteLine(game.ToString()) ;
                   System.Diagnostics.Debug.WriteLine("手番：" + game.State.TurnPlayer.ToString()) ;
                   System.Diagnostics.Debug.WriteLine("---------着手可能手------------") ;
-                  System.Diagnostics.Debug.WriteLine(string.Join('\n', moveCommands)) ;
+                  System.Diagnostics.Debug.WriteLine(string.Join("\n", moveCommands)) ;
                 }
             }
 
