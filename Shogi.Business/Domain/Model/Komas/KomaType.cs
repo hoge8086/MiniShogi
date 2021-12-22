@@ -13,18 +13,21 @@ namespace Shogi.Business.Domain.Model.Komas
         public KomaMoves Moves { get; private set; }
         public KomaMoves TransformedMoves { get; private set; }
         public bool IsKing { get; private set; }
+        public bool IsHu { get; private set; }
         public bool CanBeTransformed { get => TransformedMoves != null; }
 
         public KomaType(
             string id,
             KomaMoves moves,
             KomaMoves transformedMoves,
-            bool isKing)
+            bool isKing,
+            bool isHu = false)
         {
             Id = id;
             Moves = moves;
             TransformedMoves = transformedMoves;
             IsKing = isKing;
+            IsHu = isHu;
         }
         public BoardPositions GetMovableBoardPositions(
             PlayerType player,
