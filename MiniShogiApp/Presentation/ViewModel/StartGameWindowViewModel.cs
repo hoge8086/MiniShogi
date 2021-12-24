@@ -6,6 +6,7 @@ using Shogi.Business.Domain.Model.GameFactorys;
 using Shogi.Business.Domain.Model.Players;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
 
@@ -49,12 +50,14 @@ namespace MiniShogiApp.Presentation.ViewModel
             set { SetProperty(ref _secondAIThinkDepth, value); }
         }
 
-        private GameType _gameType = GameType.AnimalShogi;
-        public GameType GameType
+        private string _gameType;
+        public string GameType
         {
             get { return _gameType; }
             set { SetProperty(ref _gameType, value); }
         }
+
+        public ObservableCollection<string> TemplateGameNameList { get; private set; }
 
         public Shogi.Business.Domain.Model.Players.Player CreatePlayer(PlayerKind playerType, int aiThinkDepth)
         {
@@ -63,12 +66,14 @@ namespace MiniShogiApp.Presentation.ViewModel
             else
                 return new NegaAlphaAI(aiThinkDepth);
         }
-        public GameSet CreateGameSet()
+
+        public Shogi.Business.Domain.Model.Players.Player FirstPlayer => CreatePlayer(FirstPlayerType, FirstAIThinkDepth);
+        public Shogi.Business.Domain.Model.Players.Player SecondPlayer => CreatePlayer(SecondPlayerType, SecondAIThinkDepth);
+
+        public StartGameWindowViewModel()
         {
-            return new GameSet(
-                CreatePlayer(FirstPlayerType, FirstAIThinkDepth),
-                CreatePlayer(SecondPlayerType, SecondAIThinkDepth),
-                GameType);
+            TemplateGameNameList = new ObservableCollection<string>(App.GameService.GameTemplateRepository.FindAllName());
+            GameType = TemplateGameNameList[0];
         }
     }
 }

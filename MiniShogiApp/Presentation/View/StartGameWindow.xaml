@@ -142,9 +142,7 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0" Text="ゲーム種別：" Margin="5,5,0,0"/>
             <ComboBox Grid.Row="0" Grid.Column="1" Width="150" Margin="5,5,0,0" Grid.ColumnSpan="2" HorizontalAlignment="Left"
-                      ItemsSource="{Binding Source, Source={local:EnumGameTypeSourceProvider}}"
-                      DisplayMemberPath="Name"
-                      SelectedValuePath="Code"
+                      ItemsSource="{Binding TemplateGameNameList}"
                       SelectedValue="{Binding GameType}"/>
             <TextBlock Grid.Row="1" Grid.Column="0" Text="先手：" Margin="5,5,0,0"/>
             <ComboBox Grid.Row="1" Grid.Column="1" Width="100" Margin="5,5,0,0"

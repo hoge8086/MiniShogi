@@ -5,14 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.Games
 {
+    [DataContract]
     public class GameState
     {
+        [DataMember]
         public List<Koma> KomaList { get; private set; }
+        [DataMember]
         public PlayerType TurnPlayer { get; private set; }
 
+        [DataMember]
         public GameResult GameResult { get; set; }
         public bool IsEnd => GameResult != null;
         public GameState(List<Koma> komaList, PlayerType turnPlayer)

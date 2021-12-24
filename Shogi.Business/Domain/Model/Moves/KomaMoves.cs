@@ -1,11 +1,16 @@
 ﻿using System.Collections.Generic;
 using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.PlayerTypes;
+using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.Moves
 {
+    [DataContract]
+    [KnownType(typeof(PinpointKomaMove))]
+    [KnownType(typeof(StraightKomaMove))]
     public class KomaMoves
     {
+        [DataMember]
         public List<IKomaMove> Moves { get; private set; }
 
         public KomaMoves(List<IKomaMove> moves)

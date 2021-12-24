@@ -3,15 +3,21 @@ using System.Collections.Generic;
 using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Komas;
 using Shogi.Business.Domain.Model.PlayerTypes;
+using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.Komas
 {
 
+    [DataContract]
+    [KnownType(typeof(OnBoard))]
+    [KnownType(typeof(InHand))]
     public class Koma
     {
-        public PlayerType Player { get;  private set;}
-        public KomaType KomaType { get;  private set;}
-
+        [DataMember]
+        public PlayerType Player { get; private set;}
+        [DataMember]
+        public KomaType KomaType { get; private set;}
+        [DataMember]
         public IKomaState State { get; private set; }
 
         public Koma(PlayerType player, KomaType komaType, IKomaState state)

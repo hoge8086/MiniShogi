@@ -15,7 +15,18 @@ namespace Shogi.Business.Infrastructure
         {
             jsonPath = path;
             var repo = new JsonRepository();
-            cache = repo.Load<List<GameTemplate>>(jsonPath);
+            try
+            {
+                cache = repo.Load<List<GameTemplate>>(jsonPath);
+            }catch(Exception ex)
+            {
+                cache = new List<GameTemplate>();
+            }
+        }
+
+        public GameTemplate First()
+        {
+            return cache.First();
         }
         public void Add(GameTemplate gameTemplate)
         {

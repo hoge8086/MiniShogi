@@ -1,12 +1,15 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.PlayerTypes
 {
+    [DataContract]
     public class PlayerType
     {
-        private string Id;
+        [DataMember]
+        public string Id { get; private set; }
+
         private PlayerType(string id) { Id = id; }
         public static PlayerType FirstPlayer = new PlayerType("先手");
         public static PlayerType SecondPlayer = new PlayerType("後手");

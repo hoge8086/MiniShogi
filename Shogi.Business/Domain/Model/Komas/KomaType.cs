@@ -4,15 +4,22 @@ using System.Text;
 using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Moves;
 using Shogi.Business.Domain.Model.PlayerTypes;
+using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.Komas
 {
+    [DataContract]
     public class KomaType
     {
+        [DataMember]
         public string Id { get; private set; }
+        [DataMember]
         public KomaMoves Moves { get; private set; }
+        [DataMember]
         public KomaMoves TransformedMoves { get; private set; }
+        [DataMember]
         public bool IsKing { get; private set; }
+        [DataMember]
         public bool IsHu { get; private set; }
         public bool CanBeTransformed { get => TransformedMoves != null; }
 

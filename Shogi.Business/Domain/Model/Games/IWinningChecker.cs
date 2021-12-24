@@ -1,5 +1,6 @@
 ﻿using Shogi.Business.Domain.Model.PlayerTypes;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.Games
 {
@@ -8,9 +9,15 @@ namespace Shogi.Business.Domain.Model.Games
         bool IsWinning(Game game, PlayerType player);
     }
 
+    [DataContract]
+    [KnownType(typeof(CheckmateWinningChecker))]
+    [KnownType(typeof(TakeKingWinningChecker))]
+    [KnownType(typeof(EnterOpponentTerritoryWinningChecker))]
+    [KnownType(typeof(MultiWinningChecker))]
     public class MultiWinningChecker : IWinningChecker
     {
-        public List<IWinningChecker> WinningCheckers;
+        [DataMember]
+        public List<IWinningChecker> WinningCheckers { get; set; }
         public MultiWinningChecker(List<IWinningChecker> winningCheckers)
         {
             WinningCheckers = winningCheckers;
@@ -26,6 +33,7 @@ namespace Shogi.Business.Domain.Model.Games
 
         }
     }
+    [DataContract]
     public class TakeKingWinningChecker : IWinningChecker
     {
         public bool IsWinning(Game game, PlayerType player)
@@ -33,6 +41,7 @@ namespace Shogi.Business.Domain.Model.Games
             return !game.State.ExistKingOnBoard(player.Opponent);
         }
     }
+    [DataContract]
     public class EnterOpponentTerritoryWinningChecker : IWinningChecker
     {
         public bool IsWinning(Game game, PlayerType player)
@@ -40,6 +49,7 @@ namespace Shogi.Business.Domain.Model.Games
             return game.KingEnterOpponentTerritory(player) && !game.DoOte(player.Opponent);
         }
     }
+    [DataContract]
     public class CheckmateWinningChecker : IWinningChecker
     {
         public bool IsWinning(Game game, PlayerType player)

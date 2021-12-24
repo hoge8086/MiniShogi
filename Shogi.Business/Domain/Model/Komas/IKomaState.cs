@@ -2,6 +2,7 @@
 using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.Komas
 {
@@ -17,8 +18,12 @@ namespace Shogi.Business.Domain.Model.Komas
 
     }
 
+    [DataContract]
     public class InHand : IKomaState
     {
+        /// <remark>
+        /// シリアライズ化するのであれば、シングルトンは使えないので、このインスタンスで同一性を判断してはいけない
+        /// </remark>
         public static readonly InHand State = new InHand();
         private InHand() { }
         public BoardPositions GetMovableBoardPositions(
@@ -50,10 +55,14 @@ namespace Shogi.Business.Domain.Model.Komas
             return "手駒";
         }
     }
+
+    [DataContract]
     public class OnBoard : IKomaState
     {
+        [DataMember]
         public BoardPosition Position { get; private set; }
-        public bool IsTransformed { get;  private set;}
+        [DataMember]
+        public bool IsTransformed { get; private set;}
 
         public OnBoard(BoardPosition position)
         {

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Shogi.Business.Application;
+using Shogi.Business.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +15,6 @@ namespace MiniShogiApp
     /// </summary>
     public partial class App : Application
     {
+        static public GameService GameService { get; } = new GameService(new GameTemplateJsonRepository("games.json"));
     }
 }

@@ -1,21 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.Boards
 {
     /// <summary>
     /// 先手から見たボート位置
     /// </summary>
+    [DataContract]
     public class BoardPosition
     {
         /// <summary>
         /// 左から0始まり(将棋の筋とは数え方が異なる)
         /// </summary>
-        public int X;
+        [DataMember]
+        public int X { get; private set; }
         /// <summary>
         /// 上から0始まり(将棋の段とは数え方が異なる)
         /// </summary>
-        public int Y;
+        [DataMember]
+        public int Y { get; private set; }
 
         public BoardPosition(int x, int y)
         {
@@ -55,10 +59,14 @@ namespace Shogi.Business.Domain.Model.Boards
         }
     }
 
+    [DataContract]
     public class RelativeBoardPosition
     {
-        public int dX;
-        public int dY;
+        [DataMember]
+        public int dX { get; private set; }
+        [DataMember]
+        public int dY { get; private set; }
+
         public RelativeBoardPosition(int dx, int dy)
         {
             dX = dx;

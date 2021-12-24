@@ -12,7 +12,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		バックログ.txt = バックログ.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shogi.Business", "Shogi.Business\Shogi.Business.csproj", "{C4117439-F4C4-4FB5-AC14-795CE0FE09FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shogi.Business", "Shogi.Business\Shogi.Business.csproj", "{C4117439-F4C4-4FB5-AC14-795CE0FE09FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shogi.BusinessTests", "Shogi.BusinessTests\Shogi.BusinessTests.csproj", "{4D849E79-B0F8-49EA-81C9-F74F2AD02635}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,10 @@ Global
 		{C4117439-F4C4-4FB5-AC14-795CE0FE09FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4117439-F4C4-4FB5-AC14-795CE0FE09FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4117439-F4C4-4FB5-AC14-795CE0FE09FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

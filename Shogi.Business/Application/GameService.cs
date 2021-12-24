@@ -7,6 +7,7 @@ using Shogi.Business.Domain.Model.GameFactorys;
 using Shogi.Business.Domain.Model.Players;
 using Shogi.Business.Domain.Model.AI;
 using System.Threading;
+using Shogi.Business.Domain.Model.GameTemplates;
 
 namespace Shogi.Business.Application
 {
@@ -14,19 +15,19 @@ namespace Shogi.Business.Application
     {
         public Dictionary<PlayerType, Player> Players;
         public Game Game;
-        public GameType GameType;
 
-        public GameSet(Player firstPlayer, Player secondPlayer, GameType gameType)
+        public GameSet(Player firstPlayer, Player secondPlayer, Game game)
         {
             Players = new Dictionary<PlayerType, Player>();
             Players.Add(PlayerType.FirstPlayer, firstPlayer);
             Players.Add(PlayerType.SecondPlayer, secondPlayer);
-            GameType = gameType;
-            Game = new GameFactory().Create(GameType);
+            Game = game;
+            
+            
         }
         public void Reset()
         {
-            Game = new GameFactory().Create(GameType);
+            Game.Reset();
         }
     }
     public interface GameListener
@@ -41,6 +42,12 @@ namespace Shogi.Business.Application
         private Object thisLock = new Object();
         private GameSet GameSet = null;
         private GameListener GameListener = null;
+        public IGameTemplateRepository GameTemplateRepository;
+
+        public GameService(IGameTemplateRepository gameTemplateRepository)
+        {
+            GameTemplateRepository = gameTemplateRepository;
+        }
 
         public void Subscribe(GameListener listener)
         {
@@ -49,12 +56,17 @@ namespace Shogi.Business.Application
                 GameListener = listener;
             }
         }
-        public void Start(GameSet gameSet, CancellationToken cancellation)
+        public void Start(Player firstPlayer, Player secondPlayer, string gameName, CancellationToken cancellation)
         {
             lock (thisLock)
             {
                 //GameSet = new GameSet(firstPlayer, secondPlayer, gameType);
-                GameSet = gameSet;
+                GameTemplate template;
+                if (gameName == null)
+                    template = GameTemplateRepository.First();
+                else
+                    template = GameTemplateRepository.FindByName(gameName);
+                GameSet = new GameSet(firstPlayer, secondPlayer, template.Game.Clone());
                 GameListener?.OnStarted();
                 Next(cancellation);
             }

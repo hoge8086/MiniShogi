@@ -1,13 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.Games
 {
+    [DataContract]
     public class GameRecord
     {
-        private List<GameState> SateRecords;
+        [DataMember]
+        public List<GameState> SateRecords { get; private set; }
 
+        [DataMember]
         public int CurrentMovesCount { get; private set; }
+
         public GameRecord Clone()
         {
             return new GameRecord(new List<GameState>(SateRecords), CurrentMovesCount);
@@ -59,6 +64,14 @@ namespace Shogi.Business.Domain.Model.Games
         public int CountOccurrences(GameState state)
         {
             return 0;
+        }
+
+        public GameState Reset()
+        {
+            // 最低でもの盤面が1つあることは保証している(コンストラクタで)
+            SateRecords = SateRecords.Take(1).ToList();
+            CurrentMovesCount = 0;
+            return SateRecords.First().Clone();
         }
     }
 }

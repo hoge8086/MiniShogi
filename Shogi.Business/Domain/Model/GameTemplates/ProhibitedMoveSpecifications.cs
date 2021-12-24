@@ -5,12 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.GameTemplates
 {
     /// <summary>
     /// 禁じ手：二歩
     /// </summary>
+    [DataContract]
     public class NiHu : IProhibitedMoveSpecification
     {
         public bool IsSatisfiedBy(MoveCommand moveCommand, Game game)
@@ -28,6 +30,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
     /// <summary>
     /// 禁じ手：打ち歩詰め
     /// </summary>
+    [DataContract]
     public class CheckmateByHandHu : IProhibitedMoveSpecification
     {
         public bool IsSatisfiedBy(MoveCommand moveCommand, Game game)
@@ -41,6 +44,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
     /// <summary>
     /// 禁じ手：動かせない駒
     /// </summary>
+    [DataContract]
     public class KomaCannotMove : IProhibitedMoveSpecification
     {
         public bool IsSatisfiedBy(MoveCommand moveCommand, Game game)
@@ -56,6 +60,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
     /// <summary>
     /// 禁じ手：王手放置
     /// </summary>
+    [DataContract]
     public class LeaveOte: IProhibitedMoveSpecification
     {
         public bool IsSatisfiedBy(MoveCommand moveCommand, Game game)

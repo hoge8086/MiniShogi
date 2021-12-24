@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.Boards
 {
+    [DataContract]
     public class BoardPositions
     {
-        public List<BoardPosition> Positions { get; }
+        [DataMember]
+        public List<BoardPosition> Positions { get; private set; }
 
         public BoardPositions()
         {

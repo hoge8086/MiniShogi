@@ -1,12 +1,15 @@
 ﻿using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.PlayerTypes;
+using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.Moves
 {
+    [DataContract]
     public class StraightKomaMove : IKomaMove
     {
         // [先手の向きで移動可能な位置]
-        private RelativeBoardPosition RelativeBoardPosition;
+        [DataMember]
+        public RelativeBoardPosition RelativeBoardPosition { get; private set; }
         public StraightKomaMove(RelativeBoardPosition relativeBoardPosition)
         {
             RelativeBoardPosition = relativeBoardPosition;

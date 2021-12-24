@@ -1,10 +1,18 @@
 ﻿using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.PlayerTypes;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.Games
 {
 
+    [DataContract]
+    [KnownType(typeof(TakeKingWinningChecker))]
+    [KnownType(typeof(CheckmateWinningChecker))]
+    [KnownType(typeof(EnterOpponentTerritoryWinningChecker))]
+    [KnownType(typeof(MultiWinningChecker))]
+    [KnownType(typeof(NullProhibitedMoveSpecification))]
+    [KnownType(typeof(MultiProhibitedMoveSpecification))]
     public class CustomRule
     {
         // [Gameクラスとの循環参照が発生しているがここではGameクラスの内部実装には依存しないため、許容する]
@@ -12,9 +20,11 @@ namespace Shogi.Business.Domain.Model.Games
         // [     禁じ手というルールが、基本のルールより上位の(メタな)ルールに属しているからである(歩を打てるけど、実は打っちゃダメのように).]
         // [     上記概念を、GameクラスをGameBaseクラス(打ち歩詰めを許容する)とGameWithRuleクラス(打ち歩詰めを許容しない)]の2層に]
         // [     分けることで循環参照なしに表現できるかもしれないが、過剰設計と思われるのでやらない]
-
-        private int TerritoryBoundary;
+        [DataMember]
+        public int TerritoryBoundary { get; private set; }
+        [DataMember]
         public IProhibitedMoveSpecification ProhibitedMoveSpecification { get; private set; }
+        [DataMember]
         public IWinningChecker WinningChecker { get; private set; }
         public CustomRule(int positionBoundary, IProhibitedMoveSpecification prohibitedMoveSpecification, IWinningChecker winningChecker)
         {

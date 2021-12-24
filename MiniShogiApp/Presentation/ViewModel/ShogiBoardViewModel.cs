@@ -68,28 +68,31 @@ namespace MiniShogiApp.Presentation.ViewModel
         }
         private CancellationTokenSource cancelTokenSource;
 
-        private GameService gameService;
 
         private IMessenger Messenger;
-        public ShogiBoardViewModel(GameService gameService, IMessenger messenger, Func<GameSet> gameSetGetter)
+        public ShogiBoardViewModel(IMessenger messenger, Func<StartGameWindowViewModel> gameSetGetter)
         {
             Messenger = messenger;
-            this.gameService = gameService;
 
             OperationMode = OperationMode.SelectMoveSource;
-            this.gameService.Subscribe(this);
+            App.GameService.Subscribe(this);
 
             StartCommand = new DelegateCommand(
                 async () =>
                 {
                     var gameSet = gameSetGetter();
-                    FirstPlayerHands.Name = gameSet.Players[PlayerType.FirstPlayer].Name;
-                    SecondPlayerHands.Name = gameSet.Players[PlayerType.SecondPlayer].Name;
+                    FirstPlayerHands.Name = gameSet.FirstPlayer.Name;
+                    SecondPlayerHands.Name = gameSet.SecondPlayer.Name;
                     OperationMode = OperationMode.AIThinking;
                     cancelTokenSource = new CancellationTokenSource();
                     await Task.Run(() =>
                     {
-                        this.gameService.Start(gameSet, cancelTokenSource.Token);
+                        //this.gameService.Start(gameSet, cancelTokenSource.Token);
+                        App.GameService.Start(
+                            gameSet.FirstPlayer,
+                            gameSet.SecondPlayer,
+                            gameSet.GameType,
+                            cancelTokenSource.Token);
                         //this.gameService.Start(new NegaAlphaAI(9), new NegaAlphaAI(9), GameType.AnimalShogi, this);
                     });
                     cancelTokenSource = null;
@@ -107,7 +110,7 @@ namespace MiniShogiApp.Presentation.ViewModel
                     cancelTokenSource = new CancellationTokenSource();
                     await Task.Run(() =>
                     {
-                        this.gameService.Restart(cancelTokenSource.Token);
+                        App.GameService.Restart(cancelTokenSource.Token);
                     });
                     cancelTokenSource = null;
                     // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
@@ -152,7 +155,7 @@ namespace MiniShogiApp.Presentation.ViewModel
                             //game.Play(move);
                             OperationMode = OperationMode.AIThinking;
                             cancelTokenSource = new CancellationTokenSource();
-                            await Task.Run(() => this.gameService.Play(move, cancelTokenSource.Token));
+                            await Task.Run(() => App.GameService.Play(move, cancelTokenSource.Token));
                             cancelTokenSource = null;
                             // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
                             UpdateOperationModeOnTaskFinished();
@@ -178,13 +181,13 @@ namespace MiniShogiApp.Presentation.ViewModel
                             if (cell.Koma == null)
                                 return false;
 
-                            return this.gameService.GetGame().State.TurnPlayer == cell.Koma.Player.ToDomain();
+                            return App.GameService.GetGame().State.TurnPlayer == cell.Koma.Player.ToDomain();
                         }
 
                         var hand = param as HandKomaViewModel;
                         if(hand != null)
                         {
-                            return this.gameService.GetGame().State.TurnPlayer == hand.Player.ToDomain();
+                            return App.GameService.GetGame().State.TurnPlayer == hand.Player.ToDomain();
                         }
                     }
                     else if (OperationMode == OperationMode.SelectMoveDestination)
@@ -218,7 +221,7 @@ namespace MiniShogiApp.Presentation.ViewModel
                     cancelTokenSource = new CancellationTokenSource();
                     await Task.Run(() =>
                     {
-                        this.gameService.Resume(cancelTokenSource.Token);
+                        App.GameService.Resume(cancelTokenSource.Token);
                     });
                     cancelTokenSource = null;
                     // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
@@ -232,7 +235,7 @@ namespace MiniShogiApp.Presentation.ViewModel
             UndoCommand = new DelegateCommand(
                 () =>
                 {
-                    this.gameService.Undo(Game.UndoType.Undo);
+                    App.GameService.Undo(Game.UndoType.Undo);
                     Update();
                     UndoCommand?.RaiseCanExecuteChanged();
                     RedoCommand?.RaiseCanExecuteChanged();
@@ -240,12 +243,12 @@ namespace MiniShogiApp.Presentation.ViewModel
                 () =>
                 {
                     return OperationMode == OperationMode.Stopping &&
-                            this.gameService.GetGame().CanUndo(Game.UndoType.Undo);
+                            App.GameService.GetGame().CanUndo(Game.UndoType.Undo);
                 });
             RedoCommand = new DelegateCommand(
                 () =>
                 {
-                    this.gameService.Undo(Game.UndoType.Redo);
+                    App.GameService.Undo(Game.UndoType.Redo);
                     Update();
                     UndoCommand?.RaiseCanExecuteChanged();
                     RedoCommand?.RaiseCanExecuteChanged();
@@ -253,7 +256,7 @@ namespace MiniShogiApp.Presentation.ViewModel
                 () =>
                 {
                     return OperationMode == OperationMode.Stopping &&
-                            this.gameService.GetGame().CanUndo(Game.UndoType.Redo);
+                            App.GameService.GetGame().CanUndo(Game.UndoType.Redo);
                 });
 
 
@@ -266,7 +269,7 @@ namespace MiniShogiApp.Presentation.ViewModel
 
             // [MEMO:タスクで開始していない(コンストラクタなのできない)ので、必ず初手はHumanになるようにする]
             cancelTokenSource = new CancellationTokenSource();
-            this.gameService.Start(new GameSet(human, ai, GameType.AnimalShogi), cancelTokenSource.Token);
+            App.GameService.Start(human, ai, null, cancelTokenSource.Token);
             cancelTokenSource = null;
         }
         public void UpdateOperationModeOnTaskFinished()
@@ -276,12 +279,12 @@ namespace MiniShogiApp.Presentation.ViewModel
                 return;
             }
             // [タスクが終わったというこは、自分のターンかゲーム終了かのどちらか]
-            if(gameService.GetGame().State.IsEnd)
+            if(App.GameService.GetGame().State.IsEnd)
             {
                 OperationMode = OperationMode.GameEnd;
                 return;
             }
-            if(gameService.IsTurnPlayerAI())
+            if(App.GameService.IsTurnPlayerAI())
             {
                 // [AI思考停止中]
                 OperationMode = OperationMode.Stopping;
@@ -299,15 +302,15 @@ namespace MiniShogiApp.Presentation.ViewModel
             FirstPlayerHands.Hands.Clear();
             SecondPlayerHands.Hands.Clear();
 
-            for (int y = 0; y < this.gameService.GetGame().Board.Height; y++)
+            for (int y = 0; y < App.GameService.GetGame().Board.Height; y++)
             {
                 var row = new ObservableCollection<CellViewModel>();
-                for (int x = 0; x < this.gameService.GetGame().Board.Width; x++)
+                for (int x = 0; x < App.GameService.GetGame().Board.Width; x++)
                     row.Add(new CellViewModel() { Koma = null, Position = new BoardPosition(x, y), MoveCommands = null});
                 Board.Add(row);
             }
 
-            foreach (var koma in this.gameService.GetGame().State.KomaList)
+            foreach (var koma in App.GameService.GetGame().State.KomaList)
             {
                 if (koma.BoardPosition != null)
                 {
@@ -328,8 +331,8 @@ namespace MiniShogiApp.Presentation.ViewModel
                 }
             }
             
-            FirstPlayerHands.IsCurrentTurn = this.gameService.GetGame().State.TurnPlayer == PlayerType.FirstPlayer;
-            SecondPlayerHands.IsCurrentTurn = this.gameService.GetGame().State.TurnPlayer == PlayerType.SecondPlayer;
+            FirstPlayerHands.IsCurrentTurn = App.GameService.GetGame().State.TurnPlayer == PlayerType.FirstPlayer;
+            SecondPlayerHands.IsCurrentTurn = App.GameService.GetGame().State.TurnPlayer == PlayerType.SecondPlayer;
 
             MoveCommand.RaiseCanExecuteChanged();
         }
@@ -339,9 +342,9 @@ namespace MiniShogiApp.Presentation.ViewModel
             if (OperationMode != OperationMode.SelectMoveDestination)
                 return;
 
-            Koma koma = selectedMoveSource.GetKoma(this.gameService.GetGame());
+            Koma koma = selectedMoveSource.GetKoma(App.GameService.GetGame());
 
-            var moves = this.gameService.GetGame().CreateAvailableMoveCommand(koma);
+            var moves = App.GameService.GetGame().CreateAvailableMoveCommand(koma);
             foreach(var row in Board)
             {
                 foreach(var cell in row)

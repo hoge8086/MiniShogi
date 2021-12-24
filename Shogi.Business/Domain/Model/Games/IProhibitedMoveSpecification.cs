@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.Games
 {
@@ -6,6 +7,7 @@ namespace Shogi.Business.Domain.Model.Games
     {
         bool IsSatisfiedBy(MoveCommand moveCommand, Game game);
     }
+    [DataContract]
     public class NullProhibitedMoveSpecification : IProhibitedMoveSpecification
     {
         public bool IsSatisfiedBy(MoveCommand moveCommand, Game game)
@@ -14,9 +16,15 @@ namespace Shogi.Business.Domain.Model.Games
         }
 
     }
+    [DataContract]
+    [KnownType(typeof(GameTemplates.CheckmateByHandHu))]
+    [KnownType(typeof(GameTemplates.LeaveOte))]
+    [KnownType(typeof(GameTemplates.NiHu))]
+    [KnownType(typeof(GameTemplates.KomaCannotMove))]
     public class MultiProhibitedMoveSpecification : IProhibitedMoveSpecification
     {
-        public List<IProhibitedMoveSpecification> ProhibitedMoveList;
+        [DataMember]
+        public List<IProhibitedMoveSpecification> ProhibitedMoveList { get; private set; }
         public MultiProhibitedMoveSpecification(List<IProhibitedMoveSpecification> prohibitedMoveList)
         {
             ProhibitedMoveList = prohibitedMoveList;

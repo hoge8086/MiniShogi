@@ -28,7 +28,7 @@ namespace MiniShogiApp.Presentation.View
                 {
                     var dialog = new StartGameWindow();
                     dialog.ShowDialog();
-                    return dialog.ViewModel.CreateGameSet();
+                    return dialog.ViewModel;
                 }
                 );
         }
