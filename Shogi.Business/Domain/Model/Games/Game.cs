@@ -23,9 +23,6 @@ namespace Shogi.Business.Domain.Model.Games
         [DataMember]
         public GameRecord Record { get; private set; }
 
-
-        public Game() { }
-
         public Game(Board board, GameState state, CustomRule rule)
         {
             Board = board;

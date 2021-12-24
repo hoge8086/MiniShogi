@@ -17,7 +17,6 @@ namespace Shogi.Business.Domain.Model.Moves
         {
             Moves = moves;
         }
-
         public BoardPositions GetMovableBoardPositions(
             PlayerType player,
             BoardPosition position,
