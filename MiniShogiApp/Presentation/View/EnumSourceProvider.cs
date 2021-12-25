@@ -1,5 +1,4 @@
 ﻿using MiniShogiApp.Presentation.ViewModel;
-using Shogi.Business.Domain.Model.GameFactorys;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,5 +28,4 @@ namespace MiniShogiApp.Presentation.View
     }
 
     public class EnumPlayerTypeSourceProvider : EnumSourceProvider<PlayerKind> { }
-    public class EnumGameTypeSourceProvider : EnumSourceProvider<GameType> { }
 }

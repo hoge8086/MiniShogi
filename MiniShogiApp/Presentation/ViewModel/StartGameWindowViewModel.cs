@@ -2,7 +2,6 @@
 using Prism.Mvvm;
 using Shogi.Business.Application;
 using Shogi.Business.Domain.Model.AI;
-using Shogi.Business.Domain.Model.GameFactorys;
 using Shogi.Business.Domain.Model.Players;
 using System;
 using System.Collections.Generic;

@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using Prism.Commands;
 using Shogi.Business.Domain.Model.Games;
 using Shogi.Business.Domain.Model.Boards;
-using Shogi.Business.Domain.Model.GameFactorys;
 using System.Linq;
 using Shogi.Business.Domain.Model.Komas;
 using Prism.Mvvm;
@@ -318,16 +317,16 @@ namespace MiniShogiApp.Presentation.ViewModel
                     cell.Koma = new KomaViewModel()
                     {
                         IsTransformed = koma.IsTransformed,
-                        Name = koma.KomaType.Id,
+                        Name = koma.TypeId,
                         Player = koma.Player == PlayerType.FirstPlayer ? Player.FirstPlayer : Player.SecondPlayer,
                     };
                 }
                 else
                 {
                     if (koma.Player == PlayerType.FirstPlayer)
-                        FirstPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.FirstPlayer});
+                        FirstPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.TypeId, KomaTypeId = koma.TypeId, Player = Player.FirstPlayer});
                     else
-                        SecondPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.KomaType.Id, KomaType = koma.KomaType, Player = Player.SecondPlayer });
+                        SecondPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.TypeId, KomaTypeId = koma.TypeId, Player = Player.SecondPlayer });
                 }
             }
             

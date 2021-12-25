@@ -38,7 +38,7 @@ namespace Shogi.Business.Domain.Model.Games
     {
         public bool IsWinning(Game game, PlayerType player)
         {
-            return !game.State.ExistKingOnBoard(player.Opponent);
+            return !game.State.ExistKingOnBoard(player.Opponent, game.KomaTypes);
         }
     }
     [DataContract]

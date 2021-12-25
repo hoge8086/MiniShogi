@@ -6,7 +6,7 @@ namespace MiniShogiApp.Presentation.ViewModel
 {
     public class HandKomaViewModel : BindableBase, ISelectable
     {
-        public KomaType KomaType { get; set; }
+        public string KomaTypeId { get; set; }
         public Player Player { get; set; }
         public string KomaName { get; set; }
 
@@ -18,7 +18,7 @@ namespace MiniShogiApp.Presentation.ViewModel
         }
         public Koma GetKoma(Game game)
         {
-            return game.State.FindHandKoma(Player.ToDomain(), KomaType);
+            return game.State.FindHandKoma(Player.ToDomain(), KomaTypeId);
         }
     }
 }

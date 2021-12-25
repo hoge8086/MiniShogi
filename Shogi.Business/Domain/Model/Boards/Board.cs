@@ -16,8 +16,8 @@ namespace Shogi.Business.Domain.Model.Boards
         public Board(int height, int width)
         {
             var positions = new List<BoardPosition>();
-            for (int y = 0; y < Height; y++)
-                for (int x = 0; x < Width; x++)
+            for (int y = 0; y < height; y++)
+                for (int x = 0; x < width; x++)
                     positions.Add(new BoardPosition(x, y));
             Positions = new BoardPositions(positions);
 

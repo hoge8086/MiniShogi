@@ -9,35 +9,11 @@ using System.Linq;
 using System.Text;
 using Shogi.Business.Domain.Model.GameTemplates;
 
-namespace Shogi.Business.Domain.Model.GameFactorys
+using Shogi.Business.Infrastructure;
+
+namespace Shogi.Business.Infrastructure.Tests
 {
-
-    public enum GameType
-    {
-        [System.ComponentModel.Description("どうぶつ将棋")]
-        AnimalShogi,
-        [System.ComponentModel.Description("5五将棋")]
-        FiveFiveShogi,
-        [System.ComponentModel.Description("9マス将棋(初級1)")]
-        KyuMasuShogiLevel01, // [歩と銀]
-        [System.ComponentModel.Description("9マス将棋(初級2)")]
-        KyuMasuShogiLevel02, // [角と飛車]
-        [System.ComponentModel.Description("9マス将棋(中級1)")]
-        KyuMasuShogiLevel10, // [歩と持金]
-        [System.ComponentModel.Description("9マス将棋(中級2)")]
-        KyuMasuShogiLevel11, // [歩のみ]
-        [System.ComponentModel.Description("9マス将棋(中級3)")]
-        KyuMasuShogiLevel12, // [香と金]
-        [System.ComponentModel.Description("9マス将棋(中級4)")]
-        KyuMasuShogiLevel13, // [銀と持歩]
-        [System.ComponentModel.Description("9マス将棋(中級5)")]
-        KyuMasuShogiLevel14, // [角と飛車]
-        [System.ComponentModel.Description("9マス将棋(上級1)")]
-        KyuMasuShogiLevel21, // [角と飛車]
-    }
-
-
-    public class GameFactory
+    public class GameJsonFactory
     {
         public static readonly KomaType KomaHiyoko = new KomaType(
             "ひ",
@@ -265,22 +241,18 @@ namespace Shogi.Business.Domain.Model.GameFactorys
             new CheckmateWinningChecker()
             );
 
-        public Game Create(GameType gameType)
-        {
-            if (gameType == GameType.AnimalShogi)
-            {
-                return new Game(
+        public static readonly Game DobutuShogi = new Game(
                     new Board(4, 3),
                     new GameState(new List<Koma>()
                         {
-                            new Koma(PlayerType.SecondPlayer, KomaKirin, new OnBoard(new BoardPosition(0,0))),
-                            new Koma(PlayerType.SecondPlayer, KomaRaion, new OnBoard(new BoardPosition(1,0))),
-                            new Koma(PlayerType.SecondPlayer, KomaZou, new OnBoard(new BoardPosition(2,0))),
-                            new Koma(PlayerType.SecondPlayer, KomaHiyoko, new OnBoard(new BoardPosition(1,1))),
-                            new Koma(PlayerType.FirstPlayer, KomaKirin, new OnBoard(new BoardPosition(2,3))),
-                            new Koma(PlayerType.FirstPlayer, KomaRaion, new OnBoard(new BoardPosition(1,3))),
-                            new Koma(PlayerType.FirstPlayer, KomaZou, new OnBoard(new BoardPosition(0,3))),
-                            new Koma(PlayerType.FirstPlayer, KomaHiyoko, new OnBoard(new BoardPosition(1,2))),
+                            new Koma(PlayerType.SecondPlayer, KomaKirin.Id, new OnBoard(new BoardPosition(0,0))),
+                            new Koma(PlayerType.SecondPlayer, KomaRaion.Id, new OnBoard(new BoardPosition(1,0))),
+                            new Koma(PlayerType.SecondPlayer, KomaZou.Id, new OnBoard(new BoardPosition(2,0))),
+                            new Koma(PlayerType.SecondPlayer, KomaHiyoko.Id, new OnBoard(new BoardPosition(1,1))),
+                            new Koma(PlayerType.FirstPlayer, KomaKirin.Id, new OnBoard(new BoardPosition(2,3))),
+                            new Koma(PlayerType.FirstPlayer, KomaRaion.Id, new OnBoard(new BoardPosition(1,3))),
+                            new Koma(PlayerType.FirstPlayer, KomaZou.Id, new OnBoard(new BoardPosition(0,3))),
+                            new Koma(PlayerType.FirstPlayer, KomaHiyoko.Id, new OnBoard(new BoardPosition(1,2))),
 
                         },
                         PlayerType.FirstPlayer
@@ -293,26 +265,25 @@ namespace Shogi.Business.Domain.Model.GameFactorys
                             new TakeKingWinningChecker(),
                             new EnterOpponentTerritoryWinningChecker(),
                         })
-                    ));
+                    ),
+                    new List<KomaType>() {KomaKirin, KomaRaion, KomaZou, KomaHiyoko });
 
-            } else if (gameType == GameType.FiveFiveShogi)
-            {
-                return new Game(
+        public static readonly Game GoGoShogi = new Game(
                     new Board(5, 5),
                     new GameState(new List<Koma>()
                     {
-                        new Koma(PlayerType.SecondPlayer, KomaHisya, new OnBoard(new BoardPosition(0,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaKaku, new OnBoard(new BoardPosition(1,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaGin, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaKin, new OnBoard(new BoardPosition(3,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(4,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(4,1))),
-                        new Koma(PlayerType.FirstPlayer, KomaHisya, new OnBoard(new BoardPosition(4,4))),
-                        new Koma(PlayerType.FirstPlayer, KomaKaku, new OnBoard(new BoardPosition(3,4))),
-                        new Koma(PlayerType.FirstPlayer, KomaGin, new OnBoard(new BoardPosition(2,4))),
-                        new Koma(PlayerType.FirstPlayer, KomaKin, new OnBoard(new BoardPosition(1,4))),
-                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,4))),
-                        new Koma(PlayerType.FirstPlayer, KomaHu, new OnBoard(new BoardPosition(0,3))),
+                        new Koma(PlayerType.SecondPlayer, KomaHisya.Id, new OnBoard(new BoardPosition(0,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaKaku.Id, new OnBoard(new BoardPosition(1,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaGin.Id, new OnBoard(new BoardPosition(2,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaKin.Id, new OnBoard(new BoardPosition(3,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaOu.Id, new OnBoard(new BoardPosition(4,0))),
+                        new Koma(PlayerType.SecondPlayer, KomaHu.Id, new OnBoard(new BoardPosition(4,1))),
+                        new Koma(PlayerType.FirstPlayer, KomaHisya.Id, new OnBoard(new BoardPosition(4,4))),
+                        new Koma(PlayerType.FirstPlayer, KomaKaku.Id, new OnBoard(new BoardPosition(3,4))),
+                        new Koma(PlayerType.FirstPlayer, KomaGin.Id, new OnBoard(new BoardPosition(2,4))),
+                        new Koma(PlayerType.FirstPlayer, KomaKin.Id, new OnBoard(new BoardPosition(1,4))),
+                        new Koma(PlayerType.FirstPlayer, KomaOu.Id, new OnBoard(new BoardPosition(0,4))),
+                        new Koma(PlayerType.FirstPlayer, KomaHu.Id, new OnBoard(new BoardPosition(0,3))),
 
                     },
                     PlayerType.FirstPlayer
@@ -328,145 +299,13 @@ namespace Shogi.Business.Domain.Model.GameFactorys
 
                         }),
                         new CheckmateWinningChecker()
-                    ));
-            }
-            else if (gameType == GameType.KyuMasuShogiLevel01)
-            {
-                return new Game(
-                    new Board(3, 3),
-                    new GameState(new List<Koma>()
-                    {
-                        new Koma(PlayerType.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(0,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaGin, new OnBoard(new BoardPosition(1,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(PlayerType.FirstPlayer, KomaGin, new OnBoard(new BoardPosition(1,2))),
-                        new Koma(PlayerType.FirstPlayer, KomaHu, new OnBoard(new BoardPosition(2,2))),
-                    },
-                    PlayerType.FirstPlayer
                     ),
-                    KyumasuShogiRule);
-            }
-            else if (gameType == GameType.KyuMasuShogiLevel02)
-            {
-                return new Game(
-                    new Board(3, 3),
-                    new GameState(new List<Koma>()
-                    {
-                        new Koma(PlayerType.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(0,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaKaku, new OnBoard(new BoardPosition(1,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(PlayerType.FirstPlayer, KomaHisya, new OnBoard(new BoardPosition(1,2))),
-                        new Koma(PlayerType.FirstPlayer, KomaHu, new OnBoard(new BoardPosition(2,2))),
-                    },
-                    PlayerType.FirstPlayer
-                    ),
-                    KyumasuShogiRule);
-            }
-            else if (gameType == GameType.KyuMasuShogiLevel10)
-            {
-                return new Game(
-                    new Board(3, 3),
-                    new GameState(new List<Koma>()
-                    {
-                        new Koma(PlayerType.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(1,1))),
-                        new Koma(PlayerType.SecondPlayer, KomaKin, InHand.State),
-                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(PlayerType.FirstPlayer, KomaKin, InHand.State),
-                    },
-                    PlayerType.FirstPlayer
-                    ),
-                    KyumasuShogiRule);
-            }
-            else if (gameType == GameType.KyuMasuShogiLevel11)
-            {
-                return new Game(
-                    new Board(3, 3),
-                    new GameState(new List<Koma>()
-                    {
-                        new Koma(PlayerType.SecondPlayer, KomaHu, InHand.State),
-                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(PlayerType.FirstPlayer, KomaHu, InHand.State),
-                    },
-                    PlayerType.FirstPlayer
-                    ),
-                    KyumasuShogiRule);
-            }
-            else if (gameType == GameType.KyuMasuShogiLevel12)
-            {
-                return new Game(
-                    new Board(3, 3),
-                    new GameState(new List<Koma>()
-                    {
-                        new Koma(PlayerType.SecondPlayer, KomaKin, new OnBoard(new BoardPosition(0,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaKyousya, new OnBoard(new BoardPosition(1,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(PlayerType.FirstPlayer, KomaKyousya, new OnBoard(new BoardPosition(1,2))),
-                        new Koma(PlayerType.FirstPlayer, KomaKin, new OnBoard(new BoardPosition(2,2))),
-                    },
-                    PlayerType.FirstPlayer
-                    ),
-                    KyumasuShogiRule);
-            }
-            else if (gameType == GameType.KyuMasuShogiLevel13)
-            {
-                return new Game(
-                    new Board(3, 3),
-                    new GameState(new List<Koma>()
-                    {
-                        new Koma(PlayerType.SecondPlayer, KomaGin, new OnBoard(new BoardPosition(0,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaHu, InHand.State),
-                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(PlayerType.FirstPlayer, KomaHu, InHand.State),
-                        new Koma(PlayerType.FirstPlayer, KomaGin, new OnBoard(new BoardPosition(2,2))),
-                    },
-                    PlayerType.FirstPlayer
-                    ),
-                    KyumasuShogiRule);
-            }
-            else if (gameType == GameType.KyuMasuShogiLevel14)
-            {
-                return new Game(
-                    new Board(3, 3),
-                    new GameState(new List<Koma>()
-                    {
-                        new Koma(PlayerType.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(1,1))),
-                        new Koma(PlayerType.SecondPlayer, KomaKin, InHand.State),
-                        new Koma(PlayerType.SecondPlayer, KomaGin, InHand.State),
-                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(PlayerType.FirstPlayer, KomaKin, InHand.State),
-                        new Koma(PlayerType.FirstPlayer, KomaGin, InHand.State),
-                    },
-                    PlayerType.FirstPlayer
-                    ),
-                    KyumasuShogiRule);
-            }
-            else if (gameType == GameType.KyuMasuShogiLevel21)
-            {
-                return new Game(
-                    new Board(3, 3),
-                    new GameState(new List<Koma>()
-                    {
-                        new Koma(PlayerType.SecondPlayer, KomaKema, new OnBoard(new BoardPosition(0,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaHu, new OnBoard(new BoardPosition(1,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaOu, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(PlayerType.FirstPlayer, KomaOu, new OnBoard(new BoardPosition(0,2))),
-                        new Koma(PlayerType.FirstPlayer, KomaHu, new OnBoard(new BoardPosition(1,2))),
-                        new Koma(PlayerType.FirstPlayer, KomaKema, new OnBoard(new BoardPosition(2,2))),
-                    },
-                    PlayerType.FirstPlayer
-                    ),
-                    KyumasuShogiRule);
-            }
-
-            return null;
-
+                    new List<KomaType>() {KomaHisya, KomaKaku, KomaGin, KomaKin, KomaOu, KomaHu});
+        public static void Create(string fileName)
+        {
+            var repo = new GameTemplateJsonRepository(fileName);
+            repo.Add(new GameTemplate() { Name = "どうぶつ将棋", Game = DobutuShogi });
+            repo.Add(new GameTemplate() { Name = "5五将棋", Game = GoGoShogi });
         }
 
     }

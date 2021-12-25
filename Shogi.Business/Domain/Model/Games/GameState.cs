@@ -33,18 +33,18 @@ namespace Shogi.Business.Domain.Model.Games
             GameResult = gameResult;
         }
 
-        public Koma FindKingOnBoard(PlayerType player)
+        public Koma FindKingOnBoard(PlayerType player, List<KomaType> komaTypes)
         {
             // [MEMO:プレイヤーの王は盤上に1つのみあることを前提]
-            return KomaList.FirstOrDefault(x => x.Player == player && x.KomaType.IsKing && x.IsOnBoard);
+            return KomaList.FirstOrDefault(x => x.Player == player && komaTypes.Any(y => y.IsKing && y.Id == x.TypeId) && x.IsOnBoard);
         }
         public Koma FindBoardKoma(BoardPosition fromPosition)
         {
             return KomaList.FirstOrDefault(x => x.BoardPosition == fromPosition);
         }
-        public Koma FindHandKoma(PlayerType player, KomaType komaType)
+        public Koma FindHandKoma(PlayerType player, string komaTypeId)
         {
-            return KomaList.FirstOrDefault(x => x.Player == player && x.IsInHand && x.KomaType == komaType);
+            return KomaList.FirstOrDefault(x => x.Player == player && x.IsInHand && x.TypeId == komaTypeId);
         }
 
         public BoardPositions BoardPositions(PlayerType player)
@@ -70,9 +70,9 @@ namespace Shogi.Business.Domain.Model.Games
         {
             TurnPlayer = TurnPlayer.Opponent;
         }
-        public bool ExistKingOnBoard(PlayerType player)
+        public bool ExistKingOnBoard(PlayerType player, List<KomaType> komaTypes)
         {
-            return FindKingOnBoard(player) != null;
+            return FindKingOnBoard(player, komaTypes) != null;
         }
 
         public bool IsTurnPlayer(PlayerType player)

@@ -70,7 +70,7 @@ namespace Shogi.Business.Domain.Model.AI
 
             foreach(var koma in game.State.KomaList)
             {
-                int movablePositionCount = Evaluation(koma.IsTransformed ? koma.KomaType.TransformedMoves : koma.KomaType.Moves);
+                int movablePositionCount = Evaluation(koma.IsTransformed ? game.GetKomaType(koma).TransformedMoves : game.GetKomaType(koma).Moves);
                 evaluationValue += (player == koma.Player) ? movablePositionCount : -movablePositionCount;
             }
             return evaluationValue;
@@ -85,9 +85,10 @@ namespace Shogi.Business.Domain.Model.AI
             foreach(var move in moveCommands)
             {
                 // [価値の低い駒で価値の高い駒を取る場合は良い手]
-                var fromKoma = move.FindFromKoma(game.State);
+                //var fromKoma = move.FindFromKoma(game.State);
+                var fromKoma = game.FindFromKoma(move);
                 var toKoma = game.State.FindBoardKoma(move.ToPosition);
-                if (toKoma != null && Evaluation(fromKoma.KomaType.Moves) < Evaluation(toKoma.KomaType.Moves))
+                if (toKoma != null && Evaluation(game.GetKomaType(fromKoma).Moves) < Evaluation(game.GetKomaType(toKoma).Moves))
                     sorted.Insert(0, move);
                 else
                     sorted.Add(move);

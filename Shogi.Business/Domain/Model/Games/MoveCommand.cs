@@ -17,7 +17,6 @@ namespace Shogi.Business.Domain.Model.Games
             Player = player;
             ToPosition = toPosition;
         }
-        public abstract Koma FindFromKoma(GameState state);
 
         public abstract bool DoTransform { get; }
 
@@ -34,10 +33,6 @@ namespace Shogi.Business.Domain.Model.Games
         {
             FromPosition = fromPosition;
             DoTransform = doTransform;
-        }
-        public override Koma FindFromKoma(GameState state)
-        {
-            return state.FindBoardKoma(FromPosition);
         }
 
         public override string ToString()
@@ -72,18 +67,18 @@ namespace Shogi.Business.Domain.Model.Games
 
     public class HandKomaMoveCommand : MoveCommand
     {
-        public KomaType KomaType { get; set; }
+        public string KomaTypeId { get; set; }
 
-        public HandKomaMoveCommand(PlayerType player, BoardPosition toPosition, KomaType komaType) : base(player, toPosition)
+        public HandKomaMoveCommand(PlayerType player, BoardPosition toPosition, string komaTypeId) : base(player, toPosition)
         {
-            KomaType = komaType;
+            KomaTypeId = komaTypeId;
         }
 
         public override bool DoTransform => false;
 
         public override string ToString()
         {
-            return string.Format("打:{0}->{1}", KomaType.ToString(), ToPosition.ToString());
+            return string.Format("打:{0}->{1}", KomaTypeId.ToString(), ToPosition.ToString());
         }
         public override bool Equals(object obj)
         {
@@ -91,18 +86,14 @@ namespace Shogi.Business.Domain.Model.Games
                    EqualityComparer<PlayerType>.Default.Equals(Player, command.Player) &&
                    EqualityComparer<BoardPosition>.Default.Equals(ToPosition, command.ToPosition) &&
                    DoTransform == command.DoTransform &&
-                   EqualityComparer<KomaType>.Default.Equals(KomaType, command.KomaType) &&
+                   KomaTypeId == command.KomaTypeId &&
                    DoTransform == command.DoTransform;
         }
 
-        public override Koma FindFromKoma(GameState state)
-        {
-            return state.FindHandKoma(Player, KomaType);
-        }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Player, ToPosition, DoTransform, KomaType, DoTransform);
+            return HashCode.Combine(Player, ToPosition, DoTransform, KomaTypeId, DoTransform);
         }
 
         public static bool operator ==(HandKomaMoveCommand left, HandKomaMoveCommand right)

@@ -18,10 +18,10 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         public bool IsSatisfiedBy(MoveCommand moveCommand, Game game)
         {
             return (moveCommand is HandKomaMoveCommand) && 
-                    ((HandKomaMoveCommand)moveCommand).KomaType.IsHu &&
+                   game.GetKomaType(((HandKomaMoveCommand)moveCommand).KomaTypeId).IsHu &&
                    game.State.KomaList.Any(x =>
                                     x.Player == moveCommand.Player &&
-                                    x.KomaType.IsHu &&
+                                    game.GetKomaType(x).IsHu &&
                                     !x.IsTransformed &&
                                     x.IsOnBoard &&
                                     x.BoardPosition.X == moveCommand.ToPosition.X);
@@ -37,7 +37,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         {
 
             return (moveCommand is HandKomaMoveCommand) &&
-                   ((HandKomaMoveCommand)moveCommand).KomaType.IsHu &&
+                   game.GetKomaType(((HandKomaMoveCommand)moveCommand).KomaTypeId).IsHu &&
                    game.Clone().PlayWithoutRecord(moveCommand).DoCheckmateWithoutHandMove(moveCommand.Player);
         }
     }
@@ -49,11 +49,10 @@ namespace Shogi.Business.Domain.Model.GameTemplates
     {
         public bool IsSatisfiedBy(MoveCommand moveCommand, Game game)
         {
-
-            var fromKoma = moveCommand.FindFromKoma(game.State);
+            var fromKoma = game.FindFromKoma(moveCommand);
             // [その駒以外に他の駒が一つもないボードで動けるところが何もない場合は、行き場のない駒]
-            return new Koma( moveCommand.Player, moveCommand.FindFromKoma(game.State).KomaType, new OnBoard(moveCommand.ToPosition,(moveCommand.DoTransform || fromKoma.IsTransformed)))
-                        .GetMovableBoardPositions(game.Board, new BoardPositions(), new BoardPositions())
+            return new Koma( moveCommand.Player, fromKoma.TypeId, new OnBoard(moveCommand.ToPosition,(moveCommand.DoTransform || fromKoma.IsTransformed)))
+                        .GetMovableBoardPositions(game.GetKomaType(fromKoma), game.Board, new BoardPositions(), new BoardPositions())
                         .Positions.Count == 0;
         }
     }

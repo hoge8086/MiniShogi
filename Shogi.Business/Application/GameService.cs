@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Shogi.Business.Domain.Model.Games;
 using Shogi.Business.Domain.Model.PlayerTypes;
-using Shogi.Business.Domain.Model.GameFactorys;
 using Shogi.Business.Domain.Model.Players;
 using Shogi.Business.Domain.Model.AI;
 using System.Threading;

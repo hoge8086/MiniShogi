@@ -16,21 +16,21 @@ namespace Shogi.Business.Domain.Model.Komas
         [DataMember]
         public PlayerType Player { get; private set;}
         [DataMember]
-        public KomaType KomaType { get; private set;}
+        public string TypeId { get; private set;}
         [DataMember]
         public IKomaState State { get; private set; }
 
-        public Koma(PlayerType player, KomaType komaType, IKomaState state)
+        public Koma(PlayerType player, string komaTypeId, IKomaState state)
         {
             Player = player;
-            KomaType = komaType;
+            TypeId = komaTypeId;
             State = state;
         }
 
         public void Move(BoardPosition toPosition, bool doTransform)
         {
-            if(doTransform && !KomaType.CanBeTransformed)
-                throw new InvalidProgramException("この駒は成ることができません.");
+            //if(doTransform && !KomaType.CanBeTransformed)
+            //    throw new InvalidProgramException("この駒は成ることができません.");
 
             State = State.ToBoard(toPosition, doTransform);
         }
@@ -44,12 +44,13 @@ namespace Shogi.Business.Domain.Model.Komas
         }
 
         public BoardPositions GetMovableBoardPositions(
+            KomaType komaType,
             Board board,
             BoardPositions playerKomaPositions,
             BoardPositions opponentPlayerKomaPositions)
         {
             return State.GetMovableBoardPositions(
-                                        KomaType,
+                                        komaType,
                                         Player,
                                         board,
                                         playerKomaPositions,
@@ -62,11 +63,11 @@ namespace Shogi.Business.Domain.Model.Komas
         public bool IsTransformed => (State is OnBoard) && ((OnBoard)State).IsTransformed;
         public Koma Clone()
         {
-            return new Koma(Player, KomaType, State);
+            return new Koma(Player, TypeId, State);
         }
         public override string ToString()
         {
-            return string.Format("{0}:player={1},state={2},IsTransformed={3}", KomaType.ToString(), Player.ToString(), State.ToString());
+            return string.Format("{0}:player={1},state={2}", TypeId, Player.ToString(), State.ToString());
         }
 
         /// <summary>
@@ -86,7 +87,7 @@ namespace Shogi.Business.Domain.Model.Komas
                     return false;
 
                 //Check whether the products' properties are equal.
-                return x.Player == y.Player && x.KomaType == y.KomaType && x.State == y.State;
+                return x.Player == y.Player && x.TypeId == y.TypeId && x.State == y.State;
             }
 
             // If Equals() returns true for a pair of objects
@@ -97,7 +98,7 @@ namespace Shogi.Business.Domain.Model.Komas
                 //Check whether the object is null
                 if (Object.ReferenceEquals(koma, null)) return 0;
 
-                return HashCode.Combine(koma.KomaType, koma.Player, koma.State);
+                return HashCode.Combine(koma.TypeId, koma.Player, koma.State);
             }
         }
     }

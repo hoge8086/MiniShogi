@@ -18,26 +18,34 @@ namespace Shogi.Business.Domain.Model.Games
         public GameState State { get; private set; }
 
         [DataMember]
+        public List<KomaType> KomaTypes{ get; private set; }
+
+        public KomaType GetKomaType(Koma koma) => KomaTypes.FirstOrDefault(x => x.Id == koma.TypeId);
+        public KomaType GetKomaType(string komaTypeId) => KomaTypes.FirstOrDefault(x => x.Id == komaTypeId);
+
+        [DataMember]
         public CustomRule Rule { get; private set; }
 
         [DataMember]
         public GameRecord Record { get; private set; }
 
-        public Game(Board board, GameState state, CustomRule rule)
+        public Game(Board board, GameState state, CustomRule rule, List<KomaType> komaTypes)
         {
             Board = board;
             State = state;
             Rule = rule;
             Record = new GameRecord(State);
+            KomaTypes = komaTypes;
             State.GameResult = CreateGameResult();
         }
 
-        private Game(Board board, GameState state, CustomRule rule, GameRecord record)
+        private Game(Board board, GameState state, CustomRule rule, GameRecord record, List<KomaType> komaTypes)
         {
             Board = board;
             State = state;
             Rule = rule;
             Record = record;
+            KomaTypes = komaTypes;
         }
 
         public bool IsWinning(PlayerType player)
@@ -53,12 +61,11 @@ namespace Shogi.Business.Domain.Model.Games
                 return new GameResult(State.TurnPlayer.Opponent);
 
             return null;
-           
         }
 
         public Game Clone()
         {
-            return new Game(Board, State.Clone(), Rule, Record.Clone());
+            return new Game(Board, State.Clone(), Rule, Record.Clone(), KomaTypes);
         }
 
         public void Reset()
@@ -72,7 +79,7 @@ namespace Shogi.Business.Domain.Model.Games
             if (!State.IsTurnPlayer(moveCommand.Player))
                 throw new InvalidOperationException("プレイヤーのターンではありません.");
 
-            var fromKoma = moveCommand.FindFromKoma(State);
+            var fromKoma = FindFromKoma(moveCommand);
             if (!State.IsTurnPlayer(fromKoma.Player))
                 throw new InvalidOperationException("プレイヤーの駒ではないため動かせません.");
 
@@ -105,7 +112,7 @@ namespace Shogi.Business.Domain.Model.Games
         // [★WithoutRecordというよりは終了判定のチェックなし版というのが正しい]
         public Game PlayWithoutRecord(MoveCommand moveCommand)
         {
-            var fromKoma = moveCommand.FindFromKoma(State);
+            var fromKoma = FindFromKoma(moveCommand);
             if (fromKoma.Player != moveCommand.Player)
                 throw new InvalidOperationException("差し手の駒ではありません.");
 
@@ -113,6 +120,9 @@ namespace Shogi.Business.Domain.Model.Games
             if (toKoma != null && toKoma.Player == fromKoma.Player)
                 throw new InvalidOperationException("移動先にあなたの駒があるため動かせません.");
 
+
+            if(moveCommand.DoTransform && !GetKomaType(fromKoma).CanBeTransformed)
+                throw new InvalidProgramException("この駒は成ることができません.");
 
             fromKoma.Move(moveCommand.ToPosition, moveCommand.DoTransform);
 
@@ -171,6 +181,7 @@ namespace Shogi.Business.Domain.Model.Games
         public BoardPositions MovablePosition(Koma koma)
         {
             return koma.GetMovableBoardPositions(
+                            GetKomaType(koma),
                             Board,
                             State.BoardPositions(koma.Player),
                             State.BoardPositions(koma.Player.Opponent));
@@ -186,7 +197,7 @@ namespace Shogi.Business.Domain.Model.Games
                 {
                     moveCommandList.Add(new BoardKomaMoveCommand(koma.Player, toPos, koma.BoardPosition, false));
                     if (!koma.IsTransformed &&
-                        koma.KomaType.CanBeTransformed &&
+                        GetKomaType(koma).CanBeTransformed &&
                         (Rule.IsPlayerTerritory(koma.Player.Opponent, toPos, Board) ||
                          Rule.IsPlayerTerritory(koma.Player.Opponent, koma.BoardPosition, Board)))
                     {
@@ -196,7 +207,7 @@ namespace Shogi.Business.Domain.Model.Games
                 }
                 else if (koma.IsInHand)
                 {
-                    moveCommandList.Add(new HandKomaMoveCommand(koma.Player, toPos, koma.KomaType));
+                    moveCommandList.Add(new HandKomaMoveCommand(koma.Player, toPos, koma.TypeId));
                 }
             }
             return RemoveProhibitedMove(moveCommandList);
@@ -258,16 +269,28 @@ namespace Shogi.Business.Domain.Model.Games
 
             // [MEMO:盤上の駒に重複はないのでDistinct()する必要はない]
             var movablePositions = MovablePosition(State.GetBoardKomaList(player));
-            var kingPosition = State.FindKingOnBoard(player.Opponent).BoardPosition;
+            var kingPosition = State.FindKingOnBoard(player.Opponent, KomaTypes).BoardPosition;
             return movablePositions.Contains(kingPosition);
         }
         public bool KingEnterOpponentTerritory(PlayerType player)
         {
-            var king = State.FindKingOnBoard(player);
+            var king = State.FindKingOnBoard(player, KomaTypes);
             if (king == null)
                 return false;
             return Rule.IsPlayerTerritory(player.Opponent, king.BoardPosition, Board);
         }
+
+        public Koma FindFromKoma(MoveCommand move)
+        {
+            if(move is HandKomaMoveCommand)
+                return State.FindHandKoma(((HandKomaMoveCommand)move).Player, ((HandKomaMoveCommand)move).KomaTypeId);
+
+            else if(move is BoardKomaMoveCommand)
+                return State.FindBoardKoma(((BoardKomaMoveCommand)move).FromPosition);
+
+            return null;
+        }
+
 
         public override string ToString()
         {
@@ -286,7 +309,7 @@ namespace Shogi.Business.Domain.Model.Games
                             game += " ";
                         else
                             game += ">";
-                        game += koma.KomaType.ToString();
+                        game += koma.TypeId;
                         if(koma.IsTransformed)
                             game += "@";
                         else
@@ -303,7 +326,7 @@ namespace Shogi.Business.Domain.Model.Games
 
             string HandToString(PlayerType player)
             {
-                return player.ToString() + ":" + string.Join(",", State.KomaList.Where(x => x.IsInHand && x.Player == player).Select(x => x.KomaType.Id));
+                return player.ToString() + ":" + string.Join(",", State.KomaList.Where(x => x.IsInHand && x.Player == player).Select(x => x.TypeId));
             }
         }
     }
