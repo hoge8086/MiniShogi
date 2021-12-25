@@ -19,18 +19,18 @@ namespace Shogi.Business.Infrastructure.Tests
             "ひ",
             new KomaMoves(new List<IKomaMove>()
             {
-                new PinpointKomaMove(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
             }),
             new KomaMoves(new List<IKomaMove>()
             {
-                new PinpointKomaMove(new RelativeBoardPosition(0, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(0, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
             }
             ),
             false);
@@ -38,10 +38,10 @@ namespace Shogi.Business.Infrastructure.Tests
             "ぞ",
             new KomaMoves(new List<IKomaMove>()
             {
-                new PinpointKomaMove(new RelativeBoardPosition(1, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
             }
             ),
             null,
@@ -50,10 +50,10 @@ namespace Shogi.Business.Infrastructure.Tests
             "き",
             new KomaMoves(new List<IKomaMove>()
             {
-                new PinpointKomaMove(new RelativeBoardPosition(0, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(0, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
             }
             ),
             null,
@@ -62,14 +62,14 @@ namespace Shogi.Business.Infrastructure.Tests
             "ラ",
             new KomaMoves(new List<IKomaMove>()
             {
-                new PinpointKomaMove(new RelativeBoardPosition(0, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(0, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
             }
             ),
             null,
@@ -80,16 +80,16 @@ namespace Shogi.Business.Infrastructure.Tests
             "歩",
             new KomaMoves(new List<IKomaMove>()
             {
-                new PinpointKomaMove(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
             }),
             new KomaMoves(new List<IKomaMove>()
             {
-                new PinpointKomaMove(new RelativeBoardPosition(0, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(0, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
             }
             ),
             false, true);
@@ -97,14 +97,14 @@ namespace Shogi.Business.Infrastructure.Tests
             "王",
             new KomaMoves(new List<IKomaMove>()
             {
-                new PinpointKomaMove(new RelativeBoardPosition(0, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(0, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
             }
             ),
             null,
@@ -113,12 +113,12 @@ namespace Shogi.Business.Infrastructure.Tests
             "金",
             new KomaMoves(new List<IKomaMove>()
             {
-                new PinpointKomaMove(new RelativeBoardPosition(0, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(0, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
             }
             ),
             null,
@@ -127,21 +127,21 @@ namespace Shogi.Business.Infrastructure.Tests
             "銀",
             new KomaMoves(new List<IKomaMove>()
             {
-                new PinpointKomaMove(new RelativeBoardPosition(0, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
             }
             ),
             new KomaMoves(new List<IKomaMove>()
             {
-                new PinpointKomaMove(new RelativeBoardPosition(0, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(0, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
             }
             ),
             false);
@@ -149,22 +149,22 @@ namespace Shogi.Business.Infrastructure.Tests
             "飛",
             new KomaMoves(new List<IKomaMove>()
             {
-                new StraightKomaMove(new RelativeBoardPosition(0, -1)),
-                new StraightKomaMove(new RelativeBoardPosition(0, 1)),
-                new StraightKomaMove(new RelativeBoardPosition(1, 0)),
-                new StraightKomaMove(new RelativeBoardPosition(-1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1), true),
+                new KomaMoveBase(new RelativeBoardPosition(0, 1), true),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0), true),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0), true),
             }
             ),
             new KomaMoves(new List<IKomaMove>()
             {
-                new StraightKomaMove(new RelativeBoardPosition(0, -1)),
-                new StraightKomaMove(new RelativeBoardPosition(0, 1)),
-                new StraightKomaMove(new RelativeBoardPosition(1, 0)),
-                new StraightKomaMove(new RelativeBoardPosition(-1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1), true),
+                new KomaMoveBase(new RelativeBoardPosition(0, 1), true),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0), true),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0), true),
+                new KomaMoveBase(new RelativeBoardPosition(1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
             }
             ),
             false);
@@ -172,22 +172,22 @@ namespace Shogi.Business.Infrastructure.Tests
             "角",
             new KomaMoves(new List<IKomaMove>()
             {
-                new StraightKomaMove(new RelativeBoardPosition(1, -1)),
-                new StraightKomaMove(new RelativeBoardPosition(-1, -1)),
-                new StraightKomaMove(new RelativeBoardPosition(1, 1)),
-                new StraightKomaMove(new RelativeBoardPosition(-1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1), true),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1), true),
+                new KomaMoveBase(new RelativeBoardPosition(1, 1), true),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 1), true),
             }
             ),
             new KomaMoves(new List<IKomaMove>()
             {
-                new StraightKomaMove(new RelativeBoardPosition(1, -1)),
-                new StraightKomaMove(new RelativeBoardPosition(-1, -1)),
-                new StraightKomaMove(new RelativeBoardPosition(1, 1)),
-                new StraightKomaMove(new RelativeBoardPosition(-1, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(0, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(0, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1), true),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1), true),
+                new KomaMoveBase(new RelativeBoardPosition(1, 1), true),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 1), true),
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
             }
             ),
             false);
@@ -196,16 +196,16 @@ namespace Shogi.Business.Infrastructure.Tests
             "香",
             new KomaMoves(new List<IKomaMove>()
             {
-                new StraightKomaMove(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1), true),
             }),
             new KomaMoves(new List<IKomaMove>()
             {
-                new PinpointKomaMove(new RelativeBoardPosition(0, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(0, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
             }
             ),
             false);
@@ -214,18 +214,18 @@ namespace Shogi.Business.Infrastructure.Tests
             "桂",
             new KomaMoves(new List<IKomaMove>()
             {
-                new PinpointKomaMove(new RelativeBoardPosition(1, -2)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, -2)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -2)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -2)),
             }
             ),
             new KomaMoves(new List<IKomaMove>()
             {
-                new PinpointKomaMove(new RelativeBoardPosition(0, 1)),
-                new PinpointKomaMove(new RelativeBoardPosition(0, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(1, -1)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, 0)),
-                new PinpointKomaMove(new RelativeBoardPosition(-1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
             }
             ),
             false);
@@ -301,12 +301,28 @@ namespace Shogi.Business.Infrastructure.Tests
                         new CheckmateWinningChecker()
                     ),
                     new List<KomaType>() {KomaHisya, KomaKaku, KomaGin, KomaKin, KomaOu, KomaHu});
-        public static void Create(string fileName)
+        public static void CreateGame(string fileName)
         {
             var repo = new GameTemplateJsonRepository(fileName);
             repo.Add(new GameTemplate() { Name = "どうぶつ将棋", Game = DobutuShogi });
             repo.Add(new GameTemplate() { Name = "5五将棋", Game = GoGoShogi });
         }
-
+        public static void CreateKoma(string fileName)
+        {
+            var repo = new KomaTypeJsonRepository(fileName);
+            repo.Add(KomaHiyoko);
+            repo.Add(KomaZou);
+            repo.Add(KomaKirin);
+            repo.Add(KomaRaion);
+            repo.Add(KomaHu);
+            repo.Add(KomaOu);
+            repo.Add(KomaKin);
+            repo.Add(KomaGin);
+            repo.Add(KomaHisya);
+            repo.Add(KomaKaku);
+            repo.Add(KomaKyousya);
+            repo.Add(KomaKema);
+        }
     }
 }
+

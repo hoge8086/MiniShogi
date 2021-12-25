@@ -13,17 +13,13 @@ namespace Shogi.Business.Infrastructure.Tests
         [TestMethod()]
         public void LoadTest()
         {
-            //try
-            //{
-                GameJsonFactory.Create("games.json");
-            //}catch(Exception ex)
-            //{ }
+            GameJsonFactory.CreateGame("games.json");
         }
 
         [TestMethod()]
         public void SaveTest()
         {
-            Assert.Fail();
+            GameJsonFactory.CreateKoma("komas.json");
         }
     }
 }

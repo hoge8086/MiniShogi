@@ -1,4 +1,6 @@
 ﻿using Shogi.Business.Domain.Model.Games;
+using Shogi.Business.Domain.Model.GameTemplates;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.GameTemplates
@@ -11,8 +13,6 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         [DataMember]
         public Game Game { get; set; }
     }
-
-
 
 }
 

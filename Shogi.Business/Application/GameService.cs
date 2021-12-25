@@ -36,6 +36,22 @@ namespace Shogi.Business.Application
         void OnEnded(PlayerType winner);
     }
 
+    public class CreateGameService
+    {
+        private Object thisLock = new Object();
+        public IGameTemplateRepository GameTemplateRepository;
+
+        public CreateGameService(IGameTemplateRepository gameTemplateRepository)
+        {
+            GameTemplateRepository = gameTemplateRepository;
+        }
+
+        public void Create()
+        {
+
+        }
+
+    }
     public class GameService
     {
         private Object thisLock = new Object();

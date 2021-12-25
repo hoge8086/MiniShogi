@@ -44,11 +44,11 @@ namespace Shogi.Business.Domain.Model.AI
             int movablePositionCount = 0;
             foreach(var move in moves.Moves)
             {
-                if (move is PinpointKomaMove)
+                var moveBase = move as KomaMoveBase;
+                if (moveBase != null && !moveBase.IsRepeatable)
                     movablePositionCount += 1;
 
-                // [香と桂が同じ価値ということは直線は2マス分換算ということ]
-                if (move is StraightKomaMove)
+                else if (moveBase != null && moveBase.IsRepeatable)
                     movablePositionCount += 2;
             }
             return movablePositionCount;

@@ -6,8 +6,7 @@ using System.Runtime.Serialization;
 namespace Shogi.Business.Domain.Model.Moves
 {
     [DataContract]
-    [KnownType(typeof(PinpointKomaMove))]
-    [KnownType(typeof(StraightKomaMove))]
+    [KnownType(typeof(KomaMoveBase))]
     public class KomaMoves
     {
         [DataMember]
