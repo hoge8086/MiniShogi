@@ -12,7 +12,13 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         }
         public GameTemplate Create(CreateGameCommand createGameCommand)
         {
-            return createGameCommand.Create(createGameCommand.KomaList.Select(x => KomaTypeRepository.FindById(x.TypeId)).ToList());
+            var komaTypes = createGameCommand.KomaList.Select(x => {
+                var type =KomaTypeRepository.FindById(x.TypeId);
+                if (type == null)
+                    throw new System.Exception($"駒[{type.Id}]が存在しません.");
+                return type;
+            }).ToList();
+            return createGameCommand.Create(komaTypes);
         }
     }
 

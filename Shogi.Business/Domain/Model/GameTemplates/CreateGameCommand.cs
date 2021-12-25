@@ -43,6 +43,15 @@ namespace Shogi.Business.Domain.Model.GameTemplates
     }
     public class CreateGameCommand
     {
+        public string Name { get; set; } = "新しい将棋";
+        public int Width { get; set; } = 3;
+        public int Height { get; set; } = 4;
+        public int TerritoryBoundary { get; set; } = 1;
+        public ProhibitedMoves ProhibitedMoves { get; set;} = new ProhibitedMoves();
+        public WinConditionType WinCondition { get; set; } = WinConditionType.TakeKing;
+        public List<Koma> KomaList { get; set; } = null;
+        public PlayerType TurnPlayer { get; set; } = PlayerType.FirstPlayer;
+
         private static Dictionary<WinConditionType, IWinningChecker> winningDictionary = new Dictionary<WinConditionType, IWinningChecker>()
         {
             { WinConditionType.Checkmate,  new CheckmateWinningChecker()},
@@ -54,15 +63,6 @@ namespace Shogi.Business.Domain.Model.GameTemplates
                 })},
         };
         public IWinningChecker CreateWinningChecker() => winningDictionary[WinCondition];
-
-        public string Name { get; set; } = "新しい将棋";
-        public int Width { get; set; } = 3;
-        public int Height { get; set; } = 4;
-        public int TerritoryBoundary { get; set; } = 1;
-        public ProhibitedMoves ProhibitedMoves { get; set;} = new ProhibitedMoves();
-        public WinConditionType WinCondition { get; set; } = WinConditionType.TakeKing;
-        public List<Koma> KomaList { get; set; } = null;
-        public PlayerType TurnPlayer { get; set; } = PlayerType.FirstPlayer;
 
         public GameTemplate Create(List<KomaType> komaTypes)
         {

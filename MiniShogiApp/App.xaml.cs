@@ -1,4 +1,5 @@
-﻿using Shogi.Business.Application;
+﻿using MiniShogiApp.Presentation.View;
+using Shogi.Business.Application;
 using Shogi.Business.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,15 @@ namespace MiniShogiApp
     /// </summary>
     public partial class App : Application
     {
-        static public GameService GameService { get; } = new GameService(new GameTemplateJsonRepository("games.json"));
+        static public GameService GameService;
+        static public CreateGameService CreateGameService;
+
+        void App_Startup(object sender, StartupEventArgs e)
+        {
+            var gameTemplateJsonRepository = new GameTemplateJsonRepository("games.json");
+            var komaJsonRepository = new KomaTypeJsonRepository("komas.json");
+            GameService = new GameService(gameTemplateJsonRepository);
+            CreateGameService = new CreateGameService(gameTemplateJsonRepository, komaJsonRepository);
+        }
     }
 }
