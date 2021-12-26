@@ -9,6 +9,7 @@ namespace Shogi.Business.Domain.Model.AI
     public abstract class AI : Player
     {
         public abstract MoveCommand SelectMove(Game game, CancellationToken cancellation);
+        public override bool IsAI => true;
 
         public void Play(Game game, CancellationToken cancellation)
         {

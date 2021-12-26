@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using Shogi.Business.Domain.Model.Games;
 using Shogi.Business.Domain.Model.PlayerTypes;
@@ -7,28 +6,12 @@ using Shogi.Business.Domain.Model.Players;
 using Shogi.Business.Domain.Model.AI;
 using System.Threading;
 using Shogi.Business.Domain.Model.GameTemplates;
+using Shogi.Business.Domain.Model.PlayingGames;
 
 namespace Shogi.Business.Application
 {
-    public class GameSet
-    {
-        public Dictionary<PlayerType, Player> Players;
-        public Game Game;
 
-        public GameSet(Player firstPlayer, Player secondPlayer, Game game)
-        {
-            Players = new Dictionary<PlayerType, Player>();
-            Players.Add(PlayerType.FirstPlayer, firstPlayer);
-            Players.Add(PlayerType.SecondPlayer, secondPlayer);
-            Game = game;
-            
-            
-        }
-        public void Reset()
-        {
-            Game.Reset();
-        }
-    }
+    // [TODO:ゲームの進行をDomainServiceに移す]
     public interface GameListener
     {
         void OnStarted();
@@ -38,7 +21,7 @@ namespace Shogi.Business.Application
     public class GameService
     {
         private Object thisLock = new Object();
-        private GameSet GameSet = null;
+        private PlayingGame PlayingGame = null;
         private GameListener GameListener = null;
         public IGameTemplateRepository GameTemplateRepository;
 
@@ -58,13 +41,8 @@ namespace Shogi.Business.Application
         {
             lock (thisLock)
             {
-                //GameSet = new GameSet(firstPlayer, secondPlayer, gameType);
-                GameTemplate template;
-                if (gameName == null)
-                    template = GameTemplateRepository.First();
-                else
-                    template = GameTemplateRepository.FindByName(gameName);
-                GameSet = new GameSet(firstPlayer, secondPlayer, template.Game.Clone());
+                var template = GameTemplateRepository.FindByName(gameName);
+                PlayingGame = new PlayingGame(firstPlayer, secondPlayer, template);
                 GameListener?.OnStarted();
                 Next(cancellation);
             }
@@ -73,7 +51,7 @@ namespace Shogi.Business.Application
         {
             lock (thisLock)
             {
-                GameSet.Reset();
+                PlayingGame.Reset();
                 GameListener?.OnStarted();
                 Next(cancellation);
             }
@@ -83,22 +61,22 @@ namespace Shogi.Business.Application
         {
             lock (thisLock)
             {
-                GameSet.Game.Undo(undoType);
+                PlayingGame.Game.Undo(undoType);
             }
         }
 
         public Game GetGame()
         {
             // [MEMO:クローンを返すことでマルチスレッドでアクセス可能とする]
-            // [MEMO:Game自身はGameでlockしている]
-            return GameSet.Game.Clone();
+            // [MEMO:Game自身はGameでlockしている→★してないので注意]
+            return PlayingGame.Game.Clone();
         }
 
         public void Play(MoveCommand moveCommand, CancellationToken cancellation)
         {
             lock (thisLock)
             {
-                GameSet.Game.Play(moveCommand);
+                PlayingGame.Game.Play(moveCommand);
                 GameListener?.OnPlayed();
                 Next(cancellation);
             }
@@ -106,27 +84,25 @@ namespace Shogi.Business.Application
         private void Next(CancellationToken cancellation)
         {
             System.Diagnostics.Debug.WriteLine("----------------------");
-            System.Diagnostics.Debug.WriteLine(GameSet.Game.ToString());
-            if(GameSet.Game.State.IsEnd)
+            System.Diagnostics.Debug.WriteLine(PlayingGame.Game.ToString());
+            if(PlayingGame.Game.State.IsEnd)
             {
-                GameListener?.OnEnded(GameSet.Game.State.GameResult.Winner);
+                GameListener?.OnEnded(PlayingGame.Game.State.GameResult.Winner);
                 return;
             }
 
-            if(GameSet.Players[GameSet.Game.State.TurnPlayer] is Human)
+            if(PlayingGame.TurnPlayer.IsHuman)//.Players[PlayingGame.Game.State.TurnPlayer] is Human)
             {
                 // [人]
                 return;
             }
-            else
-            {
-                // [AI]
-                var ai = GameSet.Players[GameSet.Game.State.TurnPlayer] as AI;
-                ai.Play(GameSet.Game, cancellation);
-                if (cancellation.IsCancellationRequested)
-                    return;
-                GameListener?.OnPlayed();
-            }
+
+            // [AI]
+            var ai = PlayingGame.TurnPlayer as AI;
+            ai.Play(PlayingGame.Game, cancellation);
+            if (cancellation.IsCancellationRequested)
+                return;
+            GameListener?.OnPlayed();
 
             Next(cancellation);
         }
@@ -142,7 +118,7 @@ namespace Shogi.Business.Application
         // [TODO:リードモデルとしてGameSetをとれるようにして、このメソッドはなくす]
         public bool IsTurnPlayerAI()
         {
-            return GameSet.Players[GameSet.Game.State.TurnPlayer] is AI;
+            return PlayingGame.TurnPlayer.IsAI;
         }
     }
 }

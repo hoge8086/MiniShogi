@@ -15,6 +15,7 @@ using Shogi.Business.Domain.Model.AI;
 using System.Threading.Tasks;
 using System.Threading;
 using Shogi.Business.Domain.Model.PlayerTypes;
+using Shogi.Business.Domain.Model.GameTemplates;
 
 namespace MiniShogiApp.Presentation.ViewModel
 {
@@ -268,7 +269,7 @@ namespace MiniShogiApp.Presentation.ViewModel
 
             // [MEMO:タスクで開始していない(コンストラクタなのできない)ので、必ず初手はHumanになるようにする]
             cancelTokenSource = new CancellationTokenSource();
-            App.GameService.Start(human, ai, null, cancelTokenSource.Token);
+            App.GameService.Start(human, ai, DefaultGame.DefaltGameTemplate[0].Name, cancelTokenSource.Token);
             cancelTokenSource = null;
         }
         public void UpdateOperationModeOnTaskFinished()
