@@ -6,7 +6,7 @@
              x:Class="MiniShogiMobile.Views.PlayGamePage"
              Title="{Binding Title}">
     <StackLayout>
-        <Label Text="PlayGamePage"/>
+        <Label  Text="Playing"/>
     </StackLayout>
   
 </ContentPage>

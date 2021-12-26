@@ -20,16 +20,17 @@ namespace MiniShogiMobile
         public App(IPlatformInitializer initializer)
             : base(initializer)
         {
-            var dataDir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);
-            var gameTemplateJsonRepository = new GameTemplateJsonRepository(Path.Combine(dataDir, "games.json"));
-            var komaJsonRepository = new KomaTypeJsonRepository(Path.Combine(dataDir, "games.json"));
-            GameService = new GameService(gameTemplateJsonRepository);
-            CreateGameService = new CreateGameService(gameTemplateJsonRepository, komaJsonRepository);
         }
 
         protected override async void OnInitialized()
         {
             InitializeComponent();
+
+            var dataDir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);
+            var gameTemplateJsonRepository = new GameTemplateJsonRepository(Path.Combine(dataDir, "games.json"));
+            var komaJsonRepository = new KomaTypeJsonRepository(Path.Combine(dataDir, "games.json"));
+            GameService = new GameService(gameTemplateJsonRepository);
+            CreateGameService = new CreateGameService(gameTemplateJsonRepository, komaJsonRepository);
 
             await NavigationService.NavigateAsync("NavigationPage/MainPage");
         }
@@ -41,6 +42,7 @@ namespace MiniShogiMobile
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<PlayGamePage, PlayGamePageViewModel>();
+            containerRegistry.RegisterForNavigation<StartGamePage, StartGamePageViewModel>();
         }
     }
 }
