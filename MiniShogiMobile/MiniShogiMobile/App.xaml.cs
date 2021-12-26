@@ -6,13 +6,25 @@ using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
 
+using Shogi.Business.Application;
+using Shogi.Business.Infrastructure;
+using System.IO;
+
 namespace MiniShogiMobile
 {
     public partial class App
     {
+        static public GameService GameService;
+        static public CreateGameService CreateGameService;
+
         public App(IPlatformInitializer initializer)
             : base(initializer)
         {
+            var dataDir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);
+            var gameTemplateJsonRepository = new GameTemplateJsonRepository(Path.Combine(dataDir, "games.json"));
+            var komaJsonRepository = new KomaTypeJsonRepository(Path.Combine(dataDir, "games.json"));
+            GameService = new GameService(gameTemplateJsonRepository);
+            CreateGameService = new CreateGameService(gameTemplateJsonRepository, komaJsonRepository);
         }
 
         protected override async void OnInitialized()
