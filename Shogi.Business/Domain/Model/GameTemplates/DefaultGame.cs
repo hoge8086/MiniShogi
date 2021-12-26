@@ -236,6 +236,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             KomaKin,
             KomaOu,
             KomaHu,
+            KomaKyousya,
         };
 
         public static readonly List<CreateGameCommand> DefaltGameTemplate = new List<CreateGameCommand>()
@@ -272,6 +273,19 @@ namespace Shogi.Business.Domain.Model.GameTemplates
                     new Koma(PlayerType.FirstPlayer, KomaKin.Id, new OnBoard(new BoardPosition(1,4))),
                     new Koma(PlayerType.FirstPlayer, KomaOu.Id, new OnBoard(new BoardPosition(0,4))),
                     new Koma(PlayerType.FirstPlayer, KomaHu.Id, new OnBoard(new BoardPosition(0,3))),
+                },
+                new ProhibitedMoves(true, true, true, true),
+                PlayerType.FirstPlayer),
+            new CreateGameCommand(
+                "香歩将棋", 3, 4, 2, WinConditionType.Checkmate,
+                new List<Koma>()
+                {
+                    new Koma(PlayerType.SecondPlayer, KomaKyousya.Id, new OnBoard(new BoardPosition(1,0))),
+                    new Koma(PlayerType.SecondPlayer, KomaHu.Id, InHand.State),
+                    new Koma(PlayerType.SecondPlayer, KomaOu.Id, new OnBoard(new BoardPosition(2,0))),
+                    new Koma(PlayerType.FirstPlayer, KomaKyousya.Id, new OnBoard(new BoardPosition(1,3))),
+                    new Koma(PlayerType.FirstPlayer, KomaHu.Id, InHand.State),
+                    new Koma(PlayerType.FirstPlayer, KomaOu.Id, new OnBoard(new BoardPosition(0,3))),
                 },
                 new ProhibitedMoves(true, true, true, true),
                 PlayerType.FirstPlayer),
