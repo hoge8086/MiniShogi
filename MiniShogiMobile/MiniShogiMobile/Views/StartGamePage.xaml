@@ -2,9 +2,31 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
+             xmlns:local="clr-namespace:MiniShogiMobile.ViewModels"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.StartGamePage">
     <StackLayout>
+        <Picker Title="ゲームを選択してください"
+                HorizontalTextAlignment="Center"
+                VerticalOptions="Start"
+                ItemsSource="{Binding GameNameList}"
+                SelectedItem="{Binding GameName.Value}"/>
+        <Picker Title="プレイヤー1"
+                HorizontalTextAlignment="Center"
+                VerticalOptions="Start"
+                ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
+                ItemDisplayBinding="{Binding Name}"/>
+        <Picker Title="プレイヤー2"
+                HorizontalTextAlignment="Center"
+                VerticalOptions="Start"
+                ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
+                ItemDisplayBinding="{Binding Name}"/>
+        <Picker Title="先手のプレイヤー"
+                HorizontalTextAlignment="Center"
+                VerticalOptions="Start"
+                ItemsSource="{Binding Source={local:EnumSelectFirstTurnPlayerProvider}}"
+                ItemDisplayBinding="{Binding Name}"/>
+        <!--
         <ListView ItemsSource="{Binding GameNameList}" SelectedItem="{Binding GameName.Value}">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -14,6 +36,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        -->
         <Button Text="ゲーム開始" Command="{Binding PlayGameCommand}"/>
     </StackLayout>
   
