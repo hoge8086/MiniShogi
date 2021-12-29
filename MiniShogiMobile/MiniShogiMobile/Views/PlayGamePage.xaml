@@ -7,6 +7,15 @@
              Title="{Binding Title}">
     <StackLayout>
         <Label  Text="Playing"/>
+        <ListView ItemsSource="{Binding GameNameList}" SelectedItem="{Binding GameName.Value}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Label Text="{Binding .}" HorizontalTextAlignment="Center" FontSize="Large"/>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </StackLayout>
   
 </ContentPage>

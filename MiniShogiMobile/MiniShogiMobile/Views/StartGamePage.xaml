@@ -55,17 +55,6 @@
                     ItemsSource="{Binding Source={local:EnumSelectFirstTurnPlayerProvider}}"
                     ItemDisplayBinding="{Binding Converter={StaticResource selectFirstTurnPlayerConverter}}"
                     SelectedItem="{Binding FirstTurnPlayer.Value}"/>
-            <!--
-            <ListView ItemsSource="{Binding GameNameList}" SelectedItem="{Binding GameName.Value}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Label Text="{Binding .}" HorizontalTextAlignment="Center" FontSize="Large"/>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            -->
         </StackLayout>
         <Button Text="ゲーム開始" Command="{Binding PlayGameCommand}" VerticalOptions="End"/>
     </StackLayout>

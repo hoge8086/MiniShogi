@@ -5,6 +5,8 @@ using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MiniShogiMobile.ViewModels
 {
@@ -16,13 +18,21 @@ namespace MiniShogiMobile.ViewModels
         }
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
-            var val = parameters[nameof(PlayGameCondition)] as PlayGameCondition;
-            if(val == null)
-            {
+            var param = parameters[nameof(PlayGameCondition)] as PlayGameCondition;
+            if(param == null)
                 throw new ArgumentException(nameof(PlayGameCondition));
-            }
 
-            Title = val.Name;
+            Title = param.Name;
+            var cancelTokenSource = new CancellationTokenSource();
+            //await Task.Run(() =>
+            //{
+                App.GameService.Start(param.FirstPlayer, param.SecondPlayer, param.Name, cancelTokenSource.Token);
+            //});
+            var game = App.GameService.GetGame();
+            cancelTokenSource = null;
+            // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
+            //UpdateOperationModeOnTaskFinished();
         }
     }
+
 }
