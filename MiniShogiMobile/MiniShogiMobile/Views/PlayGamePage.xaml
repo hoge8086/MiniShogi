@@ -7,15 +7,18 @@
              Title="{Binding Title}">
     <StackLayout>
         <Label  Text="Playing"/>
-        <ListView ItemsSource="{Binding GameNameList}" SelectedItem="{Binding GameName.Value}">
-            <ListView.ItemTemplate>
+        <StackLayout BindableLayout.ItemsSource="{Binding Board}" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Spacing="0">
+            <BindableLayout.ItemTemplate>
                 <DataTemplate>
-                    <ViewCell>
-                        <Label Text="{Binding .}" HorizontalTextAlignment="Center" FontSize="Large"/>
-                    </ViewCell>
+                    <StackLayout BindableLayout.ItemsSource="{Binding .}" Orientation="Horizontal" VerticalOptions="FillAndExpand" Spacing="0">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Button Text="{Binding Koma.Value.Name}" BorderColor="Black" FontSize="Large" HorizontalOptions="FillAndExpand"/>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </BindableLayout.ItemTemplate>
+        </StackLayout>
     </StackLayout>
-  
 </ContentPage>

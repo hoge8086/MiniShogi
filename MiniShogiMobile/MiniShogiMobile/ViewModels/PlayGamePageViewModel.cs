@@ -2,8 +2,10 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
+using Shogi.Business.Domain.Model.Boards;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,9 +14,11 @@ namespace MiniShogiMobile.ViewModels
 {
     public class PlayGamePageViewModel : ViewModelBase
     {
+        public ObservableCollection<ObservableCollection<CellViewModel>> Board { get; set; }
+
         public PlayGamePageViewModel(INavigationService navigationService) : base(navigationService)
         {
-
+             Board = new ObservableCollection<ObservableCollection<CellViewModel>>();
         }
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
@@ -28,10 +32,53 @@ namespace MiniShogiMobile.ViewModels
             //{
                 App.GameService.Start(param.FirstPlayer, param.SecondPlayer, param.Name, cancelTokenSource.Token);
             //});
-            var game = App.GameService.GetGame();
-            cancelTokenSource = null;
+            //var game = App.GameService.GetGame();
+            Update();
+            //cancelTokenSource = null;
+
+
             // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
             //UpdateOperationModeOnTaskFinished();
+        }
+
+        public void Update()
+        {
+            Board.Clear();
+            //FirstPlayerHands.Hands.Clear();
+            //SecondPlayerHands.Hands.Clear();
+
+            for (int y = 0; y < App.GameService.GetGame().Board.Height; y++)
+            {
+                var row = new ObservableCollection<CellViewModel>();
+                for (int x = 0; x < App.GameService.GetGame().Board.Width; x++)
+                    row.Add(new CellViewModel() { Position = new BoardPosition(x, y), MoveCommands = null});
+                Board.Add(row);
+            }
+
+            foreach (var koma in App.GameService.GetGame().State.KomaList)
+            {
+                if (koma.BoardPosition != null)
+                {
+                    var cell = Board[koma.BoardPosition.Y][koma.BoardPosition.X];
+                    cell.Koma.Value = new KomaViewModel()
+                    {
+                        IsTransformed = koma.IsTransformed,
+                        Name = koma.TypeId,
+                        //Player = koma.Player == PlayerType.FirstPlayer ? Player.FirstPlayer : Player.SecondPlayer,
+                    };
+                }
+                //else
+                //{
+                //    if (koma.Player == PlayerType.FirstPlayer)
+                //        FirstPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.TypeId, KomaTypeId = koma.TypeId, Player = Player.FirstPlayer});
+                //    else
+                //        SecondPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.TypeId, KomaTypeId = koma.TypeId, Player = Player.SecondPlayer });
+                //}
+            }
+            
+            //FirstPlayerHands.IsCurrentTurn = App.GameService.GetGame().State.TurnPlayer == PlayerType.FirstPlayer;
+            //SecondPlayerHands.IsCurrentTurn = App.GameService.GetGame().State.TurnPlayer == PlayerType.SecondPlayer;
+            //MoveCommand.RaiseCanExecuteChanged();
         }
     }
 

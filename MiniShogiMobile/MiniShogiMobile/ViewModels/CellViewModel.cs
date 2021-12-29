@@ -24,8 +24,8 @@ namespace MiniShogiMobile.ViewModels
     public class CellViewModel : BindableBase
     {
         public BoardPosition Position { get; set; }
-        public KomaViewModel Koma { get; set; }
-        public string KomaName => Koma == null ? "" : Koma.Name;
+        public ReactiveProperty<KomaViewModel> Koma { get; set; }
+        //public string KomaName { get => Koma == null ? "" : Koma.Name; }
 
         public ReactiveProperty<List<MoveCommand>> MoveCommands {get; set;}
 
@@ -33,12 +33,15 @@ namespace MiniShogiMobile.ViewModels
 
         public CellViewModel()
         {
+            Koma = new ReactiveProperty<KomaViewModel>();
             MoveCommands = new ReactiveProperty<List<MoveCommand>>();
             CanMove = new ReactiveProperty<bool>();
-            //MoveCommands.Subscribe((x) => { CanMove.Value = true; });
+            MoveCommands.Subscribe((x) => { CanMove.Value = true; });
+        }
 
-            var a = new ReactiveProperty<string>();
-            a.Subscribe((x) => { });
+        public override string ToString()
+        {
+            return Koma.Value == null ? "" : Koma.Value.Name;
         }
 
     }
