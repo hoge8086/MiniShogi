@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MiniShogiMobile.Controls.SquareCell2DGridControl"
+             x:Name="self"
+             SizeChanged="self_SizeChanged">
+    <ContentView.Content>
+        <!--行-->
+        <StackLayout x:Name="board" Spacing="0" HorizontalOptions="Center">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <!--列-->
+                    <!--セルのデータテンプレートを自身のコントロールのテンプレートにバインディングする-->
+                    <StackLayout BindableLayout.ItemsSource="{Binding}"
+                                 Orientation="Horizontal"
+                                 Spacing="0"
+                                 BindableLayout.ItemTemplate="{Binding Path=ItemTemplate, Source={x:Reference self}}"/>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

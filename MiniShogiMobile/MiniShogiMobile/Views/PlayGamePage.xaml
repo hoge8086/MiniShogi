@@ -2,23 +2,18 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.PlayGamePage"
              Title="{Binding Title}">
     <StackLayout>
         <Label  Text="Playing"/>
-        <StackLayout BindableLayout.ItemsSource="{Binding Board}" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Spacing="0">
-            <BindableLayout.ItemTemplate>
+        <ctrl:SquareCell2DGridControl ItemsSource="{Binding Board}" HorizontalOptions="Center">
+            <ctrl:SquareCell2DGridControl.ItemTemplate>
                 <DataTemplate>
-                    <StackLayout BindableLayout.ItemsSource="{Binding .}" Orientation="Horizontal" VerticalOptions="FillAndExpand" Spacing="0">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate>
-                                <Button Text="{Binding Koma.Value.Name}" BorderColor="Black" FontSize="Large" HorizontalOptions="FillAndExpand"/>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </StackLayout>
+                    <Button Text="{Binding Koma.Value.Name}" BorderColor="Black" FontSize="Large"/>
                 </DataTemplate>
-            </BindableLayout.ItemTemplate>
-        </StackLayout>
+            </ctrl:SquareCell2DGridControl.ItemTemplate>
+        </ctrl:SquareCell2DGridControl>
     </StackLayout>
 </ContentPage>
