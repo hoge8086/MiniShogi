@@ -4,40 +4,70 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:local="clr-namespace:MiniShogiMobile.ViewModels"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="MiniShogiMobile.Views.StartGamePage">
+             x:Class="MiniShogiMobile.Views.StartGamePage"
+             Title="はじめる">
+    <ContentPage.Resources>
+        <local:PlayerTypeConverter x:Key="playerTypeConverter"/>
+        <local:SelectFirstTurnPlayerConverter x:Key="selectFirstTurnPlayerConverter"/>
+    </ContentPage.Resources>
     <StackLayout>
-        <Picker Title="ゲームを選択してください"
-                HorizontalTextAlignment="Center"
-                VerticalOptions="Start"
-                ItemsSource="{Binding GameNameList}"
-                SelectedItem="{Binding GameName.Value}"/>
-        <Picker Title="プレイヤー1"
-                HorizontalTextAlignment="Center"
-                VerticalOptions="Start"
-                ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
-                ItemDisplayBinding="{Binding Name}"/>
-        <Picker Title="プレイヤー2"
-                HorizontalTextAlignment="Center"
-                VerticalOptions="Start"
-                ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
-                ItemDisplayBinding="{Binding Name}"/>
-        <Picker Title="先手のプレイヤー"
-                HorizontalTextAlignment="Center"
-                VerticalOptions="Start"
-                ItemsSource="{Binding Source={local:EnumSelectFirstTurnPlayerProvider}}"
-                ItemDisplayBinding="{Binding Name}"/>
-        <!--
-        <ListView ItemsSource="{Binding GameNameList}" SelectedItem="{Binding GameName.Value}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Label Text="{Binding .}" HorizontalTextAlignment="Center" FontSize="Large"/>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        -->
-        <Button Text="ゲーム開始" Command="{Binding PlayGameCommand}"/>
+        <StackLayout VerticalOptions="FillAndExpand">
+            <Picker Title="ゲームを選択してください"
+                    HorizontalTextAlignment="Center"
+                    VerticalOptions="Start"
+                    ItemsSource="{Binding GameNameList}"
+                    SelectedItem="{Binding GameName.Value}"/>
+            <Picker Title="プレイヤー1"
+                    HorizontalTextAlignment="Center"
+                    VerticalOptions="Start"
+                    ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
+                    ItemDisplayBinding="{Binding Converter={StaticResource playerTypeConverter}}"
+                    SelectedItem="{Binding Player1.PlayerType.Value}"/>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+                <StackLayout.Triggers>
+                    <DataTrigger TargetType="StackLayout" Binding="{Binding Player1.PlayerType.Value}" Value="Human">
+                        <Setter Property="IsVisible" Value="False"/>
+                    </DataTrigger>
+                </StackLayout.Triggers>
+                <Label Text="読みの深さ" VerticalTextAlignment="Center"/>
+                <Label Text="{Binding Player1.AIThinkDepth.Value, StringFormat='{0}手'}" VerticalTextAlignment="Center"/>
+                <Stepper Value="{Binding Player1.AIThinkDepth.Value}" Increment="1" Minimum="1" Maximum="10"/>
+            </StackLayout>
+            <Picker Title="プレイヤー2"
+                    HorizontalTextAlignment="Center"
+                    VerticalOptions="Start"
+                    ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
+                    ItemDisplayBinding="{Binding Converter={StaticResource playerTypeConverter}}"
+                    SelectedItem="{Binding Player2.PlayerType.Value}"/>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+                <StackLayout.Triggers>
+                    <DataTrigger TargetType="StackLayout" Binding="{Binding Player2.PlayerType.Value}" Value="Human">
+                        <Setter Property="IsVisible" Value="False"/>
+                    </DataTrigger>
+                </StackLayout.Triggers>
+                <Label Text="読みの深さ" VerticalTextAlignment="Center"/>
+                <Label Text="{Binding Player2.AIThinkDepth.Value, StringFormat='{0}手'}" VerticalTextAlignment="Center"/>
+                <Stepper Value="{Binding Player2.AIThinkDepth.Value}" Increment="1" Minimum="1" Maximum="10"/>
+            </StackLayout>
+            <Picker Title="先手のプレイヤー"
+                    HorizontalTextAlignment="Center"
+                    VerticalOptions="Start"
+                    ItemsSource="{Binding Source={local:EnumSelectFirstTurnPlayerProvider}}"
+                    ItemDisplayBinding="{Binding Converter={StaticResource selectFirstTurnPlayerConverter}}"
+                    SelectedItem="{Binding FirstTurnPlayer.Value}"/>
+            <!--
+            <ListView ItemsSource="{Binding GameNameList}" SelectedItem="{Binding GameName.Value}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Label Text="{Binding .}" HorizontalTextAlignment="Center" FontSize="Large"/>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            -->
+        </StackLayout>
+        <Button Text="ゲーム開始" Command="{Binding PlayGameCommand}" VerticalOptions="End"/>
     </StackLayout>
   
 </ContentPage>

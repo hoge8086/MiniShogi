@@ -8,12 +8,7 @@ using Xamarin.Forms.Xaml;
 
 namespace MiniShogiMobile.Utils
 {
-    public class EnumItem<T>
-    {
-        public T Code { get; set; }
-        public string Name { get; set; }
-    }
-    public class EnumListProvider<T>: IMarkupExtension<IList<EnumItem<T>>>
+    public class EnumListProvider<T> : IMarkupExtension<IList<T>>
     {
         private static string DisplayName(T value) {
             var fileInfo = value.GetType().GetField(value.ToString());
@@ -23,18 +18,18 @@ namespace MiniShogiMobile.Utils
             return descriptionAttribute.Description;
         }
 
-        public readonly static IList<EnumItem<T>> EnumItems = typeof(T).GetEnumValues()
+        public readonly static IList<T> EnumItems = typeof(T).GetEnumValues()
                                                         .Cast<T>()
-                                                        .Select(value => new EnumItem<T>{ Code = value, Name = DisplayName(value) })
+                                                        //.Select(value => new EnumItem<T>{ Code = value, Name = DisplayName(value) })
                                                         .ToList();
-        public IList<EnumItem<T>> ProvideValue(IServiceProvider serviceProvider)
+        public IList<T> ProvideValue(IServiceProvider serviceProvider)
         {
             return EnumItems;
         }
 
         object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider)
         {
-            return (this as IMarkupExtension<IList<EnumItem<T>>>).ProvideValue(serviceProvider);
+            return (this as IMarkupExtension<IList<T>>).ProvideValue(serviceProvider);
         }
     }
 }
