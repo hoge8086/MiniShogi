@@ -87,7 +87,10 @@ namespace MiniShogiMobile.Controls
                 return;
 
             // [各セルを同じ高さ幅（正方形）にする]
-            var size = Math.Min(Width / cells.Count(), Height / ItemsSource.Count());
+            var unitX = self.Width / cells.Count();
+            var unitY = self.Height / ItemsSource.Count();
+
+            var size = Math.Min(unitX, unitY);
             foreach(var row in board.Children)
             {
                 var stackLayout = row as StackLayout;
