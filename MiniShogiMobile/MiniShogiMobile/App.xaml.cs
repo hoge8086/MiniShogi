@@ -20,6 +20,7 @@ namespace MiniShogiMobile
         public App(IPlatformInitializer initializer)
             : base(initializer)
         {
+            Device.SetFlags(new string[] { "Shapes_Experimental" });
         }
 
         protected override async void OnInitialized()

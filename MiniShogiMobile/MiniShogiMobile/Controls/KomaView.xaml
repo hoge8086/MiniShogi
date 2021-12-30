@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:utls="clr-namespace:MiniShogiMobile.Utils"
+             x:Class="MiniShogiMobile.Controls.KomaView"
+             x:Name="koma"
+             SizeChanged="koma_SizeChanged">
+  <ContentView.Content>
+        <!--将棋の駒の形-->
+
+        <!--セル-->
+        <!--Commandプロパティ公開-->
+        <!--CanCommandプロパティ公開-->
+        <!--丸表示プロパティ公開-->
+        <!--駒-->
+        <!--名前をセルにする-->
+        <!--反転プロパティ公開-->
+        <!--Textプロパティ公開-->
+        <!--個数プロパティ公開-->
+        <Polygon x:Name="polygon"
+             HorizontalOptions="Center"
+             VerticalOptions="Center"
+             Margin="0"
+             Fill="Moccasin"
+             Stroke="Oldlace"
+             StrokeThickness="2">
+            <!--
+                Xaml上で座標を指定してScaleを設定するのはうまくいかなかった(なぜか見切れる)
+                <Polygon x:Name="polygon" Points="0,100, 100,100 85,20 50,0 15,20"
+            <Polygon.Triggers>
+                <DataTrigger Binding="{Binding Source={x:Reference koma}, Path=IsInversion}" Value="True">
+                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <RotateTransform Angle="180"/>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Polygon.Triggers>
+            -->
+        </Polygon>
+    </ContentView.Content>
+</ContentView>
