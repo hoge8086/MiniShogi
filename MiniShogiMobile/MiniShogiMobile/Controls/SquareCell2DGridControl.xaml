@@ -8,12 +8,15 @@
              SizeChanged="self_SizeChanged">
     <ContentView.Content>
         <!--行-->
+        <!--自身のサイズ変更時にセルのサイズを調整する-->
         <StackLayout x:Name="board" Spacing="0" HorizontalOptions="Center" VerticalOptions="Center"
             SizeChanged="self_SizeChanged">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
                     <!--列-->
                     <!--セルのデータテンプレートを自身のコントロールのテンプレートにバインディングする-->
+                    <!--アイテム追加時にセルのサイズを調整する-->
+                    <!--※ルートのコントロールがFillAndExpandなのでアイテムを追加してもルートのコントロールのサイズが変わらないため-->
                     <StackLayout BindableLayout.ItemsSource="{Binding}"
                                  HorizontalOptions="FillAndExpand"
                                  VerticalOptions="FillAndExpand"

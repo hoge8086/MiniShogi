@@ -10,13 +10,18 @@
         <BoxView BackgroundColor="AliceBlue"
             Grid.Column="1"
             Grid.Row="1"/>
+
         <ctrl:SquareCell2DGridControl
             Grid.Column="1"
             Grid.Row="1"
             ItemsSource="{Binding Board}">
             <ctrl:SquareCell2DGridControl.ItemTemplate>
                 <DataTemplate>
-                    <Button x:Name="cell" Text="{Binding Koma.Value.Name}" BorderColor="Black" CornerRadius="0"/>
+                    <Button x:Name="cell" Text="{Binding Koma.Value.Name}"
+                            BorderColor="Black"
+                            CornerRadius="0"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="FillAndExpand"/>
                 </DataTemplate>
             </ctrl:SquareCell2DGridControl.ItemTemplate>
         </ctrl:SquareCell2DGridControl>
