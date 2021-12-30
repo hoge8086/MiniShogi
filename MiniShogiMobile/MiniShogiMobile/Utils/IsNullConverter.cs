@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows.Data;
+using Xamarin.Forms;
 
-namespace MiniShogiApp.Presentation.View
+namespace MiniShogiMobile.Utils
 {
     public class IsNullConverter : IValueConverter
     {

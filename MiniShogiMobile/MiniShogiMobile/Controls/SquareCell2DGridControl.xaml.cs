@@ -12,6 +12,7 @@ namespace MiniShogiMobile.Controls
 {
     /// <summary>
     /// 2Dグリッドコントロール
+    /// 自身のコント―ロ―ル領域で、正方形のセルのグリッドを最大化する(ぴったりでなければ、縦か横のどちらかに余白が残る)
     /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SquareCell2DGridControl : ContentView
@@ -24,7 +25,7 @@ namespace MiniShogiMobile.Controls
         #region ItemTemplate
         public static readonly BindableProperty ItemTemplateProperty = BindableProperty.Create(
                                                                             "ItemTemplate",
-                                                                            typeof(DataTemplate),
+                                                                            typeof(ControlTemplate),
                                                                             typeof(SquareCell2DGridControl),
                                                                             null,
                                                                             propertyChanging: OnItemTemplatePropertyChanged);
@@ -32,16 +33,16 @@ namespace MiniShogiMobile.Controls
         /// <summary>
         /// グリットの各セルのデータテンプレート
         /// </summary>
-        public DataTemplate ItemTemplate
+        public ControlTemplate ItemTemplate
         {
-            get { return (DataTemplate)GetValue(ItemTemplateProperty); }
+            get { return (ControlTemplate)GetValue(ItemTemplateProperty); }
             set { SetValue(ItemTemplateProperty, value); }
         }
 
         static void OnItemTemplatePropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var ctrl = bindable as SquareCell2DGridControl;
-            var template = newValue as DataTemplate;
+            var template = newValue as ControlTemplate;
             ctrl.ItemTemplate = template;
         }
 
@@ -86,10 +87,11 @@ namespace MiniShogiMobile.Controls
             if (cells.Count() == 0)
                 return;
 
-            // [各セルを同じ高さ幅（正方形）にする]
-            var unitX = self.Width / cells.Count();
-            var unitY = self.Height / ItemsSource.Count();
+            // [TODO:プロパティ化 21 = 10(枠線)×2 + 1(下線/右線)]
+            var unitX = (self.Width - 21) / cells.Count();
+            var unitY = (self.Height - 21) / ItemsSource.Count();
 
+            // [各セルを同じ高さ幅（正方形）にする]
             var size = Math.Min(unitX, unitY);
             foreach(var row in board.Children)
             {
