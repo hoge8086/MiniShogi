@@ -7,37 +7,33 @@
              SizeChanged="koma_SizeChanged">
   <ContentView.Content>
         <!--将棋の駒の形-->
-
-        <!--セル-->
-        <!--Commandプロパティ公開-->
-        <!--CanCommandプロパティ公開-->
-        <!--丸表示プロパティ公開-->
-        <!--駒-->
-        <!--名前をセルにする-->
-        <!--反転プロパティ公開-->
-        <!--Textプロパティ公開-->
-        <!--個数プロパティ公開-->
-        <Polygon x:Name="polygon"
-             HorizontalOptions="Center"
-             VerticalOptions="Center"
-             Margin="0"
-             Fill="Moccasin"
-             Stroke="Oldlace"
-             StrokeThickness="2">
-            <!--
+        <!--TODO:個数プロパティ公開-->
+        <Grid>
+            <Polygon x:Name="polygon"
+                 HorizontalOptions="Center"
+                 VerticalOptions="Center"
+                 Margin="0"
+                 Fill="Moccasin"
+                 Stroke="Oldlace"
+                 StrokeThickness="2"/>
+            <!--名前をセルにする-->
+            <Label Text="{Binding Path=DisplayName, Source={x:Reference koma}}"
+                   TextColor="Black"
+                   HorizontalOptions="Fill"
+                   VerticalOptions="Fill"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"
+                   FontSize="Large"/>
+            <!--反転プロパティ公開-->
+            <Grid.Triggers>
+                <DataTrigger TargetType="Grid" Binding="{Binding Source={x:Reference koma}, Path=IsRotated}" Value="True">
+                    <Setter Property="Rotation" Value="180"/>
+                </DataTrigger>
+            </Grid.Triggers>
+        </Grid>
+        <!--
                 Xaml上で座標を指定してScaleを設定するのはうまくいかなかった(なぜか見切れる)
                 <Polygon x:Name="polygon" Points="0,100, 100,100 85,20 50,0 15,20"
-            <Polygon.Triggers>
-                <DataTrigger Binding="{Binding Source={x:Reference koma}, Path=IsInversion}" Value="True">
-                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
-                    <Setter Property="RenderTransform">
-                        <Setter.Value>
-                            <RotateTransform Angle="180"/>
-                        </Setter.Value>
-                    </Setter>
-                </DataTrigger>
-            </Polygon.Triggers>
             -->
-        </Polygon>
     </ContentView.Content>
 </ContentView>

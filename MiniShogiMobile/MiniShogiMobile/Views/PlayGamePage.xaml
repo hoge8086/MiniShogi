@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.PlayGamePage"
              Title="{Binding Title}">
@@ -10,7 +11,6 @@
         <BoxView BackgroundColor="AliceBlue"
             Grid.Column="1"
             Grid.Row="1"/>
-
         <ctrl:SquareCell2DGridControl
             BackgroundColor="SandyBrown"
             Grid.Column="1"
@@ -18,6 +18,11 @@
             ItemsSource="{Binding Board}">
             <ctrl:SquareCell2DGridControl.ItemTemplate>
                 <DataTemplate>
+                    <!--セル-->
+                    <!--Commandプロパティ公開-->
+                    <!--CanCommandプロパティ公開-->
+                    <!--丸表示プロパティ公開-->
+                    <!--駒-->
                     <Frame BackgroundColor="Chocolate"
                            CornerRadius="0"
                            Padding="0"
@@ -29,18 +34,18 @@
                                Padding="0"
                                HorizontalOptions="FillAndExpand"
                                VerticalOptions="FillAndExpand">
-                            <ctrl:KomaView/>
+                            <ctrl:KomaView DisplayName="{Binding Koma.Value.Name}">
+                                <ctrl:KomaView.Triggers>
+                                    <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value.PlayerType}" Value="{x:Static vm:PlayerType.AI}">
+                                        <Setter Property="IsRotated" Value="True"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value, TargetNullValue=''}" Value="">
+                                        <Setter Property="IsVisible" Value="False"/>
+                                    </DataTrigger>
+                                </ctrl:KomaView.Triggers>
+                            </ctrl:KomaView>
                         </Frame>
                     </Frame>
-                    <!--
-                    <Button x:Name="cell" Text="{Binding Koma.Value.Name}"
-                            CornerRadius="0"
-                            BorderColor="Red"
-                            BorderWidth="1"
-                            HorizontalOptions="FillAndExpand"
-                            VerticalOptions="FillAndExpand">
-                    </Button>
-                    -->
                 </DataTemplate>
             </ctrl:SquareCell2DGridControl.ItemTemplate>
         </ctrl:SquareCell2DGridControl>

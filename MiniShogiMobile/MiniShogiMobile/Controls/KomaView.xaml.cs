@@ -32,5 +32,39 @@ namespace MiniShogiMobile.Controls
             polygon.HeightRequest = this.Height * 0.8;
             polygon.WidthRequest = this.Width * 0.8;
         }
+
+        #region DisplayName
+        public static readonly BindableProperty DisplayNameProperty = BindableProperty.Create(
+                                                                            nameof(DisplayName),
+                                                                            typeof(string),
+                                                                            typeof(KomaView),
+                                                                            null);
+ 
+        /// <summary>
+        /// 表示名
+        /// </summary>
+        public string DisplayName
+        {
+            get { return (string)GetValue(DisplayNameProperty); }
+            set { SetValue(DisplayNameProperty, value); }
+        }
+        #endregion
+
+        #region IsRotated
+        public static readonly BindableProperty IsRotatedProperty = BindableProperty.Create(
+                                                                            nameof(IsRotated),
+                                                                            typeof(bool),
+                                                                            typeof(KomaView),
+                                                                            null);
+ 
+        /// <summary>
+        /// 表示名
+        /// </summary>
+        public bool IsRotated
+        {
+            get { return (bool)GetValue(IsRotatedProperty); }
+            set { SetValue(IsRotatedProperty, value); }
+        }
+        #endregion
     }
 }

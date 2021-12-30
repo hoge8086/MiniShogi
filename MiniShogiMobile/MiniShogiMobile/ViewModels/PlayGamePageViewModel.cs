@@ -64,7 +64,8 @@ namespace MiniShogiMobile.ViewModels
                     {
                         IsTransformed = koma.IsTransformed,
                         Name = koma.TypeId,
-                        //Player = koma.Player == PlayerType.FirstPlayer ? Player.FirstPlayer : Player.SecondPlayer,
+                        // TODO:違うので直す
+                        PlayerType = koma.Player == Shogi.Business.Domain.Model.PlayerTypes.PlayerType.FirstPlayer ? PlayerType.Human : PlayerType.AI,
                     };
                 }
                 //else
