@@ -14,13 +14,14 @@ namespace Shogi.Business.Domain.Model.PlayingGames
 
         public Player TurnPlayer => Players[Game.State.TurnPlayer];
 
-        public PlayingGame(Player firstPlayer, Player secondPlayer, GameTemplate gameTemplate)
+        public PlayingGame(Player firstPlayer, Player secondPlayer, PlayerType firstTurnPlayer, GameTemplate gameTemplate)
         {
             Players = new Dictionary<PlayerType, Player>();
-            Players.Add(PlayerType.FirstPlayer, firstPlayer);
-            Players.Add(PlayerType.SecondPlayer, secondPlayer);
+            Players.Add(PlayerType.Player1, firstPlayer);
+            Players.Add(PlayerType.Player2, secondPlayer);
             TemplateName = gameTemplate.Name;
             Game = gameTemplate.Game.Clone();
+            Game.ChangeFirstTurnPlayer(firstTurnPlayer);
         }
         public void Reset()
         {

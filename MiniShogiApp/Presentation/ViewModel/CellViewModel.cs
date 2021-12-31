@@ -27,9 +27,9 @@ namespace MiniShogiApp.Presentation.ViewModel
         {
             switch (player) {
                 case Player.FirstPlayer:
-                    return PlayerType.FirstPlayer;
+                    return PlayerType.Player1;
                 case Player.SecondPlayer:
-                    return PlayerType.SecondPlayer;
+                    return PlayerType.Player2;
             }
             return null;
         }

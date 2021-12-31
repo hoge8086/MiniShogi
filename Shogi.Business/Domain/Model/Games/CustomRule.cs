@@ -34,7 +34,7 @@ namespace Shogi.Business.Domain.Model.Games
         }
         public bool IsPlayerTerritory(PlayerType player, BoardPosition position, Board board)
         {
-            if (player == PlayerType.FirstPlayer)
+            if (player == PlayerType.Player1)
             {
                 return ((board.Height - 1) - position.Y) < TerritoryBoundary;
             }

@@ -1,4 +1,6 @@
-﻿namespace MiniShogiMobile.ViewModels
+﻿using Shogi.Business.Domain.Model.PlayerTypes;
+
+namespace MiniShogiMobile.ViewModels
 {
     public class KomaViewModel
     {

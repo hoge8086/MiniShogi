@@ -40,7 +40,7 @@ namespace MiniShogiMobile.ViewModels
             var cancelTokenSource = new CancellationTokenSource();
             //await Task.Run(() =>
             //{
-                App.GameService.Start(param.FirstPlayer, param.SecondPlayer, param.Name, cancelTokenSource.Token);
+                App.GameService.Start(param.Player1, param.Player2, param.FirstTurnPlayer, param.Name, cancelTokenSource.Token);
             //});
             //var game = App.GameService.GetGame();
             Update();
@@ -78,8 +78,7 @@ namespace MiniShogiMobile.ViewModels
                     {
                         IsTransformed = koma.IsTransformed,
                         Name = koma.TypeId,
-                        // TODO:違うので直す
-                        PlayerType = koma.Player == Shogi.Business.Domain.Model.PlayerTypes.PlayerType.FirstPlayer ? PlayerType.Human : PlayerType.AI,
+                        PlayerType = koma.Player,
                     };
                 }
                 //else

@@ -37,12 +37,12 @@ namespace Shogi.Business.Application
                 GameListener = listener;
             }
         }
-        public void Start(Player firstPlayer, Player secondPlayer, string gameName, CancellationToken cancellation)
+        public void Start(Player player1, Player player2, PlayerType firstTurnPlayer, string gameName, CancellationToken cancellation)
         {
             lock (thisLock)
             {
                 var template = GameTemplateRepository.FindByName(gameName);
-                PlayingGame = new PlayingGame(firstPlayer, secondPlayer, template);
+                PlayingGame = new PlayingGame(player1, player2, firstTurnPlayer, template);
                 GameListener?.OnStarted();
                 Next(cancellation);
             }

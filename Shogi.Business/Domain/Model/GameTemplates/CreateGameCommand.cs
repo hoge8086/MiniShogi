@@ -50,7 +50,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         public ProhibitedMoves ProhibitedMoves { get; set;} = new ProhibitedMoves();
         public WinConditionType WinCondition { get; set; } = WinConditionType.TakeKing;
         public List<Koma> KomaList { get; set; } = null;
-        public PlayerType TurnPlayer { get; set; } = PlayerType.FirstPlayer;
+        public PlayerType TurnPlayer { get; set; } = PlayerType.Player1;
 
         private static Dictionary<WinConditionType, IWinningChecker> winningDictionary = new Dictionary<WinConditionType, IWinningChecker>()
         {

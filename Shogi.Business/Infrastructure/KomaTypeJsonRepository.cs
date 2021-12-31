@@ -12,17 +12,18 @@ namespace Shogi.Business.Infrastructure
         private string jsonPath;
         private List<KomaType> cache;
 
-        public KomaTypeJsonRepository(string path)
+        public KomaTypeJsonRepository(string path, bool isCacheMode = true)
         {
             jsonPath = path;
+            cache = new List<KomaType>();
+            if (isCacheMode)
+                return;
+
             var repo = new JsonRepository();
             try
             {
                 cache = repo.Load<List<KomaType>>(jsonPath);
-            }catch(Exception ex)
-            {
-                cache = new List<KomaType>();
-            }
+            }catch(Exception ex){ }
         }
 
         public KomaType FindById(string id)

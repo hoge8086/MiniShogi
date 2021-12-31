@@ -91,6 +91,7 @@ namespace MiniShogiApp.Presentation.ViewModel
                         App.GameService.Start(
                             gameSet.FirstPlayer,
                             gameSet.SecondPlayer,
+                            PlayerType.Player1,
                             gameSet.GameType,
                             cancelTokenSource.Token);
                         //this.gameService.Start(new NegaAlphaAI(9), new NegaAlphaAI(9), GameType.AnimalShogi, this);
@@ -269,7 +270,7 @@ namespace MiniShogiApp.Presentation.ViewModel
 
             // [MEMO:タスクで開始していない(コンストラクタなのできない)ので、必ず初手はHumanになるようにする]
             cancelTokenSource = new CancellationTokenSource();
-            App.GameService.Start(human, ai, DefaultGame.DefaltGameTemplate[0].Name, cancelTokenSource.Token);
+            App.GameService.Start(human, ai, PlayerType.Player2, DefaultGame.DefaltGameTemplate[0].Name, cancelTokenSource.Token);
             cancelTokenSource = null;
         }
         public void UpdateOperationModeOnTaskFinished()
@@ -319,20 +320,20 @@ namespace MiniShogiApp.Presentation.ViewModel
                     {
                         IsTransformed = koma.IsTransformed,
                         Name = koma.TypeId,
-                        Player = koma.Player == PlayerType.FirstPlayer ? Player.FirstPlayer : Player.SecondPlayer,
+                        Player = koma.Player == PlayerType.Player1 ? Player.FirstPlayer : Player.SecondPlayer,
                     };
                 }
                 else
                 {
-                    if (koma.Player == PlayerType.FirstPlayer)
+                    if (koma.Player == PlayerType.Player1)
                         FirstPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.TypeId, KomaTypeId = koma.TypeId, Player = Player.FirstPlayer});
                     else
                         SecondPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.TypeId, KomaTypeId = koma.TypeId, Player = Player.SecondPlayer });
                 }
             }
             
-            FirstPlayerHands.IsCurrentTurn = App.GameService.GetGame().State.TurnPlayer == PlayerType.FirstPlayer;
-            SecondPlayerHands.IsCurrentTurn = App.GameService.GetGame().State.TurnPlayer == PlayerType.SecondPlayer;
+            FirstPlayerHands.IsCurrentTurn = App.GameService.GetGame().State.TurnPlayer == PlayerType.Player1;
+            SecondPlayerHands.IsCurrentTurn = App.GameService.GetGame().State.TurnPlayer == PlayerType.Player2;
 
             MoveCommand.RaiseCanExecuteChanged();
         }
@@ -375,7 +376,7 @@ namespace MiniShogiApp.Presentation.ViewModel
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
-                var winnerName = winner == PlayerType.FirstPlayer ? FirstPlayerHands.Name : SecondPlayerHands.Name;
+                var winnerName = winner == PlayerType.Player1 ? FirstPlayerHands.Name : SecondPlayerHands.Name;
                 Messenger.Message("勝者: " + winnerName + "(" + winner.ToString() + ")");
                 MoveCommand.RaiseCanExecuteChanged();
             });

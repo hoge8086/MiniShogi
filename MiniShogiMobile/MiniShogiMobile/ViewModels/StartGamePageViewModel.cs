@@ -12,12 +12,13 @@ using MiniShogiMobile.Utils;
 using System.ComponentModel;
 using Shogi.Business.Domain.Model.Players;
 using Shogi.Business.Domain.Model.AI;
+using Shogi.Business.Domain.Model.PlayerTypes;
 
 namespace MiniShogiMobile.ViewModels
 {
-    public class EnumPlayerTypeProvider : EnumListProvider<PlayerType> { }
-    public class PlayerTypeConverter : EnumToDescriptionConverter<PlayerType> { }
-    public enum PlayerType
+    public class EnumPlayerTypeProvider : EnumListProvider<PlayerThinkingType> { }
+    public class PlayerTypeConverter : EnumToDescriptionConverter<PlayerThinkingType> { }
+    public enum PlayerThinkingType
     {
         [Description("あなた")]
         Human,
@@ -53,42 +54,55 @@ namespace MiniShogiMobile.ViewModels
                 GameNameList.Add(name);
 
             GameName = new ReactiveProperty<string>(GameNameList.First());
-            Player1 = new PlayperViewModel(PlayerType.Human);
-            Player2 = new PlayperViewModel(PlayerType.AI, 5);
+            Player1 = new PlayperViewModel(PlayerThinkingType.Human);
+            Player2 = new PlayperViewModel(PlayerThinkingType.AI, 5);
             FirstTurnPlayer = new ReactiveProperty<SelectFirstTurnPlayer>(SelectFirstTurnPlayer.Random);
 
             PlayGameCommand = new ReactiveCommand();
             PlayGameCommand.Subscribe(() =>
             {
-                var firstTurnPlayer = FirstTurnPlayer.Value;
-                if (firstTurnPlayer == SelectFirstTurnPlayer.Random)
-                    firstTurnPlayer = new Random().Next(2) == 0 ? SelectFirstTurnPlayer.Player1 : SelectFirstTurnPlayer.Player2;
                 var param = new NavigationParameters();
                 param.Add(nameof(PlayGameCondition),
                     new PlayGameCondition(
                         GameName.Value,
-                        firstTurnPlayer == SelectFirstTurnPlayer.Player1 ? Player1.CreatePlayer() : Player2.CreatePlayer(),
-                        firstTurnPlayer == SelectFirstTurnPlayer.Player1 ? Player2.CreatePlayer() : Player1.CreatePlayer()
+                        Player1.CreatePlayer(),
+                        Player2.CreatePlayer(),
+                        GetFirstTurnPlayer()
                     ));
                 navigationService.NavigateAsync(nameof(PlayGamePage), param);
             });
 
         }
 
+        private PlayerType GetFirstTurnPlayer()
+        {
+            switch(FirstTurnPlayer.Value)
+            {
+                case SelectFirstTurnPlayer.Player1:
+                    return PlayerType.Player1;
+                case SelectFirstTurnPlayer.Player2:
+                    return PlayerType.Player2;
+                case SelectFirstTurnPlayer.Random:
+                    return new Random().Next(2) == 0 ? PlayerType.Player1 : PlayerType.Player2;
+                default:
+                    return PlayerType.Player1;
+            }
+        }
+
         public class PlayperViewModel : BindableBase
         {
-            public ReactiveProperty<PlayerType> PlayerType { get; set; }
+            public ReactiveProperty<PlayerThinkingType> PlayerType { get; set; }
             public ReactiveProperty<int> AIThinkDepth { get; set; }
 
-            public PlayperViewModel(PlayerType playerType, int depth = 1)
+            public PlayperViewModel(PlayerThinkingType playerType, int depth = 1)
             {
-                PlayerType = new ReactiveProperty<PlayerType>(playerType);
+                PlayerType = new ReactiveProperty<PlayerThinkingType>(playerType);
                 AIThinkDepth = new ReactiveProperty<int>(depth);
             }
 
             public Player CreatePlayer()
             {
-                if (PlayerType.Value == ViewModels.PlayerType.Human)
+                if (PlayerType.Value == ViewModels.PlayerThinkingType.Human)
                     return new Human();
                 else
                     return new NegaAlphaAI(AIThinkDepth.Value);

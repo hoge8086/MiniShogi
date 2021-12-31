@@ -52,6 +52,15 @@ namespace Shogi.Business.Domain.Model.Games
             return new BoardPositions(KomaList.Where(x => x.Player == player && x.IsOnBoard).Select(x => x.BoardPosition).ToList());
         }
 
+        /// <summary>
+        /// 履歴(Recode)がおかしくなるので使用は限定的にする(未着手の場合のみ)
+        /// </summary>
+        /// <param name="turnPlayer"></param>
+        public void ChangeCurrentTurn(PlayerType turnPlayer)
+        {
+            TurnPlayer = turnPlayer;
+        }
+
         public List<Koma> GetKomaList(PlayerType player)
         {
             return KomaList.Where(x => x.Player == player).ToList();

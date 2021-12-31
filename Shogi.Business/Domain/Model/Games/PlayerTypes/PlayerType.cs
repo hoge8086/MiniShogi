@@ -11,8 +11,8 @@ namespace Shogi.Business.Domain.Model.PlayerTypes
         public string Id { get; private set; }
 
         private PlayerType(string id) { Id = id; }
-        public static PlayerType FirstPlayer = new PlayerType("先手");
-        public static PlayerType SecondPlayer = new PlayerType("後手");
+        public static PlayerType Player1 = new PlayerType(nameof(Player1));
+        public static PlayerType Player2 = new PlayerType(nameof(Player2));
 
         public override string ToString()
         {
@@ -21,7 +21,7 @@ namespace Shogi.Business.Domain.Model.PlayerTypes
         public PlayerType Opponent
         {
             get {
-                return (this == FirstPlayer) ? SecondPlayer : FirstPlayer;
+                return (this == Player1) ? Player2 : Player1;
             }
         }
 

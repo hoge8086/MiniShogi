@@ -245,17 +245,17 @@ namespace Shogi.Business.Infrastructure.Tests
                     new Board(4, 3),
                     new GameState(new List<Koma>()
                         {
-                            new Koma(PlayerType.SecondPlayer, KomaKirin.Id, new OnBoard(new BoardPosition(0,0))),
-                            new Koma(PlayerType.SecondPlayer, KomaRaion.Id, new OnBoard(new BoardPosition(1,0))),
-                            new Koma(PlayerType.SecondPlayer, KomaZou.Id, new OnBoard(new BoardPosition(2,0))),
-                            new Koma(PlayerType.SecondPlayer, KomaHiyoko.Id, new OnBoard(new BoardPosition(1,1))),
-                            new Koma(PlayerType.FirstPlayer, KomaKirin.Id, new OnBoard(new BoardPosition(2,3))),
-                            new Koma(PlayerType.FirstPlayer, KomaRaion.Id, new OnBoard(new BoardPosition(1,3))),
-                            new Koma(PlayerType.FirstPlayer, KomaZou.Id, new OnBoard(new BoardPosition(0,3))),
-                            new Koma(PlayerType.FirstPlayer, KomaHiyoko.Id, new OnBoard(new BoardPosition(1,2))),
+                            new Koma(PlayerType.Player2, KomaKirin.Id, new OnBoard(new BoardPosition(0,0))),
+                            new Koma(PlayerType.Player2, KomaRaion.Id, new OnBoard(new BoardPosition(1,0))),
+                            new Koma(PlayerType.Player2, KomaZou.Id, new OnBoard(new BoardPosition(2,0))),
+                            new Koma(PlayerType.Player2, KomaHiyoko.Id, new OnBoard(new BoardPosition(1,1))),
+                            new Koma(PlayerType.Player1, KomaKirin.Id, new OnBoard(new BoardPosition(2,3))),
+                            new Koma(PlayerType.Player1, KomaRaion.Id, new OnBoard(new BoardPosition(1,3))),
+                            new Koma(PlayerType.Player1, KomaZou.Id, new OnBoard(new BoardPosition(0,3))),
+                            new Koma(PlayerType.Player1, KomaHiyoko.Id, new OnBoard(new BoardPosition(1,2))),
 
                         },
-                        PlayerType.FirstPlayer
+                        PlayerType.Player1
                     ),
                     new CustomRule(
                         1,
@@ -272,21 +272,21 @@ namespace Shogi.Business.Infrastructure.Tests
                     new Board(5, 5),
                     new GameState(new List<Koma>()
                     {
-                        new Koma(PlayerType.SecondPlayer, KomaHisya.Id, new OnBoard(new BoardPosition(0,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaKaku.Id, new OnBoard(new BoardPosition(1,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaGin.Id, new OnBoard(new BoardPosition(2,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaKin.Id, new OnBoard(new BoardPosition(3,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaOu.Id, new OnBoard(new BoardPosition(4,0))),
-                        new Koma(PlayerType.SecondPlayer, KomaHu.Id, new OnBoard(new BoardPosition(4,1))),
-                        new Koma(PlayerType.FirstPlayer, KomaHisya.Id, new OnBoard(new BoardPosition(4,4))),
-                        new Koma(PlayerType.FirstPlayer, KomaKaku.Id, new OnBoard(new BoardPosition(3,4))),
-                        new Koma(PlayerType.FirstPlayer, KomaGin.Id, new OnBoard(new BoardPosition(2,4))),
-                        new Koma(PlayerType.FirstPlayer, KomaKin.Id, new OnBoard(new BoardPosition(1,4))),
-                        new Koma(PlayerType.FirstPlayer, KomaOu.Id, new OnBoard(new BoardPosition(0,4))),
-                        new Koma(PlayerType.FirstPlayer, KomaHu.Id, new OnBoard(new BoardPosition(0,3))),
+                        new Koma(PlayerType.Player2, KomaHisya.Id, new OnBoard(new BoardPosition(0,0))),
+                        new Koma(PlayerType.Player2, KomaKaku.Id, new OnBoard(new BoardPosition(1,0))),
+                        new Koma(PlayerType.Player2, KomaGin.Id, new OnBoard(new BoardPosition(2,0))),
+                        new Koma(PlayerType.Player2, KomaKin.Id, new OnBoard(new BoardPosition(3,0))),
+                        new Koma(PlayerType.Player2, KomaOu.Id, new OnBoard(new BoardPosition(4,0))),
+                        new Koma(PlayerType.Player2, KomaHu.Id, new OnBoard(new BoardPosition(4,1))),
+                        new Koma(PlayerType.Player1, KomaHisya.Id, new OnBoard(new BoardPosition(4,4))),
+                        new Koma(PlayerType.Player1, KomaKaku.Id, new OnBoard(new BoardPosition(3,4))),
+                        new Koma(PlayerType.Player1, KomaGin.Id, new OnBoard(new BoardPosition(2,4))),
+                        new Koma(PlayerType.Player1, KomaKin.Id, new OnBoard(new BoardPosition(1,4))),
+                        new Koma(PlayerType.Player1, KomaOu.Id, new OnBoard(new BoardPosition(0,4))),
+                        new Koma(PlayerType.Player1, KomaHu.Id, new OnBoard(new BoardPosition(0,3))),
 
                     },
-                    PlayerType.FirstPlayer
+                    PlayerType.Player1
                     ),
                     new CustomRule(
                         1,

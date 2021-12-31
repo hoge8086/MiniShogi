@@ -11,16 +11,20 @@ namespace Shogi.Business.Infrastructure
 
         private string jsonPath;
         private List<GameTemplate> cache;
-        public GameTemplateJsonRepository(string path)
+        public GameTemplateJsonRepository(string path, bool isCacheMode = true)
         {
             jsonPath = path;
+            cache = new List<GameTemplate>();
+
+            if (isCacheMode)
+                return;
+
             var repo = new JsonRepository();
             try
             {
                 cache = repo.Load<List<GameTemplate>>(jsonPath);
             }catch(Exception ex)
             {
-                cache = new List<GameTemplate>();
             }
         }
 

@@ -17,7 +17,7 @@
                HorizontalOptions="FillAndExpand"
                VerticalOptions="FillAndExpand">
             <ctrl:KomaView.Triggers>
-                <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value.PlayerType}" Value="{x:Static vm:PlayerType.AI}">
+                <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value.PlayerType.Id}" Value="Player2">
                     <Setter Property="IsRotated" Value="True"/>
                 </DataTrigger>
                 <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value, Converter={StaticResource isNullConverter}}" Value="True">

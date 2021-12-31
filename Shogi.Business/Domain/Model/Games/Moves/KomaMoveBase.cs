@@ -29,7 +29,7 @@ namespace Shogi.Business.Domain.Model.Moves
 
             // [後手なら移動可能位置は反転される]
             var toRelativePos = RelativeBoardPosition;
-            if (player == PlayerType.SecondPlayer)
+            if (player == PlayerType.Player2)
                 toRelativePos = toRelativePos.Reverse();
 
             for(var toPos = position.Add(toRelativePos); ; toPos = toPos.Add(toRelativePos))

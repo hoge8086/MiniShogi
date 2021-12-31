@@ -29,6 +29,7 @@ namespace Shogi.Business.Domain.Model.Games
         [DataMember]
         public GameRecord Record { get; private set; }
 
+
         public Game(Board board, GameState state, CustomRule rule, List<KomaType> komaTypes)
         {
             Board = board;
@@ -48,6 +49,15 @@ namespace Shogi.Business.Domain.Model.Games
             KomaTypes = komaTypes;
         }
 
+        public void ChangeFirstTurnPlayer(PlayerType firstTurnPlayer)
+        {
+            // [BUG:Reset()すると先攻が分かる可能性がある]
+            // [「CurrentMovesCount == 0」でRecodeが1件あるのは勘違いするので、未着手は履歴を保持しないように直す]
+            if(Record.CurrentMovesCount != 0)
+                throw new InvalidProgramException("未着手のゲームしか先手を変更できません.");
+
+            State.ChangeCurrentTurn(firstTurnPlayer);
+        }
         public bool IsWinning(PlayerType player)
         {
             return Rule.WinningChecker.IsWinning(this, player);
@@ -305,7 +315,7 @@ namespace Shogi.Business.Domain.Model.Games
                         game += "____";
                     }else
                     {
-                        if (koma.Player == PlayerType.FirstPlayer)
+                        if (koma.Player == PlayerType.Player1)
                             game += " ";
                         else
                             game += ">";
@@ -319,8 +329,8 @@ namespace Shogi.Business.Domain.Model.Games
                 }
                 game += "\n";
             }
-            game += HandToString(PlayerType.FirstPlayer) + "\n";
-            game += HandToString(PlayerType.SecondPlayer) + "\n";
+            game += HandToString(PlayerType.Player1) + "\n";
+            game += HandToString(PlayerType.Player2) + "\n";
             game += "手番：" + State.TurnPlayer.ToString();
             return game;
 
