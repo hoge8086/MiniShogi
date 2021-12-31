@@ -3,14 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
-             xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
-             xmlns:util="clr-namespace:MiniShogiMobile.Utils"
+             xmlns:views="clr-namespace:MiniShogiMobile.Views"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.PlayGamePage"
              Title="{Binding Title}">
-    <ContentPage.Resources>
-        <util:IsNullConverter x:Key="isNullConverter"/>
-    </ContentPage.Resources>
     <Grid RowDefinitions="*,10*,3*" ColumnDefinitions="*,20*,*">
         <BoxView BackgroundColor="AliceBlue"
             Grid.Column="1"
@@ -22,36 +18,8 @@
             ItemsSource="{Binding Board.Cells}">
             <ctrl:SquareCell2DGridControl.ItemTemplate>
                 <ControlTemplate>
-                    <!--セル-->
-                    <!--Commandプロパティ公開-->
-                    <!--CanCommandプロパティ公開-->
-                    <!--丸表示プロパティ公開-->
-                    <!--駒-->
-                    <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                        <BoxView BackgroundColor="SandyBrown"/>
-                        <ctrl:KomaView  DisplayName="{TemplateBinding BindingContext.Koma.Value.Name}"
-                               HorizontalOptions="FillAndExpand"
-                               VerticalOptions="FillAndExpand">
-                            <ctrl:KomaView.Triggers>
-                                <DataTrigger TargetType="ctrl:KomaView" Binding="{TemplateBinding BindingContext.Koma.Value.PlayerType}" Value="{x:Static vm:PlayerType.AI}">
-                                    <Setter Property="IsRotated" Value="True"/>
-                                </DataTrigger>
-                                <DataTrigger TargetType="ctrl:KomaView" Binding="{TemplateBinding BindingContext.Koma.Value, Converter={StaticResource isNullConverter}}" Value="True">
-                                    <Setter Property="IsVisible" Value="False"/>
-                                </DataTrigger>
-                            </ctrl:KomaView.Triggers>
-                        </ctrl:KomaView>
-                        <Button CommandParameter="{TemplateBinding BindingContext}"
-                            Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
-                            BackgroundColor="Transparent">
-                            <!--
-                            <ctrl:TemplatedButton.ControlTemplate>
-                                <ControlTemplate>
-                                </ControlTemplate>
-                            </ctrl:TemplatedButton.ControlTemplate>
-                            -->
-                        </Button>
-                    </Grid>
+                    <views:CellView
+                        ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"/>
                 </ControlTemplate>
             </ctrl:SquareCell2DGridControl.ItemTemplate>
         </ctrl:SquareCell2DGridControl>
