@@ -16,6 +16,7 @@
             Grid.Column="1"
             Grid.Row="1"/>
         <ctrl:SquareCell2DGridControl
+            x:Name="board"
             Grid.Column="1"
             Grid.Row="1"
             ItemsSource="{Binding Board}">
@@ -26,12 +27,11 @@
                     <!--CanCommandプロパティ公開-->
                     <!--丸表示プロパティ公開-->
                     <!--駒-->
-                    <Frame BackgroundColor="SandyBrown"
-                           CornerRadius="0"
-                           Padding="0"
-                           HorizontalOptions="FillAndExpand"
-                           VerticalOptions="FillAndExpand">
-                        <ctrl:KomaView  DisplayName="{TemplateBinding BindingContext.Koma.Value.Name}">
+                    <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <BoxView BackgroundColor="SandyBrown"/>
+                        <ctrl:KomaView  DisplayName="{TemplateBinding BindingContext.Koma.Value.Name}"
+                               HorizontalOptions="FillAndExpand"
+                               VerticalOptions="FillAndExpand">
                             <ctrl:KomaView.Triggers>
                                 <DataTrigger TargetType="ctrl:KomaView" Binding="{TemplateBinding BindingContext.Koma.Value.PlayerType}" Value="{x:Static vm:PlayerType.AI}">
                                     <Setter Property="IsRotated" Value="True"/>
@@ -41,7 +41,17 @@
                                 </DataTrigger>
                             </ctrl:KomaView.Triggers>
                         </ctrl:KomaView>
-                    </Frame>
+                        <Button CommandParameter="{TemplateBinding BindingContext}"
+                            Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
+                            BackgroundColor="Transparent">
+                            <!--
+                            <ctrl:TemplatedButton.ControlTemplate>
+                                <ControlTemplate>
+                                </ControlTemplate>
+                            </ctrl:TemplatedButton.ControlTemplate>
+                            -->
+                        </Button>
+                    </Grid>
                 </ControlTemplate>
             </ctrl:SquareCell2DGridControl.ItemTemplate>
         </ctrl:SquareCell2DGridControl>

@@ -2,6 +2,7 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
+using Reactive.Bindings;
 using Shogi.Business.Domain.Model.Boards;
 using System;
 using System.Collections.Generic;
@@ -9,16 +10,23 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MiniShogiMobile.ViewModels
 {
     public class PlayGamePageViewModel : ViewModelBase
     {
         public ObservableCollection<ObservableCollection<CellViewModel>> Board { get; set; }
+        public ReactiveCommand<CellViewModel> MoveCommand { get; set; }
 
         public PlayGamePageViewModel(INavigationService navigationService) : base(navigationService)
         {
-             Board = new ObservableCollection<ObservableCollection<CellViewModel>>();
+            Board = new ObservableCollection<ObservableCollection<CellViewModel>>();
+            MoveCommand = new ReactiveCommand<CellViewModel>();
+            MoveCommand.Subscribe(x =>
+            {
+                var y = x;
+            });
         }
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
