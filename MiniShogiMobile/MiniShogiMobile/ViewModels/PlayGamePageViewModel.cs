@@ -1,9 +1,9 @@
 ﻿using MiniShogiMobile.Conditions;
 using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using Reactive.Bindings;
 using Shogi.Business.Domain.Model.Boards;
+using Shogi.Business.Domain.Model.Games;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,13 +16,15 @@ namespace MiniShogiMobile.ViewModels
 {
     public class PlayGamePageViewModel : ViewModelBase
     {
-        public ObservableCollection<ObservableCollection<CellViewModel>> Board { get; set; }
-        public ReactiveCommand<CellViewModel> MoveCommand { get; set; }
+        //public ObservableCollection<ObservableCollection<CellViewModel>> Board { get; set; }
+        public BoardViewModel<CellPlayingViewModel> Board { get; set; }
+        public ReactiveCommand<CellPlayingViewModel> MoveCommand { get; set; }
 
         public PlayGamePageViewModel(INavigationService navigationService) : base(navigationService)
         {
-            Board = new ObservableCollection<ObservableCollection<CellViewModel>>();
-            MoveCommand = new ReactiveCommand<CellViewModel>();
+            //Board = new ObservableCollection<ObservableCollection<CellViewModel>>();
+            Board = new BoardViewModel<CellPlayingViewModel>();
+            MoveCommand = new ReactiveCommand<CellPlayingViewModel>();
             MoveCommand.Subscribe(x =>
             {
                 var y = x;
@@ -51,23 +53,27 @@ namespace MiniShogiMobile.ViewModels
 
         public void Update()
         {
-            Board.Clear();
+            //Board.Clear();
+            Board.Cells.Clear();
             //FirstPlayerHands.Hands.Clear();
             //SecondPlayerHands.Hands.Clear();
 
             for (int y = 0; y < App.GameService.GetGame().Board.Height; y++)
             {
-                var row = new ObservableCollection<CellViewModel>();
+                //var row = new ObservableCollection<CellViewModel>();
+                var row = new ObservableCollection<CellPlayingViewModel>();
                 for (int x = 0; x < App.GameService.GetGame().Board.Width; x++)
-                    row.Add(new CellViewModel() { Position = new BoardPosition(x, y), MoveCommands = null});
-                Board.Add(row);
+                    //row.Add(new CellViewModel() { Position = new BoardPosition(x, y), MoveCommands = null});
+                    row.Add(new CellPlayingViewModel() { Position = new BoardPosition(x, y), MoveCommands = null});
+                Board.Cells.Add(row);
             }
 
             foreach (var koma in App.GameService.GetGame().State.KomaList)
             {
                 if (koma.BoardPosition != null)
                 {
-                    var cell = Board[koma.BoardPosition.Y][koma.BoardPosition.X];
+                    //var cell = Board[koma.BoardPosition.Y][koma.BoardPosition.X];
+                    var cell = Board.Cells[koma.BoardPosition.Y][koma.BoardPosition.X];
                     cell.Koma.Value = new KomaViewModel()
                     {
                         IsTransformed = koma.IsTransformed,
@@ -88,6 +94,26 @@ namespace MiniShogiMobile.ViewModels
             //FirstPlayerHands.IsCurrentTurn = App.GameService.GetGame().State.TurnPlayer == PlayerType.FirstPlayer;
             //SecondPlayerHands.IsCurrentTurn = App.GameService.GetGame().State.TurnPlayer == PlayerType.SecondPlayer;
             //MoveCommand.RaiseCanExecuteChanged();
+        }
+    }
+    public class HandViewModel
+    {
+
+    }
+    public class BoardWithHandViewModel<T> where T : CellBaseViewModel
+    {
+        public BoardViewModel<T> Board { get; set; }
+        public HandViewModel Player1 { get; set; }
+        public HandViewModel Player2 { get; set; }
+    }
+
+    public class BoardViewModel<T> where T : CellBaseViewModel
+    {
+        public ObservableCollection<ObservableCollection<T>> Cells { get; set; }
+
+        public BoardViewModel()
+        {
+            Cells = new ObservableCollection<ObservableCollection<T>>();
         }
     }
 

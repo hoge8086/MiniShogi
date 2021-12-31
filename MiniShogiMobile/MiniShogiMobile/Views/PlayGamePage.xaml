@@ -19,7 +19,7 @@
             x:Name="board"
             Grid.Column="1"
             Grid.Row="1"
-            ItemsSource="{Binding Board}">
+            ItemsSource="{Binding Board.Cells}">
             <ctrl:SquareCell2DGridControl.ItemTemplate>
                 <ControlTemplate>
                     <!--セル-->
