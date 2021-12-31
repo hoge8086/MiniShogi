@@ -19,6 +19,7 @@
             <ctrl:SquareCell2DGridControl.ItemTemplate>
                 <ControlTemplate>
                     <views:CellView
+                        BindingContext="{TemplateBinding BindingContext}"
                         ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"/>
                 </ControlTemplate>
             </ctrl:SquareCell2DGridControl.ItemTemplate>

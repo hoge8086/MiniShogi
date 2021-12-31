@@ -14,20 +14,20 @@
     <!--丸表示プロパティ公開-->
     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <BoxView BackgroundColor="SandyBrown"/>
-        <ctrl:KomaView  DisplayName="{TemplateBinding BindingContext.Koma.Value.Name}"
+        <ctrl:KomaView  DisplayName="{Binding Koma.Value.Name}"
                HorizontalOptions="FillAndExpand"
                VerticalOptions="FillAndExpand">
             <ctrl:KomaView.Triggers>
-                <DataTrigger TargetType="ctrl:KomaView" Binding="{TemplateBinding BindingContext.Koma.Value.PlayerType}" Value="{x:Static vm:PlayerType.AI}">
+                <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value.PlayerType}" Value="{x:Static vm:PlayerType.AI}">
                     <Setter Property="IsRotated" Value="True"/>
                 </DataTrigger>
-                <DataTrigger TargetType="ctrl:KomaView" Binding="{TemplateBinding BindingContext.Koma.Value, Converter={StaticResource isNullConverter}}" Value="True">
+                <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value, Converter={StaticResource isNullConverter}}" Value="True">
                     <Setter Property="IsVisible" Value="False"/>
                 </DataTrigger>
             </ctrl:KomaView.Triggers>
         <!--駒-->
         </ctrl:KomaView>
-        <Button CommandParameter="{TemplateBinding BindingContext}"
+        <Button CommandParameter="{Binding}"
             Command="{Binding Path=ClickCommand, Source={x:Reference cell}}"
             BackgroundColor="Transparent">
             <!--
