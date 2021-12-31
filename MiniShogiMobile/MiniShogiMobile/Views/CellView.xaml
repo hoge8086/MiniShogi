@@ -12,7 +12,6 @@
   <ContentView.Content>
     <!--セル-->
     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-        <BoxView BackgroundColor="SandyBrown"/>
         <!--駒-->
         <ctrl:KomaView  DisplayName="{Binding Koma.Value.Name}"
                HorizontalOptions="FillAndExpand"

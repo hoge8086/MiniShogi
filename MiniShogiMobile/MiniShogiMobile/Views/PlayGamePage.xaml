@@ -21,7 +21,13 @@
                     <views:CellView BackgroundColor="SandyBrown"
                         BindingContext="{TemplateBinding BindingContext}"
                         ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
-                        IsMarked="{Binding IsSelected.Value}"/>
+                        IsMarked="{Binding IsSelected.Value}">
+                        <views:CellView.Triggers>
+                            <DataTrigger TargetType="views:CellView" Binding="{Binding IsSelected.Value}" Value="True">
+                                <Setter Property="BackgroundColor" Value="DarkOrange"/>
+                            </DataTrigger>
+                        </views:CellView.Triggers>
+                    </views:CellView>
                 </ControlTemplate>
             </ctrl:SquareCell2DGridControl.ItemTemplate>
         </ctrl:SquareCell2DGridControl>
