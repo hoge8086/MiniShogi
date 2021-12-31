@@ -18,9 +18,10 @@
             ItemsSource="{Binding Board.Cells}">
             <ctrl:SquareCell2DGridControl.ItemTemplate>
                 <ControlTemplate>
-                    <views:CellView
+                    <views:CellView BackgroundColor="SandyBrown"
                         BindingContext="{TemplateBinding BindingContext}"
-                        ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"/>
+                        ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
+                        IsMarked="{Binding IsSelected.Value}"/>
                 </ControlTemplate>
             </ctrl:SquareCell2DGridControl.ItemTemplate>
         </ctrl:SquareCell2DGridControl>

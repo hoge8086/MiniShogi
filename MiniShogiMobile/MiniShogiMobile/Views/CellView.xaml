@@ -11,9 +11,9 @@
     </ContentView.Resources>
   <ContentView.Content>
     <!--セル-->
-    <!--丸表示プロパティ公開-->
     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <BoxView BackgroundColor="SandyBrown"/>
+        <!--駒-->
         <ctrl:KomaView  DisplayName="{Binding Koma.Value.Name}"
                HorizontalOptions="FillAndExpand"
                VerticalOptions="FillAndExpand">
@@ -25,17 +25,21 @@
                     <Setter Property="IsVisible" Value="False"/>
                 </DataTrigger>
             </ctrl:KomaView.Triggers>
-        <!--駒-->
         </ctrl:KomaView>
+        <!--丸表示(IsMarkedプロパティ)-->
+        <RelativeLayout IsVisible="{Binding IsMarked, Source={x:Reference cell}}"
+            VerticalOptions="FillAndExpand"
+            HorizontalOptions="FillAndExpand">
+            <Ellipse Fill="OrangeRed"
+                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.4}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.2}"
+                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.2}"
+                Opacity="0.6"/>
+        </RelativeLayout>
         <Button CommandParameter="{Binding}"
             Command="{Binding Path=ClickCommand, Source={x:Reference cell}}"
             BackgroundColor="Transparent">
-            <!--
-            <ctrl:TemplatedButton.ControlTemplate>
-                <ControlTemplate>
-                </ControlTemplate>
-            </ctrl:TemplatedButton.ControlTemplate>
-            -->
         </Button>
     </Grid>
   </ContentView.Content>

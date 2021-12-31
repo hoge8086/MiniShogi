@@ -27,7 +27,7 @@ namespace MiniShogiMobile.ViewModels
             MoveCommand = new ReactiveCommand<CellPlayingViewModel>();
             MoveCommand.Subscribe(x =>
             {
-                var y = x;
+                x.IsSelected.Value = !x.IsSelected.Value;
             });
         }
         public override void OnNavigatedTo(INavigationParameters parameters)

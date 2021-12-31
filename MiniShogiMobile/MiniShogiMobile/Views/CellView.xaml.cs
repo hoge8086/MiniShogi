@@ -27,5 +27,15 @@ namespace MiniShogiMobile.Views
             get { return (ICommand)GetValue(ClickCommandProperty); }
             set { SetValue(ClickCommandProperty, value); }
         }
+
+        public static readonly BindableProperty IsMarkedProperty =
+            BindableProperty.Create(
+                nameof(IsMarked), typeof(bool), typeof(CellView), false);
+
+        public bool IsMarked
+        {
+            get { return (bool)GetValue(IsMarkedProperty); }
+            set { SetValue(IsMarkedProperty, value); }
+        }
     }
 }
