@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
+using Prism.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,8 @@ namespace MiniShogiMobile.ViewModels
 {
     public class ViewModelBase : BindableBase, IInitialize, INavigationAware, IDestructible
     {
-        protected INavigationService NavigationService { get; private set; }
+        public INavigationService NavigationService { get; private set; }
+        public IPageDialogService PageDialogService { get; private set; }
 
         private string _title;
         public string Title
@@ -18,9 +20,10 @@ namespace MiniShogiMobile.ViewModels
             set { SetProperty(ref _title, value); }
         }
 
-        public ViewModelBase(INavigationService navigationService)
+        public ViewModelBase(INavigationService navigationService, IPageDialogService pageDialogService)
         {
             NavigationService = navigationService;
+            PageDialogService = pageDialogService;
         }
 
         public virtual void Initialize(INavigationParameters parameters)
@@ -33,7 +36,7 @@ namespace MiniShogiMobile.ViewModels
 
         }
 
-        public virtual void OnNavigatedTo(INavigationParameters parameters)
+        public async virtual void OnNavigatedTo(INavigationParameters parameters)
         {
 
         }

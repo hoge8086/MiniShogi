@@ -13,6 +13,7 @@ namespace Shogi.Business.Domain.Model.PlayingGames
         public string TemplateName { get; }
 
         public Player TurnPlayer => Players[Game.State.TurnPlayer];
+        public Player GerPlayer(PlayerType pleyerType) => Players[pleyerType];
 
         public PlayingGame(Player firstPlayer, Player secondPlayer, PlayerType firstTurnPlayer, GameTemplate gameTemplate)
         {

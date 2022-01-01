@@ -1,78 +1,154 @@
 ﻿using MiniShogiMobile.Conditions;
 using Prism.Commands;
 using Prism.Navigation;
+using Prism.Services;
 using Reactive.Bindings;
+using Shogi.Business.Application;
 using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Games;
+using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace MiniShogiMobile.ViewModels
 {
-    public class PlayGamePageViewModel : ViewModelBase
+    public interface IViewState
     {
-        //public ObservableCollection<ObservableCollection<CellViewModel>> Board { get; set; }
+        Task HandleAsync(PlayGamePageViewModel vm, CellPlayingViewModel cell);
+    }
+    public class ViewStateHumanThinkingForMoveFrom : IViewState
+    {
+        public async Task HandleAsync(PlayGamePageViewModel vm, CellPlayingViewModel fromCell)
+        {
+            //Koma koma = selectedMoveSource.GetKoma(App.GameService.GetGame());
+            var koma = App.GameService.GetGame().State.FindBoardKoma(fromCell.Position);
+            if (koma == null || !App.GameService.GetGame().State.IsTurnPlayer(koma.Player))
+                return;
+
+            var moves = App.GameService.GetGame().CreateAvailableMoveCommand(koma);
+            foreach(var row in vm.Board.Cells)
+            {
+                foreach(var cell in row)
+                {
+                    var cellMoves = moves.Where(x => x.ToPosition == cell.Position).ToList();
+                    if(cellMoves.Count() > 0)
+                        cell.MoveCommands.Value = cellMoves;
+                }
+            }
+            fromCell.IsSelected.Value = true;
+
+            vm.ChangeState(new ViewStateHumanThinkingForMoveTo());
+        }
+    }
+    public class ViewStateHumanThinkingForMoveTo : IViewState
+    {
+        public async Task HandleAsync(PlayGamePageViewModel vm, CellPlayingViewModel cell)
+        {
+            if(cell.CanMove.Value)
+            {
+
+                MoveCommand move = null;
+                if(cell.MoveCommands.Value.Count == 1)
+                {
+                    move = cell.MoveCommands.Value[0];
+                }
+                else
+                {
+                    var doTransform = await vm.PageDialogService.DisplayAlertAsync("確認", "成りますか?", "Yes", "No");
+                    move = cell.MoveCommands.Value.FirstOrDefault(x => x.DoTransform == doTransform);
+                }
+                await vm.AppServiceCallCommandAsync(service =>
+                {
+                    service.Play(move, CancellationToken.None);
+                });
+            }
+            else
+            {
+                vm.UpdateView();
+                vm.ChangeState(new ViewStateHumanThinkingForMoveFrom());
+            }
+        }
+    }
+
+    public class ViewStateGameEnd: IViewState
+    {
+        public async Task HandleAsync(PlayGamePageViewModel vm, CellPlayingViewModel cell)
+        {
+            return;
+        }
+    }
+
+    public class ViewStateWaiting : IViewState
+    {
+        public async Task HandleAsync(PlayGamePageViewModel vm, CellPlayingViewModel cell)
+        {
+            return;
+        }
+    }
+
+
+    public class PlayGamePageViewModel : ViewModelBase, GameListener
+    {
+        private ReactiveProperty<IViewState> ViewState;
+        public void ChangeState(IViewState state) => ViewState.Value = state;
         public BoardViewModel<CellPlayingViewModel> Board { get; set; }
         public ReactiveCommand<CellPlayingViewModel> MoveCommand { get; set; }
 
-        public PlayGamePageViewModel(INavigationService navigationService) : base(navigationService)
+        public PlayGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
-            //Board = new ObservableCollection<ObservableCollection<CellViewModel>>();
+            ViewState = new ReactiveProperty<IViewState>();
             Board = new BoardViewModel<CellPlayingViewModel>();
             MoveCommand = new ReactiveCommand<CellPlayingViewModel>();
-            MoveCommand.Subscribe(x =>
+            MoveCommand.Subscribe(async x =>
             {
-                x.IsSelected.Value = !x.IsSelected.Value;
+                await ViewState.Value.HandleAsync(this, x);
             });
         }
-        public override void OnNavigatedTo(INavigationParameters parameters)
+
+        public async Task AppServiceCallCommandAsync(Action<GameService> action)
+        {
+            await Task.Run(() =>
+            {
+                action(App.GameService);
+                if (App.GameService.GetGame().State.IsEnd)
+                    ChangeState(new ViewStateGameEnd());
+                else
+                    ChangeState(new ViewStateHumanThinkingForMoveFrom());
+            });
+        }
+        public async override void OnNavigatedTo(INavigationParameters parameters)
         {
             var param = parameters[nameof(PlayGameCondition)] as PlayGameCondition;
             if(param == null)
                 throw new ArgumentException(nameof(PlayGameCondition));
 
             Title = param.Name;
+            App.GameService.Subscribe(this);
             var cancelTokenSource = new CancellationTokenSource();
-            //await Task.Run(() =>
-            //{
-                App.GameService.Start(param.Player1, param.Player2, param.FirstTurnPlayer, param.Name, cancelTokenSource.Token);
-            //});
-            //var game = App.GameService.GetGame();
-            Update();
-            //cancelTokenSource = null;
+            await AppServiceCallCommandAsync(service =>
+            {
+                service.Start(param.Player1, param.Player2, param.FirstTurnPlayer, param.Name, cancelTokenSource.Token);
+            });
 
-
-            // [MEMO:タスクが完了されるまでここは実行されない(AIThinkingのまま)]
-            //UpdateOperationModeOnTaskFinished();
         }
 
-        public void Update()
+        public void UpdateView()
         {
-            //Board.Clear();
-            Board.Cells.Clear();
-            //FirstPlayerHands.Hands.Clear();
-            //SecondPlayerHands.Hands.Clear();
-
-            for (int y = 0; y < App.GameService.GetGame().Board.Height; y++)
-            {
-                //var row = new ObservableCollection<CellViewModel>();
-                var row = new ObservableCollection<CellPlayingViewModel>();
-                for (int x = 0; x < App.GameService.GetGame().Board.Width; x++)
-                    //row.Add(new CellViewModel() { Position = new BoardPosition(x, y), MoveCommands = null});
-                    row.Add(new CellPlayingViewModel() { Position = new BoardPosition(x, y), MoveCommands = null});
-                Board.Cells.Add(row);
-            }
+            foreach(var row in Board.Cells)
+                foreach (var cell in row)
+                    cell.Reset();
 
             foreach (var koma in App.GameService.GetGame().State.KomaList)
             {
                 if (koma.BoardPosition != null)
                 {
-                    //var cell = Board[koma.BoardPosition.Y][koma.BoardPosition.X];
                     var cell = Board.Cells[koma.BoardPosition.Y][koma.BoardPosition.X];
                     cell.Koma.Value = new KomaViewModel()
                     {
@@ -89,10 +165,49 @@ namespace MiniShogiMobile.ViewModels
                 //        SecondPlayerHands.Hands.Add(new HandKomaViewModel() { KomaName = koma.TypeId, KomaTypeId = koma.TypeId, Player = Player.SecondPlayer });
                 //}
             }
-            
+
             //FirstPlayerHands.IsCurrentTurn = App.GameService.GetGame().State.TurnPlayer == PlayerType.FirstPlayer;
             //SecondPlayerHands.IsCurrentTurn = App.GameService.GetGame().State.TurnPlayer == PlayerType.SecondPlayer;
             //MoveCommand.RaiseCanExecuteChanged();
+        }
+
+        public void OnStarted()
+        {
+            Device.InvokeOnMainThreadAsync(() =>
+            {
+                // [ボード初期化]
+                // [MEMO:ボードのマス目の数はゲーム中は変わらないので、一度初期化するだけでよい]
+                Board.Cells.Clear();
+                for (int y = 0; y < App.GameService.GetGame().Board.Height; y++)
+                {
+                    var row = new ObservableCollection<CellPlayingViewModel>();
+                    for (int x = 0; x < App.GameService.GetGame().Board.Width; x++)
+                        row.Add(new CellPlayingViewModel() { Position = new BoardPosition(x, y) });
+                    Board.Cells.Add(row);
+                }
+                UpdateView();
+            });
+        }
+
+        public void OnPlayed()
+        {
+            Device.InvokeOnMainThreadAsync(() =>
+            {
+                UpdateView();
+            });
+        }
+
+        public void OnEnded(PlayerType winner)
+        {
+            Device.InvokeOnMainThreadAsync(() =>
+            {
+                var player = App.GameService.GetPlayingGame().GerPlayer(winner);
+                PageDialogService.DisplayAlertAsync(
+                     "ゲーム終了",
+                     $"勝者: {player.Name}({winner.ToString()})",
+                     "OK");
+                //var winnerName = winner == PlayerType.Player1 ? FirstPlayerHands.Name : SecondPlayerHands.Name;
+            });
         }
     }
     public class HandViewModel

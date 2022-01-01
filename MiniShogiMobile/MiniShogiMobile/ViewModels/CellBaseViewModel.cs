@@ -4,6 +4,7 @@ using Reactive.Bindings;
 using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Games;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 
 namespace MiniShogiMobile.ViewModels
 {
@@ -21,15 +22,23 @@ namespace MiniShogiMobile.ViewModels
     {
         public ReactiveProperty<List<MoveCommand>> MoveCommands { get; set; }
 
-        public ReactiveProperty<bool> CanMove { get; set; }
+        public ReadOnlyReactivePropertySlim<bool> CanMove { get; set; }
 
         public ReactiveProperty<bool> IsSelected { get; set; }
         public CellPlayingViewModel()
         {
             MoveCommands = new ReactiveProperty<List<MoveCommand>>();
-            CanMove = new ReactiveProperty<bool>();
+            //CanMove = new ReactiveProperty<bool>();
             IsSelected = new ReactiveProperty<bool>(false);
-            MoveCommands.Subscribe((x) => { CanMove.Value = true; });
+            //MoveCommands.Subscribe((x) => { CanMove.Value == null; });
+            CanMove = MoveCommands.Select((x) => x != null).ToReadOnlyReactivePropertySlim();
+        }
+        public void Reset()
+        {
+            Koma.Value = null;
+            IsSelected.Value = false;
+            MoveCommands.Value = null;
+
         }
 
     }

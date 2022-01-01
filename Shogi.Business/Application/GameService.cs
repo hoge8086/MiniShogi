@@ -71,6 +71,12 @@ namespace Shogi.Business.Application
             // [MEMO:Game自身はGameでlockしている→★してないので注意]
             return PlayingGame.Game.Clone();
         }
+        public PlayingGame GetPlayingGame()
+        {
+            // [MEMO:クローンを返すことでマルチスレッドでアクセス可能とする]
+            // [MEMO:Game自身はGameでlockしている→★してないので注意]
+            return PlayingGame;
+        }
 
         public void Play(MoveCommand moveCommand, CancellationToken cancellation)
         {

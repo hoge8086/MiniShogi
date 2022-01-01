@@ -13,6 +13,7 @@ using System.ComponentModel;
 using Shogi.Business.Domain.Model.Players;
 using Shogi.Business.Domain.Model.AI;
 using Shogi.Business.Domain.Model.PlayerTypes;
+using Prism.Services;
 
 namespace MiniShogiMobile.ViewModels
 {
@@ -47,7 +48,7 @@ namespace MiniShogiMobile.ViewModels
         public PlayperViewModel Player2 { get; set; }
         public ReactiveProperty<SelectFirstTurnPlayer> FirstTurnPlayer { get; set; }
 
-        public StartGamePageViewModel(INavigationService navigationService) : base(navigationService)
+        public StartGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             GameNameList = new ObservableCollection<string>();
             foreach (var name in App.GameService.GameTemplateRepository.FindAllName())
