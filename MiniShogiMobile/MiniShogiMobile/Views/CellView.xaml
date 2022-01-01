@@ -15,13 +15,17 @@
         <!--駒-->
         <ctrl:KomaView  DisplayName="{Binding Koma.Value.Name}"
                HorizontalOptions="FillAndExpand"
-               VerticalOptions="FillAndExpand">
+               VerticalOptions="FillAndExpand"
+               NameColor="Black">
             <ctrl:KomaView.Triggers>
                 <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value.PlayerType.Id}" Value="Player2">
                     <Setter Property="IsRotated" Value="True"/>
                 </DataTrigger>
                 <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value, Converter={StaticResource isNullConverter}}" Value="True">
                     <Setter Property="IsVisible" Value="False"/>
+                </DataTrigger>
+                <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value.IsTransformed}" Value="True">
+                    <Setter Property="NameColor" Value="Red"/>
                 </DataTrigger>
             </ctrl:KomaView.Triggers>
         </ctrl:KomaView>

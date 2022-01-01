@@ -58,12 +58,29 @@ namespace MiniShogiMobile.Controls
                                                                             null);
  
         /// <summary>
-        /// 表示名
+        /// 反転
         /// </summary>
         public bool IsRotated
         {
             get { return (bool)GetValue(IsRotatedProperty); }
             set { SetValue(IsRotatedProperty, value); }
+        }
+        #endregion
+
+        #region NameColor
+        public static readonly BindableProperty NameColorProperty = BindableProperty.Create(
+                                                                            nameof(NameColor),
+                                                                            typeof(Color),
+                                                                            typeof(KomaView),
+                                                                            null);
+ 
+        /// <summary>
+        /// 表示名
+        /// </summary>
+        public Color NameColor
+        {
+            get { return (Color)GetValue(NameColorProperty); }
+            set { SetValue(NameColorProperty, value); }
         }
         #endregion
     }

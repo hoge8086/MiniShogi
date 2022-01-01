@@ -18,7 +18,7 @@
                  StrokeThickness="2"/>
             <!--名前をセルにする-->
             <Label Text="{Binding Path=DisplayName, Source={x:Reference koma}}"
-                   TextColor="Black"
+                   TextColor="{Binding Path=NameColor, Source={x:Reference koma}}"
                    HorizontalOptions="Fill"
                    VerticalOptions="Fill"
                    VerticalTextAlignment="Center"
