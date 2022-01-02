@@ -43,6 +43,16 @@ namespace MiniShogiMobile.Controls
             set { SetValue(DisplayNameProperty, value); }
         }
         #endregion
+
+        public static readonly BindableProperty IsHighlightProperty =
+            BindableProperty.Create(
+                nameof(IsHighlight), typeof(bool), typeof(HandKomaView), false);
+
+        public bool IsHighlight
+        {
+            get { return (bool)GetValue(IsHighlightProperty); }
+            set { SetValue(IsHighlightProperty, value); }
+        }
     }
 
 }

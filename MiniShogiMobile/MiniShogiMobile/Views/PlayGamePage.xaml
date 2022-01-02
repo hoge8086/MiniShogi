@@ -7,7 +7,7 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.PlayGamePage"
              Title="{Binding Title}">
-    <Grid RowDefinitions="*,10*,*,2*" ColumnDefinitions="*,20*,*">
+    <Grid RowDefinitions="*,8*,*,2*" ColumnDefinitions="*,20*,*">
         <ctrl:KomadaiView
             Grid.Column="1"
             Grid.Row="0"
@@ -17,7 +17,7 @@
             ItemsSource="{Binding Game.HandsOfPlayer2.Hands}">
             <ctrl:KomadaiView.ItemTemplate>
                 <DataTemplate>
-                    <ctrl:HandKomaView Number="{Binding Num}" DisplayName="{Binding Name}"/>
+                    <ctrl:HandKomaView Number="{Binding Num}" DisplayName="{Binding Name}" IsHighlight="True"/>
                 </DataTemplate>
             </ctrl:KomadaiView.ItemTemplate>
         </ctrl:KomadaiView>
@@ -33,15 +33,11 @@
             ItemsSource="{Binding Game.Board.Cells}">
             <ctrl:SquareCell2DGridControl.ItemTemplate>
                 <ControlTemplate>
-                    <views:CellView BackgroundColor="SandyBrown"
+                    <views:CellView
                         BindingContext="{TemplateBinding BindingContext}"
                         ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
-                        IsMarked="{Binding CanMove.Value}">
-                        <views:CellView.Triggers>
-                            <DataTrigger TargetType="views:CellView" Binding="{Binding IsSelected.Value}" Value="True">
-                                <Setter Property="BackgroundColor" Value="DarkOrange"/>
-                            </DataTrigger>
-                        </views:CellView.Triggers>
+                        IsMarked="{Binding CanMove.Value}"
+                        IsHighlight="{Binding IsSelected.Value}">
                     </views:CellView>
                 </ControlTemplate>
             </ctrl:SquareCell2DGridControl.ItemTemplate>

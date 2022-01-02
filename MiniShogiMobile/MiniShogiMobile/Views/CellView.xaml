@@ -5,10 +5,16 @@
              xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
              xmlns:util="clr-namespace:MiniShogiMobile.Utils"
              x:Class="MiniShogiMobile.Views.CellView"
-             x:Name="cell">
+             x:Name="cell"
+             BackgroundColor="SandyBrown">
     <ContentView.Resources>
         <util:IsNullConverter x:Key="isNullConverter"/>
     </ContentView.Resources>
+    <ContentView.Triggers>
+        <DataTrigger TargetType="ContentView" Binding="{Binding IsHighlight, Source={x:Reference cell}}" Value="True">
+            <Setter Property="BackgroundColor" Value="DarkOrange"/>
+        </DataTrigger>
+    </ContentView.Triggers>
   <ContentView.Content>
     <!--セル-->
     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">

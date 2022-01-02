@@ -37,5 +37,16 @@ namespace MiniShogiMobile.Views
             get { return (bool)GetValue(IsMarkedProperty); }
             set { SetValue(IsMarkedProperty, value); }
         }
+
+        public static readonly BindableProperty IsHighlightProperty =
+            BindableProperty.Create(
+                nameof(IsHighlight), typeof(bool), typeof(CellView), false);
+
+        public bool IsHighlight
+        {
+            get { return (bool)GetValue(IsHighlightProperty); }
+            set { SetValue(IsHighlightProperty, value); }
+        }
+
     }
 }
