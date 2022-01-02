@@ -16,6 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Controls\HandKomaView.xaml.cs">
+      <DependentUpon>HandKomaView.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Controls\KomadaiView.xaml.cs">
       <DependentUpon>KomadaiView.xaml</DependentUpon>
     </Compile>
@@ -25,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Controls\HandKoma.xaml">
+    <EmbeddedResource Update="Controls\HandKomaView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Controls\KomadaiView.xaml">
