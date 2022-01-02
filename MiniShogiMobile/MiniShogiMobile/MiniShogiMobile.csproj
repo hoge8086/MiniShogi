@@ -16,6 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Controls\KomadaiView.xaml.cs">
+      <DependentUpon>KomadaiView.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Controls\SquareCell2DGridControl.xaml.cs">
       <DependentUpon>SquareCell2DGridControl.xaml</DependentUpon>
     </Compile>
@@ -23,6 +26,9 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Controls\HandKoma.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Controls\KomadaiView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Controls\KomaView.xaml">

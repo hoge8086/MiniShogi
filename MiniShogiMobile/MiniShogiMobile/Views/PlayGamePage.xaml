@@ -7,36 +7,20 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.PlayGamePage"
              Title="{Binding Title}">
-    <Grid RowDefinitions="*,10*,3*" ColumnDefinitions="*,20*,*">
-        <Frame BackgroundColor="Chocolate"
+    <Grid RowDefinitions="*,10*,*,2*" ColumnDefinitions="*,20*,*">
+        <ctrl:KomadaiView
+            Grid.Column="1"
+            Grid.Row="0"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand"
-            Grid.Column="1"
-            Padding="0"
-            CornerRadius="0"
-            Grid.Row="0">
-            <Frame BackgroundColor="SandyBrown"
-                Margin="1"
-                Padding="0"
-                CornerRadius="0"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand">
-                <StackLayout 
-                    Orientation="Horizontal"
-                    HorizontalOptions="CenterAndExpand"
-                    VerticalOptions="CenterAndExpand"
-                    Spacing="0"
-                    BindableLayout.ItemsSource="{Binding Game.HandsOfPlayer2.Hands}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <ctrl:HandKomaView Number="{Binding Num}" DisplayName="{Binding Name}"
-                                HorizontalOptions="FillAndExpand"
-                                VerticalOptions="FillAndExpand"/>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </StackLayout>
-            </Frame>
-        </Frame>
+            Rotation="180"
+            ItemsSource="{Binding Game.HandsOfPlayer2.Hands}">
+            <ctrl:KomadaiView.ItemTemplate>
+                <DataTemplate>
+                    <ctrl:HandKomaView Number="{Binding Num}" DisplayName="{Binding Name}"/>
+                </DataTemplate>
+            </ctrl:KomadaiView.ItemTemplate>
+        </ctrl:KomadaiView>
             <!--
         <BoxView BackgroundColor="AliceBlue"
             Grid.Column="1"
@@ -62,5 +46,17 @@
                 </ControlTemplate>
             </ctrl:SquareCell2DGridControl.ItemTemplate>
         </ctrl:SquareCell2DGridControl>
+        <ctrl:KomadaiView
+            Grid.Column="1"
+            Grid.Row="2"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand"
+            ItemsSource="{Binding Game.HandsOfPlayer2.Hands}">
+            <ctrl:KomadaiView.ItemTemplate>
+                <DataTemplate>
+                    <ctrl:HandKomaView Number="{Binding Num}" DisplayName="{Binding Name}"/>
+                </DataTemplate>
+            </ctrl:KomadaiView.ItemTemplate>
+        </ctrl:KomadaiView>
     </Grid>
 </ContentPage>
