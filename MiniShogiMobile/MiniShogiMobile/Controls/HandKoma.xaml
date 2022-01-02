@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             x:Class="MiniShogiMobile.Controls.HandKomaView"
+             x:Name="self">
+  <ContentView.Content>
+        <RelativeLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <ctrl:KomaView
+                DisplayName="{Binding Path=DisplayName, Source={x:Reference self}}"
+                RelativeLayout.XConstraint="0"
+                RelativeLayout.YConstraint="0"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"
+                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"/>
+            <Grid
+                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.6}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.4}"
+                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.4}">
+                <Grid.Triggers>
+                    <DataTrigger TargetType="Grid" Binding="{Binding Path=Number, Source={x:Reference self}}" Value="1">
+                        <Setter Property="IsVisible" Value="False"/>
+                    </DataTrigger>
+                </Grid.Triggers>
+                <Ellipse Fill="MidnightBlue" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
+                <Label Text="{Binding Path=Number, Source={x:Reference self}}"
+                       TextColor="White"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+            </Grid>
+        </RelativeLayout>
+  </ContentView.Content>
+</ContentView>

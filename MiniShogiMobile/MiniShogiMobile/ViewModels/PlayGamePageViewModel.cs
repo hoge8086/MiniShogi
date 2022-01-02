@@ -1,5 +1,6 @@
 ﻿using MiniShogiMobile.Conditions;
 using Prism.Commands;
+using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
 using Reactive.Bindings;
@@ -33,7 +34,7 @@ namespace MiniShogiMobile.ViewModels
                 return;
 
             var moves = App.GameService.GetGame().CreateAvailableMoveCommand(koma);
-            foreach(var row in vm.Board.Cells)
+            foreach(var row in vm.Game.Board.Cells)
             {
                 foreach(var cell in row)
                 {
@@ -98,13 +99,14 @@ namespace MiniShogiMobile.ViewModels
     {
         private ReactiveProperty<IViewState> ViewState;
         public void ChangeState(IViewState state) => ViewState.Value = state;
-        public BoardViewModel<CellPlayingViewModel> Board { get; set; }
+        //public BoardViewModel<> Board { get; set; }
+        public GameViewModel<CellPlayingViewModel> Game { get; set; }
         public ReactiveCommand<CellPlayingViewModel> MoveCommand { get; set; }
 
         public PlayGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             ViewState = new ReactiveProperty<IViewState>();
-            Board = new BoardViewModel<CellPlayingViewModel>();
+            Game = new GameViewModel<CellPlayingViewModel>();
             MoveCommand = new ReactiveCommand<CellPlayingViewModel>();
             MoveCommand.Subscribe(async x =>
             {
@@ -141,7 +143,7 @@ namespace MiniShogiMobile.ViewModels
 
         public void UpdateView()
         {
-            foreach(var row in Board.Cells)
+            foreach(var row in Game.Board.Cells)
                 foreach (var cell in row)
                     cell.Reset();
 
@@ -149,7 +151,7 @@ namespace MiniShogiMobile.ViewModels
             {
                 if (koma.BoardPosition != null)
                 {
-                    var cell = Board.Cells[koma.BoardPosition.Y][koma.BoardPosition.X];
+                    var cell = Game.Board.Cells[koma.BoardPosition.Y][koma.BoardPosition.X];
                     cell.Koma.Value = new KomaViewModel()
                     {
                         IsTransformed = koma.IsTransformed,
@@ -177,15 +179,17 @@ namespace MiniShogiMobile.ViewModels
             {
                 // [ボード初期化]
                 // [MEMO:ボードのマス目の数はゲーム中は変わらないので、一度初期化するだけでよい]
-                Board.Cells.Clear();
+                Game.Board.Cells.Clear();
                 for (int y = 0; y < App.GameService.GetGame().Board.Height; y++)
                 {
                     var row = new ObservableCollection<CellPlayingViewModel>();
                     for (int x = 0; x < App.GameService.GetGame().Board.Width; x++)
                         row.Add(new CellPlayingViewModel() { Position = new BoardPosition(x, y) });
-                    Board.Cells.Add(row);
+                    Game.Board.Cells.Add(row);
                 }
                 UpdateView();
+                Game.HandsOfPlayer2.Hands.Add(new HandKomaViewModel() { Name = "あ", Num = 2 });
+                Game.HandsOfPlayer2.Hands.Add(new HandKomaViewModel() { Name = "い", Num = 1 });
             });
         }
 
@@ -210,15 +214,34 @@ namespace MiniShogiMobile.ViewModels
             });
         }
     }
-    public class HandViewModel
-    {
 
+    public class HandKomaViewModel : BindableBase
+    {
+        public string Name { get; set; }
+        public int Num { get; set; }
     }
-    public class BoardWithHandViewModel<T> where T : CellBaseViewModel
+    public class HandViewModel : BindableBase
+    {
+        public ObservableCollection<HandKomaViewModel> Hands { get; set; }
+
+        public HandViewModel()
+        {
+            Hands = new ObservableCollection<HandKomaViewModel>();
+        }
+    }
+    public class GameViewModel<T> where T : CellBaseViewModel
     {
         public BoardViewModel<T> Board { get; set; }
-        public HandViewModel Player1 { get; set; }
-        public HandViewModel Player2 { get; set; }
+        public HandViewModel HandsOfPlayer1 { get; set; }
+        public HandViewModel HandsOfPlayer2 { get; set; }
+
+        public GameViewModel()
+        {
+            HandsOfPlayer1 = new HandViewModel();
+            HandsOfPlayer2 = new HandViewModel();
+            Board = new BoardViewModel<T>();
+        }
+
     }
 
     public class BoardViewModel<T> where T : CellBaseViewModel

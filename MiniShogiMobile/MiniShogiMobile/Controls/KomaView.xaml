@@ -23,7 +23,7 @@
                    VerticalOptions="Fill"
                    VerticalTextAlignment="Center"
                    HorizontalTextAlignment="Center"
-                   FontSize="Large"/>
+                   FontSize="Default"/>
             <!--反転プロパティ公開-->
             <Grid.Triggers>
                 <DataTrigger TargetType="Grid" Binding="{Binding Source={x:Reference koma}, Path=IsRotated}" Value="True">

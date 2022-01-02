@@ -8,14 +8,45 @@
              x:Class="MiniShogiMobile.Views.PlayGamePage"
              Title="{Binding Title}">
     <Grid RowDefinitions="*,10*,3*" ColumnDefinitions="*,20*,*">
+        <Frame BackgroundColor="Chocolate"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand"
+            Grid.Column="1"
+            Padding="0"
+            CornerRadius="0"
+            Grid.Row="0">
+            <Frame BackgroundColor="SandyBrown"
+                Margin="1"
+                Padding="0"
+                CornerRadius="0"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand">
+                <StackLayout 
+                    Orientation="Horizontal"
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="CenterAndExpand"
+                    Spacing="0"
+                    BindableLayout.ItemsSource="{Binding Game.HandsOfPlayer2.Hands}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <ctrl:HandKomaView Number="{Binding Num}" DisplayName="{Binding Name}"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="FillAndExpand"/>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+            </Frame>
+        </Frame>
+            <!--
         <BoxView BackgroundColor="AliceBlue"
             Grid.Column="1"
             Grid.Row="1"/>
+        -->
         <ctrl:SquareCell2DGridControl
             x:Name="board"
             Grid.Column="1"
             Grid.Row="1"
-            ItemsSource="{Binding Board.Cells}">
+            ItemsSource="{Binding Game.Board.Cells}">
             <ctrl:SquareCell2DGridControl.ItemTemplate>
                 <ControlTemplate>
                     <views:CellView BackgroundColor="SandyBrown"
