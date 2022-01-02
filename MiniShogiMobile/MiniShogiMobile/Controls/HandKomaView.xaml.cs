@@ -53,6 +53,7 @@ namespace MiniShogiMobile.Controls
             get { return (bool)GetValue(IsHighlightProperty); }
             set { SetValue(IsHighlightProperty, value); }
         }
+
     }
 
 }

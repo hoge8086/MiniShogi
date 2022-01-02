@@ -17,15 +17,16 @@
             ItemsSource="{Binding Game.HandsOfPlayer2.Hands}">
             <ctrl:KomadaiView.ItemTemplate>
                 <DataTemplate>
-                    <ctrl:HandKomaView Number="{Binding Num}" DisplayName="{Binding Name}" IsHighlight="True"/>
+                    <Grid>
+                        <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}" IsHighlight="{Binding IsSelected.Value}"/>
+                        <Button CommandParameter="{Binding}"
+                            Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
+                            BackgroundColor="Transparent">
+                        </Button>
+                    </Grid>
                 </DataTemplate>
             </ctrl:KomadaiView.ItemTemplate>
         </ctrl:KomadaiView>
-            <!--
-        <BoxView BackgroundColor="AliceBlue"
-            Grid.Column="1"
-            Grid.Row="1"/>
-        -->
         <ctrl:SquareCell2DGridControl
             x:Name="board"
             Grid.Column="1"
@@ -47,10 +48,16 @@
             Grid.Row="2"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand"
-            ItemsSource="{Binding Game.HandsOfPlayer2.Hands}">
+            ItemsSource="{Binding Game.HandsOfPlayer1.Hands}">
             <ctrl:KomadaiView.ItemTemplate>
                 <DataTemplate>
-                    <ctrl:HandKomaView Number="{Binding Num}" DisplayName="{Binding Name}"/>
+                    <Grid>
+                        <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}" IsHighlight="{Binding IsSelected.Value}"/>
+                        <Button CommandParameter="{Binding}"
+                            Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
+                            BackgroundColor="Transparent">
+                        </Button>
+                    </Grid>
                 </DataTemplate>
             </ctrl:KomadaiView.ItemTemplate>
         </ctrl:KomadaiView>

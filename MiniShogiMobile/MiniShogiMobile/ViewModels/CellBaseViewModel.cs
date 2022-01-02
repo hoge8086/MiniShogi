@@ -18,7 +18,7 @@ namespace MiniShogiMobile.ViewModels
             Koma = new ReactiveProperty<KomaViewModel>();
         }
     }
-    public class CellPlayingViewModel : CellBaseViewModel
+    public class CellPlayingViewModel : CellBaseViewModel, ISelectable
     {
         public ReactiveProperty<List<MoveCommand>> MoveCommands { get; set; }
 
@@ -40,7 +40,10 @@ namespace MiniShogiMobile.ViewModels
             MoveCommands.Value = null;
 
         }
-
+        public void Select()
+        {
+            IsSelected.Value = true;
+        }
     }
 
 }
