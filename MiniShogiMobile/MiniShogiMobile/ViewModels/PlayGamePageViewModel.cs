@@ -18,6 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace MiniShogiMobile.ViewModels
 {
@@ -122,7 +123,7 @@ namespace MiniShogiMobile.ViewModels
 
         public PlayGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
-            ViewState = new ReactiveProperty<IViewState>();
+            ViewState = new ReactiveProperty<IViewState>(new ViewStateWaiting());
             Game = new GameViewModel<CellPlayingViewModel, HandKomaPlayingViewModel>();
             MoveCommand = new ReactiveCommand<ISelectable>();
             MoveCommand.Subscribe(async x =>
@@ -161,12 +162,11 @@ namespace MiniShogiMobile.ViewModels
 
         public void UpdateView()
         {
+            // [MEMO:Clear()するとちらつきが発生するため、セルを挿入しなおさないでセルを更新する]
             foreach(var row in Game.Board.Cells)
                 foreach (var cell in row)
                     cell.Reset();
 
-            Game.HandsOfPlayer1.Hands.Clear();
-            Game.HandsOfPlayer2.Hands.Clear();
             foreach (var koma in App.GameService.GetGame().State.KomaList)
             {
                 if (koma.BoardPosition != null)
@@ -184,8 +184,36 @@ namespace MiniShogiMobile.ViewModels
                     AddHnad(koma, koma.Player == PlayerType.Player1 ? Game.HandsOfPlayer1.Hands : Game.HandsOfPlayer2.Hands);
                 }
             }
+
+            UpdateHandView(Game.HandsOfPlayer1.Hands, PlayerType.Player1);
+            UpdateHandView(Game.HandsOfPlayer2.Hands, PlayerType.Player2);
         }
 
+        private void UpdateHandView(ObservableCollection<HandKomaPlayingViewModel> hands, PlayerType player)
+        {
+            // [MEMO:Clear()するとちらつきが発生＆順序が変わるため、順番を変えないように持ち手を更新する]
+
+            // [初期化＆駒の数を0にする]
+            hands.ForEach(x => {
+                x.Num.Value = 0;
+                x.IsSelected.Value = false;
+            }) ;
+
+            // [駒の数をカウントし直す]
+            App.GameService.GetGame().State.KomaList.Where(x => !x.IsOnBoard && x.Player == player).ForEach(koma =>
+            {
+                var hand = hands.FirstOrDefault(x => x.Name == koma.TypeId);
+                if (hand == null)
+                    hands.Add(new HandKomaPlayingViewModel() { Name = koma.TypeId, Player = koma.Player});
+                else
+                    hand.Num.Value++;
+            });
+
+            // [存在しない駒は削除する]
+            var nothings = hands.Where(x => x.Num.Value == 0).ToList();
+            foreach (var item in nothings)
+                hands.Remove(item);
+        }
         private void AddHnad(Koma koma, ObservableCollection<HandKomaPlayingViewModel> hands)
         {
             var hand = hands.FirstOrDefault(x => x.Name == koma.TypeId);
