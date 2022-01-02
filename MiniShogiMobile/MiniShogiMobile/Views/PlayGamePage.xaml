@@ -51,7 +51,7 @@
             ItemsSource="{Binding Game.HandsOfPlayer1.Hands}">
             <ctrl:KomadaiView.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
                         <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}" IsHighlight="{Binding IsSelected.Value}"/>
                         <Button CommandParameter="{Binding}"
                             Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
