@@ -28,7 +28,7 @@
                     </DataTemplate>
                 </ctrl:KomadaiView.ItemTemplate>
             </ctrl:KomadaiView>
-            <ctrl:PlayerView Text="P2" WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}" BackgroundColor="Red"/>
+            <ctrl:PlayerView Text="{Binding Game.HandsOfPlayer2.Name.Value}" SubText="{Binding Game.HandsOfPlayer2.TurnTypeName.Value}" WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}" BackgroundColor="Red"/>
         </StackLayout>
         <ctrl:SquareCell2DGridControl
             x:Name="board"
@@ -49,7 +49,7 @@
         <StackLayout Orientation="Horizontal"
             Grid.Column="1"
             Grid.Row="2">
-            <ctrl:PlayerView Text="P1" SubText="先手" WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}" BackgroundColor="Blue"/>
+            <ctrl:PlayerView Text="{Binding Game.HandsOfPlayer1.Name.Value}" SubText="{Binding Game.HandsOfPlayer1.TurnTypeName.Value}" WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}" BackgroundColor="Blue"/>
             <ctrl:KomadaiView
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand"

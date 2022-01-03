@@ -19,13 +19,6 @@ namespace MiniShogiMobile.ViewModels
 {
     public class EnumPlayerTypeProvider : EnumListProvider<PlayerThinkingType> { }
     public class PlayerTypeConverter : EnumToDescriptionConverter<PlayerThinkingType> { }
-    public enum PlayerThinkingType
-    {
-        [Description("あなた")]
-        Human,
-        [Description("AI")]
-        AI,
-    };
 
     public class EnumSelectFirstTurnPlayerProvider : EnumListProvider<SelectFirstTurnPlayer> { }
     public class SelectFirstTurnPlayerConverter : EnumToDescriptionConverter<SelectFirstTurnPlayer> { }

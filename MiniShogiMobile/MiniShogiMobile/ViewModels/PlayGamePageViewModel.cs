@@ -8,6 +8,7 @@ using Shogi.Business.Application;
 using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Games;
 using Shogi.Business.Domain.Model.Komas;
+using Shogi.Business.Domain.Model.Players;
 using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
 using System.Collections.Generic;
@@ -118,13 +119,13 @@ namespace MiniShogiMobile.ViewModels
         private ReactiveProperty<IViewState> ViewState;
         public void ChangeState(IViewState state) => ViewState.Value = state;
         //public BoardViewModel<> Board { get; set; }
-        public GameViewModel<CellPlayingViewModel, HandKomaPlayingViewModel> Game { get; set; }
+        public GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel> Game { get; set; }
         public ReactiveCommand<ISelectable> MoveCommand { get; set; }
 
         public PlayGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             ViewState = new ReactiveProperty<IViewState>(new ViewStateWaiting());
-            Game = new GameViewModel<CellPlayingViewModel, HandKomaPlayingViewModel>();
+            Game = new GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel>();
             MoveCommand = new ReactiveCommand<ISelectable>();
             MoveCommand.Subscribe(async x =>
             {
@@ -135,6 +136,7 @@ namespace MiniShogiMobile.ViewModels
 
         public async Task AppServiceCallCommandAsync(Action<GameService> action)
         {
+            ChangeState(new ViewStateWaiting());
             await Task.Run(() =>
             {
                 action(App.GameService);
@@ -153,6 +155,7 @@ namespace MiniShogiMobile.ViewModels
             Title = param.Name;
             App.GameService.Subscribe(this);
             var cancelTokenSource = new CancellationTokenSource();
+
             await AppServiceCallCommandAsync(service =>
             {
                 service.Start(param.Player1, param.Player2, param.FirstTurnPlayer, param.Name, cancelTokenSource.Token);
@@ -185,6 +188,8 @@ namespace MiniShogiMobile.ViewModels
                 }
             }
 
+            Game.HandsOfPlayer1.IsCurrentTurn.Value = App.GameService.GetGame().State.TurnPlayer == PlayerType.Player1;
+            Game.HandsOfPlayer2.IsCurrentTurn.Value = App.GameService.GetGame().State.TurnPlayer == PlayerType.Player2;
             UpdateHandView(Game.HandsOfPlayer1.Hands, PlayerType.Player1);
             UpdateHandView(Game.HandsOfPlayer2.Hands, PlayerType.Player2);
         }
@@ -227,6 +232,15 @@ namespace MiniShogiMobile.ViewModels
         {
             Device.InvokeOnMainThreadAsync(() =>
             {
+
+                // [プレイヤー]
+                Game.HandsOfPlayer1.Player.Value = App.GameService.GetPlayingGame().GerPlayer(PlayerType.Player1);
+                Game.HandsOfPlayer1.Type.Value = PlayerType.Player1;
+                Game.HandsOfPlayer1.TurnType.Value = App.GameService.GetGame().State.TurnPlayer == PlayerType.Player1 ? TurnType.FirstTurn : TurnType.SecondTurn;
+                Game.HandsOfPlayer2.Player.Value = App.GameService.GetPlayingGame().GerPlayer(PlayerType.Player2);
+                Game.HandsOfPlayer2.Type.Value = PlayerType.Player2;
+                Game.HandsOfPlayer2.TurnType.Value = App.GameService.GetGame().State.TurnPlayer == PlayerType.Player2 ? TurnType.FirstTurn : TurnType.SecondTurn;
+
                 // [ボード初期化]
                 // [MEMO:ボードのマス目の数はゲーム中は変わらないので、一度初期化するだけでよい]
                 Game.Board.Cells.Clear();
@@ -297,16 +311,51 @@ namespace MiniShogiMobile.ViewModels
             Hands = new ObservableCollection<T>();
         }
     }
-    public class GameViewModel<BoardCell, HandCell> where BoardCell : CellBaseViewModel where HandCell : HandKomaViewModel
+
+    public enum TurnType
+    {
+        FirstTurn,
+        SecondTurn,
+    }
+
+    public class PlayerWithHandPlayingViewModel : HandViewModel<HandKomaPlayingViewModel>
+    {
+        public ReactiveProperty<Player> Player { get; set; }
+        public ReactiveProperty<PlayerType> Type { get; set; }
+        public ReactiveProperty<TurnType> TurnType { get; set; }
+        public  ReactiveProperty<bool> IsCurrentTurn { get; }
+        public  ReadOnlyReactiveProperty<string> Name { get; }
+        public  ReadOnlyReactiveProperty<string> TurnTypeName { get; }
+
+        public string GetName() {
+            if (Player.Value == null || Type.Value == null)
+                return "";
+            return Player.Value.IsAI ? "CPU" : (Type.Value == PlayerType.Player1 ? "P1" : "P2");
+        }
+
+        public PlayerWithHandPlayingViewModel()
+        {
+            Player = new ReactiveProperty<Player>();
+            Type = new ReactiveProperty<PlayerType>();
+            IsCurrentTurn = new ReactiveProperty<bool>();
+            Name = Player.CombineLatest(Type, (x, y) => GetName()).ToReadOnlyReactiveProperty();
+            TurnType = new ReactiveProperty<TurnType>();
+            TurnTypeName = TurnType.Select(x => x == ViewModels.TurnType.FirstTurn ? "先手" : "後手").ToReadOnlyReactiveProperty();
+        }
+
+    }
+
+    //public class GameViewModel<BoardCell, HandCell> where BoardCell : CellBaseViewModel where HandCell : HandKomaViewModel
+    public class GameViewModel<BoardCell, Hands, HandCell> where BoardCell : CellBaseViewModel where Hands : HandViewModel<HandCell>, new()  where HandCell : HandKomaViewModel
     {
         public BoardViewModel<BoardCell> Board { get; set; }
-        public HandViewModel<HandCell> HandsOfPlayer1 { get; set; }
-        public HandViewModel<HandCell> HandsOfPlayer2 { get; set; }
+        public Hands HandsOfPlayer1 { get; set; }
+        public Hands HandsOfPlayer2 { get; set; }
 
         public GameViewModel()
         {
-            HandsOfPlayer1 = new HandViewModel<HandCell>();
-            HandsOfPlayer2 = new HandViewModel<HandCell>();
+            HandsOfPlayer1 = new Hands();
+            HandsOfPlayer2 = new Hands();
             Board = new BoardViewModel<BoardCell>();
         }
 
