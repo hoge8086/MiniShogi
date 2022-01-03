@@ -8,25 +8,28 @@
              x:Class="MiniShogiMobile.Views.PlayGamePage"
              Title="{Binding Title}">
     <Grid RowDefinitions="*,8*,*,2*" ColumnDefinitions="*,20*,*">
-        <ctrl:KomadaiView
+        <StackLayout Orientation="Horizontal"
             Grid.Column="1"
-            Grid.Row="0"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="FillAndExpand"
-            Rotation="180"
-            ItemsSource="{Binding Game.HandsOfPlayer2.Hands}">
-            <ctrl:KomadaiView.ItemTemplate>
-                <DataTemplate>
-                    <Grid WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
-                        <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}" IsHighlight="{Binding IsSelected.Value}"/>
-                        <Button CommandParameter="{Binding}"
-                            Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
-                            BackgroundColor="Transparent">
-                        </Button>
-                    </Grid>
-                </DataTemplate>
-            </ctrl:KomadaiView.ItemTemplate>
-        </ctrl:KomadaiView>
+            Grid.Row="0">
+            <ctrl:KomadaiView
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                Rotation="180"
+                ItemsSource="{Binding Game.HandsOfPlayer2.Hands}">
+                <ctrl:KomadaiView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
+                            <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}" IsHighlight="{Binding IsSelected.Value}"/>
+                            <Button CommandParameter="{Binding}"
+                                Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
+                                BackgroundColor="Transparent">
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ctrl:KomadaiView.ItemTemplate>
+            </ctrl:KomadaiView>
+            <ctrl:PlayerView Text="P2" WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}" BackgroundColor="Red"/>
+        </StackLayout>
         <ctrl:SquareCell2DGridControl
             x:Name="board"
             Grid.Column="1"
@@ -43,23 +46,26 @@
                 </ControlTemplate>
             </ctrl:SquareCell2DGridControl.ItemTemplate>
         </ctrl:SquareCell2DGridControl>
-        <ctrl:KomadaiView
+        <StackLayout Orientation="Horizontal"
             Grid.Column="1"
-            Grid.Row="2"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="FillAndExpand"
-            ItemsSource="{Binding Game.HandsOfPlayer1.Hands}">
-            <ctrl:KomadaiView.ItemTemplate>
-                <DataTemplate>
-                    <Grid WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
-                        <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}" IsHighlight="{Binding IsSelected.Value}"/>
-                        <Button CommandParameter="{Binding}"
-                            Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
-                            BackgroundColor="Transparent">
-                        </Button>
-                    </Grid>
-                </DataTemplate>
-            </ctrl:KomadaiView.ItemTemplate>
-        </ctrl:KomadaiView>
+            Grid.Row="2">
+            <ctrl:PlayerView Text="P1" SubText="先手" WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}" BackgroundColor="Blue"/>
+            <ctrl:KomadaiView
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                ItemsSource="{Binding Game.HandsOfPlayer1.Hands}">
+                <ctrl:KomadaiView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
+                            <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}" IsHighlight="{Binding IsSelected.Value}"/>
+                            <Button CommandParameter="{Binding}"
+                                Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
+                                BackgroundColor="Transparent">
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ctrl:KomadaiView.ItemTemplate>
+            </ctrl:KomadaiView>
+        </StackLayout>
     </Grid>
 </ContentPage>

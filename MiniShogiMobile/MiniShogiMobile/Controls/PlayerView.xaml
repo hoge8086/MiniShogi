@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
+             x:Class="MiniShogiMobile.Controls.PlayerView"
+             x:Name="self">
+    <ContentView.Resources>
+        <utils:IsNotNullConverter x:Key="isNotNullConverter"/>
+    </ContentView.Resources>
+  <ContentView.Content>
+        <Frame Padding="2" CornerRadius="0" BackgroundColor="{Binding Path=BackgroundColor, Source={x:Reference self}}">
+            <Frame Padding="1" CornerRadius="0" BackgroundColor="White">
+                <Frame Padding="0" CornerRadius="0" BackgroundColor="{Binding Path=BackgroundColor, Source={x:Reference self}}">
+                    <StackLayout Spacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <Label TextColor="White"
+                               FontAttributes="Bold"
+                               FontSize="Medium"
+                               Text="{Binding Path=Text, Source={x:Reference self}}"
+                               HorizontalOptions="Center" VerticalOptions="CenterAndExpand"/>
+                        <Label TextColor="White"
+                               FontAttributes="Bold"
+                               FontSize="Micro"
+                               Text="{Binding Path=SubText,
+                               Source={x:Reference self}}" HorizontalOptions="Center"
+                               VerticalOptions="CenterAndExpand"
+                               IsVisible="{Binding Path=SubText, Source={x:Reference self},
+                               Converter={x:StaticResource isNotNullConverter}}" />
+                    </StackLayout>
+                </Frame>
+            </Frame>
+        </Frame>
+  </ContentView.Content>
+</ContentView>
