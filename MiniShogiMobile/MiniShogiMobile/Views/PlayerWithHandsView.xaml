@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:views="clr-namespace:MiniShogiMobile.Views"
+             x:Class="MiniShogiMobile.Views.PlayerWithHandsView"
+             x:Name="self">
+  <ContentView.Content>
+        <Grid ColumnDefinitions="Auto,*,Auto">
+            <ctrl:PlayerView
+                Grid.Column="0"
+                Text="{Binding Name.Value}"
+                SubText="{Binding TurnTypeName.Value}"
+                WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
+                BackgroundColor="{Binding Path=PlayerColor, Source={x:Reference self}}">
+                <ctrl:PlayerView.Triggers>
+                    <DataTrigger TargetType="ctrl:PlayerView" Binding="{Binding Path=IsRotated, Source={x:Reference self}}" Value="True">
+                        <Setter Property="Grid.Column" Value="2"/>
+                    </DataTrigger>
+                    <DataTrigger TargetType="ctrl:PlayerView" Binding="{Binding IsCurrentTurn.Value}" Value="False">
+                        <Setter Property="BackgroundColor" Value="DimGray"/>
+                    </DataTrigger>
+                </ctrl:PlayerView.Triggers>
+            </ctrl:PlayerView>
+            <ctrl:KomadaiView
+                Grid.Column="1"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                ItemsSource="{Binding Hands}">
+                <ctrl:KomadaiView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
+                            <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}" IsHighlight="{Binding IsSelected.Value}"/>
+                            <!--なぜかDataTemplate内でx:Referenceが効かないのでRelativeSourceを使う-->
+                            <!--参考:https://social.msdn.microsoft.com/Forums/en-US/bbfd3371-b913-4f0e-9ee3-c811a7282193/xreference-not-working?forum=xamarinforms-->
+                            <Button CommandParameter="{Binding}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type views:PlayerWithHandsView}}, Path=ClickCommand}"
+                                BackgroundColor="Transparent">
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ctrl:KomadaiView.ItemTemplate>
+                <ctrl:KomadaiView.Triggers>
+                    <DataTrigger TargetType="ctrl:KomadaiView" Binding="{Binding Path=IsRotated, Source={x:Reference self}}" Value="True">
+                        <Setter Property="Rotation" Value="180"/>
+                    </DataTrigger>
+                </ctrl:KomadaiView.Triggers>
+            </ctrl:KomadaiView>
+        </Grid>
+  </ContentView.Content>
+</ContentView>

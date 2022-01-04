@@ -6,30 +6,16 @@
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.PlayGamePage"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             x:Name="self">
     <Grid RowDefinitions="*,8*,*,2*" ColumnDefinitions="*,20*,*">
-        <StackLayout Orientation="Horizontal"
+        <views:PlayerWithHandsView
             Grid.Column="1"
-            Grid.Row="0">
-            <ctrl:KomadaiView
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand"
-                Rotation="180"
-                ItemsSource="{Binding Game.HandsOfPlayer2.Hands}">
-                <ctrl:KomadaiView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
-                            <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}" IsHighlight="{Binding IsSelected.Value}"/>
-                            <Button CommandParameter="{Binding}"
-                                Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
-                                BackgroundColor="Transparent">
-                            </Button>
-                        </Grid>
-                    </DataTemplate>
-                </ctrl:KomadaiView.ItemTemplate>
-            </ctrl:KomadaiView>
-            <ctrl:PlayerView Text="{Binding Game.HandsOfPlayer2.Name.Value}" SubText="{Binding Game.HandsOfPlayer2.TurnTypeName.Value}" WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}" BackgroundColor="Red"/>
-        </StackLayout>
+            Grid.Row="0"
+            IsRotated="True"
+            PlayerColor="Red"
+            ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"
+            BindingContext="{Binding Game.HandsOfPlayer2}"/>
         <ctrl:SquareCell2DGridControl
             x:Name="board"
             Grid.Column="1"
@@ -46,26 +32,12 @@
                 </ControlTemplate>
             </ctrl:SquareCell2DGridControl.ItemTemplate>
         </ctrl:SquareCell2DGridControl>
-        <StackLayout Orientation="Horizontal"
+        <views:PlayerWithHandsView
             Grid.Column="1"
-            Grid.Row="2">
-            <ctrl:PlayerView Text="{Binding Game.HandsOfPlayer1.Name.Value}" SubText="{Binding Game.HandsOfPlayer1.TurnTypeName.Value}" WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}" BackgroundColor="Blue"/>
-            <ctrl:KomadaiView
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand"
-                ItemsSource="{Binding Game.HandsOfPlayer1.Hands}">
-                <ctrl:KomadaiView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
-                            <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}" IsHighlight="{Binding IsSelected.Value}"/>
-                            <Button CommandParameter="{Binding}"
-                                Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
-                                BackgroundColor="Transparent">
-                            </Button>
-                        </Grid>
-                    </DataTemplate>
-                </ctrl:KomadaiView.ItemTemplate>
-            </ctrl:KomadaiView>
-        </StackLayout>
+            Grid.Row="2"
+            IsRotated="False"
+            PlayerColor="Blue"
+            ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"
+            BindingContext="{Binding Game.HandsOfPlayer1}"/>
     </Grid>
 </ContentPage>
