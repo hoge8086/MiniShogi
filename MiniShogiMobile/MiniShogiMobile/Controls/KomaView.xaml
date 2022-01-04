@@ -7,7 +7,6 @@
              SizeChanged="koma_SizeChanged">
   <ContentView.Content>
         <!--将棋の駒の形-->
-        <!--TODO:個数プロパティ公開-->
         <Grid>
             <Polygon x:Name="polygon"
                  HorizontalOptions="Center"
@@ -16,14 +15,19 @@
                  Fill="Moccasin"
                  Stroke="Oldlace"
                  StrokeThickness="2"/>
-            <!--名前をセルにする-->
-            <Label Text="{Binding Path=DisplayName, Source={x:Reference koma}}"
-                   TextColor="{Binding Path=NameColor, Source={x:Reference koma}}"
-                   HorizontalOptions="Fill"
-                   VerticalOptions="Fill"
-                   VerticalTextAlignment="Center"
-                   HorizontalTextAlignment="Center"
-                   FontSize="Default"/>
+            <!--駒の形的に少し駒の名前を下げるといい感じの見た目になる-->
+            <RelativeLayout>
+                <Label Text="{Binding Path=DisplayName, Source={x:Reference koma}}"
+                       TextColor="{Binding Path=NameColor, Source={x:Reference koma}}"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"
+                       RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                       RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.03}"
+                       RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1.0}"
+                       RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.97}"
+                       FontAttributes="Bold"
+                       FontSize="Large"/>
+            </RelativeLayout>
             <!--反転プロパティ公開-->
             <Grid.Triggers>
                 <DataTrigger TargetType="Grid" Binding="{Binding Source={x:Reference koma}, Path=IsRotated}" Value="True">

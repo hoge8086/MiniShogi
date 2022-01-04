@@ -12,6 +12,7 @@
   <ContentView.Content>
         <RelativeLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <ctrl:KomaView
+                NameColor="Black"
                 DisplayName="{Binding Path=DisplayName, Source={x:Reference self}}"
                 RelativeLayout.XConstraint="0"
                 RelativeLayout.YConstraint="0"
