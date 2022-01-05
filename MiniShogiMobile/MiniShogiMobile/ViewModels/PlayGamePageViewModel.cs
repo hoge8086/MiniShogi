@@ -1,6 +1,5 @@
 ﻿using MiniShogiMobile.Conditions;
 using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
 using Reactive.Bindings;
@@ -31,94 +30,10 @@ namespace MiniShogiMobile.ViewModels
     {
         Task HandleAsync(PlayGamePageViewModel vm, ISelectable cell);
     }
-    public class ViewStateHumanThinkingForMoveFrom : IViewState
-    {
-        public async Task HandleAsync(PlayGamePageViewModel vm, ISelectable fromCell)
-        {
-            //Koma koma = selectedMoveSource.GetKoma(App.GameService.GetGame());
-            var koma = GetKoma(fromCell);//App.GameService.GetGame().State.FindBoardKoma(fromCell.Position);
-            if (koma == null || !App.GameService.GetGame().State.IsTurnPlayer(koma.Player))
-                return;
-
-            var moves = App.GameService.GetGame().CreateAvailableMoveCommand(koma);
-            foreach(var row in vm.Game.Board.Cells)
-            {
-                foreach(var cell in row)
-                {
-                    var cellMoves = moves.Where(x => x.ToPosition == cell.Position).ToList();
-                    if(cellMoves.Count() > 0)
-                        cell.MoveCommands.Value = cellMoves;
-                }
-            }
-            //fromCell.IsSelected.Value = true;
-            fromCell.Select();
-
-            vm.ChangeState(new ViewStateHumanThinkingForMoveTo());
-        }
-        private Koma GetKoma(ISelectable cell)
-        {
-            if(cell is CellPlayingViewModel)
-                return App.GameService.GetGame().State.FindBoardKoma(((CellPlayingViewModel)cell).Position);
-            if(cell is HandKomaViewModel)
-                return App.GameService.GetGame().State.FindHandKoma(((HandKomaViewModel)cell).Player, ((HandKomaViewModel)cell).Name);
-
-            throw new InvalidProgramException("MoveCommandに不明なパラメータが渡されました.");
-        }
-    }
-    public class ViewStateHumanThinkingForMoveTo : IViewState
-    {
-        public async Task HandleAsync(PlayGamePageViewModel vm, ISelectable cell)
-        {
-
-            var boardCell = cell as CellPlayingViewModel;
-            if(boardCell != null && boardCell.CanMove.Value)
-            {
-
-                MoveCommand move = null;
-                if(boardCell.MoveCommands.Value.Count == 1)
-                {
-                    move = boardCell.MoveCommands.Value[0];
-                }
-                else
-                {
-                    var doTransform = await vm.PageDialogService.DisplayAlertAsync("確認", "成りますか?", "Yes", "No");
-                    move = boardCell.MoveCommands.Value.FirstOrDefault(x => x.DoTransform == doTransform);
-                }
-                await vm.AppServiceCallCommandAsync(service =>
-                {
-                    service.Play(move, CancellationToken.None);
-                });
-            }
-            else
-            {
-                vm.UpdateView();
-                vm.ChangeState(new ViewStateHumanThinkingForMoveFrom());
-            }
-        }
-    }
-
-    public class ViewStateGameEnd: IViewState
-    {
-        public async Task HandleAsync(PlayGamePageViewModel vm, ISelectable cell)
-        {
-            return;
-        }
-    }
-
-    public class ViewStateWaiting : IViewState
-    {
-        public async Task HandleAsync(PlayGamePageViewModel vm, ISelectable cell)
-        {
-            return;
-        }
-    }
-
-
     public class PlayGamePageViewModel : ViewModelBase, GameListener
     {
         private ReactiveProperty<IViewState> ViewState;
         public void ChangeState(IViewState state) => ViewState.Value = state;
-        //public BoardViewModel<> Board { get; set; }
         public GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel> Game { get; set; }
         public ReactiveCommand<ISelectable> MoveCommand { get; set; }
 
@@ -129,7 +44,6 @@ namespace MiniShogiMobile.ViewModels
             MoveCommand = new ReactiveCommand<ISelectable>();
             MoveCommand.Subscribe(async x =>
             {
-                //var cell = x as CellPlayingViewModel;
                 await ViewState.Value.HandleAsync(this, x);
             });
         }
@@ -277,18 +191,6 @@ namespace MiniShogiMobile.ViewModels
         }
     }
 
-    public class HandKomaViewModel : BindableBase
-    {
-        public string Name { get; set; }
-        public ReactiveProperty<int> Num { get; set; }
-        public PlayerType Player { get; set; }
-
-        public HandKomaViewModel()
-        {
-            Num = new ReactiveProperty<int>(1);
-        }
-    }
-
     public class HandKomaPlayingViewModel : HandKomaViewModel, ISelectable
     {
         public ReactiveProperty<bool> IsSelected { get; set; }
@@ -302,16 +204,34 @@ namespace MiniShogiMobile.ViewModels
             IsSelected.Value = true;
         }
     }
-    public class HandViewModel<T> : BindableBase where T : HandKomaViewModel
-    {
-        public ObservableCollection<T> Hands { get; set; }
 
-        public HandViewModel()
+    public class CellPlayingViewModel : CellBaseViewModel, ISelectable
+    {
+        public ReactiveProperty<List<MoveCommand>> MoveCommands { get; set; }
+
+        public ReadOnlyReactivePropertySlim<bool> CanMove { get; set; }
+
+        public ReactiveProperty<bool> IsSelected { get; set; }
+        public CellPlayingViewModel()
         {
-            Hands = new ObservableCollection<T>();
+            MoveCommands = new ReactiveProperty<List<MoveCommand>>();
+            //CanMove = new ReactiveProperty<bool>();
+            IsSelected = new ReactiveProperty<bool>(false);
+            //MoveCommands.Subscribe((x) => { CanMove.Value == null; });
+            CanMove = MoveCommands.Select((x) => x != null).ToReadOnlyReactivePropertySlim();
+        }
+        public void Reset()
+        {
+            Koma.Value = null;
+            IsSelected.Value = false;
+            MoveCommands.Value = null;
+
+        }
+        public void Select()
+        {
+            IsSelected.Value = true;
         }
     }
-
     public enum TurnType
     {
         FirstTurn,
@@ -343,32 +263,6 @@ namespace MiniShogiMobile.ViewModels
             TurnTypeName = TurnType.Select(x => x == ViewModels.TurnType.FirstTurn ? "先手" : "後手").ToReadOnlyReactiveProperty();
         }
 
-    }
-
-    //public class GameViewModel<BoardCell, HandCell> where BoardCell : CellBaseViewModel where HandCell : HandKomaViewModel
-    public class GameViewModel<BoardCell, Hands, HandCell> where BoardCell : CellBaseViewModel where Hands : HandViewModel<HandCell>, new()  where HandCell : HandKomaViewModel
-    {
-        public BoardViewModel<BoardCell> Board { get; set; }
-        public Hands HandsOfPlayer1 { get; set; }
-        public Hands HandsOfPlayer2 { get; set; }
-
-        public GameViewModel()
-        {
-            HandsOfPlayer1 = new Hands();
-            HandsOfPlayer2 = new Hands();
-            Board = new BoardViewModel<BoardCell>();
-        }
-
-    }
-
-    public class BoardViewModel<T> where T : CellBaseViewModel
-    {
-        public ObservableCollection<ObservableCollection<T>> Cells { get; set; }
-
-        public BoardViewModel()
-        {
-            Cells = new ObservableCollection<ObservableCollection<T>>();
-        }
     }
 
 }
