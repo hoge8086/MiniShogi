@@ -82,7 +82,7 @@ namespace MiniShogiMobile.ViewModels
             // [MEMO:Clear()するとちらつきが発生するため、セルを挿入しなおさないでセルを更新する]
             foreach(var row in Game.Board.Cells)
                 foreach (var cell in row)
-                    cell.Reset();
+                    cell.ToEmpty();
 
             foreach (var koma in App.GameService.GetGame().State.KomaList)
             {
@@ -205,7 +205,7 @@ namespace MiniShogiMobile.ViewModels
         }
     }
 
-    public class CellPlayingViewModel : CellBaseViewModel, ISelectable
+    public class CellPlayingViewModel : CellViewModel, ISelectable
     {
         public ReactiveProperty<List<MoveCommand>> MoveCommands { get; set; }
 
@@ -220,7 +220,7 @@ namespace MiniShogiMobile.ViewModels
             //MoveCommands.Subscribe((x) => { CanMove.Value == null; });
             CanMove = MoveCommands.Select((x) => x != null).ToReadOnlyReactivePropertySlim();
         }
-        public void Reset()
+        public void ToEmpty()
         {
             Koma.Value = null;
             IsSelected.Value = false;
@@ -238,7 +238,7 @@ namespace MiniShogiMobile.ViewModels
         SecondTurn,
     }
 
-    public class PlayerWithHandPlayingViewModel : HandViewModel<HandKomaPlayingViewModel>
+    public class PlayerWithHandPlayingViewModel : HandsViewModel<HandKomaPlayingViewModel>
     {
         public ReactiveProperty<Player> Player { get; set; }
         public ReactiveProperty<PlayerType> Type { get; set; }

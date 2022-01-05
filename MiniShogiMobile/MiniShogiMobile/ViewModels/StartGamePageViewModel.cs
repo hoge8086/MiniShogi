@@ -17,6 +17,14 @@ using Prism.Services;
 
 namespace MiniShogiMobile.ViewModels
 {
+    public enum PlayerThinkingType
+    {
+        [Description("あなた")]
+        Human,
+        [Description("AI")]
+        AI,
+    };
+
     public class EnumPlayerTypeProvider : EnumListProvider<PlayerThinkingType> { }
     public class PlayerTypeConverter : EnumToDescriptionConverter<PlayerThinkingType> { }
 

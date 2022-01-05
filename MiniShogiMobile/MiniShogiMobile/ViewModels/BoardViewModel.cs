@@ -2,7 +2,7 @@
 
 namespace MiniShogiMobile.ViewModels
 {
-    public class BoardViewModel<T> where T : CellBaseViewModel
+    public class BoardViewModel<T> where T : CellViewModel
     {
         public ObservableCollection<ObservableCollection<T>> Cells { get; set; }
 

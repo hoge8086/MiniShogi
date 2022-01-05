@@ -3,11 +3,11 @@ using System.Collections.ObjectModel;
 
 namespace MiniShogiMobile.ViewModels
 {
-    public class HandViewModel<T> : BindableBase where T : HandKomaViewModel
+    public class HandsViewModel<T> : BindableBase where T : HandKomaViewModel
     {
         public ObservableCollection<T> Hands { get; set; }
 
-        public HandViewModel()
+        public HandsViewModel()
         {
             Hands = new ObservableCollection<T>();
         }
