@@ -5,9 +5,6 @@
              x:Name="self"
              HorizontalOptions="FillAndExpand"
              VerticalOptions="FillAndExpand">
-    <!--
-             SizeChanged="self_SizeChanged">
-                -->
     <ContentView.Content>
         <!--TODO：枠線幅のプロパティ化(.csのセルサイズの計算に影響あり)-->
         <!--TODO：線色とバックグランドのプロパティ化-->
