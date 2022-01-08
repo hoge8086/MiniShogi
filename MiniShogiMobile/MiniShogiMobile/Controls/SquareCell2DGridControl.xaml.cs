@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +14,7 @@ namespace MiniShogiMobile.Controls
 {
     /// <summary>
     /// 2Dグリッドコントロール
-    /// 自身のコント―ロ―ル領域で、正方形のセルのグリッドを最大化する(ぴったりでなければ、縦か横のどちらかに余白が残る)
+    /// 自身のコントロ―ル領域で、正方形のセルのグリッドを最大化する(ぴったりでなければ、縦か横のどちらかに余白が残る)
     /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SquareCell2DGridControl : ContentView
@@ -68,6 +70,32 @@ namespace MiniShogiMobile.Controls
         {
             var uc = bindable as SquareCell2DGridControl;
             var source = newValue as IEnumerable<object>;
+
+            // 行列が増えた時にセルのサイズを調整するメソッドをアタッチする
+            var rows = newValue as INotifyPropertyChanged;
+            if(rows != null)
+            {
+                rows.PropertyChanged += uc.self_SizeChanged;
+                foreach(var row in source)
+                {
+                    var cells = row as INotifyPropertyChanged;
+                    if(cells != null)
+                        cells.PropertyChanged += uc.self_SizeChanged;
+                }
+            }
+
+            // デタッチ
+            rows = oldValue as INotifyPropertyChanged;
+            if(rows != null)
+            {
+                rows.PropertyChanged -= uc.self_SizeChanged;
+                foreach(var row in source)
+                {
+                    var cells = row as INotifyPropertyChanged;
+                    if(cells != null)
+                        cells.PropertyChanged -= uc.self_SizeChanged;
+                }
+            }
             uc.ItemsSource = source;
             BindableLayout.SetItemsSource(uc.board, source);
         }
