@@ -7,7 +7,7 @@
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
         <Button Text="はじめる" Command="{Binding StartGameCommand}"/>
         <Button Text="つづきから" Command="{Binding StartGameCommand}"/>
-        <Button Text="ゲームを作る" Command="{Binding StartGameCommand}"/>
+        <Button Text="ゲームを作る" Command="{Binding CreateGameCommand}"/>
     </StackLayout>
 
 </ContentPage>

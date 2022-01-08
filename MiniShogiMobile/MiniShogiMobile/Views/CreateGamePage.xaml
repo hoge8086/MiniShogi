@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:views="clr-namespace:MiniShogiMobile.Views"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="MiniShogiMobile.Views.CreateGamePage">
+    <Grid RowDefinitions="*,8*,*,2*" ColumnDefinitions="*,20*,*">
+        <Grid ColumnDefinitions="*,Auto"
+            BindingContext="{Binding Game.HandsOfPlayer2}"
+            Grid.Column="1"
+            Grid.Row="0">
+            <ctrl:PlayerView
+                Grid.Column="1"
+                Text="P2"
+                WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
+                BackgroundColor="Red">
+            </ctrl:PlayerView>
+            <ctrl:KomadaiView
+                Grid.Column="0"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                ItemsSource="{Binding Hands}">
+                <ctrl:KomadaiView.ItemTemplate>
+                    <DataTemplate>
+                        <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}"
+                                           WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"/>
+                    </DataTemplate>
+                </ctrl:KomadaiView.ItemTemplate>
+            </ctrl:KomadaiView>
+        </Grid>
+        <ctrl:SquareCell2DGridControl
+            x:Name="board"
+            Grid.Column="1"
+            Grid.Row="1"
+            ItemsSource="{Binding Game.Board.Cells}">
+            <ctrl:SquareCell2DGridControl.ItemTemplate>
+                <ControlTemplate>
+                    <views:CellView
+                        BindingContext="{TemplateBinding BindingContext}"
+                        ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
+                        IsMarked="{Binding CanMove.Value}"
+                        IsHighlight="{Binding IsSelected.Value}">
+                    </views:CellView>
+                </ControlTemplate>
+            </ctrl:SquareCell2DGridControl.ItemTemplate>
+        </ctrl:SquareCell2DGridControl>
+        <Grid ColumnDefinitions="Auto,*"
+            BindingContext="{Binding Game.HandsOfPlayer1}"
+            Grid.Column="1"
+            Grid.Row="2">
+            <ctrl:PlayerView
+                Grid.Column="0"
+                Text="P1"
+                WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
+                BackgroundColor="Blue">
+            </ctrl:PlayerView>
+            <ctrl:KomadaiView
+                Grid.Column="1"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                ItemsSource="{Binding Hands}">
+                <ctrl:KomadaiView.ItemTemplate>
+                    <DataTemplate>
+                        <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}"
+                                           WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"/>
+                    </DataTemplate>
+                </ctrl:KomadaiView.ItemTemplate>
+            </ctrl:KomadaiView>
+        </Grid>
+        <StackLayout
+            Grid.Column="1"
+            Grid.Row="3">
+            <StackLayout Orientation="Horizontal">
+                <Label Text="高さ" VerticalTextAlignment="Center"/>
+                <Stepper Value="{Binding Height.Value}}" Increment="1" Minimum="1" Maximum="10"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="幅" VerticalTextAlignment="Center"/>
+                <Stepper Value="{Binding Width.Value}}" Increment="1" Minimum="1" Maximum="10"/>
+            </StackLayout>
+        </StackLayout>
+    </Grid>
+  
+</ContentPage>

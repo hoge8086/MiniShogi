@@ -16,12 +16,19 @@ namespace MiniShogiMobile.ViewModels
     public class MainPageViewModel : ViewModelBase
     {
         public ReactiveCommand StartGameCommand { get; set; }
+        public ReactiveCommand CreateGameCommand { get; set; }
         public MainPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             StartGameCommand = new ReactiveCommand();
             StartGameCommand.Subscribe(() =>
             {
                 navigationService.NavigateAsync(nameof(StartGamePage));
+            });
+
+            CreateGameCommand = new ReactiveCommand();
+            CreateGameCommand.Subscribe(() =>
+            {
+                navigationService.NavigateAsync(nameof(CreateGamePage));
             });
         }
     }
