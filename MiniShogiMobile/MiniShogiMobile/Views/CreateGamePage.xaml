@@ -39,9 +39,7 @@
                 <ControlTemplate>
                     <views:CellView
                         BindingContext="{TemplateBinding BindingContext}"
-                        ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
-                        IsMarked="{Binding CanMove.Value}"
-                        IsHighlight="{Binding IsSelected.Value}">
+                        ClickCommand="{Binding Path=BindingContext.EditCellCommand, Source={x:Reference board}}">
                     </views:CellView>
                 </ControlTemplate>
             </ctrl:SquareCell2DGridControl.ItemTemplate>

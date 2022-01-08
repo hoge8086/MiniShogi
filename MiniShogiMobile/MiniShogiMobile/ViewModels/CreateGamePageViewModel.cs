@@ -1,4 +1,6 @@
-﻿using Prism.Commands;
+﻿using MiniShogiMobile.Conditions;
+using MiniShogiMobile.Views;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
@@ -15,7 +17,7 @@ namespace MiniShogiMobile.ViewModels
     public class CreateGamePageViewModel : ViewModelBase
     {
         public GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
-        public ReactiveCommand<object> MoveCommand { get; set; }
+        public ReactiveCommand<CellViewModel> EditCellCommand { get; set; }
         public ReactiveProperty<uint> Width { get; set; }
         public ReactiveProperty<uint> Height { get; set; }
         public CreateGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
@@ -25,6 +27,14 @@ namespace MiniShogiMobile.ViewModels
             Height = new ReactiveProperty<uint>(4);
             Width.Subscribe(x => UpdateView());
             Height.Subscribe(x => UpdateView());
+
+            EditCellCommand = new ReactiveCommand<CellViewModel>();
+            EditCellCommand.Subscribe(x =>
+            {
+                var param = new NavigationParameters();
+                param.Add(nameof(EditCellCondition), new EditCellCondition(x));
+                navigationService.NavigateAsync(nameof(EditCellPage), param);
+            });
         }
 
         public async override void OnNavigatedTo(INavigationParameters parameters)
