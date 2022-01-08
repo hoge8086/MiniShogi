@@ -12,8 +12,7 @@ namespace MiniShogiMobile.ViewModels
     {
         public async Task HandleAsync(PlayGamePageViewModel vm, ISelectable fromCell)
         {
-            //Koma koma = selectedMoveSource.GetKoma(App.GameService.GetGame());
-            var koma = GetKoma(fromCell);//App.GameService.GetGame().State.FindBoardKoma(fromCell.Position);
+            var koma = GetKoma(fromCell);
             if (koma == null || !App.GameService.GetGame().State.IsTurnPlayer(koma.Player))
                 return;
 
@@ -27,7 +26,6 @@ namespace MiniShogiMobile.ViewModels
                         cell.MoveCommands.Value = cellMoves;
                 }
             }
-            //fromCell.IsSelected.Value = true;
             fromCell.Select();
 
             vm.ChangeState(new ViewStateHumanThinkingForMoveTo());
@@ -58,7 +56,7 @@ namespace MiniShogiMobile.ViewModels
                 }
                 else
                 {
-                    var doTransform = await vm.PageDialogService.DisplayAlertAsync("確認", "成りますか?", "Yes", "No");
+                    var doTransform = await vm.PageDialogService.DisplayAlertAsync("確認", "成りますか?", "はい", "いいえ");
                     move = boardCell.MoveCommands.Value.FirstOrDefault(x => x.DoTransform == doTransform);
                 }
                 await vm.AppServiceCallCommandAsync(service =>
