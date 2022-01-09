@@ -19,18 +19,18 @@
     <!--セル-->
     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <!--駒-->
-        <ctrl:KomaView  DisplayName="{Binding Koma.Value.Name}"
+        <ctrl:KomaView  DisplayName="{Binding Koma.Value.Name.Value}"
                HorizontalOptions="FillAndExpand"
                VerticalOptions="FillAndExpand"
                NameColor="Black">
             <ctrl:KomaView.Triggers>
-                <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value.PlayerType.Id}" Value="Player2">
+                <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value.PlayerType.Value.Id}" Value="Player2">
                     <Setter Property="IsRotated" Value="True"/>
                 </DataTrigger>
                 <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value, Converter={StaticResource isNullConverter}}" Value="True">
                     <Setter Property="IsVisible" Value="False"/>
                 </DataTrigger>
-                <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value.IsTransformed}" Value="True">
+                <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value.IsTransformed.Value}" Value="True">
                     <Setter Property="NameColor" Value="Red"/>
                 </DataTrigger>
             </ctrl:KomaView.Triggers>

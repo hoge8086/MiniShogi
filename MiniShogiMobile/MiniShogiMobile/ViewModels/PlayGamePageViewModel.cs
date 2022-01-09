@@ -89,12 +89,7 @@ namespace MiniShogiMobile.ViewModels
                 if (koma.BoardPosition != null)
                 {
                     var cell = Game.Board.Cells[koma.BoardPosition.Y][koma.BoardPosition.X];
-                    cell.Koma.Value = new KomaViewModel()
-                    {
-                        IsTransformed = koma.IsTransformed,
-                        Name = koma.TypeId,
-                        PlayerType = koma.Player,
-                    };
+                    cell.Koma.Value = new KomaViewModel(koma.TypeId, koma.Player, koma.IsTransformed);
                 }
                 else
                 {

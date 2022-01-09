@@ -2,26 +2,37 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
+             xmlns:views="clr-namespace:MiniShogiMobile.Views"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="MiniShogiMobile.Views.EditCellPage">
-    <TableView Intent="Menu">
-      <TableRoot>
-        <TableSection Title="Toggle all">
-          <SwitchCell Text="Toggle sw1 &amp; sw2" 
-                      On="{Binding SwAllValue, Mode=OneWayToSource}" />
-        </TableSection>
-        <TableSection Title="Toggle each">
-          <SwitchCell Text="Toggle sw1" 
-                      On="{Binding Sw1Value, Mode=TwoWay}" />
-          <SwitchCell Text="Toggle sw2" 
-                      On="{Binding Sw2Value, Mode=TwoWay}" />
-        </TableSection>
-        <TableSection Title="Values of ViewModel">
-          <TextCell Text="sw1 value" 
-                    Detail="{Binding Sw1Value}" />
-          <TextCell Text="sw2 value" 
-                    Detail="{Binding Sw2Value}" />
-        </TableSection>
-      </TableRoot>
-    </TableView>
+             x:Class="MiniShogiMobile.Views.EditCellPage"
+             Title="駒の編集">
+    <StackLayout Spacing="0" VerticalOptions="FillAndExpand">
+        <StackLayout Spacing="6" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
+            <Label Text="駒の有無" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+            <Switch x:Name="hasKoma" HorizontalOptions="End" IsToggled="{Binding HasKoma.Value}" WidthRequest="100"/>
+        </StackLayout>
+        <StackLayout Spacing="6">
+            <StackLayout.Triggers>
+                <DataTrigger TargetType="StackLayout" Binding="{Binding Source={x:Reference hasKoma}, Path=IsToggled}" Value="False">
+                    <Setter Property="IsVisible" Value="False"/>
+                </DataTrigger>
+            </StackLayout.Triggers>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
+                <Label Text="駒タイプ" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+                <Picker HorizontalOptions="End" ItemsSource="{Binding KomaNameList}" SelectedItem="{Binding EditingKoma.Name.Value}" WidthRequest="100"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
+                <Label Text="プレイヤー" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+                <Button Text="{Binding EditingKoma.PlayerType.Value.Id}" Command="{Binding ChangePlayerCommand}" BackgroundColor="Pink" TextColor="White" FontAttributes="Bold" WidthRequest="100"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0" IsEnabled="{Binding CanTransform.Value}">
+                <Label Text="成り" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+                <Switch HorizontalOptions="End" IsToggled="{Binding EditingKoma.IsTransformed.Value}" WidthRequest="100"/>
+            </StackLayout>
+        </StackLayout>
+        <!--
+        <views:CellView BindingContext="{Binding EditingCell}">
+        -->
+        <Button Command="{Binding OkCommand}" Text="OK" VerticalOptions="EndAndExpand" Margin="15"/>
+    </StackLayout>
 </ContentPage>

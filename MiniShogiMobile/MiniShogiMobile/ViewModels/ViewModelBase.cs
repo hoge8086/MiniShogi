@@ -4,12 +4,14 @@ using Prism.Navigation;
 using Prism.Services;
 using System;
 using System.Collections.Generic;
+using System.Reactive.Disposables;
 using System.Text;
 
 namespace MiniShogiMobile.ViewModels
 {
     public class ViewModelBase : BindableBase, IInitialize, INavigationAware, IDestructible
     {
+        protected CompositeDisposable Disposable { get; } = new CompositeDisposable();
         public INavigationService NavigationService { get; private set; }
         public IPageDialogService PageDialogService { get; private set; }
 
