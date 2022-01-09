@@ -5,6 +5,10 @@ using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
 using Reactive.Bindings;
+using Shogi.Business.Domain.Model.Boards;
+using Shogi.Business.Domain.Model.GameTemplates;
+using Shogi.Business.Domain.Model.Komas;
+using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,13 +22,14 @@ namespace MiniShogiMobile.ViewModels
     {
         public GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
         public ReactiveCommand<CellViewModel> EditCellCommand { get; set; }
-        public ReactiveProperty<uint> Width { get; set; }
-        public ReactiveProperty<uint> Height { get; set; }
+        public ReactiveCommand SaveCommand { get; set; }
+        public ReactiveProperty<int> Width { get; set; }
+        public ReactiveProperty<int> Height { get; set; }
         public CreateGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             Game = new GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
-            Width = new ReactiveProperty<uint>(3);
-            Height = new ReactiveProperty<uint>(4);
+            Width = new ReactiveProperty<int>(3);
+            Height = new ReactiveProperty<int>(4);
             Width.Subscribe(x => UpdateView());
             Height.Subscribe(x => UpdateView());
 
@@ -35,6 +40,48 @@ namespace MiniShogiMobile.ViewModels
                 param.Add(nameof(EditCellCondition), new EditCellCondition(x));
                 navigationService.NavigateAsync(nameof(EditCellPage), param);
             });
+            SaveCommand = new ReactiveCommand();
+            SaveCommand.Subscribe(x =>
+            {
+                var command = new CreateGameCommand()
+                {
+                    Height = this.Height.Value,
+                    Width = this.Width.Value,
+                    Name = "新しいゲーム",
+                    ProhibitedMoves = new ProhibitedMoves(false, false, false, true),
+                    TerritoryBoundary = 1,
+                    WinCondition = WinConditionType.Checkmate,
+                    TurnPlayer = PlayerType.Player1,
+                    KomaList = CreateKomaList(),
+                };
+                App.CreateGameService.CreateGame(command);
+                navigationService.GoBackToRootAsync();
+            });
+        }
+
+        private List<Koma> CreateKomaList()
+        {
+            var komaList = new List<Koma>();
+
+            for(int y = 0; y<Height.Value; y++)
+            {
+                for(int x = 0; x<Width.Value; x++)
+                {
+                    var cell = Game.Board.Cells[y][x];
+                    if (cell.Koma.Value != null)
+                    {
+                        var koma = cell.Koma.Value;
+                        komaList.Add(new Koma(
+                            koma.PlayerType.Value,
+                            koma.Name.Value,
+                            new OnBoard(
+                                new BoardPosition(x, y),
+                                koma.IsTransformed.Value)
+                            ));
+                    }
+                }
+            }
+            return komaList;
         }
 
         public async override void OnNavigatedTo(INavigationParameters parameters)
@@ -48,7 +95,7 @@ namespace MiniShogiMobile.ViewModels
             Game.Board.Cells.ForEach(x => UpdateBoardSize(x, Width.Value));
         }
 
-        private static void UpdateBoardSize<T>(ObservableCollection<T> list, uint size) where T : new()
+        private static void UpdateBoardSize<T>(ObservableCollection<T> list, int size) where T : new()
         {
             if(list.Count > size)
             {

@@ -70,6 +70,7 @@
         <StackLayout
             Grid.Column="1"
             Grid.Row="3">
+            <Button Text="保存" Command="{Binding SaveCommand}"  VerticalOptions="EndAndExpand"/>
             <StackLayout Orientation="Horizontal">
                 <Label Text="高さ" VerticalTextAlignment="Center"/>
                 <Stepper Value="{Binding Height.Value}}" Increment="1" Minimum="1" Maximum="10"/>
