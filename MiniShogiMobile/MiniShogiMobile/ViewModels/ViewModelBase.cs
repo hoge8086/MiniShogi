@@ -45,7 +45,7 @@ namespace MiniShogiMobile.ViewModels
 
         public virtual void Destroy()
         {
-
+            this.Disposable.Dispose();
         }
     }
 }

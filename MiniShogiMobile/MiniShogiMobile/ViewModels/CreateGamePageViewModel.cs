@@ -25,8 +25,10 @@ namespace MiniShogiMobile.ViewModels
         public ReactiveCommand SaveCommand { get; set; }
         public ReactiveProperty<int> Width { get; set; }
         public ReactiveProperty<int> Height { get; set; }
+        public string GameName { get; set; }
         public CreateGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
+            GameName = "新しいゲーム";
             Game = new GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
             Width = new ReactiveProperty<int>(3);
             Height = new ReactiveProperty<int>(4);
@@ -47,7 +49,7 @@ namespace MiniShogiMobile.ViewModels
                 {
                     Height = this.Height.Value,
                     Width = this.Width.Value,
-                    Name = "新しいゲーム",
+                    Name = GameName,
                     ProhibitedMoves = new ProhibitedMoves(false, false, false, true),
                     TerritoryBoundary = 1,
                     WinCondition = WinConditionType.Checkmate,

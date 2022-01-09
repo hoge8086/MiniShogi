@@ -19,14 +19,11 @@ namespace MiniShogiMobile.ViewModels
     {
         public ReactiveCommand OkCommand { get; }
         public ReactiveCommand ChangePlayerCommand { get; }
-
         public CellViewModel Cell { get; private set; }
-
         public ObservableCollection<string> KomaNameList { get; }
         public Dictionary<string, KomaType> KomaTypes { get; }
 
         public CellViewModel EditingCell { get; private set; }
-        //public KomaViewModel EditingKoma { get; private set; }
         public ReactiveProperty<bool> HasKoma { get; private set; }
         public ReactiveProperty<bool> CanTransform { get; private set; }
 
@@ -45,15 +42,16 @@ namespace MiniShogiMobile.ViewModels
             }).AddTo(this.Disposable);
 
             ChangePlayerCommand = new ReactiveCommand();
-            ChangePlayerCommand.Subscribe(() => EditingCell.Koma.Value.PlayerType.Value = EditingCell.Koma.Value.PlayerType.Value.Opponent);
+            ChangePlayerCommand.Subscribe(() =>
+                EditingCell.Koma.Value.PlayerType.Value = EditingCell.Koma.Value.PlayerType.Value.Opponent)
+                .AddTo(this.Disposable);
 
             OkCommand = new ReactiveCommand();
             OkCommand.Subscribe(() =>
             {
                 Cell.Koma.Value = HasKoma.Value ? new KomaViewModel(EditingCell.Koma.Value) : null;
-                this.Disposable.Dispose();
                 navigationService.GoBackAsync();
-            });
+            }).AddTo(this.Disposable);
         }
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
