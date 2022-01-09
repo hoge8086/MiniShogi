@@ -33,6 +33,9 @@
                 <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value.IsTransformed.Value}" Value="True">
                     <Setter Property="NameColor" Value="Red"/>
                 </DataTrigger>
+                <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding IsKomaHidden, Source={x:Reference cell}}" Value="True">
+                    <Setter Property="IsVisible" Value="False"/>
+                </DataTrigger>
             </ctrl:KomaView.Triggers>
         </ctrl:KomaView>
         <!--丸表示(IsMarkedプロパティ)-->

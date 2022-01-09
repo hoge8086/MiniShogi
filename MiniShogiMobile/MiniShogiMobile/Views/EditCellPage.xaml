@@ -3,10 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
+             xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.EditCellPage"
              Title="駒の編集">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <utils:InverseBooleanConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <StackLayout Spacing="0" VerticalOptions="FillAndExpand">
+        <views:CellView BindingContext="{Binding EditingCell}" HeightRequest="200" WidthRequest="{Binding Path=Height, Source={RelativeSource Self}}"
+                        IsKomaHidden="{Binding Source={x:Reference hasKoma}, Path=IsToggled,Converter={StaticResource InvertedBoolConverter}}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
         <StackLayout Spacing="6" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
             <Label Text="駒の有無" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
             <Switch x:Name="hasKoma" HorizontalOptions="End" IsToggled="{Binding HasKoma.Value}" WidthRequest="100"/>
@@ -19,20 +29,17 @@
             </StackLayout.Triggers>
             <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
                 <Label Text="駒タイプ" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
-                <Picker HorizontalOptions="End" ItemsSource="{Binding KomaNameList}" SelectedItem="{Binding EditingKoma.Name.Value}" WidthRequest="100"/>
+                <Picker HorizontalOptions="End" ItemsSource="{Binding KomaNameList}" SelectedItem="{Binding EditingCell.Koma.Value.Name.Value}" WidthRequest="100"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
                 <Label Text="プレイヤー" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
-                <Button Text="{Binding EditingKoma.PlayerType.Value.Id}" Command="{Binding ChangePlayerCommand}" BackgroundColor="Pink" TextColor="White" FontAttributes="Bold" WidthRequest="100"/>
+                <Button Text="{Binding EditingCell.Koma.Value.PlayerType.Value.Id}" Command="{Binding ChangePlayerCommand}" BackgroundColor="Pink" TextColor="White" FontAttributes="Bold" WidthRequest="100"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0" IsEnabled="{Binding CanTransform.Value}">
                 <Label Text="成り" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
-                <Switch HorizontalOptions="End" IsToggled="{Binding EditingKoma.IsTransformed.Value}" WidthRequest="100"/>
+                <Switch HorizontalOptions="End" IsToggled="{Binding EditingCell.Koma.Value.IsTransformed.Value}" WidthRequest="100"/>
             </StackLayout>
         </StackLayout>
-        <!--
-        <views:CellView BindingContext="{Binding EditingCell}">
-        -->
-        <Button Command="{Binding OkCommand}" Text="OK" VerticalOptions="EndAndExpand" Margin="15"/>
+        <Button Command="{Binding OkCommand}" Text="OK" VerticalOptions="EndAndExpand" Margin="10"/>
     </StackLayout>
 </ContentPage>

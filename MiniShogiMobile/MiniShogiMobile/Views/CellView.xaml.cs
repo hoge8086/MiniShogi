@@ -48,5 +48,14 @@ namespace MiniShogiMobile.Views
             set { SetValue(IsHighlightProperty, value); }
         }
 
+        public static readonly BindableProperty IsKomaHiddenProperty =
+            BindableProperty.Create(
+                nameof(IsKomaHidden), typeof(bool), typeof(CellView), false);
+
+        public bool IsKomaHidden
+        {
+            get { return (bool)GetValue(IsKomaHiddenProperty); }
+            set { SetValue(IsKomaHiddenProperty, value); }
+        }
     }
 }
