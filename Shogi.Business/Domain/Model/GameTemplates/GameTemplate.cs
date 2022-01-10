@@ -2,6 +2,7 @@
 using Shogi.Business.Domain.Model.Komas;
 using Shogi.Business.Domain.Model.PlayerTypes;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.GameTemplates
 {
@@ -28,17 +29,27 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         TakeKing,
         TakeKingOrEnterOpponentTerritory,
     }
+    [DataContract]
     public class GameTemplate
     {
-        public string Name { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public int TerritoryBoundary { get; set; }
-        public ProhibitedMoves ProhibitedMoves { get; set;}
-        public WinConditionType WinCondition { get; set; }
-        public List<Koma> KomaList { get; set; }
 
-        public List<KomaType> KomaTypes = null;
+        [DataMember]
+        public string Name { get; set; }
+        [DataMember]
+        public int Width { get; set; }
+        [DataMember]
+        public int Height { get; set; }
+        [DataMember]
+        public int TerritoryBoundary { get; set; }
+        [DataMember]
+        public ProhibitedMoves ProhibitedMoves { get; set;}
+        [DataMember]
+        public WinConditionType WinCondition { get; set; }
+        [DataMember]
+        public List<Koma> KomaList { get; set; }
+        [DataMember]
+
+        public List<KomaType> KomaTypes;
 
         public GameTemplate()
         {
