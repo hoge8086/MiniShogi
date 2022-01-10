@@ -14,7 +14,7 @@
             Grid.Row="0">
             <Label Text="名前" FontSize="Caption" VerticalTextAlignment="Center"/>
             <Entry Text="{Binding GameName}" Margin="5,0,0,0" HorizontalOptions="FillAndExpand"/>
-            <Button Text="詳細設定" Command="{Binding DetailSettingCommand}"  HorizontalOptions="End"/>
+            <Button Text="詳細設定" Command="{Binding EditDetailSettingCommand}"  HorizontalOptions="End"/>
         </StackLayout>
         <Grid ColumnDefinitions="*,Auto"
             BindingContext="{Binding Game.HandsOfPlayer2}"

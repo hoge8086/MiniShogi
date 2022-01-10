@@ -5,6 +5,7 @@ using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.GameTemplates;
 using Shogi.Business.Domain.Model.Komas;
@@ -22,6 +23,7 @@ namespace MiniShogiMobile.ViewModels
     {
         public GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
         public ReactiveCommand<CellViewModel> EditCellCommand { get; set; }
+        public ReactiveCommand EditDetailSettingCommand {get;}
         public ReactiveCommand SaveCommand { get; set; }
         public ReactiveProperty<int> Width { get; set; }
         public ReactiveProperty<int> Height { get; set; }
@@ -32,8 +34,8 @@ namespace MiniShogiMobile.ViewModels
             Game = new GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
             Width = new ReactiveProperty<int>(3);
             Height = new ReactiveProperty<int>(4);
-            Width.Subscribe(x => UpdateView());
-            Height.Subscribe(x => UpdateView());
+            Width.Subscribe(x => UpdateView()).AddTo(this.Disposable);
+            Height.Subscribe(x => UpdateView()).AddTo(this.Disposable);
 
             EditCellCommand = new ReactiveCommand<CellViewModel>();
             EditCellCommand.Subscribe(x =>
@@ -41,7 +43,7 @@ namespace MiniShogiMobile.ViewModels
                 var param = new NavigationParameters();
                 param.Add(nameof(EditCellCondition), new EditCellCondition(x));
                 navigationService.NavigateAsync(nameof(EditCellPage), param);
-            });
+            }).AddTo(this.Disposable);
             SaveCommand = new ReactiveCommand();
             SaveCommand.Subscribe(x =>
             {
@@ -58,7 +60,16 @@ namespace MiniShogiMobile.ViewModels
                 };
                 App.CreateGameService.CreateGame(command);
                 navigationService.GoBackToRootAsync();
-            });
+            }).AddTo(this.Disposable);
+
+            EditDetailSettingCommand = new ReactiveCommand();
+            EditDetailSettingCommand.Subscribe(() =>
+            {
+                //var param = new NavigationParameters();
+                //param.Add(nameof(EditCellCondition), new EditCellCondition(x));
+                //navigationService.NavigateAsync(nameof(EditDetailGameSettingsPage), param);
+
+            }).AddTo(this.Disposable);
         }
 
         private List<Koma> CreateKomaList()
