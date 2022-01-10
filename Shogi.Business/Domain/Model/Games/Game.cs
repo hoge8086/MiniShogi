@@ -48,16 +48,6 @@ namespace Shogi.Business.Domain.Model.Games
             Record = record;
             KomaTypes = komaTypes;
         }
-
-        public void ChangeFirstTurnPlayer(PlayerType firstTurnPlayer)
-        {
-            // [BUG:Reset()すると先攻が分かる可能性がある]
-            // [「CurrentMovesCount == 0」でRecodeが1件あるのは勘違いするので、未着手は履歴を保持しないように直す]
-            if(Record.CurrentMovesCount != 0)
-                throw new InvalidProgramException("未着手のゲームしか先手を変更できません.");
-
-            State.ChangeCurrentTurn(firstTurnPlayer);
-        }
         public bool IsWinning(PlayerType player)
         {
             return Rule.WinningChecker.IsWinning(this, player);

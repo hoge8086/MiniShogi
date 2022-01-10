@@ -239,9 +239,9 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             KomaKyousya,
         };
 
-        public static readonly List<CreateGameCommand> DefaltGameTemplate = new List<CreateGameCommand>()
+        public static readonly List<GameTemplate> DefaltGameTemplate = new List<GameTemplate>()
         {
-            new CreateGameCommand(
+            new GameTemplate(
                 "どうぶつ将棋", 3, 4, 1, WinConditionType.TakeKingOrEnterOpponentTerritory,
                 new List<Koma>()
                 {
@@ -254,10 +254,10 @@ namespace Shogi.Business.Domain.Model.GameTemplates
                     new Koma(PlayerType.Player1, KomaZou.Id, new OnBoard(new BoardPosition(0,3))),
                     new Koma(PlayerType.Player1, KomaHiyoko.Id, new OnBoard(new BoardPosition(1,2))),
                 },
-                new ProhibitedMoves(false, false, false, false),
-                PlayerType.Player1),
+                new ProhibitedMoves(false, false, false, false)),
+                //PlayerType.Player1),
 
-            new CreateGameCommand(
+            new GameTemplate(
                 "5五将棋", 5, 5, 1, WinConditionType.Checkmate,
                 new List<Koma>()
                 {
@@ -274,9 +274,9 @@ namespace Shogi.Business.Domain.Model.GameTemplates
                     new Koma(PlayerType.Player1, KomaOu.Id, new OnBoard(new BoardPosition(0,4))),
                     new Koma(PlayerType.Player1, KomaHu.Id, new OnBoard(new BoardPosition(0,3))),
                 },
-                new ProhibitedMoves(true, true, true, true),
-                PlayerType.Player1),
-            new CreateGameCommand(
+                new ProhibitedMoves(true, true, true, true)),
+                //PlayerType.Player1),
+            new GameTemplate(
                 "香歩将棋", 3, 4, 2, WinConditionType.Checkmate,
                 new List<Koma>()
                 {
@@ -287,8 +287,8 @@ namespace Shogi.Business.Domain.Model.GameTemplates
                     new Koma(PlayerType.Player1, KomaHu.Id, InHand.State),
                     new Koma(PlayerType.Player1, KomaOu.Id, new OnBoard(new BoardPosition(0,3))),
                 },
-                new ProhibitedMoves(true, true, true, true),
-                PlayerType.Player1),
+                new ProhibitedMoves(true, true, true, true)),
+                //PlayerType.Player1),
         };
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Shogi.Business.Domain.Model.GameTemplates;
 using Shogi.Business.Domain.Model.Komas;
 
@@ -21,16 +22,33 @@ namespace Shogi.Business.Application
 
             if (GameTemplateRepository.FindAllName().Count == 0)
                 foreach (var temp in DefaultGame.DefaltGameTemplate)
-                    GameTemplateRepository.Add(new GameTemplateFactory(KomaTypeRepository).Create(temp));
+                    //GameTemplateRepository.Add(new GameFactory(KomaTypeRepository).Create(temp));
+                    GameTemplateRepository.Add(ResolveKomaTypes(temp));
         }
 
-        public void CreateGame(CreateGameCommand createGameCommand)
+        /// <summary>
+        /// [FIX:アプリケーションサービスではやりたくないので何とかする.TemplateとCreateTemplateCommandと分ける]
+        /// </summary>
+        /// <param name="template"></param>
+        private GameTemplate ResolveKomaTypes(GameTemplate template)
+        {
+            template.KomaTypes = template.KomaList.Select(x => {
+                var type =KomaTypeRepository.FindById(x.TypeId);
+                if (type == null)
+                    throw new System.Exception($"駒[{type.Id}]が存在しません.");
+                return type;
+            }).ToList();
+            return template;
+        }
+
+        public void CreateGame(GameTemplate createGameCommand)
         {
             if (GameTemplateRepository.FindByName(createGameCommand.Name) != null)
                 throw new Exception("既に存在する名前は作成できません");
 
-            var template = new GameTemplateFactory(KomaTypeRepository).Create(createGameCommand);
-            GameTemplateRepository.Add(template);
+            ResolveKomaTypes(createGameCommand);
+
+            GameTemplateRepository.Add(createGameCommand);
         }
 
         public void CreateKomaType(KomaType komaType)

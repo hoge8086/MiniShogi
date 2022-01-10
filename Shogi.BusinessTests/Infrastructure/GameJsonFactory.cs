@@ -304,8 +304,8 @@ namespace Shogi.Business.Infrastructure.Tests
         public static void CreateGame(string fileName)
         {
             var repo = new GameTemplateJsonRepository(fileName);
-            repo.Add(new GameTemplate() { Name = "どうぶつ将棋", Game = DobutuShogi });
-            repo.Add(new GameTemplate() { Name = "5五将棋", Game = GoGoShogi });
+            //repo.Add(new GameTemplate() { Name = "どうぶつ将棋", Game = DobutuShogi });
+            //repo.Add(new GameTemplate() { Name = "5五将棋", Game = GoGoShogi });
         }
         public static void CreateKoma(string fileName)
         {

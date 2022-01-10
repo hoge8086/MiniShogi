@@ -42,7 +42,8 @@ namespace Shogi.Business.Application
             lock (thisLock)
             {
                 var template = GameTemplateRepository.FindByName(gameName);
-                PlayingGame = new PlayingGame(player1, player2, firstTurnPlayer, template);
+                var game = new GameFactory().Create(template, firstTurnPlayer);
+                PlayingGame = new PlayingGame(player1, player2, firstTurnPlayer, game);
                 GameListener?.OnStarted();
                 Next(cancellation);
             }

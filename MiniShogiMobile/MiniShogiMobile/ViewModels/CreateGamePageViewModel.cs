@@ -47,7 +47,7 @@ namespace MiniShogiMobile.ViewModels
             SaveCommand = new ReactiveCommand();
             SaveCommand.Subscribe(x =>
             {
-                var command = new CreateGameCommand()
+                var command = new GameTemplate()
                 {
                     Height = this.Height.Value,
                     Width = this.Width.Value,
@@ -55,7 +55,7 @@ namespace MiniShogiMobile.ViewModels
                     ProhibitedMoves = new ProhibitedMoves(false, false, false, true),
                     TerritoryBoundary = 1,
                     WinCondition = WinConditionType.Checkmate,
-                    TurnPlayer = PlayerType.Player1,
+                    //TurnPlayer = PlayerType.Player1,
                     KomaList = CreateKomaList(),
                 };
                 App.CreateGameService.CreateGame(command);
