@@ -2,6 +2,7 @@
 using Shogi.Business.Domain.Model.Komas;
 using Shogi.Business.Domain.Model.PlayerTypes;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.GameTemplates
@@ -25,8 +26,12 @@ namespace Shogi.Business.Domain.Model.GameTemplates
     }
     public enum WinConditionType
     {
+
+        [Description("詰み")]
         Checkmate,
+        [Description("王取り")]
         TakeKing,
+        [Description("王取りor入玉")]
         TakeKingOrEnterOpponentTerritory,
     }
     [DataContract]

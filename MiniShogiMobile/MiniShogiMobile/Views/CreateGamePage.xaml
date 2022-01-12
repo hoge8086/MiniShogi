@@ -9,12 +9,11 @@
              Title="ゲーム作成">
     <Grid RowDefinitions="*,*,8*,*,*" ColumnDefinitions="*,20*,*">
         <StackLayout
-            Orientation="Horizontal"
             Grid.Column="1"
-            Grid.Row="0">
-            <Label Text="名前" FontSize="Caption" VerticalTextAlignment="Center"/>
-            <Entry Text="{Binding GameName}" Margin="5,0,0,0" HorizontalOptions="FillAndExpand"/>
-            <Button Text="詳細設定" Command="{Binding EditDetailSettingCommand}"  HorizontalOptions="End"/>
+            Grid.Row="0"
+            Orientation="Horizontal"
+            HorizontalOptions="FillAndExpand">
+            <Button Text="設定" Command="{Binding EditDetailSettingCommand}" Margin="5" HorizontalOptions="EndAndExpand"/>
         </StackLayout>
         <Grid ColumnDefinitions="*,Auto"
             BindingContext="{Binding Game.HandsOfPlayer2}"
@@ -80,16 +79,6 @@
             Grid.Column="1"
             Grid.Row="4">
             <Button Text="保存" Command="{Binding SaveCommand}" VerticalOptions="CenterAndExpand"/>
-            <!--
-            <StackLayout Orientation="Horizontal">
-                <Label Text="高さ" VerticalTextAlignment="Center"/>
-                <Stepper Value="{Binding Height.Value}}" Increment="1" Minimum="1" Maximum="10"/>
-            </StackLayout>
-            <StackLayout Orientation="Horizontal">
-                <Label Text="幅" VerticalTextAlignment="Center"/>
-                <Stepper Value="{Binding Width.Value}}" Increment="1" Minimum="1" Maximum="10"/>
-            </StackLayout>
-            -->
         </StackLayout>
     </Grid>
   

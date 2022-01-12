@@ -14,6 +14,7 @@ using Shogi.Business.Domain.Model.Players;
 using Shogi.Business.Domain.Model.AI;
 using Shogi.Business.Domain.Model.PlayerTypes;
 using Prism.Services;
+using Shogi.Business.Domain.Model.GameTemplates;
 
 namespace MiniShogiMobile.ViewModels
 {

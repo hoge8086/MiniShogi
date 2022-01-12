@@ -27,13 +27,18 @@ namespace MiniShogiMobile.ViewModels
         public ReactiveCommand SaveCommand { get; set; }
         public ReactiveProperty<int> Width { get; set; }
         public ReactiveProperty<int> Height { get; set; }
-        public string GameName { get; set; }
+        //public string GameName { get; set; }
+
+        private GameTemplate GameTemplate;
         public CreateGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
-            GameName = "新しいゲーム";
+
+            //GameName = "新しいゲーム";
+            GameTemplate = new GameTemplate();
+
             Game = new GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
-            Width = new ReactiveProperty<int>(3);
-            Height = new ReactiveProperty<int>(4);
+            Width = new ReactiveProperty<int>();
+            Height = new ReactiveProperty<int>();
             Width.Subscribe(x => UpdateView()).AddTo(this.Disposable);
             Height.Subscribe(x => UpdateView()).AddTo(this.Disposable);
 
@@ -47,27 +52,17 @@ namespace MiniShogiMobile.ViewModels
             SaveCommand = new ReactiveCommand();
             SaveCommand.Subscribe(x =>
             {
-                var command = new GameTemplate()
-                {
-                    Height = this.Height.Value,
-                    Width = this.Width.Value,
-                    Name = GameName,
-                    ProhibitedMoves = new ProhibitedMoves(false, false, false, true),
-                    TerritoryBoundary = 1,
-                    WinCondition = WinConditionType.Checkmate,
-                    //TurnPlayer = PlayerType.Player1,
-                    KomaList = CreateKomaList(),
-                };
-                App.CreateGameService.CreateGame(command);
+                GameTemplate.KomaList = CreateKomaList();
+                App.CreateGameService.CreateGame(GameTemplate);
                 navigationService.GoBackToRootAsync();
             }).AddTo(this.Disposable);
 
             EditDetailSettingCommand = new ReactiveCommand();
             EditDetailSettingCommand.Subscribe(() =>
             {
-                //var param = new NavigationParameters();
-                //param.Add(nameof(EditCellCondition), new EditCellCondition(x));
-                //navigationService.NavigateAsync(nameof(EditDetailGameSettingsPage), param);
+                var param = new NavigationParameters();
+                param.Add(nameof(EditDetailGameSettingsCondition), new EditDetailGameSettingsCondition(GameTemplate));
+                navigationService.NavigateAsync(nameof(EditDetailGameSettingsPage), param);
 
             }).AddTo(this.Disposable);
         }
@@ -99,7 +94,19 @@ namespace MiniShogiMobile.ViewModels
 
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
+            Title = GameTemplate.Name;
+            Width.Value = GameTemplate.Width;
+            Height.Value = GameTemplate.Height;
             UpdateView();
+            var navigationMode = parameters.GetNavigationMode();
+            //if (navigationMode == NavigationMode.New)
+            //{
+            //    // 次の画面へ進む場合
+            //}
+            //else
+            //{
+            //    // 前の画面へ戻る場合
+            //}
         }
 
         public void UpdateView()

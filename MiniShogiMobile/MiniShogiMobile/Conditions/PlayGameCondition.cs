@@ -21,9 +21,4 @@ namespace MiniShogiMobile.Conditions
 
         }
     }
-
-    class EditDetailGameSettingsCondition
-    {
-
-    }
 }

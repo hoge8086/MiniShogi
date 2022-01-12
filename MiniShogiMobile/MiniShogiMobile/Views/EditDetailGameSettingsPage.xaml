@@ -1,8 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com"
+             xmlns:prism="http://prismlibrary.com" xmlns:local="clr-namespace:MiniShogiMobile.ViewModels"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="MiniShogiMobile.Views.EditDetailGameSettingsPage">
-  
+             x:Class="MiniShogiMobile.Views.EditDetailGameSettingsPage"
+             Title="ゲーム設定">
+    <ContentPage.Resources>
+        <local:WinConditionTypeConverter x:Key="winConditionTypeConverter"/>
+    </ContentPage.Resources>
+    <StackLayout Spacing="0" VerticalOptions="FillAndExpand">
+        <StackLayout Spacing="6" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
+            <Label Text="名前" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+            <Entry Text="{Binding Name.Value}" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
+        <StackLayout Spacing="6" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
+            <Label Text="盤の高さ" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+            <Label Text="{Binding Height.Value, StringFormat='{0}マス'}" VerticalTextAlignment="Center"/>
+            <Stepper Value="{Binding Height.Value}" Increment="1" Minimum="1" Maximum="10"/>
+        </StackLayout>
+        <StackLayout Spacing="6" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
+            <Label Text="盤の幅" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+            <Label Text="{Binding Width.Value, StringFormat='{0}マス'}" VerticalTextAlignment="Center"/>
+            <Stepper Value="{Binding Width.Value}" Increment="1" Minimum="1" Maximum="10"/>
+        </StackLayout>
+        <StackLayout Spacing="6" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
+            <Label Text="自陣の高さ" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+            <Label Text="{Binding TerritoryBoundary.Value, StringFormat='{0}段目'}" VerticalTextAlignment="Center"/>
+            <!--TOOD:盤の高さの半分以下(切り捨て)をMaximumにBindingする-->
+            <Stepper Value="{Binding TerritoryBoundary.Value}" Increment="1" Minimum="1" Maximum="10"/>
+        </StackLayout>
+
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
+            <Label Text="勝利判定" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+            <Picker HorizontalOptions="FillAndExpand"
+                    HorizontalTextAlignment="Center"
+                    VerticalOptions="Start"
+                    ItemsSource="{Binding Source={local:EnumWinConditionTypeProvider}}"
+                    ItemDisplayBinding="{Binding Converter={StaticResource winConditionTypeConverter}}"
+                    SelectedItem="{Binding WinCondition.Value}"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0" IsEnabled="{Binding CanTransform.Value}">
+            <Label Text="禁じ手-二歩" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+            <Switch HorizontalOptions="End" IsToggled="{Binding EnableNiHu.Value}" WidthRequest="100"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0" IsEnabled="{Binding CanTransform.Value}">
+            <Label Text="禁じ手-打ち歩詰め" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+            <Switch HorizontalOptions="End" IsToggled="{Binding EnableCheckmateByHandHu.Value}" WidthRequest="100"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0" IsEnabled="{Binding CanTransform.Value}">
+            <Label Text="禁じ手-動かせない駒" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+            <Switch HorizontalOptions="End" IsToggled="{Binding EnableKomaCannotMove.Value}" WidthRequest="100"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0" IsEnabled="{Binding CanTransform.Value}">
+            <Label Text="禁じ手-王手放置" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+            <Switch HorizontalOptions="End" IsToggled="{Binding EnableLeaveOte.Value}" WidthRequest="100"/>
+        </StackLayout>
+        <Button Command="{Binding OkCommand}" Text="OK" VerticalOptions="EndAndExpand" Margin="10"/>
+    </StackLayout>
 </ContentPage>

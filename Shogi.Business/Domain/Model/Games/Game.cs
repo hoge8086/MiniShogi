@@ -50,6 +50,7 @@ namespace Shogi.Business.Domain.Model.Games
         }
         public bool IsWinning(PlayerType player)
         {
+            // [TODO:ここで着手可能な手がない場合は負け判定がひつよう]
             return Rule.WinningChecker.IsWinning(this, player);
         }
 
