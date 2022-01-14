@@ -2,9 +2,9 @@
 
 namespace MiniShogiMobile.Views
 {
-    public partial class EditDetailGameSettingsPage : ContentPage
+    public partial class EditGameSettingsPage : ContentPage
     {
-        public EditDetailGameSettingsPage()
+        public EditGameSettingsPage()
         {
             InitializeComponent();
         }

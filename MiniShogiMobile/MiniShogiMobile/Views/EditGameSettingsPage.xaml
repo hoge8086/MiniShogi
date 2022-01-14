@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com" xmlns:local="clr-namespace:MiniShogiMobile.ViewModels"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="MiniShogiMobile.Views.EditDetailGameSettingsPage"
+             x:Class="MiniShogiMobile.Views.EditGameSettingsPage"
              Title="ゲーム設定">
     <ContentPage.Resources>
         <local:WinConditionTypeConverter x:Key="winConditionTypeConverter"/>

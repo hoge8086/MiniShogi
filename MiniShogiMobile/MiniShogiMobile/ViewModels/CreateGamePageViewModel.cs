@@ -23,7 +23,7 @@ namespace MiniShogiMobile.ViewModels
     {
         public GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
         public ReactiveCommand<CellViewModel> EditCellCommand { get; set; }
-        public ReactiveCommand EditDetailSettingCommand {get;}
+        public ReactiveCommand EditSettingCommand {get;}
         public ReactiveCommand SaveCommand { get; set; }
         public ReactiveProperty<int> Width { get; set; }
         public ReactiveProperty<int> Height { get; set; }
@@ -57,12 +57,12 @@ namespace MiniShogiMobile.ViewModels
                 navigationService.GoBackToRootAsync();
             }).AddTo(this.Disposable);
 
-            EditDetailSettingCommand = new ReactiveCommand();
-            EditDetailSettingCommand.Subscribe(() =>
+            EditSettingCommand = new ReactiveCommand();
+            EditSettingCommand.Subscribe(() =>
             {
                 var param = new NavigationParameters();
                 param.Add(nameof(EditDetailGameSettingsCondition), new EditDetailGameSettingsCondition(GameTemplate));
-                navigationService.NavigateAsync(nameof(EditDetailGameSettingsPage), param);
+                navigationService.NavigateAsync(nameof(EditGameSettingsPage), param);
 
             }).AddTo(this.Disposable);
         }

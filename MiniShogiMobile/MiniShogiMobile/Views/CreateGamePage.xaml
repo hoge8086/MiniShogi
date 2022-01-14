@@ -13,7 +13,7 @@
             Grid.Row="0"
             Orientation="Horizontal"
             HorizontalOptions="FillAndExpand">
-            <Button Text="設定" Command="{Binding EditDetailSettingCommand}" Margin="5" HorizontalOptions="EndAndExpand"/>
+            <Button Text="設定" Command="{Binding EditSettingCommand}" Margin="5" HorizontalOptions="EndAndExpand"/>
         </StackLayout>
         <Grid ColumnDefinitions="*,Auto"
             BindingContext="{Binding Game.HandsOfPlayer2}"
