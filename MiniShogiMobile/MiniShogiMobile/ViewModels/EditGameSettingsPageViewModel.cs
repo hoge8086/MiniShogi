@@ -15,7 +15,7 @@ namespace MiniShogiMobile.ViewModels
 {
     public class EnumWinConditionTypeProvider : EnumListProvider<WinConditionType> { }
     public class WinConditionTypeConverter : EnumToDescriptionConverter<WinConditionType> { }
-    public class EditDetailGameSettingsPageViewModel : ViewModelBase
+    public class EditGameSettingsPageViewModel : ViewModelBase
     {
         public ReactiveCommand OkCommand { get; }
         public ReactiveProperty<string> Name { get; }
@@ -30,7 +30,7 @@ namespace MiniShogiMobile.ViewModels
         public ReactiveProperty<bool> EnableLeaveOte { get; }
         private GameTemplate GameTemplate;
 
-        public EditDetailGameSettingsPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
+        public EditGameSettingsPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             Name = new ReactiveProperty<string>();
             Height = new ReactiveProperty<int>();
