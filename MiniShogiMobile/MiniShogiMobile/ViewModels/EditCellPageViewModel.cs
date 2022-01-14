@@ -60,7 +60,10 @@ namespace MiniShogiMobile.ViewModels
                 throw new ArgumentException(nameof(EditCellCondition));
 
             Cell = param.Cell;
-            EditingCell.Koma.Value.Update(Cell.Koma.Value);
+            if (Cell.Koma.Value != null)
+                EditingCell.Koma.Value.Update(Cell.Koma.Value);
+            else
+                EditingCell.Koma.Value.PlayerType.Value = ((param.Height / 2) > Cell.Position.Y) ? PlayerType.Player2 : PlayerType.Player1;
             // [駒がないセルを押下した場合は、駒を追加したいからであるため、デフォはONの方が使いやすい]
             HasKoma.Value = true;// Cell.Koma.Value != null;
         }

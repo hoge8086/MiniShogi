@@ -46,7 +46,7 @@ namespace MiniShogiMobile.ViewModels
             EditCellCommand.Subscribe(x =>
             {
                 var param = new NavigationParameters();
-                param.Add(nameof(EditCellCondition), new EditCellCondition(x));
+                param.Add(nameof(EditCellCondition), new EditCellCondition(x, Height.Value));
                 navigationService.NavigateAsync(nameof(EditCellPage), param);
             }).AddTo(this.Disposable);
             SaveCommand = new ReactiveCommand();
@@ -113,6 +113,10 @@ namespace MiniShogiMobile.ViewModels
         {
             UpdateBoardSize(Game.Board.Cells, Height.Value);
             Game.Board.Cells.ForEach(x => UpdateBoardSize(x, Width.Value));
+            for (int y = 0; y < Game.Board.Cells.Count; y++)
+                for (int x = 0; x < Game.Board.Cells[y].Count; x++)
+                    Game.Board.Cells[y][x].Position = new BoardPosition(x, y);
+
         }
 
         private static void UpdateBoardSize<T>(ObservableCollection<T> list, int size) where T : new()
