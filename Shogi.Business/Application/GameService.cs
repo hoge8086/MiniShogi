@@ -12,16 +12,17 @@ namespace Shogi.Business.Application
 {
 
     // [TODO:ゲームの進行をDomainServiceに移す]
+    // [MEMO:ApplicationServiceからGetGmae()やGetPlayingGmae()で直接取れないようにすることで、マルチスレッドアクセスを可能にする]
+    // [     Clone()したPlayingGameが返る]
     public interface GameListener
     {
-        void OnStarted();
-        void OnPlayed();
+        void OnStarted(PlayingGame playingGame);
+        void OnPlayed(PlayingGame playingGame);
         void OnEnded(PlayerType winner);
     }
     public class GameService
     {
         private Object thisLock = new Object();
-        //private PlayingGame PlayingGame = null;
         private GameListener GameListener = null;
         public IGameTemplateRepository GameTemplateRepository;
         private ICurrentPlayingGameRepository CurrentPlayingGameRepository;
@@ -47,7 +48,7 @@ namespace Shogi.Business.Application
             {
                 var current = CurrentPlayingGameRepository.Current();
 
-                if(PlayingGameRepository.FindByName(playingName) != null);
+                if(PlayingGameRepository.FindByName(playingName) != null)
                     PlayingGameRepository.RemoveByName(playingName);
 
                 current.ChangeName(playingName);
@@ -58,9 +59,14 @@ namespace Shogi.Business.Application
         {
             lock (thisLock)
             {
-                var current = PlayingGameRepository.FindByName(playingName);
-                CurrentPlayingGameRepository.Save(current);
-                GameListener?.OnStarted();
+                if(playingName != null)
+                {
+                    var continueGame = PlayingGameRepository.FindByName(playingName);
+                    CurrentPlayingGameRepository.Save(continueGame);
+                }
+
+                var current = CurrentPlayingGameRepository.Current();
+                GameListener?.OnStarted(current.Clone());
                 Next(current, cancellation);
             }
         }
@@ -72,8 +78,7 @@ namespace Shogi.Business.Application
                 var template = GameTemplateRepository.FindByName(gameName);
                 var game = new GameFactory().Create(template, firstTurnPlayer);
                 var playingGame = new PlayingGame(player1, player2, game, template);
-                //CurrentPlayingGameRepository.Save(playingGame);
-                GameListener?.OnStarted();
+                GameListener?.OnStarted(playingGame.Clone());
                 Next(playingGame, cancellation);
 
                 CurrentPlayingGameRepository.Save(playingGame);
@@ -86,7 +91,7 @@ namespace Shogi.Business.Application
                 var playingGame = CurrentPlayingGameRepository.Current();
                 playingGame.Reset();
 
-                GameListener?.OnStarted();
+                GameListener?.OnStarted(playingGame.Clone());
                 Next(playingGame, cancellation);
 
                 CurrentPlayingGameRepository.Save(playingGame);
@@ -104,20 +109,6 @@ namespace Shogi.Business.Application
             }
         }
 
-        public Game GetGame()
-        {
-            // [MEMO:クローンを返すことでマルチスレッドでアクセス可能とする]
-            // [MEMO:Game自身はGameでlockしている→★してないので注意]
-            var playingGame = CurrentPlayingGameRepository.Current();
-            return playingGame.Game.Clone();
-        }
-        public PlayingGame GetPlayingGame()
-        {
-            // [MEMO:クローンを返すことでマルチスレッドでアクセス可能とする]
-            // [MEMO:Game自身はGameでlockしている→★してないので注意]
-            var playingGame = CurrentPlayingGameRepository.Current();
-            return playingGame;
-        }
 
         public void Play(MoveCommand moveCommand, CancellationToken cancellation)
         {
@@ -125,7 +116,7 @@ namespace Shogi.Business.Application
             {
                 var playingGame = CurrentPlayingGameRepository.Current();
                 playingGame.Game.Play(moveCommand);
-                GameListener?.OnPlayed();
+                GameListener?.OnPlayed(playingGame.Clone());
                 Next(playingGame, cancellation);
 
                 CurrentPlayingGameRepository.Save(playingGame);
@@ -157,7 +148,7 @@ namespace Shogi.Business.Application
             ai.Play(playingGame.Game, cancellation);
             if (cancellation.IsCancellationRequested)
                 return;
-            GameListener?.OnPlayed();
+            GameListener?.OnPlayed(playingGame.Clone());
 
             Next(playingGame, cancellation);
         }
@@ -170,11 +161,5 @@ namespace Shogi.Business.Application
                 Next(playingGame, cancellation);
             }
         }
-
-        // [TODO:リードモデルとしてGameSetをとれるようにして、このメソッドはなくす]
-        //public bool IsTurnPlayerAI()
-        //{
-        //    return PlayingGame.TurnPlayer.IsAI;
-        //}
     }
 }

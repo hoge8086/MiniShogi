@@ -12,11 +12,11 @@ namespace MiniShogiMobile.ViewModels
     {
         public async Task HandleAsync(PlayGamePageViewModel vm, ISelectable fromCell)
         {
-            var koma = GetKoma(fromCell);
-            if (koma == null || !App.GameService.GetGame().State.IsTurnPlayer(koma.Player))
+            var koma = GetKoma(fromCell, vm.PlayingGame.Game);
+            if (koma == null || !vm.PlayingGame.Game.State.IsTurnPlayer(koma.Player))
                 return;
 
-            var moves = App.GameService.GetGame().CreateAvailableMoveCommand(koma);
+            var moves = vm.PlayingGame.Game.CreateAvailableMoveCommand(koma);
             foreach(var row in vm.Game.Board.Cells)
             {
                 foreach(var cell in row)
@@ -30,12 +30,12 @@ namespace MiniShogiMobile.ViewModels
 
             vm.ChangeState(new ViewStateHumanThinkingForMoveTo());
         }
-        private Koma GetKoma(ISelectable cell)
+        private Koma GetKoma(ISelectable cell, Game game)
         {
             if(cell is CellPlayingViewModel)
-                return App.GameService.GetGame().State.FindBoardKoma(((CellPlayingViewModel)cell).Position);
+                return game.State.FindBoardKoma(((CellPlayingViewModel)cell).Position);
             if(cell is HandKomaViewModel)
-                return App.GameService.GetGame().State.FindHandKoma(((HandKomaViewModel)cell).Player, ((HandKomaViewModel)cell).Name);
+                return game.State.FindHandKoma(((HandKomaViewModel)cell).Player, ((HandKomaViewModel)cell).Name);
 
             throw new InvalidProgramException("MoveCommandに不明なパラメータが渡されました.");
         }

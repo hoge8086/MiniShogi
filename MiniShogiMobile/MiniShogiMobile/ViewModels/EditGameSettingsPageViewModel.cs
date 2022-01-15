@@ -19,7 +19,6 @@ namespace MiniShogiMobile.ViewModels
     {
         public ReactiveCommand OkCommand { get; }
         public ReactiveProperty<string> Name { get; }
-
         public ReactiveProperty<int> Height { get; }
         public ReactiveProperty<int> Width { get; }
         public ReactiveProperty<int> TerritoryBoundary { get; }

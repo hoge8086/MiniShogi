@@ -8,6 +8,7 @@ using System.Text;
 using Reactive.Bindings;
 using MiniShogiMobile.Views;
 using Prism.Services;
+using MiniShogiMobile.Conditions;
 
 // 参考:<https://anderson02.com/category/cs/xamarin-prism/>
 
@@ -17,6 +18,7 @@ namespace MiniShogiMobile.ViewModels
     {
         public ReactiveCommand StartGameCommand { get; set; }
         public ReactiveCommand CreateGameCommand { get; set; }
+        public ReactiveCommand ContinueGameCommand { get; set; }
         public MainPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             StartGameCommand = new ReactiveCommand();
@@ -25,6 +27,13 @@ namespace MiniShogiMobile.ViewModels
                 navigationService.NavigateAsync(nameof(StartGamePage));
             });
 
+            ContinueGameCommand = new ReactiveCommand();
+            ContinueGameCommand.Subscribe(() =>
+            {
+                var param = new NavigationParameters();
+                param.Add(nameof(PlayGameCondition), null);
+                navigationService.NavigateAsync(nameof(PlayGamePage), param);
+            });
             CreateGameCommand = new ReactiveCommand();
             CreateGameCommand.Subscribe(() =>
             {

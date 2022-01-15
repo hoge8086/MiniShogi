@@ -18,21 +18,21 @@ namespace Shogi.Business.Domain.Model.PlayingGames
         [DataMember]
         public string Name { get; private set; }
         [DataMember]
-        private Dictionary<PlayerType, Player> Players;
+        private Dictionary<string, Player> Players;
         [DataMember]
         public Game Game { get; private set; }
         [DataMember]
         public GameTemplate GameTemplate { get; private set;}
 
-        public Player TurnPlayer => Players[Game.State.TurnPlayer];
-        public Player GerPlayer(PlayerType pleyerType) => Players[pleyerType];
+        public Player TurnPlayer => Players[Game.State.TurnPlayer.Id];
+        public Player GerPlayer(PlayerType pleyerType) => Players[pleyerType.Id];
 
         public PlayingGame(Player firstPlayer, Player secondPlayer, Game game, GameTemplate gameTemplate)
         {
             Name = null;
-            Players = new Dictionary<PlayerType, Player>();
-            Players.Add(PlayerType.Player1, firstPlayer);
-            Players.Add(PlayerType.Player2, secondPlayer);
+            Players = new Dictionary<string, Player>();
+            Players.Add(PlayerType.Player1.Id, firstPlayer);
+            Players.Add(PlayerType.Player2.Id, secondPlayer);
             GameTemplate = gameTemplate;
             Game = game.Clone();
         }

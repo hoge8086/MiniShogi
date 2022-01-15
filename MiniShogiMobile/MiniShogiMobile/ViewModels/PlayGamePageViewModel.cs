@@ -9,6 +9,7 @@ using Shogi.Business.Domain.Model.Games;
 using Shogi.Business.Domain.Model.Komas;
 using Shogi.Business.Domain.Model.Players;
 using Shogi.Business.Domain.Model.PlayerTypes;
+using Shogi.Business.Domain.Model.PlayingGames;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -32,6 +33,7 @@ namespace MiniShogiMobile.ViewModels
     }
     public class PlayGamePageViewModel : ViewModelBase, GameListener
     {
+        public PlayingGame PlayingGame { get; private set; }
         private ReactiveProperty<IViewState> ViewState;
         public void ChangeState(IViewState state) => ViewState.Value = state;
         public GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel> Game { get; set; }
@@ -39,6 +41,7 @@ namespace MiniShogiMobile.ViewModels
 
         public PlayGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
+            PlayingGame = null;
             ViewState = new ReactiveProperty<IViewState>(new ViewStateWaiting());
             Game = new GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel>();
             MoveCommand = new ReactiveCommand<ISelectable>();
@@ -57,62 +60,73 @@ namespace MiniShogiMobile.ViewModels
             await Task.Run(() =>
             {
                 action(App.GameService);
-                if (App.GameService.GetGame().State.IsEnd)
-                    ChangeState(new ViewStateGameEnd());
-                else
-                    ChangeState(new ViewStateHumanThinkingForMoveFrom());
             });
+            if (PlayingGame.Game.State.IsEnd)
+                ChangeState(new ViewStateGameEnd());
+            else
+                ChangeState(new ViewStateHumanThinkingForMoveFrom());
         }
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
             await CatchErrorWithMessageAsync(async () =>
             {
 
-                var param = parameters[nameof(PlayGameCondition)] as PlayGameCondition;
-                if (param == null)
-                    throw new ArgumentException(nameof(PlayGameCondition));
-
-                Title = param.Name;
                 App.GameService.Subscribe(this);
-                var cancelTokenSource = new CancellationTokenSource();
 
-                await AppServiceCallCommandAsync(service =>
+                if (parameters[nameof(PlayGameCondition)] is PlayGameCondition)
                 {
-                    service.Start(param.Player1, param.Player2, param.FirstTurnPlayer, param.Name, cancelTokenSource.Token);
-                });
+                    var param = parameters[nameof(PlayGameCondition)] as PlayGameCondition;
+                    var cancelTokenSource = new CancellationTokenSource();
+                    await AppServiceCallCommandAsync(service =>
+                    {
+                        service.Start(param.Player1, param.Player2, param.FirstTurnPlayer, param.Name, cancelTokenSource.Token);
+                    });
+                }
+                // [FIX: 引数の渡し方をちゃんと考える]
+                else
+                {
+                    var cancelTokenSource = new CancellationTokenSource();
+                    await AppServiceCallCommandAsync(service =>
+                    {
+                        service.Continue(null, cancelTokenSource.Token);
+                    });
+                }
             });
 
         }
 
         public void UpdateView()
         {
-            var game = App.GameService.GetGame();
+            var game = PlayingGame.Game;
             Game.Update(game.Board.Height, game.Board.Width, game.State.KomaList);
             Game.HandsOfPlayer1.IsCurrentTurn.Value = game.State.TurnPlayer == PlayerType.Player1;
             Game.HandsOfPlayer2.IsCurrentTurn.Value = game.State.TurnPlayer == PlayerType.Player2;
         }
 
-        public void OnStarted()
+        public void OnStarted(PlayingGame playingGame)
         {
             Device.InvokeOnMainThreadAsync(() =>
             {
+                Title = playingGame.GameTemplate.Name;
+                PlayingGame = playingGame;
                 // [TODO:かっこ悪いので直す]
                 // [プレイヤー]
-                Game.HandsOfPlayer1.Player.Value = App.GameService.GetPlayingGame().GerPlayer(PlayerType.Player1);
+                Game.HandsOfPlayer1.Player.Value = playingGame.GerPlayer(PlayerType.Player1);
                 Game.HandsOfPlayer1.Type.Value = PlayerType.Player1;
-                Game.HandsOfPlayer1.TurnType.Value = App.GameService.GetGame().State.TurnPlayer == PlayerType.Player1 ? TurnType.FirstTurn : TurnType.SecondTurn;
-                Game.HandsOfPlayer2.Player.Value = App.GameService.GetPlayingGame().GerPlayer(PlayerType.Player2);
+                Game.HandsOfPlayer1.TurnType.Value = playingGame.Game.State.TurnPlayer == PlayerType.Player1 ? TurnType.FirstTurn : TurnType.SecondTurn;
+                Game.HandsOfPlayer2.Player.Value = playingGame.GerPlayer(PlayerType.Player2);
                 Game.HandsOfPlayer2.Type.Value = PlayerType.Player2;
-                Game.HandsOfPlayer2.TurnType.Value = App.GameService.GetGame().State.TurnPlayer == PlayerType.Player2 ? TurnType.FirstTurn : TurnType.SecondTurn;
+                Game.HandsOfPlayer2.TurnType.Value = playingGame.Game.State.TurnPlayer == PlayerType.Player2 ? TurnType.FirstTurn : TurnType.SecondTurn;
 
                 UpdateView();
             });
         }
 
-        public void OnPlayed()
+        public void OnPlayed(PlayingGame playingGame)
         {
             Device.InvokeOnMainThreadAsync(() =>
             {
+                PlayingGame = playingGame;
                 UpdateView();
             });
         }
@@ -121,7 +135,7 @@ namespace MiniShogiMobile.ViewModels
         {
             Device.InvokeOnMainThreadAsync(() =>
             {
-                var player = App.GameService.GetPlayingGame().GerPlayer(winner);
+                var player = PlayingGame.GerPlayer(winner);
                 PageDialogService.DisplayAlertAsync(
                      "ゲーム終了",
                      $"勝者: {player.Name}({winner.ToString()})",
