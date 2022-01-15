@@ -74,7 +74,7 @@ namespace Shogi.Business.Domain.Model.Games
                 return true;
 
             // [MEMO:盤上の駒に重複はないのでDistinct()する必要はない]
-            var moveCommands = CreateAvailableMoveCommand(State.GetBoardKomaList(player.Opponent));
+            var moveCommands = CreateAvailableMoveCommand(State.GetKomaList(player.Opponent));
             if (moveCommands.Count == 0)
                 return true;
 
