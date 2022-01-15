@@ -19,7 +19,7 @@ namespace MiniShogiMobile.ViewModels
 
         public void Update(int height, int width, List<Koma> komaList)
         {
-            UpdateBoardSize(height, width);
+            UpdateSize(height, width);
 
             foreach(var row in Cells)
                 foreach (var cell in row)
@@ -34,7 +34,7 @@ namespace MiniShogiMobile.ViewModels
                 }
             }
         }
-        private void UpdateBoardSize(int height, int width)
+        public void UpdateSize(int height, int width)
         {
             UpdateBoardSize(Cells, height);
             Cells.ForEach(x => UpdateBoardSize(x, width));

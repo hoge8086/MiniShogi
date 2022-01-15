@@ -25,28 +25,18 @@ namespace MiniShogiMobile.ViewModels
         public ReactiveCommand<CellViewModel> EditCellCommand { get; set; }
         public ReactiveCommand EditSettingCommand {get;}
         public ReactiveCommand SaveCommand { get; set; }
-        public ReactiveProperty<int> Width { get; set; }
-        public ReactiveProperty<int> Height { get; set; }
-        //public string GameName { get; set; }
 
         private GameTemplate GameTemplate;
         public CreateGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
-
-            //GameName = "新しいゲーム";
             GameTemplate = new GameTemplate();
-
             Game = new GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
-            Width = new ReactiveProperty<int>();
-            Height = new ReactiveProperty<int>();
-            Width.Subscribe(x => UpdateView()).AddTo(this.Disposable);
-            Height.Subscribe(x => UpdateView()).AddTo(this.Disposable);
 
             EditCellCommand = new ReactiveCommand<CellViewModel>();
             EditCellCommand.Subscribe(x =>
             {
                 var param = new NavigationParameters();
-                param.Add(nameof(EditCellCondition), new EditCellCondition(x, Height.Value));
+                param.Add(nameof(EditCellCondition), new EditCellCondition(x, GameTemplate.Height));
                 navigationService.NavigateAsync(nameof(EditCellPage), param);
             }).AddTo(this.Disposable);
             SaveCommand = new ReactiveCommand();
@@ -71,9 +61,9 @@ namespace MiniShogiMobile.ViewModels
         {
             var komaList = new List<Koma>();
 
-            for(int y = 0; y<Height.Value; y++)
+            for(int y = 0; y<GameTemplate.Height; y++)
             {
-                for(int x = 0; x<Width.Value; x++)
+                for(int x = 0; x<GameTemplate.Width; x++)
                 {
                     var cell = Game.Board.Cells[y][x];
                     if (cell.Koma.Value != null)
@@ -97,7 +87,6 @@ namespace MiniShogiMobile.ViewModels
             var navigationMode = parameters.GetNavigationMode();
             if (navigationMode == NavigationMode.New)
             {
-                // 次の画面へ進む場合
                 var param = parameters[nameof(CreateGameCondition)] as CreateGameCondition;
                 if(param == null)
                     throw new ArgumentException(nameof(CreateGameCondition));
@@ -106,37 +95,15 @@ namespace MiniShogiMobile.ViewModels
                     GameTemplate = App.CreateGameService.GameTemplateRepository.FindByName(param.GameName);
                 else
                     GameTemplate = new GameTemplate();
+
+                Game.Update(GameTemplate.Height, GameTemplate.Width, GameTemplate.KomaList);
+            }
+            else if (navigationMode == NavigationMode.Back)
+            {
+                Game.Board.UpdateSize(GameTemplate.Height, GameTemplate.Width);
             }
 
             Title = GameTemplate.Name;
-            Game.Update(GameTemplate.Height, GameTemplate.Width, GameTemplate.KomaList);
-        }
-
-        public void UpdateView()
-        {
-            UpdateBoardSize(Game.Board.Cells, Height.Value);
-            Game.Board.Cells.ForEach(x => UpdateBoardSize(x, Width.Value));
-            for (int y = 0; y < Game.Board.Cells.Count; y++)
-                for (int x = 0; x < Game.Board.Cells[y].Count; x++)
-                    Game.Board.Cells[y][x].Position = new BoardPosition(x, y);
-
-        }
-
-        private static void UpdateBoardSize<T>(ObservableCollection<T> list, int size) where T : new()
-        {
-            if(list.Count > size)
-            {
-                var delNum = list.Count - size;
-                for(int i=0; i<delNum; i++)
-                    list.RemoveAt(list.Count - i - 1);
-            }
-
-            if(list.Count < size)
-            {
-                var addNum = size - list.Count;
-                for(int i=0; i<addNum; i++)
-                    list.Add(new T());
-            }
         }
     }
 }
