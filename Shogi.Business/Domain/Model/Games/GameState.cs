@@ -26,6 +26,12 @@ namespace Shogi.Business.Domain.Model.Games
             TurnPlayer = turnPlayer;
             GameResult = null;
         }
+        /// <summary>
+        /// Clone()用
+        /// </summary>
+        /// <param name="komaList"></param>
+        /// <param name="turnPlayer"></param>
+        /// <param name="gameResult"></param>
         public GameState(List<Koma> komaList, PlayerType turnPlayer, GameResult gameResult)
         {
             KomaList = komaList;

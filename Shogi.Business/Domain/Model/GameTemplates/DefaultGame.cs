@@ -226,17 +226,17 @@ namespace Shogi.Business.Domain.Model.GameTemplates
 
         public static readonly List<KomaType> DefaltKomaType = new List<KomaType>()
         {
+            KomaOu,
+            KomaKin,
+            KomaGin,
+            KomaHu,
+            KomaHisya,
+            KomaKaku,
+            KomaKyousya,
             KomaKirin,
             KomaRaion,
             KomaZou,
             KomaHiyoko,
-            KomaHisya,
-            KomaKaku,
-            KomaGin,
-            KomaKin,
-            KomaOu,
-            KomaHu,
-            KomaKyousya,
         };
 
         public static readonly List<GameTemplate> DefaltGameTemplate = new List<GameTemplate>()

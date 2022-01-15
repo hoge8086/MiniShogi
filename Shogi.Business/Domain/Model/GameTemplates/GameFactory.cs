@@ -41,13 +41,6 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         }
         public Game Create(GameTemplate gameTemplate, PlayerType firstTurnPlayer)
         {
-            //var komaTypes = gameTemplate.KomaList.Select(x => {
-            //    var type =KomaTypeRepository.FindById(x.TypeId);
-            //    if (type == null)
-            //        throw new System.Exception($"駒[{type.Id}]が存在しません.");
-            //    return type;
-            //}).ToList();
-            //return createGameCommand.Create(komaTypes);
             return new Game(
                     new Boards.Board(gameTemplate.Height, gameTemplate.Width),
                     new GameState(gameTemplate.KomaList, firstTurnPlayer),

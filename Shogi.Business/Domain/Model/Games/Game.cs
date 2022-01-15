@@ -32,14 +32,32 @@ namespace Shogi.Business.Domain.Model.Games
 
         public Game(Board board, GameState state, CustomRule rule, List<KomaType> komaTypes)
         {
+            if (state.KomaList.Where(x => x.Player == PlayerType.Player1 && x.IsOnBoard && komaTypes.FirstOrDefault(y => y.Id == x.TypeId).IsKing).Count() != 1 ||
+                state.KomaList.Where(x => x.Player == PlayerType.Player1 && x.IsOnBoard && komaTypes.FirstOrDefault(y => y.Id == x.TypeId).IsKing).Count() != 1)
+                throw new Exception("各プレイヤーに1つずつ王が必要です.");
+
+            if (state.KomaList.Any(x => x.IsInHand && komaTypes.FirstOrDefault(y => y.Id == x.TypeId).IsKing))
+                throw new Exception("王は手持ちに加えられません.");
+
             Board = board;
             State = state;
             Rule = rule;
             Record = new GameRecord(State);
             KomaTypes = komaTypes;
             State.GameResult = CreateGameResult();
+
+            if(State.IsEnd)
+                throw new Exception("既に勝敗がついています.");
         }
 
+        /// <summary>
+        /// Clone()用
+        /// </summary>
+        /// <param name="board"></param>
+        /// <param name="state"></param>
+        /// <param name="rule"></param>
+        /// <param name="record"></param>
+        /// <param name="komaTypes"></param>
         private Game(Board board, GameState state, CustomRule rule, GameRecord record, List<KomaType> komaTypes)
         {
             Board = board;

@@ -67,7 +67,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             Height = 4;
             TerritoryBoundary = 1;
             ProhibitedMoves = new ProhibitedMoves();
-            WinCondition = WinConditionType.TakeKing;
+            WinCondition = WinConditionType.Checkmate;
             KomaList = new List<Koma>();
 
             // [Fix:保存時に種別一覧をリソルブしなくてもよいように、保存用とDTOに分ける?]

@@ -2,6 +2,7 @@
 using System.Linq;
 using Shogi.Business.Domain.Model.GameTemplates;
 using Shogi.Business.Domain.Model.Komas;
+using Shogi.Business.Domain.Model.PlayerTypes;
 
 namespace Shogi.Business.Application
 {
@@ -47,6 +48,9 @@ namespace Shogi.Business.Application
                 throw new Exception("既に存在する名前は作成できません");
 
             ResolveKomaTypes(createGameCommand);
+
+            // 既に勝敗がついていないかチェック(ついている場合は例外)
+            new GameFactory().Create(createGameCommand, PlayerType.Player1);
 
             if(GameTemplateRepository.FindById(createGameCommand.Id) != null)
                 GameTemplateRepository.RemoveById(createGameCommand.Id);
