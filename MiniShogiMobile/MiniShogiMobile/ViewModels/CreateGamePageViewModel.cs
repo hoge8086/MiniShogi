@@ -42,9 +42,13 @@ namespace MiniShogiMobile.ViewModels
             SaveCommand = new ReactiveCommand();
             SaveCommand.Subscribe(x =>
             {
-                GameTemplate.KomaList = CreateKomaList();
-                App.CreateGameService.CreateGame(GameTemplate);
-                navigationService.GoBackToRootAsync();
+                CatchErrorWithMessage(() =>
+                {
+                    GameTemplate.KomaList = CreateKomaList();
+                    App.CreateGameService.CreateGame(GameTemplate);
+                    navigationService.GoBackToRootAsync();
+                });
+
             }).AddTo(this.Disposable);
 
             EditSettingCommand = new ReactiveCommand();

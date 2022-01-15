@@ -1,6 +1,7 @@
 ﻿using Shogi.Business.Domain.Model.Games;
 using Shogi.Business.Domain.Model.Komas;
 using Shogi.Business.Domain.Model.PlayerTypes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
@@ -39,6 +40,8 @@ namespace Shogi.Business.Domain.Model.GameTemplates
     {
 
         [DataMember]
+        public string Id{ get; set; }
+        [DataMember]
         public string Name { get; set; }
         [DataMember]
         public int Width { get; set; }
@@ -58,6 +61,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
 
         public GameTemplate()
         {
+            Id = Guid.NewGuid().ToString();
             Name = "新しい将棋";
             Width = 3;
             Height = 4;
@@ -71,6 +75,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         }
         public GameTemplate(string name, int width, int height, int territoryBoundary, WinConditionType winCondition, List<Koma> komaList, ProhibitedMoves prohibitedMoves)//, PlayerType turnPlayer)
         {
+            Id = Guid.NewGuid().ToString();
             Name = name;
             Width = width;
             Height = height;

@@ -48,12 +48,21 @@ namespace Shogi.Business.Infrastructure
         {
             return cache.FirstOrDefault(x => x.Name == name);
         }
-
-        public void RemoveByName(string name)
+        public GameTemplate FindById(string id)
         {
-            cache.RemoveAll(x => x.Name == name);
+            return cache.FirstOrDefault(x => x.Id == id);
+        }
+
+        public void RemoveById(string id)
+        {
+            cache.RemoveAll(x => x.Id == id);
             var repo = new JsonRepository();
             repo.Save(jsonPath, cache);
+        }
+
+        public List<GameTemplate> FindAll()
+        {
+            return  new List<GameTemplate>(cache);
         }
     }
 }

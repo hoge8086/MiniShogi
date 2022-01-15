@@ -47,5 +47,17 @@ namespace MiniShogiMobile.ViewModels
         {
             this.Disposable.Dispose();
         }
+
+        public void CatchErrorWithMessage(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch(Exception ex)
+            {
+                PageDialogService.DisplayAlertAsync("エラー", ex.Message, "OK");
+            }
+        }
     }
 }

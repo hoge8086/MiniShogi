@@ -43,10 +43,13 @@ namespace Shogi.Business.Application
 
         public void CreateGame(GameTemplate createGameCommand)
         {
-            if (GameTemplateRepository.FindByName(createGameCommand.Name) != null)
+            if (GameTemplateRepository.FindAll().Any(x => x.Id != createGameCommand.Id && x.Name == createGameCommand.Name))
                 throw new Exception("既に存在する名前は作成できません");
 
             ResolveKomaTypes(createGameCommand);
+
+            if(GameTemplateRepository.FindById(createGameCommand.Id) != null)
+                GameTemplateRepository.RemoveById(createGameCommand.Id);
 
             GameTemplateRepository.Add(createGameCommand);
         }
