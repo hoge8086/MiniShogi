@@ -68,7 +68,16 @@ namespace Shogi.Business.Domain.Model.Games
         }
         public bool IsWinning(PlayerType player)
         {
-            // [TODO:ここで着手可能な手がない場合は負け判定がひつよう]
+            // [相手の王なし、着手可能手無しの場合は、勝ち条件と関係なく共通で勝利判定とする]
+            var king = State.FindKingOnBoard(player.Opponent, KomaTypes);
+            if (king == null)
+                return true;
+
+            // [MEMO:盤上の駒に重複はないのでDistinct()する必要はない]
+            var moveCommands = CreateAvailableMoveCommand(State.GetBoardKomaList(player.Opponent));
+            if (moveCommands.Count == 0)
+                return true;
+
             return Rule.WinningChecker.IsWinning(this, player);
         }
 
