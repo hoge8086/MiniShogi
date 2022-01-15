@@ -215,8 +215,9 @@ namespace MiniShogiMobile.ViewModels
             //MoveCommands.Subscribe((x) => { CanMove.Value == null; });
             CanMove = MoveCommands.Select((x) => x != null).ToReadOnlyReactivePropertySlim();
         }
-        public void ToEmpty()
+        public override void ToEmpty()
         {
+            base.ToEmpty();
             Koma.Value = null;
             IsSelected.Value = false;
             MoveCommands.Value = null;

@@ -17,6 +17,10 @@ namespace MiniShogiMobile.ViewModels
         {
             Koma = new ReactiveProperty<KomaViewModel>();
         }
+        public virtual void ToEmpty()
+        {
+            Koma.Value = null;
+        }
     }
 
 }

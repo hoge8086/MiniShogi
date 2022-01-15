@@ -94,19 +94,22 @@ namespace MiniShogiMobile.ViewModels
 
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
-            Title = GameTemplate.Name;
-            Width.Value = GameTemplate.Width;
-            Height.Value = GameTemplate.Height;
-            UpdateView();
             var navigationMode = parameters.GetNavigationMode();
-            //if (navigationMode == NavigationMode.New)
-            //{
-            //    // 次の画面へ進む場合
-            //}
-            //else
-            //{
-            //    // 前の画面へ戻る場合
-            //}
+            if (navigationMode == NavigationMode.New)
+            {
+                // 次の画面へ進む場合
+                var param = parameters[nameof(CreateGameCondition)] as CreateGameCondition;
+                if(param == null)
+                    throw new ArgumentException(nameof(CreateGameCondition));
+
+                if (param.GameName != null)
+                    GameTemplate = App.CreateGameService.GameTemplateRepository.FindByName(param.GameName);
+                else
+                    GameTemplate = new GameTemplate();
+            }
+
+            Title = GameTemplate.Name;
+            Game.Update(GameTemplate.Height, GameTemplate.Width, GameTemplate.KomaList);
         }
 
         public void UpdateView()
