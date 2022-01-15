@@ -79,69 +79,17 @@ namespace MiniShogiMobile.ViewModels
 
         public void UpdateView()
         {
-            // [MEMO:Clear()するとちらつきが発生するため、セルを挿入しなおさないでセルを更新する]
-            foreach(var row in Game.Board.Cells)
-                foreach (var cell in row)
-                    cell.ToEmpty();
-
-            foreach (var koma in App.GameService.GetGame().State.KomaList)
-            {
-                if (koma.BoardPosition != null)
-                {
-                    var cell = Game.Board.Cells[koma.BoardPosition.Y][koma.BoardPosition.X];
-                    cell.Koma.Value = new KomaViewModel(koma.TypeId, koma.Player, koma.IsTransformed);
-                }
-                else
-                {
-                    AddHnad(koma, koma.Player == PlayerType.Player1 ? Game.HandsOfPlayer1.Hands : Game.HandsOfPlayer2.Hands);
-                }
-            }
-
-            Game.HandsOfPlayer1.IsCurrentTurn.Value = App.GameService.GetGame().State.TurnPlayer == PlayerType.Player1;
-            Game.HandsOfPlayer2.IsCurrentTurn.Value = App.GameService.GetGame().State.TurnPlayer == PlayerType.Player2;
-            UpdateHandView(Game.HandsOfPlayer1.Hands, PlayerType.Player1);
-            UpdateHandView(Game.HandsOfPlayer2.Hands, PlayerType.Player2);
-        }
-
-        private void UpdateHandView(ObservableCollection<HandKomaPlayingViewModel> hands, PlayerType player)
-        {
-            // [MEMO:Clear()するとちらつきが発生＆順序が変わるため、順番を変えないように持ち手を更新する]
-
-            // [初期化＆駒の数を0にする]
-            hands.ForEach(x => {
-                x.Num.Value = 0;
-                x.IsSelected.Value = false;
-            }) ;
-
-            // [駒の数をカウントし直す]
-            App.GameService.GetGame().State.KomaList.Where(x => !x.IsOnBoard && x.Player == player).ForEach(koma =>
-            {
-                var hand = hands.FirstOrDefault(x => x.Name == koma.TypeId);
-                if (hand == null)
-                    hands.Add(new HandKomaPlayingViewModel() { Name = koma.TypeId, Player = koma.Player});
-                else
-                    hand.Num.Value++;
-            });
-
-            // [存在しない駒は削除する]
-            var nothings = hands.Where(x => x.Num.Value == 0).ToList();
-            foreach (var item in nothings)
-                hands.Remove(item);
-        }
-        private void AddHnad(Koma koma, ObservableCollection<HandKomaPlayingViewModel> hands)
-        {
-            var hand = hands.FirstOrDefault(x => x.Name == koma.TypeId);
-            if (hand == null)
-                hands.Add(new HandKomaPlayingViewModel() { Name = koma.TypeId, Player = koma.Player});
-            else
-                hand.Num.Value++;
+            var game = App.GameService.GetGame();
+            Game.Update(game.Board.Height, game.Board.Width, game.State.KomaList);
+            Game.HandsOfPlayer1.IsCurrentTurn.Value = game.State.TurnPlayer == PlayerType.Player1;
+            Game.HandsOfPlayer2.IsCurrentTurn.Value = game.State.TurnPlayer == PlayerType.Player2;
         }
 
         public void OnStarted()
         {
             Device.InvokeOnMainThreadAsync(() =>
             {
-
+                // [TODO:かっこ悪いので直す]
                 // [プレイヤー]
                 Game.HandsOfPlayer1.Player.Value = App.GameService.GetPlayingGame().GerPlayer(PlayerType.Player1);
                 Game.HandsOfPlayer1.Type.Value = PlayerType.Player1;
@@ -150,16 +98,6 @@ namespace MiniShogiMobile.ViewModels
                 Game.HandsOfPlayer2.Type.Value = PlayerType.Player2;
                 Game.HandsOfPlayer2.TurnType.Value = App.GameService.GetGame().State.TurnPlayer == PlayerType.Player2 ? TurnType.FirstTurn : TurnType.SecondTurn;
 
-                // [ボード初期化]
-                // [MEMO:ボードのマス目の数はゲーム中は変わらないので、一度初期化するだけでよい]
-                Game.Board.Cells.Clear();
-                for (int y = 0; y < App.GameService.GetGame().Board.Height; y++)
-                {
-                    var row = new ObservableCollection<CellPlayingViewModel>();
-                    for (int x = 0; x < App.GameService.GetGame().Board.Width; x++)
-                        row.Add(new CellPlayingViewModel() { Position = new BoardPosition(x, y) });
-                    Game.Board.Cells.Add(row);
-                }
                 UpdateView();
             });
         }
@@ -181,7 +119,6 @@ namespace MiniShogiMobile.ViewModels
                      "ゲーム終了",
                      $"勝者: {player.Name}({winner.ToString()})",
                      "OK");
-                //var winnerName = winner == PlayerType.Player1 ? FirstPlayerHands.Name : SecondPlayerHands.Name;
             });
         }
     }
@@ -190,9 +127,14 @@ namespace MiniShogiMobile.ViewModels
     {
         public ReactiveProperty<bool> IsSelected { get; set; }
 
+        public override void Clear()
+        {
+            base.Clear();
+            IsSelected.Value = false;
+        }
         public HandKomaPlayingViewModel()
         {
-            IsSelected = new ReactiveProperty<bool>();
+            IsSelected = new ReactiveProperty<bool>(false);
         }
         public void Select()
         {
@@ -210,15 +152,12 @@ namespace MiniShogiMobile.ViewModels
         public CellPlayingViewModel()
         {
             MoveCommands = new ReactiveProperty<List<MoveCommand>>();
-            //CanMove = new ReactiveProperty<bool>();
             IsSelected = new ReactiveProperty<bool>(false);
-            //MoveCommands.Subscribe((x) => { CanMove.Value == null; });
             CanMove = MoveCommands.Select((x) => x != null).ToReadOnlyReactivePropertySlim();
         }
         public override void ToEmpty()
         {
             base.ToEmpty();
-            Koma.Value = null;
             IsSelected.Value = false;
             MoveCommands.Value = null;
 
@@ -258,7 +197,5 @@ namespace MiniShogiMobile.ViewModels
             TurnType = new ReactiveProperty<TurnType>();
             TurnTypeName = TurnType.Select(x => x == ViewModels.TurnType.FirstTurn ? "先手" : "後手").ToReadOnlyReactiveProperty();
         }
-
     }
-
 }

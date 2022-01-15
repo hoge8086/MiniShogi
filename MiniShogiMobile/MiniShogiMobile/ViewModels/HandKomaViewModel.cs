@@ -14,6 +14,10 @@ namespace MiniShogiMobile.ViewModels
         {
             Num = new ReactiveProperty<int>(1);
         }
+        public virtual void Clear()
+        {
+            Num.Value = 0;
+        }
     }
 
 }
