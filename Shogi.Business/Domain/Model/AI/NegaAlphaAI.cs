@@ -3,14 +3,17 @@ using Shogi.Business.Domain.Model.Moves;
 using Shogi.Business.Domain.Model.PlayerTypes;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading;
 
 namespace Shogi.Business.Domain.Model.AI
 {
+    [DataContract]
     public class NegaAlphaAI : AI
     {
         public override string Name => "AI (" + Depth.ToString() + "手読み)";
-        private int Depth;
+        [DataMember]
+        private int Depth { get; set;}
         private bool debug = true;
 
         private static int InfiniteEvaluationValue = 99999999;

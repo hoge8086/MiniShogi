@@ -32,8 +32,10 @@ namespace MiniShogiMobile
             var dataDir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);
             var gameTemplateJsonRepository = new GameTemplateJsonRepository(Path.Combine(dataDir, "games.json"), isCacheMode);
             var komaJsonRepository = new KomaTypeJsonRepository(Path.Combine(dataDir, "komas.json"), isCacheMode);
+            var currentPlayingGameJsonRepository = new CurrentPlayingGameJsonRepository(Path.Combine(dataDir, "current.json"), isCacheMode);
+            var playingGameJsonRepository = new PlayingGameJsonRepository(Path.Combine(dataDir, "playings.json"), isCacheMode);
 
-            GameService = new GameService(gameTemplateJsonRepository);
+            GameService = new GameService(gameTemplateJsonRepository, currentPlayingGameJsonRepository, playingGameJsonRepository);
             CreateGameService = new CreateGameService(gameTemplateJsonRepository, komaJsonRepository);
 
             await NavigationService.NavigateAsync("NavigationPage/MainPage");

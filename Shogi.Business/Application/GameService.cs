@@ -21,13 +21,17 @@ namespace Shogi.Business.Application
     public class GameService
     {
         private Object thisLock = new Object();
-        private PlayingGame PlayingGame = null;
+        //private PlayingGame PlayingGame = null;
         private GameListener GameListener = null;
         public IGameTemplateRepository GameTemplateRepository;
+        private ICurrentPlayingGameRepository CurrentPlayingGameRepository;
+        private IPlayingGameRepository PlayingGameRepository;
 
-        public GameService(IGameTemplateRepository gameTemplateRepository)
+        public GameService(IGameTemplateRepository gameTemplateRepository, ICurrentPlayingGameRepository currentPlayingGameRepository, IPlayingGameRepository playingGameRepository)
         {
             GameTemplateRepository = gameTemplateRepository;
+            CurrentPlayingGameRepository = currentPlayingGameRepository;
+            PlayingGameRepository = playingGameRepository;
         }
 
         public void Subscribe(GameListener listener)
@@ -37,24 +41,55 @@ namespace Shogi.Business.Application
                 GameListener = listener;
             }
         }
+        public void SaveCurrent(string playingName)
+        {
+            lock (thisLock)
+            {
+                var current = CurrentPlayingGameRepository.Current();
+
+                if(PlayingGameRepository.FindByName(playingName) != null);
+                    PlayingGameRepository.RemoveByName(playingName);
+
+                current.ChangeName(playingName);
+                PlayingGameRepository.Add(current);
+            }
+        }
+        public void Continue(string playingName, CancellationToken cancellation)
+        {
+            lock (thisLock)
+            {
+                var current = PlayingGameRepository.FindByName(playingName);
+                CurrentPlayingGameRepository.Save(current);
+                GameListener?.OnStarted();
+                Next(current, cancellation);
+            }
+        }
+
         public void Start(Player player1, Player player2, PlayerType firstTurnPlayer, string gameName, CancellationToken cancellation)
         {
             lock (thisLock)
             {
                 var template = GameTemplateRepository.FindByName(gameName);
                 var game = new GameFactory().Create(template, firstTurnPlayer);
-                PlayingGame = new PlayingGame(player1, player2, firstTurnPlayer, game);
+                var playingGame = new PlayingGame(player1, player2, game, template);
+                //CurrentPlayingGameRepository.Save(playingGame);
                 GameListener?.OnStarted();
-                Next(cancellation);
+                Next(playingGame, cancellation);
+
+                CurrentPlayingGameRepository.Save(playingGame);
             }
         }
         public void Restart(CancellationToken cancellation)
         {
             lock (thisLock)
             {
-                PlayingGame.Reset();
+                var playingGame = CurrentPlayingGameRepository.Current();
+                playingGame.Reset();
+
                 GameListener?.OnStarted();
-                Next(cancellation);
+                Next(playingGame, cancellation);
+
+                CurrentPlayingGameRepository.Save(playingGame);
             }
         }
 
@@ -62,7 +97,10 @@ namespace Shogi.Business.Application
         {
             lock (thisLock)
             {
-                PlayingGame.Game.Undo(undoType);
+                var playingGame = CurrentPlayingGameRepository.Current();
+                playingGame.Game.Undo(undoType);
+
+                CurrentPlayingGameRepository.Save(playingGame);
             }
         }
 
@@ -70,62 +108,73 @@ namespace Shogi.Business.Application
         {
             // [MEMO:クローンを返すことでマルチスレッドでアクセス可能とする]
             // [MEMO:Game自身はGameでlockしている→★してないので注意]
-            return PlayingGame.Game.Clone();
+            var playingGame = CurrentPlayingGameRepository.Current();
+            return playingGame.Game.Clone();
         }
         public PlayingGame GetPlayingGame()
         {
             // [MEMO:クローンを返すことでマルチスレッドでアクセス可能とする]
             // [MEMO:Game自身はGameでlockしている→★してないので注意]
-            return PlayingGame;
+            var playingGame = CurrentPlayingGameRepository.Current();
+            return playingGame;
         }
 
         public void Play(MoveCommand moveCommand, CancellationToken cancellation)
         {
             lock (thisLock)
             {
-                PlayingGame.Game.Play(moveCommand);
+                var playingGame = CurrentPlayingGameRepository.Current();
+                playingGame.Game.Play(moveCommand);
                 GameListener?.OnPlayed();
-                Next(cancellation);
+                Next(playingGame, cancellation);
+
+                CurrentPlayingGameRepository.Save(playingGame);
             }
         }
-        private void Next(CancellationToken cancellation)
+        /// <summary>
+        /// ゲーム進行はDomainService化する
+        /// </summary>
+        /// <param name="playingGame"></param>
+        /// <param name="cancellation"></param>
+        private void Next(PlayingGame playingGame, CancellationToken cancellation)
         {
             System.Diagnostics.Debug.WriteLine("----------------------");
-            System.Diagnostics.Debug.WriteLine(PlayingGame.Game.ToString());
-            if(PlayingGame.Game.State.IsEnd)
+            System.Diagnostics.Debug.WriteLine(playingGame.Game.ToString());
+            if(playingGame.Game.State.IsEnd)
             {
-                GameListener?.OnEnded(PlayingGame.Game.State.GameResult.Winner);
+                GameListener?.OnEnded(playingGame.Game.State.GameResult.Winner);
                 return;
             }
 
-            if(PlayingGame.TurnPlayer.IsHuman)//.Players[PlayingGame.Game.State.TurnPlayer] is Human)
+            if(playingGame.TurnPlayer.IsHuman)//.Players[PlayingGame.Game.State.TurnPlayer] is Human)
             {
                 // [人]
                 return;
             }
 
             // [AI]
-            var ai = PlayingGame.TurnPlayer as AI;
-            ai.Play(PlayingGame.Game, cancellation);
+            var ai = playingGame.TurnPlayer as AI;
+            ai.Play(playingGame.Game, cancellation);
             if (cancellation.IsCancellationRequested)
                 return;
             GameListener?.OnPlayed();
 
-            Next(cancellation);
+            Next(playingGame, cancellation);
         }
 
         public void Resume(CancellationToken cancellation)
         {
             lock(thisLock)
             {
-                Next(cancellation);
+                var playingGame = CurrentPlayingGameRepository.Current();
+                Next(playingGame, cancellation);
             }
         }
 
         // [TODO:リードモデルとしてGameSetをとれるようにして、このメソッドはなくす]
-        public bool IsTurnPlayerAI()
-        {
-            return PlayingGame.TurnPlayer.IsAI;
-        }
+        //public bool IsTurnPlayerAI()
+        //{
+        //    return PlayingGame.TurnPlayer.IsAI;
+        //}
     }
 }
