@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Reactive.Disposables;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MiniShogiMobile.ViewModels
 {
@@ -48,15 +49,15 @@ namespace MiniShogiMobile.ViewModels
             this.Disposable.Dispose();
         }
 
-        public void CatchErrorWithMessage(Action action)
+        public async Task CatchErrorWithMessageAsync(Func<Task> action)
         {
             try
             {
-                action();
+                await action();
             }
             catch(Exception ex)
             {
-                PageDialogService.DisplayAlertAsync("エラー", ex.Message, "OK");
+                await PageDialogService.DisplayAlertAsync("エラー", ex.Message, "OK");
             }
         }
     }

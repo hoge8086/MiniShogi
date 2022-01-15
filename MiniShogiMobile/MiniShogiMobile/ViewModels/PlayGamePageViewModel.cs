@@ -44,7 +44,10 @@ namespace MiniShogiMobile.ViewModels
             MoveCommand = new ReactiveCommand<ISelectable>();
             MoveCommand.Subscribe(async x =>
             {
-                await ViewState.Value.HandleAsync(this, x);
+                await CatchErrorWithMessageAsync(async () =>
+                {
+                    await ViewState.Value.HandleAsync(this, x);
+                });
             });
         }
 
@@ -62,17 +65,21 @@ namespace MiniShogiMobile.ViewModels
         }
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
-            var param = parameters[nameof(PlayGameCondition)] as PlayGameCondition;
-            if(param == null)
-                throw new ArgumentException(nameof(PlayGameCondition));
-
-            Title = param.Name;
-            App.GameService.Subscribe(this);
-            var cancelTokenSource = new CancellationTokenSource();
-
-            await AppServiceCallCommandAsync(service =>
+            await CatchErrorWithMessageAsync(async () =>
             {
-                service.Start(param.Player1, param.Player2, param.FirstTurnPlayer, param.Name, cancelTokenSource.Token);
+
+                var param = parameters[nameof(PlayGameCondition)] as PlayGameCondition;
+                if (param == null)
+                    throw new ArgumentException(nameof(PlayGameCondition));
+
+                Title = param.Name;
+                App.GameService.Subscribe(this);
+                var cancelTokenSource = new CancellationTokenSource();
+
+                await AppServiceCallCommandAsync(service =>
+                {
+                    service.Start(param.Player1, param.Player2, param.FirstTurnPlayer, param.Name, cancelTokenSource.Token);
+                });
             });
 
         }

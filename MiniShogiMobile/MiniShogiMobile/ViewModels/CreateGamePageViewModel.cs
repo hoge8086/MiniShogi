@@ -33,30 +33,36 @@ namespace MiniShogiMobile.ViewModels
             Game = new GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
 
             EditCellCommand = new ReactiveCommand<CellViewModel>();
-            EditCellCommand.Subscribe(x =>
+            EditCellCommand.Subscribe(async x =>
             {
-                var param = new NavigationParameters();
-                param.Add(nameof(EditCellCondition), new EditCellCondition(x, GameTemplate.Height));
-                navigationService.NavigateAsync(nameof(EditCellPage), param);
+                await CatchErrorWithMessageAsync(async () =>
+                {
+                    var param = new NavigationParameters();
+                    param.Add(nameof(EditCellCondition), new EditCellCondition(x, GameTemplate.Height));
+                    await navigationService.NavigateAsync(nameof(EditCellPage), param);
+                });
             }).AddTo(this.Disposable);
             SaveCommand = new ReactiveCommand();
-            SaveCommand.Subscribe(x =>
+            SaveCommand.Subscribe(async (x) =>
             {
-                CatchErrorWithMessage(() =>
+                await CatchErrorWithMessageAsync(async () =>
                 {
                     GameTemplate.KomaList = CreateKomaList();
                     App.CreateGameService.CreateGame(GameTemplate);
-                    navigationService.GoBackToRootAsync();
+                    await navigationService .GoBackToRootAsync();
                 });
 
             }).AddTo(this.Disposable);
 
             EditSettingCommand = new ReactiveCommand();
-            EditSettingCommand.Subscribe(() =>
+            EditSettingCommand.Subscribe(async () =>
             {
-                var param = new NavigationParameters();
-                param.Add(nameof(EditDetailGameSettingsCondition), new EditDetailGameSettingsCondition(GameTemplate));
-                navigationService.NavigateAsync(nameof(EditGameSettingsPage), param);
+                await CatchErrorWithMessageAsync(async () =>
+                {
+                    var param = new NavigationParameters();
+                    param.Add(nameof(EditDetailGameSettingsCondition), new EditDetailGameSettingsCondition(GameTemplate));
+                    await navigationService.NavigateAsync(nameof(EditGameSettingsPage), param);
+                });
 
             }).AddTo(this.Disposable);
         }
@@ -88,26 +94,29 @@ namespace MiniShogiMobile.ViewModels
 
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
-            var navigationMode = parameters.GetNavigationMode();
-            if (navigationMode == NavigationMode.New)
+            await CatchErrorWithMessageAsync(async () =>
             {
-                var param = parameters[nameof(CreateGameCondition)] as CreateGameCondition;
-                if(param == null)
-                    throw new ArgumentException(nameof(CreateGameCondition));
+                var navigationMode = parameters.GetNavigationMode();
+                if (navigationMode == NavigationMode.New)
+                {
+                    var param = parameters[nameof(CreateGameCondition)] as CreateGameCondition;
+                    if (param == null)
+                        throw new ArgumentException(nameof(CreateGameCondition));
 
-                if (param.GameName != null)
-                    GameTemplate = App.CreateGameService.GameTemplateRepository.FindByName(param.GameName);
-                else
-                    GameTemplate = new GameTemplate();
+                    if (param.GameName != null)
+                        GameTemplate = App.CreateGameService.GameTemplateRepository.FindByName(param.GameName);
+                    else
+                        GameTemplate = new GameTemplate();
 
-                Game.Update(GameTemplate.Height, GameTemplate.Width, GameTemplate.KomaList);
-            }
-            else if (navigationMode == NavigationMode.Back)
-            {
-                Game.Board.UpdateSize(GameTemplate.Height, GameTemplate.Width);
-            }
+                    Game.Update(GameTemplate.Height, GameTemplate.Width, GameTemplate.KomaList);
+                }
+                else if (navigationMode == NavigationMode.Back)
+                {
+                    Game.Board.UpdateSize(GameTemplate.Height, GameTemplate.Width);
+                }
 
-            Title = GameTemplate.Name;
+                Title = GameTemplate.Name;
+            });
         }
     }
 }
