@@ -6,19 +6,30 @@ using System.Text;
 
 namespace MiniShogiMobile.Conditions
 {
-    class PlayGameCondition
+    public enum PlayMode
     {
+        NewGame,
+        ContinueGame,
+    }
+    public class PlayGameCondition
+    {
+        public PlayMode PlayMode { get; } 
         public string Name { get; }
         public Player Player1 { get; }
         public Player Player2 { get; }
         public PlayerType FirstTurnPlayer { get; }
-        public PlayGameCondition(string name, Player player1, Player player2, PlayerType firstTurnPlayer)
+        public PlayGameCondition(PlayMode playMode, string name, Player player1, Player player2, PlayerType firstTurnPlayer)
         {
+            PlayMode = playMode;
             Name = name;
             Player1 = player1;
             Player2 = player2;
             FirstTurnPlayer = firstTurnPlayer;
-
+        }
+        public PlayGameCondition(PlayMode playMode, string name)
+        {
+            PlayMode = playMode;
+            Name = name;
         }
     }
 }

@@ -30,9 +30,7 @@ namespace MiniShogiMobile.ViewModels
             ContinueGameCommand = new ReactiveCommand();
             ContinueGameCommand.Subscribe(() =>
             {
-                var param = new NavigationParameters();
-                param.Add(nameof(PlayGameCondition), null);
-                navigationService.NavigateAsync(nameof(PlayGamePage), param);
+                navigationService.NavigateAsync(nameof(PlayingGameListPage));
             });
             CreateGameCommand = new ReactiveCommand();
             CreateGameCommand.Subscribe(() =>

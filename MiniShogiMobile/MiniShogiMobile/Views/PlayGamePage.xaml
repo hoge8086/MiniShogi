@@ -39,5 +39,10 @@
             PlayerColor="Blue"
             ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"
             BindingContext="{Binding Game.HandsOfPlayer1}"/>
+        <StackLayout Orientation="Horizontal"
+            Grid.Column="1"
+            Grid.Row="3">
+            <Button Text="保存" Command="{Binding SaveCommand}"/>
+        </StackLayout>
     </Grid>
 </ContentPage>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:xct="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="MiniShogiMobile.Views.PlayingGameListPage"
+             Title="つづきから"
+             x:Name="root">
+        <StackLayout VerticalOptions="FillAndExpand">
+            <ListView ItemsSource="{Binding PlayingGameList}" SelectedItem="{Binding SelectedPlayingGame.Value}">
+                <ListView.Behaviors>
+                    <xct:EventToCommandBehavior
+                        EventName="ItemTapped"
+                        Command="{Binding PlayCommand}"/>
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="5,0,5,0">
+                                <Label FontSize="Large" Text="{Binding Name}" HorizontalOptions="FillAndExpand"/>
+                                <Button Text="削除"
+                                        HorizontalOptions="End"
+                                        Command="{Binding Path=BindingContext.DeleteCommand, Source={x:Reference root}}"
+                                        CommandParameter="{Binding}"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+</ContentPage>

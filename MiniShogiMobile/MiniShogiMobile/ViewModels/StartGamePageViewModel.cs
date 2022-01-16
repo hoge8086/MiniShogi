@@ -67,6 +67,7 @@ namespace MiniShogiMobile.ViewModels
                 var param = new NavigationParameters();
                 param.Add(nameof(PlayGameCondition),
                     new PlayGameCondition(
+                        PlayMode.NewGame,
                         GameName.Value,
                         Player1.CreatePlayer(),
                         Player2.CreatePlayer(),

@@ -3,6 +3,7 @@ using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using Shogi.Business.Application;
 using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Games;
@@ -38,6 +39,7 @@ namespace MiniShogiMobile.ViewModels
         public void ChangeState(IViewState state) => ViewState.Value = state;
         public GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel> Game { get; set; }
         public ReactiveCommand<ISelectable> MoveCommand { get; set; }
+        public ReactiveCommand SaveCommand { get; set; }
 
         public PlayGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
@@ -51,7 +53,18 @@ namespace MiniShogiMobile.ViewModels
                 {
                     await ViewState.Value.HandleAsync(this, x);
                 });
-            });
+            }).AddTo(Disposable);
+
+            SaveCommand = new ReactiveCommand();
+            SaveCommand.Subscribe(async x =>
+            {
+                await CatchErrorWithMessageAsync(async () =>
+                {
+                    App.GameService.SaveCurrent($"{DateTime.Now.ToString(System.Globalization.CultureInfo.CreateSpecificCulture("ja-JP"))}_{PlayingGame.GameTemplate.Name}");
+                });
+
+            }).AddTo(Disposable);
+
         }
 
         public async Task AppServiceCallCommandAsync(Action<GameService> action)
@@ -71,25 +84,31 @@ namespace MiniShogiMobile.ViewModels
             await CatchErrorWithMessageAsync(async () =>
             {
 
+                var param = parameters[nameof(PlayGameCondition)] as PlayGameCondition;
+                if (param == null)
+                    throw new ArgumentException(nameof(PlayGameCondition));
+
                 App.GameService.Subscribe(this);
 
-                if (parameters[nameof(PlayGameCondition)] is PlayGameCondition)
+                if (param.PlayMode == PlayMode.NewGame)
                 {
-                    var param = parameters[nameof(PlayGameCondition)] as PlayGameCondition;
                     var cancelTokenSource = new CancellationTokenSource();
                     await AppServiceCallCommandAsync(service =>
                     {
                         service.Start(param.Player1, param.Player2, param.FirstTurnPlayer, param.Name, cancelTokenSource.Token);
                     });
                 }
-                // [FIX: 引数の渡し方をちゃんと考える]
-                else
+                else if(param.PlayMode == PlayMode.ContinueGame)
                 {
                     var cancelTokenSource = new CancellationTokenSource();
                     await AppServiceCallCommandAsync(service =>
                     {
-                        service.Continue(null, cancelTokenSource.Token);
+                        service.Continue(param.Name, cancelTokenSource.Token);
                     });
+                }
+                else
+                {
+                    throw new ArgumentException(nameof(PlayGameCondition));
                 }
             });
 

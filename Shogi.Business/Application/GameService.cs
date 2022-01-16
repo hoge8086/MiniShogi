@@ -25,8 +25,8 @@ namespace Shogi.Business.Application
         private Object thisLock = new Object();
         private GameListener GameListener = null;
         public IGameTemplateRepository GameTemplateRepository;
-        private ICurrentPlayingGameRepository CurrentPlayingGameRepository;
-        private IPlayingGameRepository PlayingGameRepository;
+        public ICurrentPlayingGameRepository CurrentPlayingGameRepository;
+        public IPlayingGameRepository PlayingGameRepository;
 
         public GameService(IGameTemplateRepository gameTemplateRepository, ICurrentPlayingGameRepository currentPlayingGameRepository, IPlayingGameRepository playingGameRepository)
         {
