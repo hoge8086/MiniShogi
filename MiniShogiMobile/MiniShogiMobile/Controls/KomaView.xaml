@@ -5,6 +5,11 @@
              x:Class="MiniShogiMobile.Controls.KomaView"
              x:Name="koma"
              SizeChanged="koma_SizeChanged">
+  <ContentView.Resources>
+      <ResourceDictionary>
+          <utls:MultipleDoubleConverter x:Key="multipleDoubleConverter" />
+      </ResourceDictionary>
+  </ContentView.Resources>
   <ContentView.Content>
         <!--将棋の駒の形-->
         <Grid>
@@ -26,7 +31,7 @@
                        RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1.0}"
                        RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.97}"
                        FontAttributes="Bold"
-                       FontSize="Large"/>
+                       FontSize="{Binding Source={RelativeSource Self}, Path=Width, Converter={StaticResource multipleDoubleConverter}, ConverterParameter=0.4}"/>
             </RelativeLayout>
             <!--反転プロパティ公開-->
             <Grid.Triggers>
