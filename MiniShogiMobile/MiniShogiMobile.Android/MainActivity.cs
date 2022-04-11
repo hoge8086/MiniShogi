@@ -3,6 +3,7 @@ using Android.Content.PM;
 using Android.OS;
 using Prism;
 using Prism.Ioc;
+using Prism.Plugin.Popups;
 
 namespace MiniShogiMobile.Droid
 {
@@ -18,9 +19,13 @@ namespace MiniShogiMobile.Droid
             base.OnCreate(savedInstanceState);
 
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            global::Rg.Plugins.Popup.Popup.Init(this);
             LoadApplication(new App(new AndroidInitializer()));
         }
-
+        public override void OnBackPressed()
+        {
+            PopupPlugin.OnBackPressed();
+        }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);

@@ -9,6 +9,7 @@ using Xamarin.Forms;
 using Shogi.Business.Application;
 using Shogi.Business.Infrastructure;
 using System.IO;
+using Prism.Plugin.Popups;
 
 namespace MiniShogiMobile
 {
@@ -43,6 +44,7 @@ namespace MiniShogiMobile
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterPopupNavigationService();
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();

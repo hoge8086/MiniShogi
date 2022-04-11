@@ -1,19 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<popups:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
+             xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.EditCellPage"
              Title="駒の編集">
-    <ContentPage.Resources>
+    <popups:PopupPage.Resources>
         <ResourceDictionary>
             <utils:InverseBooleanConverter x:Key="InvertedBoolConverter" />
         </ResourceDictionary>
-    </ContentPage.Resources>
-    <StackLayout Spacing="0" VerticalOptions="FillAndExpand">
-        <views:CellView BindingContext="{Binding EditingCell}" HeightRequest="200" WidthRequest="{Binding Path=Height, Source={RelativeSource Self}}"
+    </popups:PopupPage.Resources>
+    <StackLayout Spacing="0" BackgroundColor="White" HorizontalOptions="Center" VerticalOptions="Center">
+        <!--VerticalOptions="FillAndExpand">-->
+        <views:CellView BindingContext="{Binding EditingCell}" HeightRequest="100" WidthRequest="{Binding Path=Height, Source={RelativeSource Self}}"
                         IsKomaHidden="{Binding Source={x:Reference hasKoma}, Path=IsToggled,Converter={StaticResource InvertedBoolConverter}}"
                         HorizontalOptions="Center"
                         VerticalOptions="Center"/>
@@ -42,4 +44,4 @@
         </StackLayout>
         <Button Command="{Binding OkCommand}" Text="OK" VerticalOptions="EndAndExpand" Margin="10"/>
     </StackLayout>
-</ContentPage>
+</popups:PopupPage>
