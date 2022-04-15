@@ -4,6 +4,7 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
+             xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateGamePage"
              Title="ゲーム作成">
@@ -45,10 +46,36 @@
             ItemsSource="{Binding Game.Board.Cells}">
             <ctrl:SquareCell2DGridControl.ItemTemplate>
                 <ControlTemplate>
-                    <views:CellView
-                        BindingContext="{TemplateBinding BindingContext}"
-                        ClickCommand="{Binding Path=BindingContext.EditCellCommand, Source={x:Reference board}}">
-                    </views:CellView>
+                    <RelativeLayout BindingContext="{TemplateBinding BindingContext}">
+                        <views:CellView
+                            RelativeLayout.XConstraint="0"
+                            RelativeLayout.YConstraint="0"
+                            RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
+                            RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"
+                            ClickCommand="{Binding Path=BindingContext.TapCellCommand, Source={x:Reference board}}"
+                            IsHighlight="{Binding IsSelectedForMoving.Value}">
+                            <views:CellView.Triggers>
+                                <MultiTrigger TargetType="views:CellView">
+                                    <MultiTrigger.Conditions>
+                                        <BindingCondition Binding="{Binding Koma.Value, Converter={x:StaticResource isNullConverter}}" Value="True"/>
+                                        <BindingCondition Binding="{Binding Path=BindingContext.IsKomaMoving.Value, Source={x:Reference board}}" Value="True"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="IsMarked" Value="True"/>
+                                </MultiTrigger>
+                            </views:CellView.Triggers>
+                        </views:CellView>
+                        <ImageButton Source="EditCellImage.png"
+                            IsVisible="{Binding IsSelectedForMoving.Value}"
+                            CommandParameter="{Binding}"
+                            Command="{Binding Path=BindingContext.EditCellCommand, Source={x:Reference board}}"
+                            BackgroundColor="Transparent"
+                            RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.6}"
+                            RelativeLayout.YConstraint="0"
+                            RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"
+                            RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.4}"
+                            >
+                        </ImageButton>
+                    </RelativeLayout>
                 </ControlTemplate>
             </ctrl:SquareCell2DGridControl.ItemTemplate>
         </ctrl:SquareCell2DGridControl>

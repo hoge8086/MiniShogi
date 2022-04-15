@@ -19,27 +19,94 @@ using Xamarin.Forms.Internals;
 
 namespace MiniShogiMobile.ViewModels
 {
+
+    public class CellGameCreatingViewModel : CellViewModel
+    {
+        public ReactiveProperty<bool> IsSelectedForMoving { get; set; }
+
+        public CellGameCreatingViewModel()
+        {
+            IsSelectedForMoving = new ReactiveProperty<bool>(false);
+        }
+    }
     public class CreateGamePageViewModel : ViewModelBase
     {
-        public GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
-        public ReactiveCommand<CellViewModel> EditCellCommand { get; set; }
+        public GameViewModel<CellGameCreatingViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
+        public ReactiveCommand<CellGameCreatingViewModel> EditCellCommand { get; set; }
+        public ReactiveCommand<CellGameCreatingViewModel> TapCellCommand { get; set; }
         public ReactiveCommand EditSettingCommand {get;}
         public ReactiveCommand SaveCommand { get; set; }
 
         private GameTemplate GameTemplate;
+
+        // ReadOnlyReactivePropertyにしたかったが、行列追加で、監視対象のCellViewModelが増えるのに対応できないので、ReadOnlyにできなかった
+        // IsKomaMoving = Game.Board.Cells.SelectMany(x => x)
+        //                    .Select(x => x.IsSelectedForMoving)
+        //                    .CombineLatestValuesAreAllFalse()
+        //                    .Inverse()
+        //                    .ToReadOnlyReactiveProperty()
+        //                    .AddTo(this.Disposable);
+        public ReactiveProperty<bool> IsKomaMoving { get; set; }
         public CreateGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             GameTemplate = new GameTemplate();
-            Game = new GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
+            Game = new GameViewModel<CellGameCreatingViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
+            IsKomaMoving = new ReactiveProperty<bool>(false);
+            TapCellCommand = new ReactiveCommand<CellGameCreatingViewModel>();
+            TapCellCommand.Subscribe(async x =>
+            {
+                await CatchErrorWithMessageAsync(async () =>
+                {
+                    if(IsKomaMoving.Value)
+                    {
+                        // 駒選択中
+                        var MovingCell = Game.Board.Cells.SelectMany(y => y).FirstOrDefault(y => y.IsSelectedForMoving.Value);
+                        if(x.Koma.Value == null)
+                        {
+                            // 移動先が空なら駒を移動
+                            x.Koma.Value = MovingCell.Koma.Value;
+                            MovingCell.Koma.Value = null;
+                        }
+                        // 選択を解除
+                        MovingCell.IsSelectedForMoving.Value = false;
+                        IsKomaMoving.Value = false;
+                    }else
+                    {
+                        // 駒選択中ではない
+                        if (x.Koma.Value == null)
+                        {
+                            // 空セルなら駒を置くか聞く
+                            bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "駒を配置しますか?", "はい", "いいえ");
+                            if (doDelete)
+                            {
+                                var param = new NavigationParameters();
+                                param.Add(nameof(EditCellCondition), new EditCellCondition(x, GameTemplate.Height, false));
+                                await navigationService.NavigateAsync(nameof(EditCellPage), param);
+                            }
+                        }
+                        else
+                        {
+                            // 駒を選択
+                            x.IsSelectedForMoving.Value = true;
+                            IsKomaMoving.Value = true;
+                        }
+                    }
 
-            EditCellCommand = new ReactiveCommand<CellViewModel>();
+                });
+            });
+            EditCellCommand = new ReactiveCommand<CellGameCreatingViewModel>();
             EditCellCommand.Subscribe(async x =>
             {
                 await CatchErrorWithMessageAsync(async () =>
                 {
                     var param = new NavigationParameters();
-                    param.Add(nameof(EditCellCondition), new EditCellCondition(x, GameTemplate.Height));
+                    param.Add(nameof(EditCellCondition), new EditCellCondition(x, GameTemplate.Height, true));
                     await navigationService.NavigateAsync(nameof(EditCellPage), param);
+
+                    // 選択を解除
+                    var MovingCell = Game.Board.Cells.SelectMany(y => y).FirstOrDefault(y => y.IsSelectedForMoving.Value);
+                    MovingCell.IsSelectedForMoving.Value = false;
+                    IsKomaMoving.Value = false;
                 });
             }).AddTo(this.Disposable);
             SaveCommand = new ReactiveCommand();
@@ -116,6 +183,7 @@ namespace MiniShogiMobile.ViewModels
                 }
 
                 Title = GameTemplate.Name;
+
             });
         }
     }

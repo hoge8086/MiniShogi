@@ -2,10 +2,12 @@
 <prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
+             xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              x:Class="MiniShogiMobile.App">
   <Application.Resources>
-
     <!-- Application resource dictionary -->
-
+    <utils:InverseBooleanConverter x:Key="InvertedBoolConverter" />
+    <utils:PlayerTypeToBoolConverter x:Key="PlayerTypeToBoolConverter" />
+    <utils:IsNullConverter x:Key="isNullConverter"/>
   </Application.Resources>
 </prism:PrismApplication>

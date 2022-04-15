@@ -8,7 +8,6 @@
              x:Name="cell"
              BackgroundColor="SandyBrown">
     <ContentView.Resources>
-        <util:IsNullConverter x:Key="isNullConverter"/>
     </ContentView.Resources>
     <ContentView.Triggers>
         <DataTrigger TargetType="ContentView" Binding="{Binding IsHighlight, Source={x:Reference cell}}" Value="True">
