@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<popups:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="MiniShogiMobile.Views.SelectKomaPage">
+    <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="400">
+        <StackLayout BackgroundColor="white" >
+            <CollectionView Margin="15"
+                            ItemsLayout="VerticalGrid, 4"
+                            HeightRequest="400"
+                            SelectedItem="{Binding SelectedKomaName.Value}"
+                            ItemsSource="{Binding KomaNameList}"
+                            SelectionMode="Single" >
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentView HorizontalOptions="Center" VerticalOptions="Center">
+                            <ctrl:KomaView HeightRequest="80" WidthRequest="80" DisplayName="{Binding .}"/>
+                        </ContentView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Grid
+                ColumnDefinitions="*,*"
+                ColumnSpacing="1"
+                BackgroundColor="Gray">
+                <Button Grid.Column="0" Command="{Binding CancelCommand}" Text="キャンセル" VerticalOptions="FillAndExpand" CornerRadius="0"/>
+                <Button Grid.Column="1" Command="{Binding OkCommand}" Text="OK" VerticalOptions="FillAndExpand" CornerRadius="0"/>
+            </Grid>
+        </StackLayout>
+    </Frame>
+</popups:PopupPage>

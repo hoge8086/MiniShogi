@@ -31,7 +31,7 @@
                        RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1.0}"
                        RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.97}"
                        FontAttributes="Bold"
-                       FontSize="{Binding Source={RelativeSource Self}, Path=Width, Converter={StaticResource multipleDoubleConverter}, ConverterParameter=0.4}"/>
+                       FontSize="{Binding Source={x:Reference polygon}, Path=Width, Converter={StaticResource multipleDoubleConverter}, ConverterParameter=0.5}"/>
             </RelativeLayout>
             <!--反転プロパティ公開-->
             <Grid.Triggers>

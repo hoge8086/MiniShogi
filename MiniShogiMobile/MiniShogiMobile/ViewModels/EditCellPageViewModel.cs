@@ -23,9 +23,8 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand DeleteCommand { get; }
         public AsyncReactiveCommand<object> ChangeKomaTypeCommand { get; }
         public CellViewModel Cell { get; private set; }
-        public ObservableCollection<string> KomaNameList { get; }
 
-        public Dictionary<string, KomaType> KomaTypes { get; }
+        private Dictionary<string, KomaType> KomaTypes { get; }
 
         public CellViewModel EditingCell { get; private set; }
         public ReactiveProperty<bool> CanTransform { get; private set; }
@@ -35,7 +34,6 @@ namespace MiniShogiMobile.ViewModels
         public EditCellPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             KomaTypes =  App.CreateGameService.KomaTypeRepository.FindAll().ToDictionary(x => x.Id);
-            KomaNameList = new ObservableCollection<string>(KomaTypes.Keys);
             CanTransform = new ReactiveProperty<bool>(false);
             ShowDeleteKomaCommand = new ReactiveProperty<bool>(false);
             EditingCell = new CellViewModel() { Koma = new ReactiveProperty<KomaViewModel>() };
@@ -73,26 +71,35 @@ namespace MiniShogiMobile.ViewModels
             ChangeKomaTypeCommand.Subscribe(async (x) =>
             {
                 var param = new NavigationParameters();
-                param.Add(nameof(SaveGameCondition), new SaveGameCondition());
-                await navigationService.NavigateAsync(nameof(SaveGamePopupPage), param);
+                param.Add(nameof(SelectKomaConditions), new SelectKomaConditions(KomaTypes.Keys.ToList(), EditingCell.Koma.Value.Name.Value));
+                await navigationService.NavigateAsync(nameof(SelectKomaPage), param);
             }).AddTo(this.Disposable);
         }
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
             var navigationMode = parameters.GetNavigationMode();
             if (navigationMode == NavigationMode.Back)
+            {
+                var param = parameters[nameof(SelectKomaConditions)] as SelectKomaConditions;
+                if (param != null)
+                    EditingCell.Koma.Value.Name.Value = param.SelectedKoma;
+
                 return;
-
-            var param = parameters[nameof(EditCellCondition)] as EditCellCondition;
-            if(param == null)
-                throw new ArgumentException(nameof(EditCellCondition));
-
-            ShowDeleteKomaCommand.Value = param.ShowDeleteKomaCommand;
-            Cell = param.Cell;
-            if (Cell.Koma.Value != null)
-                EditingCell.Koma.Value.Update(Cell.Koma.Value);
+            }
             else
-                EditingCell.Koma.Value.PlayerType.Value = ((param.Height / 2) > Cell.Position.Y) ? PlayerType.Player2 : PlayerType.Player1;
+            {
+                var param = parameters[nameof(EditCellCondition)] as EditCellCondition;
+                if(param == null)
+                    throw new ArgumentException(nameof(EditCellCondition));
+
+                ShowDeleteKomaCommand.Value = param.ShowDeleteKomaCommand;
+                Cell = param.Cell;
+                if (Cell.Koma.Value != null)
+                    EditingCell.Koma.Value.Update(Cell.Koma.Value);
+                else
+                    EditingCell.Koma.Value.PlayerType.Value = ((param.Height / 2) > Cell.Position.Y) ? PlayerType.Player2 : PlayerType.Player1;
+            }
+
         }
     }
 }
