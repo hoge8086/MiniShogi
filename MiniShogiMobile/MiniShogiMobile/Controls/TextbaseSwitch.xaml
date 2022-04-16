@@ -9,6 +9,7 @@
       <Grid ColumnDefinitions="*,*" ColumnSpacing="0" RowSpacing="0">
         <Label Grid.Column="0"
                FontAttributes="Bold"
+               TextColor="DarkGray"
                HorizontalOptions="FillAndExpand"
                HorizontalTextAlignment="Center"
                Text="{Binding Path=OffText, Source={x:Reference self}}"
@@ -30,6 +31,7 @@
                FontAttributes="Bold"
                HorizontalOptions="FillAndExpand"
                HorizontalTextAlignment="Center"
+               TextColor="DarkGray"
                Text="{Binding Path=OnText, Source={x:Reference self}}"
                VerticalOptions="FillAndExpand"
                VerticalTextAlignment="Center"

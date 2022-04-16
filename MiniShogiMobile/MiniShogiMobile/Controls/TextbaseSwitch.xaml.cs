@@ -25,13 +25,13 @@ namespace MiniShogiMobile.Controls
         #region IsToggled
         public static readonly BindableProperty IsToggledProperty = BindableProperty.Create(
                                                                             nameof(IsToggled),
-                                                                            typeof(bool),
+                                                                            typeof(bool?),
                                                                             typeof(TextbaseSwitch),
                                                                             null,
                                                                             BindingMode.TwoWay);
-        public bool IsToggled
+        public bool? IsToggled
         {
-            get { return (bool)GetValue(IsToggledProperty); }
+            get { return (bool?)GetValue(IsToggledProperty); }
             set { SetValue(IsToggledProperty, value); }
         }
         #endregion

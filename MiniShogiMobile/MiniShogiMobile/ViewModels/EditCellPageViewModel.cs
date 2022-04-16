@@ -25,14 +25,12 @@ namespace MiniShogiMobile.ViewModels
         public Dictionary<string, KomaType> KomaTypes { get; }
 
         public CellViewModel EditingCell { get; private set; }
-        public ReactiveProperty<bool> HasKoma { get; private set; }
         public ReactiveProperty<bool> CanTransform { get; private set; }
 
         public ReactiveProperty<bool>ShowDeleteKomaCommand { get; }
 
         public EditCellPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
-            HasKoma = new ReactiveProperty<bool>();
             KomaTypes =  App.CreateGameService.KomaTypeRepository.FindAll().ToDictionary(x => x.Id);
             KomaNameList = new ObservableCollection<string>(KomaTypes.Keys);
             CanTransform = new ReactiveProperty<bool>(false);
@@ -49,7 +47,7 @@ namespace MiniShogiMobile.ViewModels
             OkCommand = new AsyncReactiveCommand();
             OkCommand.Subscribe(async () =>
             {
-                Cell.Koma.Value = HasKoma.Value ? new KomaViewModel(EditingCell.Koma.Value) : null;
+                Cell.Koma.Value = new KomaViewModel(EditingCell.Koma.Value);
                 await navigationService.GoBackAsync();
             }).AddTo(this.Disposable);
             CancelCommand = new AsyncReactiveCommand();
@@ -81,8 +79,6 @@ namespace MiniShogiMobile.ViewModels
                 EditingCell.Koma.Value.Update(Cell.Koma.Value);
             else
                 EditingCell.Koma.Value.PlayerType.Value = ((param.Height / 2) > Cell.Position.Y) ? PlayerType.Player2 : PlayerType.Player1;
-            // [駒がないセルを押下した場合は、駒を追加したいからであるため、デフォはONの方が使いやすい]
-            HasKoma.Value = true;// Cell.Koma.Value != null;
         }
     }
 }

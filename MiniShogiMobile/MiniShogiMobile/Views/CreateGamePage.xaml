@@ -24,7 +24,7 @@
                 Grid.Column="1"
                 Text="P2"
                 WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
-                BackgroundColor="Red">
+                BackgroundColor="{StaticResource Player2Color}">
             </ctrl:PlayerView>
             <ctrl:KomadaiView
                 Grid.Column="0"
@@ -87,7 +87,7 @@
                 Grid.Column="0"
                 Text="P1"
                 WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
-                BackgroundColor="Blue">
+                BackgroundColor="{StaticResource Player1Color}">
             </ctrl:PlayerView>
             <ctrl:KomadaiView
                 Grid.Column="1"

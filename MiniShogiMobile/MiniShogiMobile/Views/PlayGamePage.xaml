@@ -13,7 +13,7 @@
             Grid.Column="1"
             Grid.Row="0"
             IsRotated="True"
-            PlayerColor="Red"
+            PlayerColor="{StaticResource Player2Color}"
             ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"
             BindingContext="{Binding Game.HandsOfPlayer2}"/>
         <ctrl:SquareCell2DGridControl
@@ -36,7 +36,7 @@
             Grid.Column="1"
             Grid.Row="2"
             IsRotated="False"
-            PlayerColor="Blue"
+            PlayerColor="{StaticResource Player1Color}"
             ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"
             BindingContext="{Binding Game.HandsOfPlayer1}"/>
         <StackLayout Orientation="Horizontal"
