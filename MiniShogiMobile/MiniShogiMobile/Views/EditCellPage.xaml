@@ -14,7 +14,7 @@
         <StackLayout BackgroundColor="white" >
             <StackLayout Spacing="15" Margin="10">
                 <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                    <Label Text="駒タイプ" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+                    <Label Text="駒の種類" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
                     <views:CellView BindingContext="{Binding EditingCell}" HeightRequest="100" WidthRequest="{Binding Path=Height, Source={RelativeSource Self}}"
                                     HorizontalOptions="Center"
                                     VerticalOptions="Center"
