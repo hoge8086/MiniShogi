@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MiniShogiMobile.Controls.TextbaseSwitch"
+             x:Name="self"
+             HeightRequest="35">
+  <ContentView.Content>
+    <Frame CornerRadius="10" Padding="0">
+      <Grid ColumnDefinitions="*,*" ColumnSpacing="0" RowSpacing="0">
+        <Label Grid.Column="0"
+               FontAttributes="Bold"
+               HorizontalOptions="FillAndExpand"
+               HorizontalTextAlignment="Center"
+               Text="{Binding Path=OffText, Source={x:Reference self}}"
+               VerticalOptions="FillAndExpand"
+               VerticalTextAlignment="Center"
+               WidthRequest="60">
+          <Label.Triggers>
+            <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="True">
+                <Setter Property="TextColor" Value="DarkGray"/>
+                <Setter Property="BackgroundColor" Value="White"/>
+            </DataTrigger>
+            <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="False">
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="BackgroundColor" Value="{Binding Path=OffColor, Source={x:Reference self}}"/>
+            </DataTrigger>
+          </Label.Triggers>
+        </Label>
+        <Label Grid.Column="1"
+               FontAttributes="Bold"
+               HorizontalOptions="FillAndExpand"
+               HorizontalTextAlignment="Center"
+               Text="{Binding Path=OnText, Source={x:Reference self}}"
+               VerticalOptions="FillAndExpand"
+               VerticalTextAlignment="Center"
+               WidthRequest="60">
+          <Label.Triggers>
+            <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="False">
+                <Setter Property="TextColor" Value="DarkGray"/>
+                <Setter Property="BackgroundColor" Value="White"/>
+            </DataTrigger>
+            <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="True">
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="BackgroundColor" Value="{Binding Path=OnColor, Source={x:Reference self}}"/>
+            </DataTrigger>
+          </Label.Triggers>
+        </Label>
+      </Grid>
+    </Frame>
+  </ContentView.Content>
+</ContentView>

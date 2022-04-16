@@ -4,6 +4,7 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
+             xmlns:ctrls="clr-namespace:MiniShogiMobile.Controls"
              xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.EditCellPage"
@@ -21,11 +22,16 @@
                 </StackLayout>
                 <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                     <Label Text="駒の向き" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
-                    <Switch  HorizontalOptions="End" IsToggled="{Binding EditingCell.Koma.Value.PlayerType.Value, Converter={StaticResource PlayerTypeToBoolConverter}}"/>
+                    <ctrls:TextbaseSwitch WidthRequest="100" HorizontalOptions="End"
+                                          IsToggled="{Binding EditingCell.Koma.Value.PlayerType.Value, Converter={StaticResource PlayerTypeToBoolConverter}}"
+                                          OnColor="Red"
+                                          OnText="P2"
+                                          OffColor="Blue"
+                                          OffText="P1"/>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" IsEnabled="{Binding CanTransform.Value}">
                     <Label Text="成り" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
-                    <Switch HorizontalOptions="End" IsToggled="{Binding EditingCell.Koma.Value.IsTransformed.Value}"/>
+                    <ctrls:TextbaseSwitch WidthRequest="100" HorizontalOptions="End" IsToggled="{Binding EditingCell.Koma.Value.IsTransformed.Value}"/>
                 </StackLayout>
             </StackLayout>
             <Grid
