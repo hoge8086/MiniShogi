@@ -8,17 +8,17 @@
              xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.EditCellPage"
-             Title="駒の編集">
+             Title="駒の編集"
+             x:Name="root">
     <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="250">
         <StackLayout BackgroundColor="white" >
-            <views:CellView BindingContext="{Binding EditingCell}" HeightRequest="100" WidthRequest="{Binding Path=Height, Source={RelativeSource Self}}"
-                            Margin="5"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center"/>
-            <StackLayout Spacing="15" Margin="10,0,10,5">
-                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+            <StackLayout Spacing="15" Margin="10">
+                <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
                     <Label Text="駒タイプ" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
-                    <Picker HorizontalOptions="End" ItemsSource="{Binding KomaNameList}" SelectedItem="{Binding EditingCell.Koma.Value.Name.Value}" WidthRequest="100"/>
+                    <views:CellView BindingContext="{Binding EditingCell}" HeightRequest="100" WidthRequest="{Binding Path=Height, Source={RelativeSource Self}}"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    ClickCommand="{Binding Path=BindingContext.ChangeKomaTypeCommand, Source={x:Reference root}}"/>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                     <Label Text="駒の向き" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />

@@ -56,6 +56,7 @@ namespace MiniShogiMobile
             containerRegistry.RegisterForNavigation<EditGameSettingsPage, EditGameSettingsPageViewModel>();
             containerRegistry.RegisterForNavigation<CreateGameListPage, CreateGameListPageViewModel>();
             containerRegistry.RegisterForNavigation<PlayingGameListPage, PlayingGameListPageViewModel>();
+            containerRegistry.RegisterForNavigation<SaveGamePopupPage, SaveGamePopupPageViewModel>();
         }
     }
 }

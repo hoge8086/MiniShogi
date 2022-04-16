@@ -12,6 +12,7 @@ using Reactive.Bindings;
 using System.Collections.ObjectModel;
 using System.Reactive.Linq;
 using Reactive.Bindings.Extensions;
+using MiniShogiMobile.Views;
 
 namespace MiniShogiMobile.ViewModels
 {
@@ -20,8 +21,10 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand OkCommand { get; }
         public AsyncReactiveCommand CancelCommand { get; }
         public AsyncReactiveCommand DeleteCommand { get; }
+        public AsyncReactiveCommand<object> ChangeKomaTypeCommand { get; }
         public CellViewModel Cell { get; private set; }
         public ObservableCollection<string> KomaNameList { get; }
+
         public Dictionary<string, KomaType> KomaTypes { get; }
 
         public CellViewModel EditingCell { get; private set; }
@@ -54,7 +57,7 @@ namespace MiniShogiMobile.ViewModels
             CancelCommand.Subscribe(async () =>
             {
                 await navigationService.GoBackAsync();
-            });
+            }).AddTo(this.Disposable);
             DeleteCommand = new AsyncReactiveCommand();
             DeleteCommand.Subscribe(async () =>
             {
@@ -65,10 +68,21 @@ namespace MiniShogiMobile.ViewModels
                     Cell.Koma.Value = null;
                     await navigationService.GoBackAsync();
                 //}
-            });
+            }).AddTo(this.Disposable);
+            ChangeKomaTypeCommand = new AsyncReactiveCommand<object>();
+            ChangeKomaTypeCommand.Subscribe(async (x) =>
+            {
+                var param = new NavigationParameters();
+                param.Add(nameof(SaveGameCondition), new SaveGameCondition());
+                await navigationService.NavigateAsync(nameof(SaveGamePopupPage), param);
+            }).AddTo(this.Disposable);
         }
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
+            var navigationMode = parameters.GetNavigationMode();
+            if (navigationMode == NavigationMode.Back)
+                return;
+
             var param = parameters[nameof(EditCellCondition)] as EditCellCondition;
             if(param == null)
                 throw new ArgumentException(nameof(EditCellCondition));
