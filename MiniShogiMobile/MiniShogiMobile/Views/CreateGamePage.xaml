@@ -103,8 +103,15 @@
             </ctrl:KomadaiView>
             <ImageButton Grid.Column="2"
                 Source="{utils:ImageResource MiniShogiMobile.Images.DeleteIcon.png}" 
+                IsEnabled="{Binding Path=BindingContext.IsKomaMoving.Value, Source={x:Reference board}}"
                 Command="{Binding Path=BindingContext.DeleteKomaCommand, Source={x:Reference board}}"
-                BackgroundColor="Transparent"/>
+                BackgroundColor="Transparent">
+                <ImageButton.Triggers>
+                    <DataTrigger TargetType="ImageButton" Binding="{Binding Path=BindingContext.IsKomaMoving.Value, Source={x:Reference board}}" Value="False">
+                        <Setter Property="Opacity" Value="0.3"/>
+                    </DataTrigger>
+                </ImageButton.Triggers>
+            </ImageButton>
         </Grid>
         <StackLayout
             Grid.Column="1"

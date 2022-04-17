@@ -134,7 +134,7 @@ namespace MiniShogiMobile.ViewModels
 
             }).AddTo(this.Disposable);
             //DeleteKomaCommand = new AsyncReactiveCommand<CellGameCreatingViewModel>();
-            DeleteKomaCommand = IsKomaMoving.ToAsyncReactiveCommand();
+            DeleteKomaCommand = new AsyncReactiveCommand();
             DeleteKomaCommand.Subscribe(async () =>
             {
                 await CatchErrorWithMessageAsync(async () =>
