@@ -21,20 +21,28 @@
                    HorizontalOptions="Center"
                    VerticalOptions="Center">
                 <!--行-->
-                <!--自身のサイズ変更時にセルのサイズを調整する-->
-                <StackLayout x:Name="board" Spacing="0" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="SandyBrown"
-                    SizeChanged="self_SizeChanged">
+                <!--子の数が変わったときに時にセルのサイズを調整する-->
+                <StackLayout x:Name="board"
+                             Spacing="0"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             BackgroundColor="SandyBrown"
+                             ChildAdded="board_ChildCountChanged"
+                             ChildRemoved="board_ChildCountChanged"
+                             SizeChanged="board_ChildCountChanged">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
                             <!--列-->
                             <!--セルのデータテンプレートを自身のコントロールのテンプレートにバインディングする-->
-                            <!--アイテム追加時にセルのサイズを調整する-->
+                            <!--子の数が変わったときに時にセルのサイズを調整する-->
                             <!--※ルートのコントロールがFillAndExpandなのでアイテムを追加してもルートのコントロールのサイズが変わらないため-->
                             <StackLayout BindableLayout.ItemsSource="{Binding}"
                                          HorizontalOptions="FillAndExpand"
                                          VerticalOptions="FillAndExpand"
                                          Orientation="Horizontal"
-                                         Spacing="0">
+                                         Spacing="0"
+                                         ChildAdded="board_ChildCountChanged"
+                                         ChildRemoved="board_ChildCountChanged">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate>
                                         <!--セルの枠線を囲ってしまうと、スタックパネルの隙間が目立つので、右線と上線のみ表示する-->

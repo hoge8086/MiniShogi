@@ -69,50 +69,28 @@ namespace MiniShogiMobile.Controls
         static void OnItemsSourceChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var uc = bindable as SquareCell2DGridControl;
-            var source = newValue as IEnumerable<object>;
-
-            // 行列が増えた時にセルのサイズを調整するメソッドをアタッチする
-            var rows = newValue as INotifyPropertyChanged;
-            if(rows != null)
-            {
-                rows.PropertyChanged += uc.self_SizeChanged;
-                foreach(var row in source)
-                {
-                    var cells = row as INotifyPropertyChanged;
-                    if(cells != null)
-                        cells.PropertyChanged += uc.self_SizeChanged;
-                }
-            }
-
-            // デタッチ
-            rows = oldValue as INotifyPropertyChanged;
-            if(rows != null)
-            {
-                rows.PropertyChanged -= uc.self_SizeChanged;
-                foreach(var row in source)
-                {
-                    var cells = row as INotifyPropertyChanged;
-                    if(cells != null)
-                        cells.PropertyChanged -= uc.self_SizeChanged;
-                }
-            }
-            uc.ItemsSource = source;
-            BindableLayout.SetItemsSource(uc.board, source);
+            var newSource = newValue as IEnumerable<object>;
+            BindableLayout.SetItemsSource(uc.board, newSource);
         }
         #endregion
 
-        /// <summary>
-        /// サイズ変更処理
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void self_SizeChanged(object sender, EventArgs e)
+
+        ///// <summary>
+        ///// サイズ変更処理
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        private void board_ChildCountChanged(object sender, EventArgs e)
         {
+            //TODO:バインディング先ではなくStackLayoutのChildrenの数でサイズを求めた方が良い（仮に数に違いがあると問題なので）
             if (ItemsSource == null || ItemsSource.Count() == 0)
                 return;
 
             var cells = ItemsSource.First() as IEnumerable<object>;
             if (cells.Count() == 0)
+                return;
+
+            if (self.Width <= 0 || self.Height <= 0)
                 return;
 
             // [TODO:プロパティ化 21 = 10(枠線)×2 + 1(下線/右線)]

@@ -50,7 +50,7 @@ namespace MiniShogiMobile.ViewModels
             {
                 var delNum = list.Count - size;
                 for(int i=0; i<delNum; i++)
-                    list.RemoveAt(list.Count - i - 1);
+                    list.RemoveAt(list.Count - 1);
             }
 
             if(list.Count < size)
