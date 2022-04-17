@@ -36,18 +36,10 @@
             </StackLayout>
             <Grid
                 ColumnDefinitions="*,*"
-                RowDefinitions="Auto,Auto"
                 ColumnSpacing="1"
-                RowSpacing="0"
                 BackgroundColor="Gray">
-                <Grid.Triggers>
-                    <DataTrigger TargetType="Grid" Binding="{Binding Source={x:Reference deleteButton}, Path=IsVisible}" Value="True">
-                        <Setter Property="RowSpacing" Value="1"/>
-                    </DataTrigger>
-                </Grid.Triggers>
-                <Button x:Name="deleteButton" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Command="{Binding DeleteCommand}" Text="削除" VerticalOptions="End" CornerRadius="0" IsVisible="{Binding ShowDeleteKomaCommand.Value}"/>
-                <Button Grid.Row="1" Grid.Column="0" Command="{Binding CancelCommand}" Text="キャンセル" VerticalOptions="FillAndExpand" CornerRadius="0"/>
-                <Button Grid.Row="1" Grid.Column="1" Command="{Binding OkCommand}" Text="OK" VerticalOptions="FillAndExpand" CornerRadius="0"/>
+                <Button Grid.Column="0" Command="{Binding CancelCommand}" Text="キャンセル" VerticalOptions="FillAndExpand" CornerRadius="0"/>
+                <Button Grid.Column="1" Command="{Binding OkCommand}" Text="OK" VerticalOptions="FillAndExpand" CornerRadius="0"/>
             </Grid>
         </StackLayout>
     </Frame>

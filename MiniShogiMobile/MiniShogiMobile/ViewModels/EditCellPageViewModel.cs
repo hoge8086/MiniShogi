@@ -20,7 +20,6 @@ namespace MiniShogiMobile.ViewModels
     {
         public AsyncReactiveCommand OkCommand { get; }
         public AsyncReactiveCommand CancelCommand { get; }
-        public AsyncReactiveCommand DeleteCommand { get; }
         public AsyncReactiveCommand<object> ChangeKomaTypeCommand { get; }
         public CellViewModel Cell { get; private set; }
 
@@ -55,17 +54,6 @@ namespace MiniShogiMobile.ViewModels
             CancelCommand.Subscribe(async () =>
             {
                 await navigationService.GoBackAsync();
-            }).AddTo(this.Disposable);
-            DeleteCommand = new AsyncReactiveCommand();
-            DeleteCommand.Subscribe(async () =>
-            {
-                // 確認メッセージはうっとうしい可能性あり
-                //bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "削除しますか?", "はい", "いいえ");
-                //if (doDelete)
-                //{
-                    Cell.Koma.Value = null;
-                    await navigationService.GoBackAsync();
-                //}
             }).AddTo(this.Disposable);
             ChangeKomaTypeCommand = new AsyncReactiveCommand<object>();
             ChangeKomaTypeCommand.Subscribe(async (x) =>

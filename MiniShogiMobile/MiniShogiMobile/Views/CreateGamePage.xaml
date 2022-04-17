@@ -64,7 +64,8 @@
                                 </MultiTrigger>
                             </views:CellView.Triggers>
                         </views:CellView>
-                        <ImageButton Source="EditCellImage.png"
+                        <ImageButton
+                            Source="{utils:ImageResource MiniShogiMobile.Images.EditIcon.png}" 
                             IsVisible="{Binding IsSelectedForMoving.Value}"
                             CommandParameter="{Binding}"
                             Command="{Binding Path=BindingContext.EditCellCommand, Source={x:Reference board}}"
@@ -72,14 +73,13 @@
                             RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.6}"
                             RelativeLayout.YConstraint="0"
                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"
-                            RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.4}"
-                            >
+                            RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.4}">
                         </ImageButton>
                     </RelativeLayout>
                 </ControlTemplate>
             </ctrl:SquareCell2DGridControl.ItemTemplate>
         </ctrl:SquareCell2DGridControl>
-        <Grid ColumnDefinitions="Auto,*"
+        <Grid ColumnDefinitions="Auto,*,Auto"
             BindingContext="{Binding Game.HandsOfPlayer1}"
             Grid.Column="1"
             Grid.Row="3">
@@ -101,6 +101,10 @@
                     </DataTemplate>
                 </ctrl:KomadaiView.ItemTemplate>
             </ctrl:KomadaiView>
+            <ImageButton Grid.Column="2"
+                Source="{utils:ImageResource MiniShogiMobile.Images.DeleteIcon.png}" 
+                Command="{Binding Path=BindingContext.DeleteKomaCommand, Source={x:Reference board}}"
+                BackgroundColor="Transparent"/>
         </Grid>
         <StackLayout
             Grid.Column="1"

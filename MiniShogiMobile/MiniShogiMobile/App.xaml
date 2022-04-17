@@ -9,6 +9,7 @@
     <utils:InverseBooleanConverter x:Key="InvertedBoolConverter" />
     <utils:PlayerTypeToBoolConverter x:Key="PlayerTypeToBoolConverter" />
     <utils:IsNullConverter x:Key="isNullConverter"/>
+    <utils:ImageSourceConverter x:Key="ImageSourceConverter"/>
     <Color x:Key="Player1Color">DodgerBlue</Color>
     <Color x:Key="Player2Color">#eb233d</Color>
   </Application.Resources>

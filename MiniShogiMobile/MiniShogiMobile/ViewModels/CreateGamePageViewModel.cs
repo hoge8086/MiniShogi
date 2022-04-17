@@ -33,6 +33,7 @@ namespace MiniShogiMobile.ViewModels
     {
         public GameViewModel<CellGameCreatingViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
         public ReactiveCommand<CellGameCreatingViewModel> EditCellCommand { get; set; }
+        public AsyncReactiveCommand DeleteKomaCommand { get; set; }
         public ReactiveCommand<CellGameCreatingViewModel> TapCellCommand { get; set; }
         public ReactiveCommand EditSettingCommand {get;}
         public ReactiveCommand SaveCommand { get; set; }
@@ -131,6 +132,18 @@ namespace MiniShogiMobile.ViewModels
                     await navigationService.NavigateAsync(nameof(EditGameSettingsPage), param);
                 });
 
+            }).AddTo(this.Disposable);
+            //DeleteKomaCommand = new AsyncReactiveCommand<CellGameCreatingViewModel>();
+            DeleteKomaCommand = IsKomaMoving.ToAsyncReactiveCommand();
+            DeleteKomaCommand.Subscribe(async () =>
+            {
+                await CatchErrorWithMessageAsync(async () =>
+                {
+                    var MovingCell = Game.Board.Cells.SelectMany(y => y).FirstOrDefault(y => y.IsSelectedForMoving.Value);
+                    MovingCell.Koma.Value = null;
+                    MovingCell.IsSelectedForMoving.Value = false;
+                    IsKomaMoving.Value = false;
+                });
             }).AddTo(this.Disposable);
         }
 

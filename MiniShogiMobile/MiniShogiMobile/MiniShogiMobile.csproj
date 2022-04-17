@@ -5,6 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\DeleteIcon.png" />
+    <None Remove="Images\EditIcon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Images\DeleteIcon.png" />
+    <EmbeddedResource Include="Images\EditIcon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Prism.Plugin.Popups" Version="8.0.76" />
     <PackageReference Include="ReactiveProperty" Version="8.0.3" />
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1364" />
