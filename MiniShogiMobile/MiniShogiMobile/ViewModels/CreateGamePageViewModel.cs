@@ -29,6 +29,7 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand EditSettingCommand {get;}
         public AsyncReactiveCommand SaveCommand { get; set; }
         public ReactiveProperty<CellViewModel> SelectedCell { get; set; }
+        public ReadOnlyReactivePropertySlim<bool> IsSelectingKoma{ get; set; }
 
         private GameTemplate GameTemplate;
 
@@ -36,8 +37,8 @@ namespace MiniShogiMobile.ViewModels
         {
             GameTemplate = new GameTemplate();
             Game = new GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
-            //IsKomaMoving = new ReactiveProperty<bool>(false);
             SelectedCell = new ReactiveProperty<CellViewModel>();
+            IsSelectingKoma = SelectedCell.Select(x => x != null && x.Koma.Value != null).ToReadOnlyReactivePropertySlim().AddTo(Disposable);
             TapCellCommand = new AsyncReactiveCommand<CellViewModel>();
             TapCellCommand.Subscribe(async x =>
             {
@@ -59,6 +60,7 @@ namespace MiniShogiMobile.ViewModels
                         // 駒選択中ではない
                         if (x.Koma.Value == null)
                         {
+                            SelectedCell.Value = x;
                             // 空セルなら駒を置くか聞く
                             bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "駒を配置しますか?", "はい", "いいえ");
                             if (doDelete)
@@ -66,6 +68,12 @@ namespace MiniShogiMobile.ViewModels
                                 var param = new NavigationParameters();
                                 param.Add(nameof(EditCellCondition), new EditCellCondition(x, GameTemplate.Height, false));
                                 await navigationService.NavigateAsync(nameof(EditCellPage), param);
+                                // 画面から戻った際に選択解除
+                            }
+                            else
+                            {
+                                // 駒を選択
+                                SelectedCell.Value = null;
                             }
                         }
                         else
@@ -86,8 +94,7 @@ namespace MiniShogiMobile.ViewModels
                     param.Add(nameof(EditCellCondition), new EditCellCondition(x, GameTemplate.Height, true));
                     await navigationService.NavigateAsync(nameof(EditCellPage), param);
 
-                    // 選択を解除
-                    SelectedCell.Value = null;
+                    // 画面から戻った際に選択解除
                 });
             }).AddTo(this.Disposable);
             SaveCommand = new AsyncReactiveCommand();
@@ -170,6 +177,8 @@ namespace MiniShogiMobile.ViewModels
                 }
                 else if (navigationMode == NavigationMode.Back)
                 {
+                    // 選択を解除
+                    SelectedCell.Value = null;
                     Game.Board.UpdateSize(GameTemplate.Height, GameTemplate.Width);
                 }
 
