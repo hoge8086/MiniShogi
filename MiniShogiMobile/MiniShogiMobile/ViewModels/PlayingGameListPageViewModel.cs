@@ -18,22 +18,22 @@ namespace MiniShogiMobile.ViewModels
     {
         public ReactiveProperty<PlayingGame> SelectedPlayingGame { get; }
         public ObservableCollection<PlayingGame> PlayingGameList { get; }
-        public ReactiveCommand PlayCommand { get; set; }
-        public ReactiveCommand<PlayingGame> DeleteCommand {get;}
+        public AsyncReactiveCommand PlayCommand { get; set; }
+        public AsyncReactiveCommand<PlayingGame> DeleteCommand {get;}
 
         public PlayingGameListPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             SelectedPlayingGame = new ReactiveProperty<PlayingGame>();
             PlayingGameList = new ObservableCollection<PlayingGame>(App.GameService.PlayingGameRepository.FindAll());
-            PlayCommand = new ReactiveCommand();
-            PlayCommand.Subscribe(() =>
+            PlayCommand = new AsyncReactiveCommand();
+            PlayCommand.Subscribe(async () =>
             {
                 var param = new NavigationParameters();
                 param.Add(nameof(PlayGameCondition), new PlayGameCondition(PlayMode.ContinueGame, SelectedPlayingGame.Value.Name));
-                navigationService.NavigateAsync(nameof(PlayGamePage), param);
+                await navigationService.NavigateAsync(nameof(PlayGamePage), param);
             }).AddTo(Disposable);
 
-            DeleteCommand = new ReactiveCommand<PlayingGame>();
+            DeleteCommand = new AsyncReactiveCommand<PlayingGame>();
             DeleteCommand.Subscribe(async (x) =>
             {
                 bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "削除しますか?", "はい", "いいえ");

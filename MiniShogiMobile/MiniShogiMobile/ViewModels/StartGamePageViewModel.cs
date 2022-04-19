@@ -15,6 +15,7 @@ using Shogi.Business.Domain.Model.AI;
 using Shogi.Business.Domain.Model.PlayerTypes;
 using Prism.Services;
 using Shogi.Business.Domain.Model.GameTemplates;
+using Reactive.Bindings.Extensions;
 
 namespace MiniShogiMobile.ViewModels
 {
@@ -43,7 +44,7 @@ namespace MiniShogiMobile.ViewModels
 
     public class StartGamePageViewModel : ViewModelBase
     {
-        public ReactiveCommand PlayGameCommand { get; set; }
+        public AsyncReactiveCommand PlayGameCommand { get; set; }
         public ObservableCollection<string> GameNameList { get; set; }
         public ReactiveProperty<string> GameName { get; set; }
         public PlayperViewModel Player1 { get; set; }
@@ -61,8 +62,8 @@ namespace MiniShogiMobile.ViewModels
             Player2 = new PlayperViewModel(PlayerThinkingType.AI, 5);
             FirstTurnPlayer = new ReactiveProperty<SelectFirstTurnPlayer>(SelectFirstTurnPlayer.Random);
 
-            PlayGameCommand = new ReactiveCommand();
-            PlayGameCommand.Subscribe(() =>
+            PlayGameCommand = new AsyncReactiveCommand();
+            PlayGameCommand.Subscribe(async () =>
             {
                 var param = new NavigationParameters();
                 param.Add(nameof(PlayGameCondition),
@@ -73,8 +74,8 @@ namespace MiniShogiMobile.ViewModels
                         Player2.CreatePlayer(),
                         GetFirstTurnPlayer()
                     ));
-                navigationService.NavigateAsync(nameof(PlayGamePage), param);
-            });
+                await navigationService.NavigateAsync(nameof(PlayGamePage), param);
+            }).AddTo(Disposable);;
 
         }
 

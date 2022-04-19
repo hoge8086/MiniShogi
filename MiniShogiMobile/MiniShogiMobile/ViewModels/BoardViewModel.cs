@@ -44,7 +44,7 @@ namespace MiniShogiMobile.ViewModels
 
         }
 
-        private static void UpdateBoardSize<T>(ObservableCollection<T> list, int size) where T : new()
+        private static void UpdateBoardSize<Item>(ObservableCollection<Item> list, int size) where Item : new()
         {
             if(list.Count > size)
             {
@@ -57,7 +57,7 @@ namespace MiniShogiMobile.ViewModels
             {
                 var addNum = size - list.Count;
                 for(int i=0; i<addNum; i++)
-                    list.Add(new T());
+                    list.Add(new Item());
             }
         }
     }

@@ -38,15 +38,15 @@ namespace MiniShogiMobile.ViewModels
         private ReactiveProperty<IViewState> ViewState;
         public void ChangeState(IViewState state) => ViewState.Value = state;
         public GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel> Game { get; set; }
-        public ReactiveCommand<ISelectable> MoveCommand { get; set; }
-        public ReactiveCommand SaveCommand { get; set; }
+        public AsyncReactiveCommand<ISelectable> MoveCommand { get; set; }
+        public AsyncReactiveCommand SaveCommand { get; set; }
 
         public PlayGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             PlayingGame = null;
             ViewState = new ReactiveProperty<IViewState>(new ViewStateWaiting());
             Game = new GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel>();
-            MoveCommand = new ReactiveCommand<ISelectable>();
+            MoveCommand = new AsyncReactiveCommand<ISelectable>();
             MoveCommand.Subscribe(async x =>
             {
                 await CatchErrorWithMessageAsync(async () =>
@@ -55,7 +55,7 @@ namespace MiniShogiMobile.ViewModels
                 });
             }).AddTo(Disposable);
 
-            SaveCommand = new ReactiveCommand();
+            SaveCommand = new AsyncReactiveCommand();
             SaveCommand.Subscribe(async x =>
             {
                 await CatchErrorWithMessageAsync(async () =>

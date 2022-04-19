@@ -9,6 +9,7 @@ using Reactive.Bindings;
 using MiniShogiMobile.Views;
 using Prism.Services;
 using MiniShogiMobile.Conditions;
+using Reactive.Bindings.Extensions;
 
 // 参考:<https://anderson02.com/category/cs/xamarin-prism/>
 
@@ -16,27 +17,27 @@ namespace MiniShogiMobile.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
-        public ReactiveCommand StartGameCommand { get; set; }
-        public ReactiveCommand CreateGameCommand { get; set; }
-        public ReactiveCommand ContinueGameCommand { get; set; }
+        public AsyncReactiveCommand StartGameCommand { get; set; }
+        public AsyncReactiveCommand CreateGameCommand { get; set; }
+        public AsyncReactiveCommand ContinueGameCommand { get; set; }
         public MainPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
-            StartGameCommand = new ReactiveCommand();
-            StartGameCommand.Subscribe(() =>
+            StartGameCommand = new AsyncReactiveCommand();
+            StartGameCommand.Subscribe(async () =>
             {
-                navigationService.NavigateAsync(nameof(StartGamePage));
-            });
+                await navigationService.NavigateAsync(nameof(StartGamePage));
+            }).AddTo(Disposable);;
 
-            ContinueGameCommand = new ReactiveCommand();
-            ContinueGameCommand.Subscribe(() =>
+            ContinueGameCommand = new AsyncReactiveCommand();
+            ContinueGameCommand.Subscribe(async () =>
             {
-                navigationService.NavigateAsync(nameof(PlayingGameListPage));
-            });
-            CreateGameCommand = new ReactiveCommand();
-            CreateGameCommand.Subscribe(() =>
+                await navigationService .NavigateAsync(nameof(PlayingGameListPage));
+            }).AddTo(Disposable);;
+            CreateGameCommand = new AsyncReactiveCommand();
+            CreateGameCommand.Subscribe(async () =>
             {
-                navigationService.NavigateAsync(nameof(CreateGameListPage));
-            });
+                await navigationService.NavigateAsync(nameof(CreateGameListPage));
+            }).AddTo(Disposable);;
         }
     }
 }

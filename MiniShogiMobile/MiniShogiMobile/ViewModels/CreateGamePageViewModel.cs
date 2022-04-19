@@ -23,12 +23,12 @@ namespace MiniShogiMobile.ViewModels
     public class CreateGamePageViewModel : ViewModelBase
     {
         public GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
-        public ReactiveCommand<CellViewModel> EditCellCommand { get; set; }
+        public AsyncReactiveCommand<CellViewModel> EditCellCommand { get; set; }
         public AsyncReactiveCommand DeleteKomaCommand { get; set; }
-        public ReactiveCommand<CellViewModel> TapCellCommand { get; set; }
+        public AsyncReactiveCommand<CellViewModel> TapCellCommand { get; set; }
+        public AsyncReactiveCommand EditSettingCommand {get;}
+        public AsyncReactiveCommand SaveCommand { get; set; }
         public ReactiveProperty<CellViewModel> SelectedCell { get; set; }
-        public ReactiveCommand EditSettingCommand {get;}
-        public ReactiveCommand SaveCommand { get; set; }
 
         private GameTemplate GameTemplate;
 
@@ -38,7 +38,7 @@ namespace MiniShogiMobile.ViewModels
             Game = new GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
             //IsKomaMoving = new ReactiveProperty<bool>(false);
             SelectedCell = new ReactiveProperty<CellViewModel>();
-            TapCellCommand = new ReactiveCommand<CellViewModel>();
+            TapCellCommand = new AsyncReactiveCommand<CellViewModel>();
             TapCellCommand.Subscribe(async x =>
             {
                 await CatchErrorWithMessageAsync(async () =>
@@ -76,8 +76,8 @@ namespace MiniShogiMobile.ViewModels
                     }
 
                 });
-            });
-            EditCellCommand = new ReactiveCommand<CellViewModel>();
+            }).AddTo(Disposable);
+            EditCellCommand = new AsyncReactiveCommand<CellViewModel>();
             EditCellCommand.Subscribe(async x =>
             {
                 await CatchErrorWithMessageAsync(async () =>
@@ -90,7 +90,7 @@ namespace MiniShogiMobile.ViewModels
                     SelectedCell.Value = null;
                 });
             }).AddTo(this.Disposable);
-            SaveCommand = new ReactiveCommand();
+            SaveCommand = new AsyncReactiveCommand();
             SaveCommand.Subscribe(async (x) =>
             {
                 await CatchErrorWithMessageAsync(async () =>
@@ -102,7 +102,7 @@ namespace MiniShogiMobile.ViewModels
 
             }).AddTo(this.Disposable);
 
-            EditSettingCommand = new ReactiveCommand();
+            EditSettingCommand = new AsyncReactiveCommand();
             EditSettingCommand.Subscribe(async () =>
             {
                 await CatchErrorWithMessageAsync(async () =>
@@ -113,7 +113,6 @@ namespace MiniShogiMobile.ViewModels
                 });
 
             }).AddTo(this.Disposable);
-            //DeleteKomaCommand = new AsyncReactiveCommand<CellGameCreatingViewModel>();
             DeleteKomaCommand = new AsyncReactiveCommand();
             DeleteKomaCommand.Subscribe(async () =>
             {

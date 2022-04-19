@@ -17,22 +17,22 @@ namespace MiniShogiMobile.ViewModels
     {
         public ReactiveProperty<string> SelectedGameName { get; }
         public ObservableCollection<string> GameNameList { get; }
-        public ReactiveCommand EditCommand { get; set; }
-        public ReactiveCommand<string> DeleteCommand {get;}
-        public ReactiveCommand CreateNewCommand {get;}
+        public AsyncReactiveCommand EditCommand { get; set; }
+        public AsyncReactiveCommand<string> DeleteCommand {get;}
+        public AsyncReactiveCommand CreateNewCommand {get;}
         public CreateGameListPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             SelectedGameName = new ReactiveProperty<string>();
             GameNameList = new ObservableCollection<string>(App.CreateGameService.GameTemplateRepository.FindAllName());
-            EditCommand = new ReactiveCommand();
-            EditCommand.Subscribe(() =>
+            EditCommand = new AsyncReactiveCommand();
+            EditCommand.Subscribe(async () =>
             {
                 var param = new NavigationParameters();
                 param.Add(nameof(CreateGameCondition), new CreateGameCondition(SelectedGameName.Value));
-                navigationService.NavigateAsync(nameof(CreateGamePage), param);
+                await navigationService.NavigateAsync(nameof(CreateGamePage), param);
             }).AddTo(Disposable);
 
-            DeleteCommand = new ReactiveCommand<string>();
+            DeleteCommand = new AsyncReactiveCommand<string>();
             DeleteCommand.Subscribe(async (name) =>
             {
                 bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "削除しますか?", "はい", "いいえ");
@@ -44,12 +44,12 @@ namespace MiniShogiMobile.ViewModels
                 }
 
             }).AddTo(Disposable);
-            CreateNewCommand = new ReactiveCommand();
-            CreateNewCommand.Subscribe(() =>
+            CreateNewCommand = new AsyncReactiveCommand();
+            CreateNewCommand.Subscribe(async () =>
             {
                 var param = new NavigationParameters();
                 param.Add(nameof(CreateGameCondition), new CreateGameCondition(null));
-                navigationService.NavigateAsync(nameof(CreateGamePage), param);
+                await navigationService.NavigateAsync(nameof(CreateGamePage), param);
             }).AddTo(Disposable);
         }
     }

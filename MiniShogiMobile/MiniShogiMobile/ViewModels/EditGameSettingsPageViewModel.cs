@@ -17,7 +17,7 @@ namespace MiniShogiMobile.ViewModels
     public class WinConditionTypeConverter : EnumToDescriptionConverter<WinConditionType> { }
     public class EditGameSettingsPageViewModel : ViewModelBase
     {
-        public ReactiveCommand OkCommand { get; }
+        public AsyncReactiveCommand OkCommand { get; }
         public ReactiveProperty<string> Name { get; }
         public ReactiveProperty<int> Height { get; }
         public ReactiveProperty<int> Width { get; }
@@ -41,8 +41,8 @@ namespace MiniShogiMobile.ViewModels
             EnableKomaCannotMove = new ReactiveProperty<bool>();
             EnableLeaveOte = new ReactiveProperty<bool>();
             
-            OkCommand = new ReactiveCommand();
-            OkCommand.Subscribe(() =>
+            OkCommand = new AsyncReactiveCommand();
+            OkCommand.Subscribe(async () =>
             {
                 GameTemplate.Name = Name.Value;
                 GameTemplate.Height = Height.Value;
@@ -53,7 +53,7 @@ namespace MiniShogiMobile.ViewModels
                 GameTemplate.ProhibitedMoves.EnableKomaCannotMove = EnableKomaCannotMove.Value;
                 GameTemplate.ProhibitedMoves.EnableCheckmateByHandHu = EnableCheckmateByHandHu.Value;
                 GameTemplate.ProhibitedMoves.EnableLeaveOte = EnableLeaveOte.Value;
-                navigationService.GoBackAsync();
+                await navigationService.GoBackAsync();
             }).AddTo(this.Disposable);
         }
 
