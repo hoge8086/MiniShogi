@@ -52,13 +52,19 @@
                             RelativeLayout.YConstraint="0"
                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"
-                            ClickCommand="{Binding Path=BindingContext.TapCellCommand, Source={x:Reference board}}"
-                            IsHighlight="{Binding IsSelectedForMoving.Value}">
+                            ClickCommand="{Binding Path=BindingContext.TapCellCommand, Source={x:Reference board}}">
+                            <views:CellView.IsHighlight>
+                              <!--選択中のセルが自身のセルならハイライト-->
+                              <MultiBinding Converter="{StaticResource EqualsMultiConverter}">
+                                  <Binding Path="BindingContext.SelectedCell.Value" Source="{x:Reference board}"/>
+                                  <Binding />
+                              </MultiBinding>
+                            </views:CellView.IsHighlight>
                             <views:CellView.Triggers>
                                 <MultiTrigger TargetType="views:CellView">
                                     <MultiTrigger.Conditions>
                                         <BindingCondition Binding="{Binding Koma.Value, Converter={x:StaticResource isNullConverter}}" Value="True"/>
-                                        <BindingCondition Binding="{Binding Path=BindingContext.IsKomaMoving.Value, Source={x:Reference board}}" Value="True"/>
+                                        <BindingCondition Binding="{Binding Path=BindingContext.SelectedCell.Value, Source={x:Reference board}, Converter={StaticResource isNullConverter}}" Value="False"/>
                                     </MultiTrigger.Conditions>
                                     <Setter Property="IsMarked" Value="True"/>
                                 </MultiTrigger>
@@ -66,7 +72,6 @@
                         </views:CellView>
                         <ImageButton
                             Source="{utils:ImageResource MiniShogiMobile.Images.EditIcon.png}" 
-                            IsVisible="{Binding IsSelectedForMoving.Value}"
                             CommandParameter="{Binding}"
                             Command="{Binding Path=BindingContext.EditCellCommand, Source={x:Reference board}}"
                             BackgroundColor="Transparent"
@@ -74,6 +79,13 @@
                             RelativeLayout.YConstraint="0"
                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"
                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.4}">
+                            <ImageButton.IsVisible>
+                                <!--選択中のセルが自身のセルなら編集ボタン表示-->
+                                <MultiBinding Converter="{StaticResource EqualsMultiConverter}">
+                                    <Binding Path="BindingContext.SelectedCell.Value" Source="{x:Reference board}"/>
+                                    <Binding />
+                                </MultiBinding>
+                            </ImageButton.IsVisible>
                         </ImageButton>
                     </RelativeLayout>
                 </ControlTemplate>
@@ -103,11 +115,11 @@
             </ctrl:KomadaiView>
             <ImageButton Grid.Column="2"
                 Source="{utils:ImageResource MiniShogiMobile.Images.DeleteIcon.png}" 
-                IsEnabled="{Binding Path=BindingContext.IsKomaMoving.Value, Source={x:Reference board}}"
+                IsEnabled="{Binding Path=BindingContext.SelectedCell.Value, Source={x:Reference board}, Converter={StaticResource IsNotNullConverter}}"
                 Command="{Binding Path=BindingContext.DeleteKomaCommand, Source={x:Reference board}}"
                 BackgroundColor="Transparent">
                 <ImageButton.Triggers>
-                    <DataTrigger TargetType="ImageButton" Binding="{Binding Path=BindingContext.IsKomaMoving.Value, Source={x:Reference board}}" Value="False">
+                    <DataTrigger TargetType="ImageButton" Binding="{Binding Path=BindingContext.SelectedCell.Value, Source={x:Reference board}, Converter={StaticResource isNullConverter}}" Value="True">
                         <Setter Property="Opacity" Value="0.3"/>
                     </DataTrigger>
                 </ImageButton.Triggers>
