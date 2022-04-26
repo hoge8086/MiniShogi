@@ -23,6 +23,45 @@ namespace MiniShogiMobile.Controls
         {
             InitializeComponent();
         }
+        #region MaxHeight, MaxWidth
+        public static readonly BindableProperty MaxHeightProperty = BindableProperty.Create(
+                                                                            nameof(MaxHeight),
+                                                                            typeof(Double),
+                                                                            typeof(SquareCell2DGridControl),
+                                                                            -1.0,
+                                                                            propertyChanging: OnMaxHeightOrWidthPropertyChanged);
+ 
+        /// <summary>
+        /// グリットの各セルのデータテンプレート
+        /// </summary>
+        public Double MaxHeight
+        {
+            get { return (Double)GetValue(MaxHeightProperty); }
+            set { SetValue(MaxHeightProperty, value); }
+        }
+
+        public static readonly BindableProperty MaxWidthProperty = BindableProperty.Create(
+                                                                            nameof(MaxWidth),
+                                                                            typeof(Double),
+                                                                            typeof(SquareCell2DGridControl),
+                                                                            -1.0,
+                                                                            propertyChanging: OnMaxHeightOrWidthPropertyChanged);
+ 
+        /// <summary>
+        /// グリットの各セルのデータテンプレート
+        /// </summary>
+        public Double MaxWidth
+        {
+            get { return (Double)GetValue(MaxWidthProperty); }
+            set { SetValue(MaxWidthProperty, value); }
+        }
+
+        static void OnMaxHeightOrWidthPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var ctrl = bindable as SquareCell2DGridControl;
+            ctrl.board_ChildCountChanged(null, null);
+        }
+        #endregion
 
         #region ItemTemplate
         public static readonly BindableProperty ItemTemplateProperty = BindableProperty.Create(
@@ -74,7 +113,6 @@ namespace MiniShogiMobile.Controls
         }
         #endregion
 
-
         ///// <summary>
         ///// サイズ変更処理
         ///// </summary>
@@ -90,15 +128,21 @@ namespace MiniShogiMobile.Controls
             if (cells.Count() == 0)
                 return;
 
-            if (self.Width <= 0 || self.Height <= 0)
+            if (MaxHeight <= 0 || MaxWidth <= 0)
                 return;
 
+
             // [TODO:プロパティ化 21 = 10(枠線)×2 + 1(下線/右線)]
-            var unitX = (self.Width - 21) / cells.Count();
-            var unitY = (self.Height - 21) / ItemsSource.Count();
+            //var unitX = Math.Floor((Math.Floor(MaxWidth) - (10 + cells.Count() + 1)) / cells.Count());
+            //var unitY = Math.Floor((Math.Floor(MaxHeight) - (10 + ItemsSource.Count() + 1)) / ItemsSource.Count());
+            //var unitX = Math.Floor(((Math.Floor(MaxWidth) - (20 + (cells.Count() + 1))*2) / cells.Count()));
+            //var unitY = Math.Floor(((Math.Floor(MaxHeight) - (20 + (ItemsSource.Count() + 1)*2)) / ItemsSource.Count()));
+            var unitX = Math.Floor(((Math.Floor(MaxWidth) - (20 + cells.Count() + 1)) / cells.Count()));
+            var unitY = Math.Floor(((Math.Floor(MaxHeight) - (20 + ItemsSource.Count() + 1)) / ItemsSource.Count()));
 
             // [各セルを同じ高さ幅（正方形）にする]
             var size = Math.Min(unitX, unitY);
+            System.Diagnostics.Debug.WriteLine($"cell size:{size}");
             foreach(var row in board.Children)
             {
                 var stackLayout = row as StackLayout;

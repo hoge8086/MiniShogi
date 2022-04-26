@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MiniShogiMobile.Controls.SquareCell2DGridControl"
              x:Name="self"
+             BackgroundColor="Yellow"
              HorizontalOptions="FillAndExpand"
              VerticalOptions="FillAndExpand">
     <ContentView.Content>
@@ -14,7 +15,10 @@
                CornerRadius="0"
                HorizontalOptions="Center"
                VerticalOptions="Center">
-            <Frame Padding="0,0,1,1"
+           <!--
+            <Frame Padding="1,1,1,1"
+            -->
+            <Frame Padding="1"
                    Margin="10"
                    BackgroundColor="Chocolate"
                    CornerRadius="0"
@@ -23,10 +27,9 @@
                 <!--行-->
                 <!--子の数が変わったときに時にセルのサイズを調整する-->
                 <StackLayout x:Name="board"
-                             Spacing="0"
+                             Spacing="1"
                              HorizontalOptions="Center"
                              VerticalOptions="Center"
-                             BackgroundColor="SandyBrown"
                              ChildAdded="board_ChildCountChanged"
                              ChildRemoved="board_ChildCountChanged"
                              SizeChanged="board_ChildCountChanged">
@@ -40,23 +43,25 @@
                                          HorizontalOptions="FillAndExpand"
                                          VerticalOptions="FillAndExpand"
                                          Orientation="Horizontal"
-                                         Spacing="0"
+                                         Spacing="1"
                                          ChildAdded="board_ChildCountChanged"
                                          ChildRemoved="board_ChildCountChanged">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate>
                                         <!--セルの枠線を囲ってしまうと、スタックパネルの隙間が目立つので、右線と上線のみ表示する-->
                                         <!--↑そのためだけに、ContentTemplateを使ってめんどくさい実装をしている(Frameをコントロールを使う側でやりたくなかったので)-->
+                                        <ContentView
+                                            HorizontalOptions="FillAndExpand"
+                                            VerticalOptions="FillAndExpand"
+                                            ControlTemplate="{Binding Path=ItemTemplate, Source={x:Reference self}}"/>
+                                        <!--
                                         <Frame Padding="1,1,0,0"
                                                BackgroundColor="Chocolate"
                                                CornerRadius="0"
                                                HorizontalOptions="FillAndExpand"
                                                VerticalOptions="FillAndExpand">
-                                            <ContentView
-                                                HorizontalOptions="FillAndExpand"
-                                                VerticalOptions="FillAndExpand"
-                                                ControlTemplate="{Binding Path=ItemTemplate, Source={x:Reference self}}"/>
                                         </Frame>
+                                        -->
                                     </DataTemplate>
                                 </BindableLayout.ItemTemplate>
                             </StackLayout>

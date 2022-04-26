@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="MiniShogiMobile.App">
   <Application.Resources>
     <!-- Application resource dictionary -->
@@ -12,6 +13,8 @@
     <utils:IsNotNullConverter x:Key="IsNotNullConverter"/>
     <utils:ImageSourceConverter x:Key="ImageSourceConverter"/>
     <utils:EqualsMultiConverter x:Key="EqualsMultiConverter"/>
+    <xct:MathExpressionConverter x:Key="MathExpressionConverter" />
+    <xct:MultiMathExpressionConverter x:Key="MultiMathExpressionConverter" />
     <Color x:Key="Player1Color">DodgerBlue</Color>
     <Color x:Key="Player2Color">#eb233d</Color>
   </Application.Resources>

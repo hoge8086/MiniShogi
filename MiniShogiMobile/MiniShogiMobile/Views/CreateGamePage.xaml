@@ -8,144 +8,169 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateGamePage"
              Title="ゲーム作成">
-    <Grid RowDefinitions="*,*,8*,*,*" ColumnDefinitions="*,20*,*">
+    <Grid RowDefinitions="Auto,*,Auto" ColumnDefinitions="10,*,10">
+        <!--メニュー-->
         <StackLayout
             Grid.Column="1"
             Grid.Row="0"
             Orientation="Horizontal"
             HorizontalOptions="FillAndExpand">
+            <Label Text="{Binding Path=Height, Source={x:Reference board} }"/>
+            <Label Text="{Binding Path=MaxHeight, Source={x:Reference board} }"/>
+            <Label Text="{Binding Path=Width, Source={x:Reference board} }"/>
+            <Label Text="{Binding Path=MaxWidth, Source={x:Reference board} }"/>
             <Button Text="設定" Command="{Binding EditSettingCommand}" Margin="5" HorizontalOptions="EndAndExpand"/>
         </StackLayout>
-        <Grid ColumnDefinitions="*,Auto"
-            BindingContext="{Binding Game.HandsOfPlayer2}"
+        <!--ゲーム-->
+        <StackLayout
+            x:Name="gameField"
+            Spacing="0"
+            Margin="0"
             Grid.Column="1"
             Grid.Row="1">
-            <ctrl:PlayerView
-                Grid.Column="1"
-                Text="P2"
-                WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
-                BackgroundColor="{StaticResource Player2Color}">
-            </ctrl:PlayerView>
-            <ctrl:KomadaiView
-                Grid.Column="0"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand"
-                ItemsSource="{Binding Hands}">
-                <ctrl:KomadaiView.ItemTemplate>
-                    <DataTemplate>
-                        <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}"
-                                           WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"/>
-                    </DataTemplate>
-                </ctrl:KomadaiView.ItemTemplate>
-            </ctrl:KomadaiView>
-        </Grid>
-        <ctrl:SquareCell2DGridControl
-            x:Name="board"
-            Grid.Column="1"
-            Grid.Row="2"
-            ItemsSource="{Binding Game.Board.Cells}">
-            <ctrl:SquareCell2DGridControl.ItemTemplate>
-                <ControlTemplate>
-                    <RelativeLayout BindingContext="{TemplateBinding BindingContext}">
-                        <views:CellView
-                            RelativeLayout.XConstraint="0"
-                            RelativeLayout.YConstraint="0"
-                            RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
-                            RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"
-                            ClickCommand="{Binding Path=BindingContext.TapCellCommand, Source={x:Reference board}}">
-                            <views:CellView.IsHighlight>
-                              <!--選択中のセルが自身のセルならハイライト-->
-                              <MultiBinding Converter="{StaticResource EqualsMultiConverter}">
-                                  <Binding Path="BindingContext.SelectedCell.Value" Source="{x:Reference board}"/>
-                                  <Binding />
-                              </MultiBinding>
-                            </views:CellView.IsHighlight>
-                            <views:CellView.Triggers>
-                                <!--自身のセルが空で、選択中のセルに駒があるなら、自身のセルへ移動可能なので●を出す-->
-                                <MultiTrigger TargetType="views:CellView">
-                                    <MultiTrigger.Conditions>
-                                        <BindingCondition Binding="{Binding Koma.Value, Converter={x:StaticResource isNullConverter}}" Value="True"/>
-                                        <BindingCondition Binding="{Binding Path=BindingContext.IsSelectingKoma.Value, Source={x:Reference board}}" Value="True"/>
-                                    </MultiTrigger.Conditions>
-                                    <Setter Property="IsMarked" Value="True"/>
-                                </MultiTrigger>
-                            </views:CellView.Triggers>
-                        </views:CellView>
-                        <ImageButton
-                            Source="{utils:ImageResource MiniShogiMobile.Images.EditIcon.png}" 
-                            CommandParameter="{Binding}"
-                            Command="{Binding Path=BindingContext.EditCellCommand, Source={x:Reference board}}"
-                            BackgroundColor="Transparent"
-                            RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.6}"
-                            RelativeLayout.YConstraint="0"
-                            RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"
-                            RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.4}"
-                            IsVisible="False">
-                            <ImageButton.Triggers>
-                                <!--選択中のセルが自身のセルかつ、駒が存在するなら編集ボタン表示-->
-                                <MultiTrigger TargetType="ImageButton">
-                                    <MultiTrigger.Conditions>
-                                        <BindingCondition  Value="True">
-                                            <BindingCondition.Binding>
-                                                <MultiBinding Converter="{StaticResource EqualsMultiConverter}">
-                                                    <Binding Path="BindingContext.SelectedCell.Value" Source="{x:Reference board}"/>
-                                                    <Binding />
-                                                </MultiBinding>
-                                            </BindingCondition.Binding>
-                                        </BindingCondition>
-                                        <BindingCondition Binding="{Binding Path=BindingContext.IsSelectingKoma.Value, Source={x:Reference board}}" Value="True"/>
-                                        <BindingCondition Binding="{Binding Koma.Value, Converter={StaticResource IsNotNullConverter}}" Value="True"/>
-                                    </MultiTrigger.Conditions>
-                                    <Setter Property="IsVisible" Value="True"/>
-                                </MultiTrigger>
-                            </ImageButton.Triggers>
-                        </ImageButton>
-                    </RelativeLayout>
-                </ControlTemplate>
-            </ctrl:SquareCell2DGridControl.ItemTemplate>
-        </ctrl:SquareCell2DGridControl>
-        <Grid ColumnDefinitions="Auto,*,Auto"
-            BindingContext="{Binding Game.HandsOfPlayer1}"
-            Grid.Column="1"
-            Grid.Row="3">
-            <ctrl:PlayerView
-                Grid.Column="0"
-                Text="P1"
-                WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
-                BackgroundColor="{StaticResource Player1Color}">
-            </ctrl:PlayerView>
-            <ctrl:KomadaiView
-                Grid.Column="1"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand"
-                ItemsSource="{Binding Hands}">
-                <ctrl:KomadaiView.ItemTemplate>
-                    <DataTemplate>
-                        <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}"
-                                           WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"/>
-                    </DataTemplate>
-                </ctrl:KomadaiView.ItemTemplate>
-            </ctrl:KomadaiView>
-            <ImageButton Grid.Column="2"
-                Source="{utils:ImageResource MiniShogiMobile.Images.DeleteIcon.png}" 
-                IsEnabled="{Binding Path=BindingContext.SelectedCell.Value, Source={x:Reference board}, Converter={StaticResource IsNotNullConverter}}"
-                Command="{Binding Path=BindingContext.DeleteKomaCommand, Source={x:Reference board}}"
-                BackgroundColor="Transparent"
-                Opacity="0.3">
-                <ImageButton.Triggers>
-                    <MultiTrigger TargetType="ImageButton">
-                        <MultiTrigger.Conditions>
-                            <BindingCondition Binding="{Binding Path=BindingContext.SelectedCell.Value, Source={x:Reference board}, Converter={StaticResource isNullConverter}}" Value="False"/>
-                            <BindingCondition Binding="{Binding Path=BindingContext.IsSelectingKoma.Value, Source={x:Reference board}}" Value="True"/>
-                        </MultiTrigger.Conditions>
-                        <Setter Property="Opacity" Value="1"/>
-                    </MultiTrigger>
-                </ImageButton.Triggers>
-            </ImageButton>
-        </Grid>
+            <!--プレイヤー2-->
+            <Grid ColumnDefinitions="*,Auto"
+                BackgroundColor="Pink"
+                HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.1)'}"
+                VerticalOptions="EndAndExpand"
+                BindingContext="{Binding Game.HandsOfPlayer2}">
+                <!--プレイヤーアイコン-->
+                <ctrl:PlayerView
+                    Grid.Column="1"
+                    Text="P2"
+                    WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
+                    BackgroundColor="{StaticResource Player2Color}">
+                </ctrl:PlayerView>
+                <!--持ち駒-->
+                <ctrl:KomadaiView
+                    Grid.Column="0"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand"
+                    ItemsSource="{Binding Hands}">
+                    <ctrl:KomadaiView.ItemTemplate>
+                        <DataTemplate>
+                            <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}"
+                                               WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"/>
+                        </DataTemplate>
+                    </ctrl:KomadaiView.ItemTemplate>
+                </ctrl:KomadaiView>
+            </Grid>
+            <!--盤-->
+            <ctrl:SquareCell2DGridControl
+                BackgroundColor="Red"
+                x:Name="board"
+                VerticalOptions="Center"
+                MaxHeight="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.8)'}"
+                MaxWidth="{Binding Source={x:Reference gameField}, Path=Width}"
+                ItemsSource="{Binding Game.Board.Cells}">
+                <ctrl:SquareCell2DGridControl.ItemTemplate>
+                    <ControlTemplate>
+                        <RelativeLayout BindingContext="{TemplateBinding BindingContext}">
+                            <views:CellView
+                                RelativeLayout.XConstraint="0"
+                                RelativeLayout.YConstraint="0"
+                                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
+                                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"
+                                ClickCommand="{Binding Path=BindingContext.TapCellCommand, Source={x:Reference board}}">
+                                <views:CellView.IsHighlight>
+                                  <!--選択中のセルが自身のセルならハイライト-->
+                                  <MultiBinding Converter="{StaticResource EqualsMultiConverter}">
+                                      <Binding Path="BindingContext.SelectedCell.Value" Source="{x:Reference board}"/>
+                                      <Binding />
+                                  </MultiBinding>
+                                </views:CellView.IsHighlight>
+                                <views:CellView.Triggers>
+                                    <!--自身のセルが空で、選択中のセルに駒があるなら、自身のセルへ移動可能なので●を出す-->
+                                    <MultiTrigger TargetType="views:CellView">
+                                        <MultiTrigger.Conditions>
+                                            <BindingCondition Binding="{Binding Koma.Value, Converter={x:StaticResource isNullConverter}}" Value="True"/>
+                                            <BindingCondition Binding="{Binding Path=BindingContext.IsSelectingKoma.Value, Source={x:Reference board}}" Value="True"/>
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="IsMarked" Value="True"/>
+                                    </MultiTrigger>
+                                </views:CellView.Triggers>
+                            </views:CellView>
+                            <ImageButton
+                                Source="{utils:ImageResource MiniShogiMobile.Images.EditIcon.png}" 
+                                CommandParameter="{Binding}"
+                                Command="{Binding Path=BindingContext.EditCellCommand, Source={x:Reference board}}"
+                                BackgroundColor="Transparent"
+                                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.6}"
+                                RelativeLayout.YConstraint="0"
+                                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"
+                                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.4}"
+                                IsVisible="False">
+                                <ImageButton.Triggers>
+                                    <!--選択中のセルが自身のセルかつ、駒が存在するなら編集ボタン表示-->
+                                    <MultiTrigger TargetType="ImageButton">
+                                        <MultiTrigger.Conditions>
+                                            <BindingCondition  Value="True">
+                                                <BindingCondition.Binding>
+                                                    <MultiBinding Converter="{StaticResource EqualsMultiConverter}">
+                                                        <Binding Path="BindingContext.SelectedCell.Value" Source="{x:Reference board}"/>
+                                                        <Binding />
+                                                    </MultiBinding>
+                                                </BindingCondition.Binding>
+                                            </BindingCondition>
+                                            <BindingCondition Binding="{Binding Path=BindingContext.IsSelectingKoma.Value, Source={x:Reference board}}" Value="True"/>
+                                            <BindingCondition Binding="{Binding Koma.Value, Converter={StaticResource IsNotNullConverter}}" Value="True"/>
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="IsVisible" Value="True"/>
+                                    </MultiTrigger>
+                                </ImageButton.Triggers>
+                            </ImageButton>
+                        </RelativeLayout>
+                    </ControlTemplate>
+                </ctrl:SquareCell2DGridControl.ItemTemplate>
+            </ctrl:SquareCell2DGridControl>
+            <!--プレイヤー1-->
+            <Grid ColumnDefinitions="Auto,*,Auto"
+                BackgroundColor="Pink"
+                HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.1)'}"
+                BindingContext="{Binding Game.HandsOfPlayer1}"
+                VerticalOptions="StartAndExpand">
+                <!--プレイヤーアイコン-->
+                <ctrl:PlayerView
+                    Grid.Column="0"
+                    Text="P1"
+                    WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
+                    BackgroundColor="{StaticResource Player1Color}">
+                </ctrl:PlayerView>
+                <!--持ち駒-->
+                <ctrl:KomadaiView
+                    Grid.Column="1"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand"
+                    ItemsSource="{Binding Hands}">
+                    <ctrl:KomadaiView.ItemTemplate>
+                        <DataTemplate>
+                            <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}"
+                                               WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"/>
+                        </DataTemplate>
+                    </ctrl:KomadaiView.ItemTemplate>
+                </ctrl:KomadaiView>
+                <!--ゴミ箱-->
+                <ImageButton Grid.Column="2"
+                    Source="{utils:ImageResource MiniShogiMobile.Images.DeleteIcon.png}" 
+                    IsEnabled="{Binding Path=BindingContext.SelectedCell.Value, Source={x:Reference board}, Converter={StaticResource IsNotNullConverter}}"
+                    Command="{Binding Path=BindingContext.DeleteKomaCommand, Source={x:Reference board}}"
+                    BackgroundColor="Transparent"
+                    Opacity="0.3">
+                    <ImageButton.Triggers>
+                        <MultiTrigger TargetType="ImageButton">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Path=BindingContext.SelectedCell.Value, Source={x:Reference board}, Converter={StaticResource isNullConverter}}" Value="False"/>
+                                <BindingCondition Binding="{Binding Path=BindingContext.IsSelectingKoma.Value, Source={x:Reference board}}" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Opacity" Value="1"/>
+                        </MultiTrigger>
+                    </ImageButton.Triggers>
+                </ImageButton>
+            </Grid>
+        </StackLayout>
         <StackLayout
             Grid.Column="1"
-            Grid.Row="4">
+            Grid.Row="2">
             <Button Text="保存" Command="{Binding SaveCommand}" VerticalOptions="CenterAndExpand"/>
         </StackLayout>
     </Grid>
