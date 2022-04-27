@@ -48,9 +48,7 @@
                                         <!--↑そのためだけに、ContentTemplateを使ってめんどくさい実装をしている(Frameをコントロールを使う側でやりたくなかったので)-->
                                         <Frame Padding="1,1,0,0"
                                                BackgroundColor="Chocolate"
-                                               CornerRadius="0"
-                                               HorizontalOptions="FillAndExpand"
-                                               VerticalOptions="FillAndExpand">
+                                               CornerRadius="0">
                                             <ContentView
                                                 ControlTemplate="{Binding Path=ItemTemplate, Source={x:Reference self}}"/>
                                         </Frame>

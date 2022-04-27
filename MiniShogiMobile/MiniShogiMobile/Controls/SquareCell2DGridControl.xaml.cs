@@ -132,13 +132,13 @@ namespace MiniShogiMobile.Controls
                 return;
 
 
-            // [TODO:プロパティ化 21 = 10(枠線)×2 + 1(下線/右線)]
-            var unitX = Math.Floor((Math.Floor(MaxWidth) - 21) / cells.Count());
-            var unitY = Math.Floor((Math.Floor(MaxHeight) - 21) / ItemsSource.Count());
+            // [TODO:プロパティ化 21 = 10(Margin)×2 + (1×セル数+1)(下線/右線/左線/上線)]
+            //var unitX = Math.Floor((Math.Floor(MaxWidth) - 21) / cells.Count());
+            //var unitY = Math.Floor((Math.Floor(MaxHeight) - 21) / ItemsSource.Count());
             //var unitX = Math.Floor(((Math.Floor(MaxWidth) - (20 + (cells.Count() + 1))*2) / cells.Count()));
             //var unitY = Math.Floor(((Math.Floor(MaxHeight) - (20 + (ItemsSource.Count() + 1)*2)) / ItemsSource.Count()));
-            //var unitX = Math.Floor(((Math.Floor(MaxWidth) - (20 + cells.Count() + 1)) / cells.Count()));
-            //var unitY = Math.Floor(((Math.Floor(MaxHeight) - (20 + ItemsSource.Count() + 1)) / ItemsSource.Count()));
+            var unitX = Math.Floor(((Math.Floor(MaxWidth) - (20 + cells.Count() + 1)) / cells.Count()));
+            var unitY = Math.Floor(((Math.Floor(MaxHeight) - (20 + ItemsSource.Count() + 1)) / ItemsSource.Count()));
 
             // [各セルを同じ高さ幅（正方形）にする]
             var size = Math.Min(unitX, unitY);
@@ -150,6 +150,8 @@ namespace MiniShogiMobile.Controls
                 {
                     foreach (var cell in stackLayout.Children)
                     {
+                        // cellはFrameクラスのインスタンス
+                        // FrameのPaddingはなぜかHeightRequeset/WidthRequestに収まらず実際のHeight/WidthはRequestにPaddingを足した数になる]
                         cell.HeightRequest = size;
                         cell.WidthRequest = size;
                     }
