@@ -30,7 +30,6 @@
             Grid.Row="1">
             <!--プレイヤー2-->
             <Grid ColumnDefinitions="*,Auto"
-                BackgroundColor="Pink"
                 HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.1)'}"
                 VerticalOptions="EndAndExpand"
                 BindingContext="{Binding Game.HandsOfPlayer2}">
@@ -57,10 +56,10 @@
             </Grid>
             <!--盤-->
             <ctrl:SquareCell2DGridControl
-                BackgroundColor="Red"
+                Margin="0,12,0,12"
                 x:Name="board"
                 VerticalOptions="Center"
-                MaxHeight="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.8)'}"
+                MaxHeight="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.8) - 24'}"
                 MaxWidth="{Binding Source={x:Reference gameField}, Path=Width}"
                 ItemsSource="{Binding Game.Board.Cells}">
                 <ctrl:SquareCell2DGridControl.ItemTemplate>
@@ -125,7 +124,6 @@
             </ctrl:SquareCell2DGridControl>
             <!--プレイヤー1-->
             <Grid ColumnDefinitions="Auto,*,Auto"
-                BackgroundColor="Pink"
                 HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.1)'}"
                 BindingContext="{Binding Game.HandsOfPlayer1}"
                 VerticalOptions="StartAndExpand">
