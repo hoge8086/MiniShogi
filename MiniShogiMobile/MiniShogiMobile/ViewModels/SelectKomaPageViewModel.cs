@@ -23,7 +23,8 @@ namespace MiniShogiMobile.ViewModels
 
         public SelectKomaPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
-            KomaNameList = new ObservableCollection<string>();
+            var komaList = App.CreateGameService.KomaTypeRepository.FindAll().ToDictionary(x => x.Id);
+            KomaNameList = new ObservableCollection<string>(komaList.Keys);
             SelectedKomaName = new ReactiveProperty<string>();
 
             OkCommand = new AsyncReactiveCommand();
@@ -41,8 +42,6 @@ namespace MiniShogiMobile.ViewModels
 
         public override void Prepare(SelectKomaConditions parameter)
         {
-            foreach(var name in parameter.KomaNameList)
-                KomaNameList.Add(name);
             if (parameter.SelectedKoma == null)
                 SelectedKomaName.Value = KomaNameList.FirstOrDefault();
             else

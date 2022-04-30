@@ -66,14 +66,21 @@ namespace MiniShogiMobile.ViewModels
                             bool doPutKoma = await pageDialogService.DisplayAlertAsync("確認", "駒を配置しますか?", "はい", "いいえ");
                             if (doPutKoma)
                             {
-                                var result = await NavigateAsync<EditCellPageViewModel, EditCellCondition, KomaViewModel>(new EditCellCondition(x, GameTemplate.Height));
-                                if(result.Success)
+                                var selectedKomaType = await NavigateAsync<SelectKomaPageViewModel, SelectKomaConditions, string>(new SelectKomaConditions(null));
+                                if(selectedKomaType.Success)
                                 {
-                                    //選択を解除
-                                    SelectedCell.Value = null;
-                                    //駒を配置
-                                    x.Koma.Value = result.Data;
+                                    var owner = ((GameTemplate.Height/ 2) > x.Position.Y) ? PlayerType.Player2 : PlayerType.Player1;
+                                    var newKoma = new KomaViewModel(selectedKomaType.Data, owner, false);
+                                    var result = await NavigateAsync<EditCellPageViewModel, KomaViewModel, KomaViewModel>(newKoma);
+                                    if(result.Success)
+                                    {
+                                        //選択を解除
+                                        SelectedCell.Value = null;
+                                        //駒を配置
+                                        x.Koma.Value = result.Data;
+                                    }
                                 }
+
                             }
                             else
                             {
@@ -95,7 +102,7 @@ namespace MiniShogiMobile.ViewModels
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-                    var result = await NavigateAsync<EditCellPageViewModel, EditCellCondition, KomaViewModel>(new EditCellCondition(x, GameTemplate.Height));
+                    var result = await NavigateAsync<EditCellPageViewModel, KomaViewModel, KomaViewModel>(x.Koma.Value);
                     if(result.Success)
                     {
                         //選択を解除

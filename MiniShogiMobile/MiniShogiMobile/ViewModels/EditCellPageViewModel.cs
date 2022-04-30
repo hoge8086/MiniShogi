@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace MiniShogiMobile.ViewModels
 {
-    public class EditCellPageViewModel : NavigationViewModel<EditCellCondition, KomaViewModel>
+    public class EditCellPageViewModel : NavigationViewModel<KomaViewModel, KomaViewModel>
     {
         public AsyncReactiveCommand OkCommand { get; }
         public AsyncReactiveCommand CancelCommand { get; }
@@ -54,7 +54,7 @@ namespace MiniShogiMobile.ViewModels
             ChangeKomaTypeCommand = new AsyncReactiveCommand<object>();
             ChangeKomaTypeCommand.Subscribe(async (x) =>
             {
-                var condition = new SelectKomaConditions(KomaTypes.Keys.ToList(), EditingCell.Koma.Value.Name.Value);
+                var condition = new SelectKomaConditions(EditingCell.Koma.Value.Name.Value);
                 var result = await NavigateAsync<SelectKomaPageViewModel, SelectKomaConditions, string>(condition);
                 if (result.Success)
                 {
@@ -62,12 +62,9 @@ namespace MiniShogiMobile.ViewModels
                 }
             }).AddTo(this.Disposable);
         }
-        public override void Prepare(EditCellCondition parameter)
+        public override void Prepare(KomaViewModel parameter)
         {
-            if (parameter.Cell.Koma.Value != null)
-                EditingCell.Koma.Value.Update(parameter.Cell.Koma.Value);
-            else
-                EditingCell.Koma.Value.PlayerType.Value = ((parameter.Height / 2) > parameter.Cell.Position.Y) ? PlayerType.Player2 : PlayerType.Player1;
+            EditingCell.Koma.Value.Update(parameter);
 
         }
     }
