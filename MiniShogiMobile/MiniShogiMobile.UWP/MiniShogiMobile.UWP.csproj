@@ -133,6 +133,10 @@
     <PackageReference Include="Prism.DryIoc.Forms" Version="8.0.0.1909" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Prism.NavigationEx\Prism.NavigationEx.csproj">
+      <Project>{4e68164e-dd08-4d7b-86c7-51092719f7e0}</Project>
+      <Name>Prism.NavigationEx</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MiniShogiMobile\MiniShogiMobile.csproj">
       <Project>{A682884C-CB44-4A89-B752-27BB634E0ABE}</Project>
       <Name>MiniShogiMobile</Name>

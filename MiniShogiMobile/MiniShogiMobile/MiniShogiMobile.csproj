@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Prism.NavigationEx\Prism.NavigationEx.csproj" />
     <ProjectReference Include="..\..\Shogi.Business\Shogi.Business.csproj" />
   </ItemGroup>
 
