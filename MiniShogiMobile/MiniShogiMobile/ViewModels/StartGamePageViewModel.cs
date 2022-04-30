@@ -16,6 +16,7 @@ using Shogi.Business.Domain.Model.PlayerTypes;
 using Prism.Services;
 using Shogi.Business.Domain.Model.GameTemplates;
 using Reactive.Bindings.Extensions;
+using Prism.NavigationEx;
 
 namespace MiniShogiMobile.ViewModels
 {
@@ -42,7 +43,7 @@ namespace MiniShogiMobile.ViewModels
         Player2,
     };
 
-    public class StartGamePageViewModel : ViewModelBase
+    public class StartGamePageViewModel : NavigationViewModel
     {
         public AsyncReactiveCommand PlayGameCommand { get; set; }
         public ObservableCollection<string> GameNameList { get; set; }

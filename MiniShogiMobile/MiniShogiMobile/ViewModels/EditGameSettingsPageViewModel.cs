@@ -3,6 +3,7 @@ using MiniShogiMobile.Utils;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
+using Prism.NavigationEx;
 using Prism.Services;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -15,7 +16,7 @@ namespace MiniShogiMobile.ViewModels
 {
     public class EnumWinConditionTypeProvider : EnumListProvider<WinConditionType> { }
     public class WinConditionTypeConverter : EnumToDescriptionConverter<WinConditionType> { }
-    public class EditGameSettingsPageViewModel : ViewModelBase
+    public class EditGameSettingsPageViewModel : NavigationViewModel
     {
         public AsyncReactiveCommand OkCommand { get; }
         public ReactiveProperty<string> Name { get; }

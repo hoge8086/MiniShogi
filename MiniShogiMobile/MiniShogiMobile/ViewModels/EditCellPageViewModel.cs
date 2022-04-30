@@ -13,10 +13,11 @@ using System.Collections.ObjectModel;
 using System.Reactive.Linq;
 using Reactive.Bindings.Extensions;
 using MiniShogiMobile.Views;
+using Prism.NavigationEx;
 
 namespace MiniShogiMobile.ViewModels
 {
-    public class EditCellPageViewModel : ViewModelBase
+    public class EditCellPageViewModel : NavigationViewModel
     {
         public AsyncReactiveCommand OkCommand { get; }
         public AsyncReactiveCommand CancelCommand { get; }
@@ -58,23 +59,19 @@ namespace MiniShogiMobile.ViewModels
             ChangeKomaTypeCommand = new AsyncReactiveCommand<object>();
             ChangeKomaTypeCommand.Subscribe(async (x) =>
             {
-                var param = new NavigationParameters();
-                param.Add(nameof(SelectKomaConditions), new SelectKomaConditions(KomaTypes.Keys.ToList(), EditingCell.Koma.Value.Name.Value));
-                await navigationService.NavigateAsync(nameof(SelectKomaPage), param);
+                var condition = new SelectKomaConditions(KomaTypes.Keys.ToList(), EditingCell.Koma.Value.Name.Value);
+                var result = await NavigateAsync<SelectKomaPageViewModel, SelectKomaConditions, string>(condition);
+                if (result.Success)
+                {
+                    EditingCell.Koma.Value.Name.Value = result.Data;
+                }
             }).AddTo(this.Disposable);
         }
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
+            base.OnNavigatedTo(parameters);
             var navigationMode = parameters.GetNavigationMode();
-            if (navigationMode == NavigationMode.Back)
-            {
-                var param = parameters[nameof(SelectKomaConditions)] as SelectKomaConditions;
-                if (param != null)
-                    EditingCell.Koma.Value.Name.Value = param.SelectedKoma;
-
-                return;
-            }
-            else
+            if (navigationMode == NavigationMode.New)
             {
                 var param = parameters[nameof(EditCellCondition)] as EditCellCondition;
                 if(param == null)

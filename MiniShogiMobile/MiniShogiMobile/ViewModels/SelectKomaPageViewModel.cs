@@ -2,6 +2,7 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
+using Prism.NavigationEx;
 using Prism.Services;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -13,7 +14,7 @@ using System.Linq;
 
 namespace MiniShogiMobile.ViewModels
 {
-    public class SelectKomaPageViewModel : ViewModelBase
+    public class SelectKomaPageViewModel : NavigationViewModel<SelectKomaConditions, string>
     {
         public AsyncReactiveCommand OkCommand { get; }
         public AsyncReactiveCommand CancelCommand { get; }
@@ -28,29 +29,24 @@ namespace MiniShogiMobile.ViewModels
             OkCommand = new AsyncReactiveCommand();
             OkCommand.Subscribe(async () =>
             {
-                var param = new NavigationParameters();
-                param.Add(nameof(SelectKomaConditions), new SelectKomaConditions(null, SelectedKomaName.Value)); ;
-                await navigationService.GoBackAsync(param);
+                await GoBackAsync(SelectedKomaName.Value);
 
             }).AddTo(this.Disposable);
             CancelCommand = new AsyncReactiveCommand();
             CancelCommand.Subscribe(async () =>
             {
-                await navigationService.GoBackAsync();
+                await GoBackAsync();
             }).AddTo(this.Disposable);
         }
-        public async override void OnNavigatedTo(INavigationParameters parameters)
-        {
-            var param = parameters[nameof(SelectKomaConditions)] as SelectKomaConditions;
-            if (param == null)
-                throw new ArgumentException(nameof(SelectKomaConditions));
 
-            foreach(var name in param.KomaNameList)
+        public override void Prepare(SelectKomaConditions parameter)
+        {
+            foreach(var name in parameter.KomaNameList)
                 KomaNameList.Add(name);
-            if (param.SelectedKoma == null)
+            if (parameter.SelectedKoma == null)
                 SelectedKomaName.Value = KomaNameList.FirstOrDefault();
             else
-                SelectedKomaName.Value = param.SelectedKoma;
+                SelectedKomaName.Value = parameter.SelectedKoma;
         }
     }
 }

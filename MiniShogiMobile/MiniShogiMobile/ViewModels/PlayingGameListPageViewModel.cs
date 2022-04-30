@@ -3,6 +3,7 @@ using MiniShogiMobile.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
+using Prism.NavigationEx;
 using Prism.Services;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -14,7 +15,7 @@ using System.Linq;
 
 namespace MiniShogiMobile.ViewModels
 {
-    public class PlayingGameListPageViewModel : ViewModelBase
+    public class PlayingGameListPageViewModel : NavigationViewModel
     {
         public ReactiveProperty<PlayingGame> SelectedPlayingGame { get; }
         public ObservableCollection<PlayingGame> PlayingGameList { get; }

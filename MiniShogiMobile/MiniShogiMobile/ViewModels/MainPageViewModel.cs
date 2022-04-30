@@ -10,12 +10,13 @@ using MiniShogiMobile.Views;
 using Prism.Services;
 using MiniShogiMobile.Conditions;
 using Reactive.Bindings.Extensions;
+using Prism.NavigationEx;
 
 // 参考:<https://anderson02.com/category/cs/xamarin-prism/>
 
 namespace MiniShogiMobile.ViewModels
 {
-    public class MainPageViewModel : ViewModelBase
+    public class MainPageViewModel : NavigationViewModel
     {
         public AsyncReactiveCommand StartGameCommand { get; set; }
         public AsyncReactiveCommand CreateGameCommand { get; set; }
@@ -26,18 +27,18 @@ namespace MiniShogiMobile.ViewModels
             StartGameCommand.Subscribe(async () =>
             {
                 await navigationService.NavigateAsync(nameof(StartGamePage));
-            }).AddTo(Disposable);;
+            }).AddTo(Disposable);
 
             ContinueGameCommand = new AsyncReactiveCommand();
             ContinueGameCommand.Subscribe(async () =>
             {
                 await navigationService .NavigateAsync(nameof(PlayingGameListPage));
-            }).AddTo(Disposable);;
+            }).AddTo(Disposable);
             CreateGameCommand = new AsyncReactiveCommand();
             CreateGameCommand.Subscribe(async () =>
             {
-                await navigationService.NavigateAsync(nameof(CreateGameListPage));
-            }).AddTo(Disposable);;
+                await NavigateAsync<CreateGameListPageViewModel>();
+            }).AddTo(Disposable);
         }
     }
 }

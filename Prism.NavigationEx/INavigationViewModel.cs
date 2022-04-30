@@ -4,7 +4,7 @@ using Prism.Navigation;
 
 namespace Prism.NavigationEx
 {
-    public interface INavigationViewModel : INavigationAware, IDestructible, IConfirmNavigationAsync
+    public interface INavigationViewModel : INavigationAware, IDestructible
     {
         void OnNavigatingFrom(INavigationParameters parameters);
     }

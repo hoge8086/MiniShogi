@@ -3,17 +3,42 @@ using System.Threading.Tasks;
 using Prism.Mvvm;
 using Prism.Navigation;
 using System.Threading;
+using System.Reactive.Disposables;
+using Prism.Services;
 
 namespace Prism.NavigationEx
 {
-    public abstract class NavigationViewModel : BindableBase, INavigationViewModel
+    public abstract class NavigationViewModel : BindableBase, IInitialize, INavigationViewModel
     {
+        private string _title;
+        public string Title
+        {
+            get { return _title; }
+            set { SetProperty(ref _title, value); }
+        }
+
+        protected CompositeDisposable Disposable { get; } = new CompositeDisposable();
+        public IPageDialogService PageDialogService { get; private set; }
+
         protected INavigationService NavigationService { get; }
         private Func<INavigationViewModel, Task> _receiveResult;
+        public virtual void Initialize(INavigationParameters parameters)
+        {
+            if (parameters.GetNavigationMode() == NavigationMode.New && parameters.TryGetValue<string>(NavigationParameterKey.ReceiveResultId, out var id))
+            {
+                parameters.TryGetValue<Func<INavigationViewModel, Task>>(id, out _receiveResult);
+            }
 
-        protected NavigationViewModel(INavigationService navigationService)
+            if (parameters.GetNavigationMode() == NavigationMode.Back && _receiveResult != null)
+            {
+                _receiveResult(this);
+            }
+        }
+
+        protected NavigationViewModel(INavigationService navigationService, IPageDialogService pageDialogService)
         {
             NavigationService = navigationService;
+            PageDialogService = pageDialogService;
         }
 
         public virtual void OnNavigatedFrom(INavigationParameters parameters)
@@ -28,53 +53,11 @@ namespace Prism.NavigationEx
         {
         }
 
-        public virtual void OnNavigatingTo(INavigationParameters parameters)
-        {
-            if (parameters.GetNavigationMode() == NavigationMode.New && parameters.TryGetValue<string>(NavigationParameterKey.ReceiveResultId, out var id))
-            {
-                parameters.TryGetValue<Func<INavigationViewModel, Task>>(id, out _receiveResult);
-            }
-
-            if (parameters.GetNavigationMode() == NavigationMode.Back && _receiveResult != null)
-            {
-                _receiveResult(this);
-            }
-        }
-
         public virtual void Destroy()
         {
+            this.Disposable.Dispose();
         }
 
-        public virtual async Task<bool> CanNavigateAsync(INavigationParameters parameters)
-        {
-            var result = true;
-            Func<Task<bool>> canNavigate = null;
-
-            if (!parameters.TryGetValue<Func<Task<bool>>>(NavigationParameterKey.CanNavigate, out canNavigate))
-            {
-                if (parameters.TryGetValue<string>(NavigationParameterKey.CanNavigateId, out var id))
-                {
-                    parameters.TryGetValue<Func<Task<bool>>>(id, out canNavigate);
-                }
-            }
-
-            if (canNavigate != null)
-            {
-                result = await canNavigate();
-            }
-
-            if (!result && parameters.TryGetValue<CancellationTokenSource>(NavigationParameterKey.CancellationTokenSource, out var cts))
-            {
-                cts.Cancel();
-            }
-
-            if (result)
-            {
-                OnNavigatingFrom(parameters);
-            }
-
-            return result;
-        }
 
         protected virtual Task<INavigationResult> NavigateAsync(INavigation navigation, bool? useModalNavigation = null, bool animated = true, bool wrapInNavigationPage = false, bool noHistory = false, bool replaced = false)
         {
@@ -139,13 +122,13 @@ namespace Prism.NavigationEx
 
     public abstract class NavigationViewModel<TParameter> : NavigationViewModel, INavigationViewModel<TParameter>
     {
-        protected NavigationViewModel(INavigationService navigationService) : base(navigationService)
+        protected NavigationViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
         }
 
-        public override void OnNavigatingTo(INavigationParameters parameters)
+        public override void Initialize(INavigationParameters parameters)
         {
-            base.OnNavigatingTo(parameters);
+            base.Initialize(parameters);
 
             this.PrepareIfNeeded(parameters);
         }
@@ -157,13 +140,13 @@ namespace Prism.NavigationEx
     {
         private TaskCompletionSource<TResult> _tcs;
 
-        protected NavigationViewModelResult(INavigationService navigationService) : base(navigationService)
+        protected NavigationViewModelResult(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
         }
 
-        public override void OnNavigatingTo(INavigationParameters parameters)
+        public override void Initialize(INavigationParameters parameters)
         {
-            base.OnNavigatingTo(parameters);
+            base.Initialize(parameters);
 
             if (parameters.GetNavigationMode() == NavigationMode.New &&
                 !parameters.CreateTabExists(NavigationNameProvider.GetNavigationName(GetType())))
@@ -175,11 +158,9 @@ namespace Prism.NavigationEx
             }
         }
 
-        public override void OnNavigatingFrom(INavigationParameters parameters)
+        public override void OnNavigatedFrom(INavigationParameters parameters)
         {
-            base.OnNavigatingFrom(parameters);
-
-            if (_tcs == null || parameters.GetNavigationMode() == NavigationMode.New)
+            if (_tcs == null || parameters.GetNavigationMode() != NavigationMode.Back)
                 return;
 
             if (parameters.TryGetValue<TResult>(NavigationParameterKey.Result, out var result))
@@ -213,13 +194,13 @@ namespace Prism.NavigationEx
 
     public abstract class NavigationViewModel<TParameter, TResult> : NavigationViewModelResult<TResult>, INavigationViewModel<TParameter, TResult>
     {
-        protected NavigationViewModel(INavigationService navigationService) : base(navigationService)
+        protected NavigationViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
         }
 
-        public override void OnNavigatingTo(INavigationParameters parameters)
+        public override void Initialize(INavigationParameters parameters)
         {
-            base.OnNavigatingTo(parameters);
+            base.Initialize(parameters);
 
             this.PrepareIfNeeded(parameters);
         }

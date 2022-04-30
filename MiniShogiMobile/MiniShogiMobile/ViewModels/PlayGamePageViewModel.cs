@@ -1,6 +1,7 @@
 ﻿using MiniShogiMobile.Conditions;
 using Prism.Commands;
 using Prism.Navigation;
+using Prism.NavigationEx;
 using Prism.Services;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -32,7 +33,7 @@ namespace MiniShogiMobile.ViewModels
     {
         Task HandleAsync(PlayGamePageViewModel vm, ISelectable cell);
     }
-    public class PlayGamePageViewModel : ViewModelBase, GameListener
+    public class PlayGamePageViewModel : NavigationViewModel, GameListener
     {
         public PlayingGame PlayingGame { get; private set; }
         private ReactiveProperty<IViewState> ViewState;
@@ -49,7 +50,7 @@ namespace MiniShogiMobile.ViewModels
             MoveCommand = new AsyncReactiveCommand<ISelectable>();
             MoveCommand.Subscribe(async x =>
             {
-                await CatchErrorWithMessageAsync(async () =>
+                await this.CatchErrorWithMessageAsync(async () =>
                 {
                     await ViewState.Value.HandleAsync(this, x);
                 });
@@ -58,7 +59,7 @@ namespace MiniShogiMobile.ViewModels
             SaveCommand = new AsyncReactiveCommand();
             SaveCommand.Subscribe(async x =>
             {
-                await CatchErrorWithMessageAsync(async () =>
+                await this.CatchErrorWithMessageAsync(async () =>
                 {
                     App.GameService.SaveCurrent($"{DateTime.Now.ToString(System.Globalization.CultureInfo.CreateSpecificCulture("ja-JP"))}_{PlayingGame.GameTemplate.Name}");
                 });
@@ -81,7 +82,7 @@ namespace MiniShogiMobile.ViewModels
         }
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
-            await CatchErrorWithMessageAsync(async () =>
+            await this.CatchErrorWithMessageAsync(async () =>
             {
 
                 var param = parameters[nameof(PlayGameCondition)] as PlayGameCondition;

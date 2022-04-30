@@ -2,7 +2,7 @@
 
 namespace MiniShogiMobile.Conditions
 {
-    class SelectKomaConditions
+    public class SelectKomaConditions
     {
         public List<string> KomaNameList;
         public string SelectedKoma;

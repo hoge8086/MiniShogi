@@ -3,6 +3,7 @@ using MiniShogiMobile.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
+using Prism.NavigationEx;
 using Prism.Services;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -20,7 +21,7 @@ using Xamarin.Forms.Internals;
 namespace MiniShogiMobile.ViewModels
 {
 
-    public class CreateGamePageViewModel : ViewModelBase
+    public class CreateGamePageViewModel : NavigationViewModel
     {
         public GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
         public AsyncReactiveCommand<CellViewModel> EditCellCommand { get; set; }
@@ -42,7 +43,7 @@ namespace MiniShogiMobile.ViewModels
             TapCellCommand = new AsyncReactiveCommand<CellViewModel>();
             TapCellCommand.Subscribe(async x =>
             {
-                await CatchErrorWithMessageAsync(async () =>
+                await this.CatchErrorWithMessageAsync(async () =>
                 {
                     if(SelectedCell.Value != null)
                     {
@@ -88,7 +89,7 @@ namespace MiniShogiMobile.ViewModels
             EditCellCommand = new AsyncReactiveCommand<CellViewModel>();
             EditCellCommand.Subscribe(async x =>
             {
-                await CatchErrorWithMessageAsync(async () =>
+                await this.CatchErrorWithMessageAsync(async () =>
                 {
                     var param = new NavigationParameters();
                     param.Add(nameof(EditCellCondition), new EditCellCondition(x, GameTemplate.Height, true));
@@ -100,7 +101,7 @@ namespace MiniShogiMobile.ViewModels
             SaveCommand = new AsyncReactiveCommand();
             SaveCommand.Subscribe(async (x) =>
             {
-                await CatchErrorWithMessageAsync(async () =>
+                await this.CatchErrorWithMessageAsync(async () =>
                 {
                     GameTemplate.KomaList = CreateKomaList();
                     App.CreateGameService.CreateGame(GameTemplate);
@@ -112,7 +113,7 @@ namespace MiniShogiMobile.ViewModels
             EditSettingCommand = new AsyncReactiveCommand();
             EditSettingCommand.Subscribe(async () =>
             {
-                await CatchErrorWithMessageAsync(async () =>
+                await this.CatchErrorWithMessageAsync(async () =>
                 {
                     var param = new NavigationParameters();
                     param.Add(nameof(EditDetailGameSettingsCondition), new EditDetailGameSettingsCondition(GameTemplate));
@@ -123,7 +124,7 @@ namespace MiniShogiMobile.ViewModels
             DeleteKomaCommand = new AsyncReactiveCommand();
             DeleteKomaCommand.Subscribe(async () =>
             {
-                await CatchErrorWithMessageAsync(async () =>
+                await this.CatchErrorWithMessageAsync(async () =>
                 {
                     // 駒を消し、選択を解除
                     SelectedCell.Value.Koma.Value = null;
@@ -159,7 +160,7 @@ namespace MiniShogiMobile.ViewModels
 
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
-            await CatchErrorWithMessageAsync(async () =>
+            await this.CatchErrorWithMessageAsync(async () =>
             {
                 var navigationMode = parameters.GetNavigationMode();
                 if (navigationMode == NavigationMode.New)
@@ -175,7 +176,7 @@ namespace MiniShogiMobile.ViewModels
 
                     Game.Update(GameTemplate.Height, GameTemplate.Width, GameTemplate.KomaList);
                 }
-                else if (navigationMode == NavigationMode.Back)
+                //else if (navigationMode == NavigationMode.Back)
                 {
                     // 選択を解除
                     SelectedCell.Value = null;
