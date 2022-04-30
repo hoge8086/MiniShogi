@@ -17,5 +17,7 @@
     <xct:MultiMathExpressionConverter x:Key="MultiMathExpressionConverter" />
     <Color x:Key="Player1Color">DodgerBlue</Color>
     <Color x:Key="Player2Color">#eb233d</Color>
+    <Color x:Key="BoardFrameColor">Chocolate</Color>
+    <Color x:Key="BoardBackground">SandyBrown</Color>
   </Application.Resources>
 </prism:PrismApplication>

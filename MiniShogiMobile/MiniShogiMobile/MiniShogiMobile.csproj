@@ -7,11 +7,13 @@
   <ItemGroup>
     <None Remove="Images\DeleteIcon.png" />
     <None Remove="Images\EditIcon.png" />
+    <None Remove="Images\PlusIcon.png" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Images\DeleteIcon.png" />
     <EmbeddedResource Include="Images\EditIcon.png" />
+    <EmbeddedResource Include="Images\PlusIcon.png" />
   </ItemGroup>
 
   <ItemGroup>

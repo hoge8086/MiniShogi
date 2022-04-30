@@ -30,6 +30,7 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand EditSettingCommand {get;}
         public AsyncReactiveCommand SaveCommand { get; set; }
         public ReactiveProperty<CellViewModel> SelectedCell { get; set; }
+        public AsyncReactiveCommand AddHandKomaCommand { get; set; }
         public ReadOnlyReactivePropertySlim<bool> IsSelectingKoma{ get; set; }
 
         private GameTemplate GameTemplate;
@@ -147,6 +148,17 @@ namespace MiniShogiMobile.ViewModels
                     // 駒を消し、選択を解除
                     SelectedCell.Value.Koma.Value = null;
                     SelectedCell.Value = null;
+                });
+            }).AddTo(this.Disposable);
+            AddHandKomaCommand = new AsyncReactiveCommand();
+            AddHandKomaCommand.Subscribe(async () =>
+            {
+                await this.CatchErrorWithMessageAsync(async () =>
+                {
+                    var KomaTypes =  App.CreateGameService.KomaTypeRepository.FindAll();
+                    var addKoma = KomaTypes.FirstOrDefault(x => Game.HandsOfPlayer1.Hands.All(y => y.Name != x.Id));
+                    if(addKoma != null)
+                        Game.HandsOfPlayer1.Hands.Add(new HandKomaViewModel() { Name = addKoma.Id, Player= PlayerType.Player1});
                 });
             }).AddTo(this.Disposable);
         }

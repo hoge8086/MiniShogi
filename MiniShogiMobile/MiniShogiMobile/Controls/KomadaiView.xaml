@@ -3,27 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MiniShogiMobile.Controls.KomadaiView"
              x:Name="self">
-  <ContentView.Content>
-        <Frame BackgroundColor="Chocolate"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="FillAndExpand"
-            Padding="0"
-            CornerRadius="0">
-            <Frame BackgroundColor="SandyBrown"
-                Margin="1"
-                Padding="0"
-                CornerRadius="0"
+    <ContentView.ControlTemplate>
+        <ControlTemplate>
+            <Frame BackgroundColor="{StaticResource BoardFrameColor}"
                 HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand">
-                <StackLayout 
-                    Orientation="Horizontal"
-                    HorizontalOptions="Start"
-                    VerticalOptions="Start"
-                    Spacing="0"
-                    BindableLayout.ItemsSource="{Binding ItemsSource, Source={x:Reference self}}"
-                    BindableLayout.ItemTemplate="{Binding ItemTemplate, Source={x:Reference self}}">
-                </StackLayout>
+                VerticalOptions="FillAndExpand"
+                Padding="0"
+                CornerRadius="0">
+                <Frame BackgroundColor="{StaticResource BoardBackground}"
+                    Margin="1"
+                    Padding="0"
+                    CornerRadius="0"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand">
+                    <ContentPresenter/>
+                </Frame>
             </Frame>
-        </Frame>
-  </ContentView.Content>
+        </ControlTemplate>
+    </ContentView.ControlTemplate>
 </ContentView>
