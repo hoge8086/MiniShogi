@@ -21,7 +21,7 @@ using Xamarin.Forms.Internals;
 namespace MiniShogiMobile.ViewModels
 {
 
-    public class CreateGamePageViewModel : NavigationViewModel
+    public class CreateGamePageViewModel : NavigationViewModel<CreateGameCondition>
     {
         public GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
         public AsyncReactiveCommand<CellViewModel> EditCellCommand { get; set; }
@@ -63,13 +63,17 @@ namespace MiniShogiMobile.ViewModels
                         {
                             SelectedCell.Value = x;
                             // 空セルなら駒を置くか聞く
-                            bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "駒を配置しますか?", "はい", "いいえ");
-                            if (doDelete)
+                            bool doPutKoma = await pageDialogService.DisplayAlertAsync("確認", "駒を配置しますか?", "はい", "いいえ");
+                            if (doPutKoma)
                             {
-                                var param = new NavigationParameters();
-                                param.Add(nameof(EditCellCondition), new EditCellCondition(x, GameTemplate.Height, false));
-                                await navigationService.NavigateAsync(nameof(EditCellPage), param);
-                                // 画面から戻った際に選択解除
+                                var result = await NavigateAsync<EditCellPageViewModel, EditCellCondition, KomaViewModel>(new EditCellCondition(x, GameTemplate.Height));
+                                if(result.Success)
+                                {
+                                    //選択を解除
+                                    SelectedCell.Value = null;
+                                    //駒を配置
+                                    x.Koma.Value = result.Data;
+                                }
                             }
                             else
                             {
@@ -91,11 +95,14 @@ namespace MiniShogiMobile.ViewModels
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-                    var param = new NavigationParameters();
-                    param.Add(nameof(EditCellCondition), new EditCellCondition(x, GameTemplate.Height, true));
-                    await navigationService.NavigateAsync(nameof(EditCellPage), param);
-
-                    // 画面から戻った際に選択解除
+                    var result = await NavigateAsync<EditCellPageViewModel, EditCellCondition, KomaViewModel>(new EditCellCondition(x, GameTemplate.Height));
+                    if(result.Success)
+                    {
+                        //選択を解除
+                        SelectedCell.Value = null;
+                        //駒を配置
+                        x.Koma.Value = result.Data;
+                    }
                 });
             }).AddTo(this.Disposable);
             SaveCommand = new AsyncReactiveCommand();
@@ -115,9 +122,13 @@ namespace MiniShogiMobile.ViewModels
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-                    var param = new NavigationParameters();
-                    param.Add(nameof(EditDetailGameSettingsCondition), new EditDetailGameSettingsCondition(GameTemplate));
-                    await navigationService.NavigateAsync(nameof(EditGameSettingsPage), param);
+                    var result = await NavigateAsync<EditGameSettingsPageViewModel, GameTemplate, GameTemplate>(GameTemplate);
+                    if(result.Success)
+                    {
+                        GameTemplate = result.Data;
+                        Game.Board.UpdateSize(GameTemplate.Height, GameTemplate.Width);
+                        Title = GameTemplate.Name;
+                    }
                 });
 
             }).AddTo(this.Disposable);
@@ -158,34 +169,15 @@ namespace MiniShogiMobile.ViewModels
             return komaList;
         }
 
-        public async override void OnNavigatedTo(INavigationParameters parameters)
+        public override void Prepare(CreateGameCondition parameter)
         {
-            await this.CatchErrorWithMessageAsync(async () =>
-            {
-                var navigationMode = parameters.GetNavigationMode();
-                if (navigationMode == NavigationMode.New)
-                {
-                    var param = parameters[nameof(CreateGameCondition)] as CreateGameCondition;
-                    if (param == null)
-                        throw new ArgumentException(nameof(CreateGameCondition));
+            if (parameter.GameName != null)
+                GameTemplate = App.CreateGameService.GameTemplateRepository.FindByName(parameter.GameName);
+            else
+                GameTemplate = new GameTemplate();
 
-                    if (param.GameName != null)
-                        GameTemplate = App.CreateGameService.GameTemplateRepository.FindByName(param.GameName);
-                    else
-                        GameTemplate = new GameTemplate();
-
-                    Game.Update(GameTemplate.Height, GameTemplate.Width, GameTemplate.KomaList);
-                }
-                //else if (navigationMode == NavigationMode.Back)
-                {
-                    // 選択を解除
-                    SelectedCell.Value = null;
-                    Game.Board.UpdateSize(GameTemplate.Height, GameTemplate.Width);
-                }
-
-                Title = GameTemplate.Name;
-
-            });
+            Game.Update(GameTemplate.Height, GameTemplate.Width, GameTemplate.KomaList);
+            Title = GameTemplate.Name;
         }
     }
 }

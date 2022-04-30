@@ -11,12 +11,13 @@ using Shogi.Business.Domain.Model.GameTemplates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MiniShogiMobile.ViewModels
 {
     public class EnumWinConditionTypeProvider : EnumListProvider<WinConditionType> { }
     public class WinConditionTypeConverter : EnumToDescriptionConverter<WinConditionType> { }
-    public class EditGameSettingsPageViewModel : NavigationViewModel
+    public class EditGameSettingsPageViewModel : NavigationViewModel<GameTemplate, GameTemplate>
     {
         public AsyncReactiveCommand OkCommand { get; }
         public ReactiveProperty<string> Name { get; }
@@ -28,7 +29,6 @@ namespace MiniShogiMobile.ViewModels
         public ReactiveProperty<bool> EnableCheckmateByHandHu { get; }
         public ReactiveProperty<bool> EnableKomaCannotMove { get; }
         public ReactiveProperty<bool> EnableLeaveOte { get; }
-        private GameTemplate GameTemplate;
 
         public EditGameSettingsPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
@@ -45,35 +45,31 @@ namespace MiniShogiMobile.ViewModels
             OkCommand = new AsyncReactiveCommand();
             OkCommand.Subscribe(async () =>
             {
-                GameTemplate.Name = Name.Value;
-                GameTemplate.Height = Height.Value;
-                GameTemplate.Width = Width.Value;
-                GameTemplate.TerritoryBoundary = TerritoryBoundary.Value;
-                GameTemplate.WinCondition = WinCondition.Value;
-                GameTemplate.ProhibitedMoves.EnableNiHu = EnableNiHu.Value;
-                GameTemplate.ProhibitedMoves.EnableKomaCannotMove = EnableKomaCannotMove.Value;
-                GameTemplate.ProhibitedMoves.EnableCheckmateByHandHu = EnableCheckmateByHandHu.Value;
-                GameTemplate.ProhibitedMoves.EnableLeaveOte = EnableLeaveOte.Value;
-                await navigationService.GoBackAsync();
+                var gameTemplate = new GameTemplate();
+                gameTemplate.Name = Name.Value;
+                gameTemplate.Height = Height.Value;
+                gameTemplate.Width = Width.Value;
+                gameTemplate.TerritoryBoundary = TerritoryBoundary.Value;
+                gameTemplate.WinCondition = WinCondition.Value;
+                gameTemplate.ProhibitedMoves.EnableNiHu = EnableNiHu.Value;
+                gameTemplate.ProhibitedMoves.EnableKomaCannotMove = EnableKomaCannotMove.Value;
+                gameTemplate.ProhibitedMoves.EnableCheckmateByHandHu = EnableCheckmateByHandHu.Value;
+                gameTemplate.ProhibitedMoves.EnableLeaveOte = EnableLeaveOte.Value;
+                await GoBackAsync(gameTemplate);
             }).AddTo(this.Disposable);
         }
 
-        public async override void OnNavigatedTo(INavigationParameters parameters)
+        public override void Prepare(GameTemplate parameter)
         {
-            var param = parameters[nameof(EditDetailGameSettingsCondition)] as EditDetailGameSettingsCondition;
-            if(param == null)
-                throw new ArgumentException(nameof(EditDetailGameSettingsCondition));
-
-            GameTemplate = param.GameTemplate;
-            Name.Value = GameTemplate.Name;
-            Height.Value = GameTemplate.Height;
-            Width.Value = GameTemplate.Width;
-            TerritoryBoundary.Value = GameTemplate.TerritoryBoundary;
-            WinCondition.Value = GameTemplate.WinCondition;
-            EnableNiHu.Value = GameTemplate.ProhibitedMoves.EnableNiHu;
-            EnableKomaCannotMove.Value = GameTemplate.ProhibitedMoves.EnableKomaCannotMove;
-            EnableCheckmateByHandHu.Value = GameTemplate.ProhibitedMoves.EnableCheckmateByHandHu;
-            EnableLeaveOte.Value = GameTemplate.ProhibitedMoves.EnableLeaveOte;
+            Name.Value = parameter.Name;
+            Height.Value = parameter.Height;
+            Width.Value = parameter.Width;
+            TerritoryBoundary.Value = parameter.TerritoryBoundary;
+            WinCondition.Value = parameter.WinCondition;
+            EnableNiHu.Value = parameter.ProhibitedMoves.EnableNiHu;
+            EnableKomaCannotMove.Value = parameter.ProhibitedMoves.EnableKomaCannotMove;
+            EnableCheckmateByHandHu.Value = parameter.ProhibitedMoves.EnableCheckmateByHandHu;
+            EnableLeaveOte.Value = parameter.ProhibitedMoves.EnableLeaveOte;
         }
     }
 }

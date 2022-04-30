@@ -2,16 +2,14 @@
 
 namespace MiniShogiMobile.Conditions
 {
-    class EditCellCondition
+    public class EditCellCondition
     {
         public CellViewModel Cell{get;}
         public int Height { get; }
-        public bool ShowDeleteKomaCommand { get; }
-        public EditCellCondition(CellViewModel cell, int height, bool showDeleteKomaCommand)
+        public EditCellCondition(CellViewModel cell, int height)
         {
             Cell = cell;
             Height = height;
-            ShowDeleteKomaCommand = showDeleteKomaCommand;
         }
     }
 }

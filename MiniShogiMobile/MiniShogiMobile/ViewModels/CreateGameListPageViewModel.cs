@@ -28,9 +28,7 @@ namespace MiniShogiMobile.ViewModels
             EditCommand = new AsyncReactiveCommand();
             EditCommand.Subscribe(async () =>
             {
-                var param = new NavigationParameters();
-                param.Add(nameof(CreateGameCondition), new CreateGameCondition(SelectedGameName.Value));
-                await navigationService.NavigateAsync(nameof(CreateGamePage), param);
+                await NavigateAsync<CreateGamePageViewModel, CreateGameCondition>(new CreateGameCondition(SelectedGameName.Value));
             }).AddTo(Disposable);
 
             DeleteCommand = new AsyncReactiveCommand<string>();

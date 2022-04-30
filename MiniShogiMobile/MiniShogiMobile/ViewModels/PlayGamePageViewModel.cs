@@ -33,7 +33,7 @@ namespace MiniShogiMobile.ViewModels
     {
         Task HandleAsync(PlayGamePageViewModel vm, ISelectable cell);
     }
-    public class PlayGamePageViewModel : NavigationViewModel, GameListener
+    public class PlayGamePageViewModel : NavigationViewModel<PlayGameCondition>, GameListener
     {
         public PlayingGame PlayingGame { get; private set; }
         private ReactiveProperty<IViewState> ViewState;
@@ -79,40 +79,6 @@ namespace MiniShogiMobile.ViewModels
                 ChangeState(new ViewStateGameEnd());
             else
                 ChangeState(new ViewStateHumanThinkingForMoveFrom());
-        }
-        public async override void OnNavigatedTo(INavigationParameters parameters)
-        {
-            await this.CatchErrorWithMessageAsync(async () =>
-            {
-
-                var param = parameters[nameof(PlayGameCondition)] as PlayGameCondition;
-                if (param == null)
-                    throw new ArgumentException(nameof(PlayGameCondition));
-
-                App.GameService.Subscribe(this);
-
-                if (param.PlayMode == PlayMode.NewGame)
-                {
-                    var cancelTokenSource = new CancellationTokenSource();
-                    await AppServiceCallCommandAsync(service =>
-                    {
-                        service.Start(param.Player1, param.Player2, param.FirstTurnPlayer, param.Name, cancelTokenSource.Token);
-                    });
-                }
-                else if(param.PlayMode == PlayMode.ContinueGame)
-                {
-                    var cancelTokenSource = new CancellationTokenSource();
-                    await AppServiceCallCommandAsync(service =>
-                    {
-                        service.Continue(param.Name, cancelTokenSource.Token);
-                    });
-                }
-                else
-                {
-                    throw new ArgumentException(nameof(PlayGameCondition));
-                }
-            });
-
         }
 
         public void UpdateView()
@@ -160,6 +126,36 @@ namespace MiniShogiMobile.ViewModels
                      "ゲーム終了",
                      $"勝者: {player.Name}({winner.ToString()})",
                      "OK");
+            });
+        }
+
+        public override async Task PrepareAsync(PlayGameCondition parameter)
+        {
+            await this.CatchErrorWithMessageAsync(async () =>
+            {
+
+                App.GameService.Subscribe(this);
+
+                if (parameter.PlayMode == PlayMode.NewGame)
+                {
+                    var cancelTokenSource = new CancellationTokenSource();
+                    await AppServiceCallCommandAsync(service =>
+                    {
+                        service.Start(parameter.Player1, parameter.Player2, parameter.FirstTurnPlayer, parameter.Name, cancelTokenSource.Token);
+                    });
+                }
+                else if(parameter.PlayMode == PlayMode.ContinueGame)
+                {
+                    var cancelTokenSource = new CancellationTokenSource();
+                    await AppServiceCallCommandAsync(service =>
+                    {
+                        service.Continue(parameter.Name, cancelTokenSource.Token);
+                    });
+                }
+                else
+                {
+                    throw new ArgumentException(nameof(PlayGameCondition));
+                }
             });
         }
     }

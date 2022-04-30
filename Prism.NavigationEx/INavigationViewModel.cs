@@ -11,7 +11,7 @@ namespace Prism.NavigationEx
 
     public interface INavigationViewModel<TParameter> : INavigationViewModel
     {
-        void Prepare(TParameter parameter);
+        Task PrepareAsync(TParameter parameter);
     }
 
     public interface INavigationViewModelResult<TResult> : INavigationViewModel

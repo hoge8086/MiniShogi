@@ -66,17 +66,14 @@ namespace MiniShogiMobile.ViewModels
             PlayGameCommand = new AsyncReactiveCommand();
             PlayGameCommand.Subscribe(async () =>
             {
-                var param = new NavigationParameters();
-                param.Add(nameof(PlayGameCondition),
+                await NavigateAsync<PlayGamePageViewModel, PlayGameCondition>(
                     new PlayGameCondition(
                         PlayMode.NewGame,
                         GameName.Value,
                         Player1.CreatePlayer(),
                         Player2.CreatePlayer(),
-                        GetFirstTurnPlayer()
-                    ));
-                await navigationService.NavigateAsync(nameof(PlayGamePage), param);
-            }).AddTo(Disposable);;
+                        GetFirstTurnPlayer()));
+            }).AddTo(Disposable);
 
         }
 

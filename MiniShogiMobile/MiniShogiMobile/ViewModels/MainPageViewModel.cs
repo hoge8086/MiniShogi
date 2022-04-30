@@ -26,13 +26,13 @@ namespace MiniShogiMobile.ViewModels
             StartGameCommand = new AsyncReactiveCommand();
             StartGameCommand.Subscribe(async () =>
             {
-                await navigationService.NavigateAsync(nameof(StartGamePage));
+                await NavigateAsync<StartGamePageViewModel>();
             }).AddTo(Disposable);
 
             ContinueGameCommand = new AsyncReactiveCommand();
             ContinueGameCommand.Subscribe(async () =>
             {
-                await navigationService .NavigateAsync(nameof(PlayingGameListPage));
+                await NavigateAsync<PlayingGameListPageViewModel>();
             }).AddTo(Disposable);
             CreateGameCommand = new AsyncReactiveCommand();
             CreateGameCommand.Subscribe(async () =>

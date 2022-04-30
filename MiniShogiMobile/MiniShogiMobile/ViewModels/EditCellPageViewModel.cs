@@ -14,28 +14,24 @@ using System.Reactive.Linq;
 using Reactive.Bindings.Extensions;
 using MiniShogiMobile.Views;
 using Prism.NavigationEx;
+using System.Threading.Tasks;
 
 namespace MiniShogiMobile.ViewModels
 {
-    public class EditCellPageViewModel : NavigationViewModel
+    public class EditCellPageViewModel : NavigationViewModel<EditCellCondition, KomaViewModel>
     {
         public AsyncReactiveCommand OkCommand { get; }
         public AsyncReactiveCommand CancelCommand { get; }
         public AsyncReactiveCommand<object> ChangeKomaTypeCommand { get; }
-        public CellViewModel Cell { get; private set; }
-
         private Dictionary<string, KomaType> KomaTypes { get; }
 
         public CellViewModel EditingCell { get; private set; }
         public ReactiveProperty<bool> CanTransform { get; private set; }
 
-        public ReactiveProperty<bool>ShowDeleteKomaCommand { get; }
-
         public EditCellPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             KomaTypes =  App.CreateGameService.KomaTypeRepository.FindAll().ToDictionary(x => x.Id);
             CanTransform = new ReactiveProperty<bool>(false);
-            ShowDeleteKomaCommand = new ReactiveProperty<bool>(false);
             EditingCell = new CellViewModel() { Koma = new ReactiveProperty<KomaViewModel>() };
             EditingCell.Koma.Value = new KomaViewModel(KomaTypes.First().Value.Id, PlayerType.Player1, false);
             EditingCell.Koma.Value.Name.Subscribe(x =>
@@ -48,13 +44,12 @@ namespace MiniShogiMobile.ViewModels
             OkCommand = new AsyncReactiveCommand();
             OkCommand.Subscribe(async () =>
             {
-                Cell.Koma.Value = new KomaViewModel(EditingCell.Koma.Value);
-                await navigationService.GoBackAsync();
+                await GoBackAsync(EditingCell.Koma.Value);
             }).AddTo(this.Disposable);
             CancelCommand = new AsyncReactiveCommand();
             CancelCommand.Subscribe(async () =>
             {
-                await navigationService.GoBackAsync();
+                await GoBackAsync();
             }).AddTo(this.Disposable);
             ChangeKomaTypeCommand = new AsyncReactiveCommand<object>();
             ChangeKomaTypeCommand.Subscribe(async (x) =>
@@ -67,23 +62,12 @@ namespace MiniShogiMobile.ViewModels
                 }
             }).AddTo(this.Disposable);
         }
-        public async override void OnNavigatedTo(INavigationParameters parameters)
+        public override void Prepare(EditCellCondition parameter)
         {
-            base.OnNavigatedTo(parameters);
-            var navigationMode = parameters.GetNavigationMode();
-            if (navigationMode == NavigationMode.New)
-            {
-                var param = parameters[nameof(EditCellCondition)] as EditCellCondition;
-                if(param == null)
-                    throw new ArgumentException(nameof(EditCellCondition));
-
-                ShowDeleteKomaCommand.Value = param.ShowDeleteKomaCommand;
-                Cell = param.Cell;
-                if (Cell.Koma.Value != null)
-                    EditingCell.Koma.Value.Update(Cell.Koma.Value);
-                else
-                    EditingCell.Koma.Value.PlayerType.Value = ((param.Height / 2) > Cell.Position.Y) ? PlayerType.Player2 : PlayerType.Player1;
-            }
+            if (parameter.Cell.Koma.Value != null)
+                EditingCell.Koma.Value.Update(parameter.Cell.Koma.Value);
+            else
+                EditingCell.Koma.Value.PlayerType.Value = ((parameter.Height / 2) > parameter.Cell.Position.Y) ? PlayerType.Player2 : PlayerType.Player1;
 
         }
     }

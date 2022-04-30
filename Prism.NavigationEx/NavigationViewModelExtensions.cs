@@ -6,7 +6,7 @@ namespace Prism.NavigationEx
 {
     public static class NavigationViewModelExtensions
     {
-        internal static void PrepareIfNeeded<TParameter>(this INavigationViewModel<TParameter> self, INavigationParameters parameters)
+        internal static async Task PrepareIfNeededAsync<TParameter>(this INavigationViewModel<TParameter> self, INavigationParameters parameters)
         {
             if (parameters.GetNavigationMode() == NavigationMode.New)
             {
@@ -19,7 +19,7 @@ namespace Prism.NavigationEx
                         var key = "_" + id;
                         if (!parameters.ContainsKey(key) && parameters.TryGetValue<TParameter>(id, out var parameter))
                         {
-                            self.Prepare(parameter);
+                            await self.PrepareAsync(parameter);
                             parameters.Add(key, null);
                             break;
                         }
@@ -31,7 +31,7 @@ namespace Prism.NavigationEx
                     {
                         if (parameters.TryGetValue<TParameter>(id, out var parameter))
                         {
-                            self.Prepare(parameter);
+                            await self.PrepareAsync(parameter);
                         }
                     }
                 }

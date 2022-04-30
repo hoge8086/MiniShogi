@@ -1,6 +1,6 @@
 ﻿namespace MiniShogiMobile.Conditions
 {
-    class CreateGameCondition
+    public class CreateGameCondition
     {
         public string GameName { get; }
         public CreateGameCondition(string name)

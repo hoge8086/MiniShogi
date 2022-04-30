@@ -126,14 +126,22 @@ namespace Prism.NavigationEx
         {
         }
 
-        public override void Initialize(INavigationParameters parameters)
+        public override async void Initialize(INavigationParameters parameters)
         {
             base.Initialize(parameters);
 
-            this.PrepareIfNeeded(parameters);
+            await this.PrepareIfNeededAsync(parameters);
         }
 
-        public abstract void Prepare(TParameter parameter);
+        public virtual Task PrepareAsync(TParameter parameter)
+        {
+            Prepare(parameter);
+            return Task.Delay(0);
+        }
+        public virtual void Prepare(TParameter parameter)
+        {
+
+        }
     }
 
     public abstract class NavigationViewModelResult<TResult> : NavigationViewModel, INavigationViewModelResult<TResult>
@@ -198,13 +206,21 @@ namespace Prism.NavigationEx
         {
         }
 
-        public override void Initialize(INavigationParameters parameters)
+        public override async void Initialize(INavigationParameters parameters)
         {
             base.Initialize(parameters);
 
-            this.PrepareIfNeeded(parameters);
+            await this.PrepareIfNeededAsync(parameters);
         }
 
-        public abstract void Prepare(TParameter parameter);
+        public virtual Task PrepareAsync(TParameter parameter)
+        {
+            Prepare(parameter);
+            return Task.Delay(0);
+        }
+        public virtual void Prepare(TParameter parameter)
+        {
+
+        }
     }
 }
