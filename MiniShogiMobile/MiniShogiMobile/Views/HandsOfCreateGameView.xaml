@@ -61,20 +61,20 @@
              </StackLayout>
          </ctrl:KomadaiView>
          <!--持ち駒へ移動する際のドロップ枠-->
-         <Rectangle Margin="2"
-                    xct:TouchEffect.Command="{Binding Source={x:Reference self}, Path=TapKomadaiHighlightCommand}"
-                    xct:TouchEffect.CommandParameter="{Binding Source={x:Reference self}, Path=PlayerType}"
-                    IsVisible="{Binding Source={x:Reference self}, Path=IsHighlight}"
-                    HorizontalOptions="FillAndExpand"
-                    VerticalOptions="FillAndExpand"
-                    Stroke="White"
-                    Fill="{StaticResource HighlightColor}"
-                    Opacity="0.5"
-                    StrokeThickness="4"
-                    StrokeDashArray="2,2"/>
-                    <!--なぜかこれを付けるとAndroidで表示されない
-                    StrokeDashOffset="6"/>
-                    -->
+        <Rectangle Margin="2"
+                xct:TouchEffect.Command="{Binding Source={x:Reference self}, Path=TapKomadaiHighlightCommand}"
+                xct:TouchEffect.CommandParameter="{Binding Source={x:Reference self}, Path=PlayerType}"
+                IsVisible="{Binding Source={x:Reference self}, Path=IsHighlight}"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                Stroke="OrangeRed"
+                Fill="{StaticResource HighlightColor}"
+                Opacity="0.5"
+                StrokeThickness="4"
+                StrokeDashArray="2,2"/>
+                <!--なぜかこれを付けるとAndroidで表示されない
+                StrokeDashOffset="6"/>
+                -->
      </Grid>
   </ContentView.Content>
 </ContentView>
