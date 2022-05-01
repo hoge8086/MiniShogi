@@ -34,7 +34,7 @@ namespace MiniShogiMobile.ViewModels
                     bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "新規作成しますか?", "はい", "いいえ");
                     if (doDelete)
                     {
-                        //App.CreateGameService.KomaTypeRepository.RemoveById(SelectedKomaName.Value);
+                        await NavigateAsync<CreateKomaPageViewModel, string>(null);
                     }
                 });
             }).AddTo(this.Disposable);
@@ -46,7 +46,7 @@ namespace MiniShogiMobile.ViewModels
                     bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "編集しますか?", "はい", "いいえ");
                     if (doDelete)
                     {
-                        //App.CreateGameService.KomaTypeRepository.RemoveById(SelectedKomaName.Value);
+                        await NavigateAsync<CreateKomaPageViewModel, string>(SelectedKomaName.Value);
                     }
                 });
             }).AddTo(this.Disposable);

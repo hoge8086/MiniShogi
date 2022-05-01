@@ -60,6 +60,7 @@ namespace MiniShogiMobile
             containerRegistry.RegisterForNavigation<SelectKomaPage, SelectKomaPageViewModel>();
             containerRegistry.RegisterForNavigation<CreateKomaListPage, CreateKomaListPageViewModel>();
             containerRegistry.RegisterForNavigation<CreateTabbedPage, CreateTabbedPageViewModel>();
+            containerRegistry.RegisterForNavigation<CreateKomaPage, CreateKomaPageViewModel>();
         }
     }
 }
