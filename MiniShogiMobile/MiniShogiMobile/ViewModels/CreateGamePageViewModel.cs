@@ -14,13 +14,14 @@ using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Reactive.Linq;
+using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
 namespace MiniShogiMobile.ViewModels
 {
-
     public class CreateGamePageViewModel : NavigationViewModel<CreateGameCondition>
     {
         public GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
@@ -29,8 +30,23 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand<CellViewModel> TapCellCommand { get; set; }
         public AsyncReactiveCommand EditSettingCommand {get;}
         public AsyncReactiveCommand SaveCommand { get; set; }
-        public ReactiveProperty<CellViewModel> SelectedCell { get; set; }
-        public AsyncReactiveCommand AddHandKomaCommand { get; set; }
+
+        /// <summary>
+        /// 選択中のCellViewModelかHandKomaViewModelのいずれかが入る
+        /// </summary>
+        public ReactiveProperty<BindableBase> Selected { get; set; }
+
+        // TOOD:持ち駒関連のコマンドはHandKomaViewModelの派生クラスに移してプレイヤーごとに別コマンドにした方がすっきりするかも
+        //      ただ、SelectedCellを購読する必要がある
+        #region 持ち駒関連
+        public AsyncReactiveCommand<PlayerType> AddHandKomaCommand { get; set; }
+        public AsyncReactiveCommand<HandKomaViewModel> TapHandKomaCommand { get; set; }
+        public AsyncReactiveCommand<PlayerType> TapKomadaiCommand { get; set; }
+        // TODO:コマンドの有効無を表示と紐づけると分かり易い
+        public ReadOnlyReactiveProperty<bool> CanMoveToPlayer1Komadai { get; set; }
+        // TODO:コマンドの有効無を表示と紐づけると分かり易い
+        public ReadOnlyReactiveProperty<bool> CanMoveToPlayer2Komadai { get; set; }
+        #endregion
         public ReadOnlyReactivePropertySlim<bool> IsSelectingKoma{ get; set; }
 
         private GameTemplate GameTemplate;
@@ -39,65 +55,122 @@ namespace MiniShogiMobile.ViewModels
         {
             GameTemplate = new GameTemplate();
             Game = new GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
-            SelectedCell = new ReactiveProperty<CellViewModel>();
-            IsSelectingKoma = SelectedCell.Select(x => x != null && x.Koma.Value != null).ToReadOnlyReactivePropertySlim().AddTo(Disposable);
+            Selected = new ReactiveProperty<BindableBase>();
+            CanMoveToPlayer1Komadai = CreateCanMoveToKomadaiReactiveProperty(PlayerType.Player1);
+            CanMoveToPlayer2Komadai = CreateCanMoveToKomadaiReactiveProperty(PlayerType.Player2);
+
+            IsSelectingKoma = Selected.Select(x =>
+            {
+                if (x == null)
+                    return false;
+
+                if(x is CellViewModel cell)
+                    return cell.Koma.Value != null;
+
+                return x is HandKomaViewModel;
+            }).ToReadOnlyReactivePropertySlim().AddTo(Disposable);
             TapCellCommand = new AsyncReactiveCommand<CellViewModel>();
-            TapCellCommand.Subscribe(async x =>
+            TapCellCommand.Subscribe(async tappedCell =>
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-                    if(SelectedCell.Value != null)
+                    // 駒がすでに選択中か?
+                    if(Selected.Value != null)
                     {
-                        // 駒選択中
-                        if(x.Koma.Value == null)
+                        if(tappedCell.Koma.Value == null)
                         {
-                            // 移動先が空なら駒を移動
-                            x.Koma.Value = SelectedCell.Value.Koma.Value;
-                            SelectedCell.Value.Koma.Value = null;
+                            // すでに駒が選択中の場合で、空セルをタップした場合は駒移動
+
+                            if(Selected.Value is CellViewModel selectedCell)
+                            {
+                                // 盤上の駒→盤上の駒へ移動
+                                tappedCell.Koma.Value = selectedCell.Koma.Value;
+                                selectedCell.Koma.Value = null;
+                            }
+                            else if(Selected.Value is HandKomaViewModel selectedHandKoma)
+                            {
+                                // 持ち駒→盤上の駒へ移動
+                                Game.GetHands(selectedHandKoma.Player).RemoveOne(selectedHandKoma.Name);
+                                tappedCell.Koma.Value = new KomaViewModel(selectedHandKoma.Name, selectedHandKoma.Player, false);
+                            }
                         }
                         // 選択を解除
-                        SelectedCell.Value = null;
+                        Selected.Value = null;
                     }else
                     {
-                        // 駒選択中ではない
-                        if (x.Koma.Value == null)
-                        {
-                            SelectedCell.Value = x;
-                            // 空セルなら駒を置くか聞く
-                            bool doPutKoma = await pageDialogService.DisplayAlertAsync("確認", "駒を配置しますか?", "はい", "いいえ");
-                            if (doPutKoma)
-                            {
-                                var selectedKomaType = await NavigateAsync<SelectKomaPageViewModel, SelectKomaConditions, string>(new SelectKomaConditions(null));
-                                if(selectedKomaType.Success)
-                                {
-                                    var owner = ((GameTemplate.Height/ 2) > x.Position.Y) ? PlayerType.Player2 : PlayerType.Player1;
-                                    var newKoma = new KomaViewModel(selectedKomaType.Data, owner, false);
-                                    var result = await NavigateAsync<EditCellPageViewModel, KomaViewModel, KomaViewModel>(newKoma);
-                                    if(result.Success)
-                                    {
-                                        //選択を解除
-                                        SelectedCell.Value = null;
-                                        //駒を配置
-                                        x.Koma.Value = result.Data;
-                                    }
-                                }
+                        // 駒未選択の場合
 
+                        // セルを選択
+                        Selected.Value = tappedCell;
+
+                        // 選択したセルに駒があるか?
+                        if (tappedCell.Koma.Value == null)
+                        {
+                            // 駒がないい場合は駒を配置
+
+                            Selected.Value = tappedCell;
+                            var selectedKomaType = await NavigateAsync<SelectKomaPageViewModel, SelectKomaConditions, string>(new SelectKomaConditions(null, "配置する駒を選択してください"));
+
+                            // 駒を選んだか?
+                            if(selectedKomaType.Success)
+                            {
+                                var owner = ((GameTemplate.Height/ 2) > tappedCell.Position.Y) ? PlayerType.Player2 : PlayerType.Player1;
+                                var newKoma = new KomaViewModel(selectedKomaType.Data, owner, false);
+                                var result = await NavigateAsync<EditCellPageViewModel, KomaViewModel, KomaViewModel>(newKoma);
+                                if(result.Success)
+                                {
+                                    //選択を解除
+                                    Selected.Value = null;
+                                    //駒を配置
+                                    tappedCell.Koma.Value = result.Data;
+                                }
                             }
                             else
                             {
-                                // 駒を選択
-                                SelectedCell.Value = null;
+                                // キャンセル時は選択解除
+                                Selected.Value = null;
                             }
                         }
-                        else
-                        {
-                            // 駒を選択
-                            SelectedCell.Value = x;
-                        }
                     }
-
                 });
             }).AddTo(Disposable);
+            TapHandKomaCommand = new AsyncReactiveCommand<HandKomaViewModel>();
+            TapHandKomaCommand.Subscribe(async x =>
+            {
+                await this.CatchErrorWithMessageAsync(async () =>
+                {
+                    // MEMO:セル選択状態の場合はここに来ない
+                    //      セル選択状態の場合は、駒台がハイライトされているため、持ち駒は選択できない
+
+                    if(Selected.Value != null)
+                        // 持ち駒を選択していたら選択解除
+                        Selected.Value = null;
+                    else
+                        // 何も選択してないなら持ち駒を選択
+                        Selected.Value = x;
+                });
+            });
+            TapKomadaiCommand = new AsyncReactiveCommand<PlayerType>();
+            TapKomadaiCommand.Subscribe(async x =>
+            {
+                await this.CatchErrorWithMessageAsync(async () =>
+                {
+                    if(Selected.Value is CellViewModel selectedCell)
+                    {
+                        // 盤上の駒→持ち駒へ移動
+                        Game.GetHands(x).AddOne(selectedCell.Koma.Value.Name.Value, x);
+                        selectedCell.Koma.Value = null;
+                    }
+                    else if (Selected.Value is HandKomaViewModel handKoma)
+                    {
+                        // 相手の持ち駒→自分の持ち駒へ移動
+                        Game.GetHands(handKoma.Player).RemoveOne(handKoma.Name);
+                        Game.GetHands(x).AddOne(handKoma.Name, x);
+                    }
+                    Selected.Value = null;
+
+                });
+            }).AddTo(this.Disposable);
             EditCellCommand = new AsyncReactiveCommand<CellViewModel>();
             EditCellCommand.Subscribe(async x =>
             {
@@ -107,7 +180,7 @@ namespace MiniShogiMobile.ViewModels
                     if(result.Success)
                     {
                         //選択を解除
-                        SelectedCell.Value = null;
+                        Selected.Value = null;
                         //駒を配置
                         x.Koma.Value = result.Data;
                     }
@@ -145,20 +218,29 @@ namespace MiniShogiMobile.ViewModels
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-                    // 駒を消し、選択を解除
-                    SelectedCell.Value.Koma.Value = null;
-                    SelectedCell.Value = null;
+                    // 駒削除、選択を解除
+
+                    if (Selected.Value is CellViewModel selectedCell)
+                        // 盤上の駒を削除
+                        selectedCell.Koma.Value = null;
+
+                    if (Selected.Value is HandKomaViewModel selectedHandKoma)
+                        // 持ち駒を削除
+                        Game.GetHands(selectedHandKoma.Player).RemoveOne(selectedHandKoma.Name);
+
+                    Selected.Value = null;
                 });
             }).AddTo(this.Disposable);
-            AddHandKomaCommand = new AsyncReactiveCommand();
-            AddHandKomaCommand.Subscribe(async () =>
+            AddHandKomaCommand = new AsyncReactiveCommand<PlayerType>();
+            AddHandKomaCommand.Subscribe(async x =>
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-                    var KomaTypes =  App.CreateGameService.KomaTypeRepository.FindAll();
-                    var addKoma = KomaTypes.FirstOrDefault(x => Game.HandsOfPlayer1.Hands.All(y => y.Name != x.Id));
-                    if(addKoma != null)
-                        Game.HandsOfPlayer1.Hands.Add(new HandKomaViewModel() { Name = addKoma.Id, Player= PlayerType.Player1});
+                    var selectedKomaType = await NavigateAsync<SelectKomaPageViewModel, SelectKomaConditions, string>(new SelectKomaConditions(null, "追加する駒を選択してください"));
+                    if (selectedKomaType.Success)
+                    {
+                        Game.GetHands(x).AddOne(selectedKomaType.Data, x);
+                    }
                 });
             }).AddTo(this.Disposable);
         }
@@ -197,6 +279,29 @@ namespace MiniShogiMobile.ViewModels
 
             Game.Update(GameTemplate.Height, GameTemplate.Width, GameTemplate.KomaList);
             Title = GameTemplate.Name;
+
+        }
+        /// <summary>
+        /// 駒台をハイライトするためのリアクティブプロパティの生成
+        /// </summary>
+        /// <param name="toPlayer"></param>
+        /// <returns></returns>
+        private ReadOnlyReactiveProperty<bool> CreateCanMoveToKomadaiReactiveProperty(PlayerType toPlayer)
+        {
+            return Selected.Select(x =>
+            {
+                // 盤の駒は常に手持ちへ移動可
+                if(x is CellViewModel cell)
+                    return cell.Koma.Value != null;
+
+                // 相手の持ち駒なら自身の手持ちへ移動可能
+                if(x is HandKomaViewModel selectedHand)
+                    return selectedHand.Player != toPlayer;
+
+                return false;
+
+            }).ToReadOnlyReactiveProperty()
+            .AddTo(Disposable);
         }
     }
 }

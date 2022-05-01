@@ -14,6 +14,10 @@ namespace MiniShogiMobile.ViewModels
         public Hands HandsOfPlayer1 { get; set; }
         public Hands HandsOfPlayer2 { get; set; }
 
+        public Hands GetHands(PlayerType player)
+        {
+            return player == PlayerType.Player1 ? HandsOfPlayer1 : HandsOfPlayer2;
+        }
         public GameViewModel()
         {
             HandsOfPlayer1 = new Hands();

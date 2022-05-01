@@ -46,9 +46,7 @@ namespace MiniShogiMobile.ViewModels
             CreateNewCommand = new AsyncReactiveCommand();
             CreateNewCommand.Subscribe(async () =>
             {
-                var param = new NavigationParameters();
-                param.Add(nameof(CreateGameCondition), new CreateGameCondition(null));
-                await navigationService.NavigateAsync(nameof(CreateGamePage), param);
+                await NavigateAsync<CreateGamePageViewModel, CreateGameCondition>(new CreateGameCondition(null));
             }).AddTo(Disposable);
         }
     }

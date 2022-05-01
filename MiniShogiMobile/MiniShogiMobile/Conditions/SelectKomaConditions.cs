@@ -6,9 +6,12 @@ namespace MiniShogiMobile.Conditions
     {
         public string SelectedKoma;
 
-        public SelectKomaConditions(string selectedKoma)
+        public string Title;
+
+        public SelectKomaConditions(string selectedKoma, string title = null)
         {
             SelectedKoma = selectedKoma;
+            Title = title;
         }
     }
 }

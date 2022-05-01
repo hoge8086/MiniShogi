@@ -12,6 +12,7 @@
     <utils:IsNullConverter x:Key="isNullConverter"/>
     <utils:IsNotNullConverter x:Key="IsNotNullConverter"/>
     <utils:ImageSourceConverter x:Key="ImageSourceConverter"/>
+    <utils:IsTypeOfConverter x:Key="IsTypeOfConverter"/>
     <utils:EqualsMultiConverter x:Key="EqualsMultiConverter"/>
     <xct:MathExpressionConverter x:Key="MathExpressionConverter" />
     <xct:MultiMathExpressionConverter x:Key="MultiMathExpressionConverter" />
@@ -19,5 +20,6 @@
     <Color x:Key="Player2Color">#eb233d</Color>
     <Color x:Key="BoardFrameColor">Chocolate</Color>
     <Color x:Key="BoardBackground">SandyBrown</Color>
+    <Color x:Key="HighlightColor">DarkOrange</Color>
   </Application.Resources>
 </prism:PrismApplication>

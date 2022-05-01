@@ -4,11 +4,14 @@ using Xamarin.Forms;
 
 namespace MiniShogiMobile.Utils
 {
-    public class IsNullConverter : IValueConverter
+    public class IsTypeOfConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (value == null);
+            if (value == null || parameter == null)
+                return false;
+
+            return (bool)value.GetType().Equals(parameter);
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

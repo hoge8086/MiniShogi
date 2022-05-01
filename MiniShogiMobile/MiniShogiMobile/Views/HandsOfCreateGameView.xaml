@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:MiniShogiMobile.Views"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             x:Class="MiniShogiMobile.Views.HandsOfCreateGameView"
+             x:Name="self">
+  <ContentView.Content>
+     <!--駒台の枠-->
+     <Grid HorizontalOptions="FillAndExpand"
+           VerticalOptions="FillAndExpand">
+         <ctrl:KomadaiView HorizontalOptions="FillAndExpand"
+                           VerticalOptions="FillAndExpand">
+             <StackLayout Spacing="0" Orientation="Horizontal">
+                 <!--持ち駒-->
+                 <ScrollView Orientation="Horizontal"
+                             HorizontalOptions="FillAndExpand"
+                             VerticalOptions="FillAndExpand">
+                     <StackLayout Orientation="Horizontal"
+                                  HorizontalOptions="FillAndExpand"
+                                  VerticalOptions="FillAndExpand"
+                                  Spacing="0"
+                                  BindableLayout.ItemsSource="{Binding Hands}">
+                         <BindableLayout.ItemTemplate>
+                             <DataTemplate>
+                                    <!--なぜかコマンドをHandKomaViewに入れると数字マークが出てるときにタッチでコマンドが起動しなくなるのでグリッドを用意-->
+                                    <Grid xct:TouchEffect.Command="{Binding Source={RelativeSource AncestorType={x:Type views:HandsOfCreateGameView}}, Path=TapKomaCommand}"
+                                          xct:TouchEffect.CommandParameter="{Binding .}">
+                                        <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}"
+                                                        WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
+                                            <ctrl:HandKomaView.Triggers>
+                                                <DataTrigger TargetType="ctrl:HandKomaView" Value="True">
+                                                    <DataTrigger.Binding>
+                                                        <!--選択中のセルが自身のセルならハイライト-->
+                                                        <!-- TODO:ここだけCreateGamePageを参照するのはおかしいので、全体もCreateGamePageを参照するようにする?-->
+                                                        <MultiBinding Converter="{StaticResource EqualsMultiConverter}">
+                                                            <Binding Path="BindingContext.Selected.Value" Source="{RelativeSource AncestorType={x:Type views:CreateGamePage}}"/>
+                                                            <Binding/>
+                                                        </MultiBinding>
+                                                    </DataTrigger.Binding>
+                                                    <Setter Property="BackgroundColor" Value="{StaticResource HighlightColor}"/>
+                                                </DataTrigger>
+                                            </ctrl:HandKomaView.Triggers>
+                                        </ctrl:HandKomaView>
+                                    </Grid>
+                             </DataTemplate>
+                         </BindableLayout.ItemTemplate>
+                     </StackLayout>
+                 </ScrollView>
+                 <!--駒追加ボタン-->
+                 <ImageButton Command="{Binding Source={x:Reference self}, Path=AddKomaCommand}"
+                              CommandParameter="{Binding Source={x:Reference self}, Path=PlayerType}"
+                              Margin="5,0,-1,0"
+                              HorizontalOptions="End"
+                              VerticalOptions="Center"
+                              HeightRequest="36"
+                              WidthRequest="36"
+                              Source="{utils:ImageResource MiniShogiMobile.Images.PlusIcon.png}" />
+             </StackLayout>
+         </ctrl:KomadaiView>
+         <!--持ち駒へ移動する際のドロップ枠-->
+         <Rectangle Margin="2"
+                    xct:TouchEffect.Command="{Binding Source={x:Reference self}, Path=TapKomadaiHighlightCommand}"
+                    xct:TouchEffect.CommandParameter="{Binding Source={x:Reference self}, Path=PlayerType}"
+                    IsVisible="{Binding Source={x:Reference self}, Path=IsHighlight}"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand"
+                    Stroke="White"
+                    Fill="{StaticResource HighlightColor}"
+                    Opacity="0.5"
+                    StrokeThickness="4"
+                    StrokeDashArray="2,2"/>
+                    <!--なぜかこれを付けるとAndroidで表示されない
+                    StrokeDashOffset="6"/>
+                    -->
+     </Grid>
+  </ContentView.Content>
+</ContentView>

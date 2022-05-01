@@ -8,6 +8,8 @@
              x:Class="MiniShogiMobile.Views.SelectKomaPage">
     <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="400">
         <StackLayout BackgroundColor="white" >
+            <Label Text="{Binding Title}" FontSize="Header" Margin="15,15,15,0"/>
+            <BoxView HeightRequest="1" Color="LightGray" Margin="15,0,15,0"/>
             <CollectionView Margin="15"
                             ItemsLayout="VerticalGrid, 4"
                             HeightRequest="400"

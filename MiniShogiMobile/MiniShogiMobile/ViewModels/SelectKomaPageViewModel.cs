@@ -23,6 +23,7 @@ namespace MiniShogiMobile.ViewModels
 
         public SelectKomaPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
+            Title = "駒を選択してください";
             var komaList = App.CreateGameService.KomaTypeRepository.FindAll().ToDictionary(x => x.Id);
             KomaNameList = new ObservableCollection<string>(komaList.Keys);
             SelectedKomaName = new ReactiveProperty<string>();
@@ -46,6 +47,9 @@ namespace MiniShogiMobile.ViewModels
                 SelectedKomaName.Value = KomaNameList.FirstOrDefault();
             else
                 SelectedKomaName.Value = parameter.SelectedKoma;
+
+            if (parameter.Title != null)
+                Title = parameter.Title;
         }
     }
 }

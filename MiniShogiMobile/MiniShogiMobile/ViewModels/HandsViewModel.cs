@@ -1,5 +1,6 @@
 ﻿using Prism.Mvvm;
 using Shogi.Business.Domain.Model.Komas;
+using Shogi.Business.Domain.Model.PlayerTypes;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -14,6 +15,26 @@ namespace MiniShogiMobile.ViewModels
         public HandsViewModel()
         {
             Hands = new ObservableCollection<T>();
+        }
+
+        public void RemoveOne(string komaTypeId)
+        {
+            var removed = Hands.FirstOrDefault(x => x.Name == komaTypeId);
+            if(removed != null)
+            {
+                removed.Num.Value -= 1;
+                if (removed.Num.Value <= 0)
+                    Hands.Remove(removed);
+            }
+        }
+
+        public void AddOne(string komaTypeId, PlayerType player)
+        {
+            var added = Hands.FirstOrDefault(x => x.Name == komaTypeId);
+            if(added != null)
+                added.Num.Value += 1;
+            else
+                Hands.Add(new T() { Name = komaTypeId, Player = player});
         }
 
         public void Update(List<Koma> komaListOfPlayerHands)// ObservableCollection<HandKomaPlayingViewModel> hands, PlayerType player)

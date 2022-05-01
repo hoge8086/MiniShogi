@@ -231,6 +231,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             KomaGin,
             KomaHu,
             KomaHisya,
+            KomaKema,
             KomaKaku,
             KomaKyousya,
             KomaKirin,

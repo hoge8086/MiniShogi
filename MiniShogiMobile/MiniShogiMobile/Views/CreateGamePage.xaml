@@ -4,7 +4,9 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
+             xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
+             xmlns:player="clr-namespace:Shogi.Business.Domain.Model.PlayerTypes;assembly=Shogi.Business"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateGamePage"
@@ -41,22 +43,15 @@
                     WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
                     BackgroundColor="{StaticResource Player2Color}">
                 </ctrl:PlayerView>
-                <!--持ち駒-->
-                <ctrl:KomadaiView
-                    Grid.Column="0"
-                    Rotation="180"
-                    HorizontalOptions="FillAndExpand"
-                    VerticalOptions="FillAndExpand"
-                    ItemsSource="{Binding Hands}">
-                    <ctrl:KomadaiView.ItemTemplate>
-                        <DataTemplate>
-                            <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}"
-                                               WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
-                                               xct:TouchEffect.Command="{Binding Path=BindingContext.TapCellCommand, Source={x:Reference board}}"
-                                               xct:TouchEffect.CommandParameter="{Binding .}"/>
-                        </DataTemplate>
-                    </ctrl:KomadaiView.ItemTemplate>
-                </ctrl:KomadaiView>
+                <!--駒台-->
+                <!--TODO:一部HandsOfCreateGameViewの中からCreateGamePageを直接参照しているのが気に入らない-->
+                <views:HandsOfCreateGameView Grid.Column="0"
+                                             Rotation="180"
+                                             TapKomaCommand="{Binding Path=BindingContext.TapHandKomaCommand, Source={x:Reference board}}"
+                                             IsHighlight="{Binding Path=BindingContext.CanMoveToPlayer2Komadai.Value, Source={x:Reference board}}"
+                                             TapKomadaiHighlightCommand="{Binding Path=BindingContext.TapKomadaiCommand, Source={x:Reference board}}"
+                                             AddKomaCommand="{Binding Path=BindingContext.AddHandKomaCommand, Source={x:Reference board}}"
+                                             PlayerType="{Binding Source={x:Static player:PlayerType.Player2}}"/>
             </Grid>
             <!--盤-->
             <ctrl:SquareCell2DGridControl
@@ -78,7 +73,7 @@
                                 <views:CellView.IsHighlight>
                                   <!--選択中のセルが自身のセルならハイライト-->
                                   <MultiBinding Converter="{StaticResource EqualsMultiConverter}">
-                                      <Binding Path="BindingContext.SelectedCell.Value" Source="{x:Reference board}"/>
+                                      <Binding Path="BindingContext.Selected.Value" Source="{x:Reference board}"/>
                                       <Binding />
                                   </MultiBinding>
                                 </views:CellView.IsHighlight>
@@ -110,7 +105,7 @@
                                             <BindingCondition  Value="True">
                                                 <BindingCondition.Binding>
                                                     <MultiBinding Converter="{StaticResource EqualsMultiConverter}">
-                                                        <Binding Path="BindingContext.SelectedCell.Value" Source="{x:Reference board}"/>
+                                                        <Binding Path="BindingContext.Selected.Value" Source="{x:Reference board}"/>
                                                         <Binding />
                                                     </MultiBinding>
                                                 </BindingCondition.Binding>
@@ -137,70 +132,24 @@
                                  WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
                                  BackgroundColor="{StaticResource Player1Color}">
                 </ctrl:PlayerView>
-                <!--駒台の枠-->
-
-                <Grid Grid.Column="1"
-                      HorizontalOptions="FillAndExpand"
-                      VerticalOptions="FillAndExpand">
-                    <ctrl:KomadaiView HorizontalOptions="FillAndExpand"
-                                      VerticalOptions="FillAndExpand">
-                        <StackLayout Spacing="0" Orientation="Horizontal">
-                            <!--持ち駒-->
-                            <ScrollView Orientation="Horizontal"
-                                        HorizontalOptions="FillAndExpand"
-                                        VerticalOptions="FillAndExpand">
-                                <StackLayout Orientation="Horizontal"
-                                             HorizontalOptions="FillAndExpand"
-                                             VerticalOptions="FillAndExpand"
-                                             Spacing="0"
-                                             BindableLayout.ItemsSource="{Binding Hands}">
-                                    <BindableLayout.ItemTemplate>
-                                        <DataTemplate>
-                                            <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}"
-                                                               WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
-                                                               xct:TouchEffect.Command="{Binding Path=BindingContext.TapCellCommand, Source={x:Reference board}}"
-                                                               xct:TouchEffect.CommandParameter="{Binding .}"/>
-                                        </DataTemplate>
-                                    </BindableLayout.ItemTemplate>
-                                </StackLayout>
-                            </ScrollView>
-                            <!--駒追加ボタン-->
-                            <ImageButton Command="{Binding Path=BindingContext.AddHandKomaCommand, Source={x:Reference board}}"
-                                         Margin="5,0,-1,0"
-                                         HorizontalOptions="End"
-                                         VerticalOptions="Center"
-                                         HeightRequest="32"
-                                         WidthRequest="32"
-                                         Source="{utils:ImageResource MiniShogiMobile.Images.PlusIcon.png}" />
-                        </StackLayout>
-                    </ctrl:KomadaiView>
-                    <Rectangle Margin="2"
-                               HorizontalOptions="FillAndExpand"
-                               VerticalOptions="FillAndExpand"
-                               Stroke="Red"
-                               Fill="DarkOrange"
-                               Opacity="0.5"
-                               StrokeThickness="4"
-                               StrokeDashArray="2,2"/>
-                               <!--なぜかこれを付けるとAndroidで表示されない
-                               StrokeDashOffset="6"/>
-                               -->
-                </Grid>
+                <!--駒台-->
+                <views:HandsOfCreateGameView Grid.Column="1"
+                                             TapKomaCommand="{Binding Path=BindingContext.TapHandKomaCommand, Source={x:Reference board}}"
+                                             IsHighlight="{Binding Path=BindingContext.CanMoveToPlayer1Komadai.Value, Source={x:Reference board}}"
+                                             TapKomadaiHighlightCommand="{Binding Path=BindingContext.TapKomadaiCommand, Source={x:Reference board}}"
+                                             AddKomaCommand="{Binding Path=BindingContext.AddHandKomaCommand, Source={x:Reference board}}"
+                                             PlayerType="{Binding Source={x:Static player:PlayerType.Player1}}"/>
                 <!--ゴミ箱-->
                 <ImageButton Grid.Column="2"
                              Source="{utils:ImageResource MiniShogiMobile.Images.DeleteIcon.png}" 
-                             IsEnabled="{Binding Path=BindingContext.SelectedCell.Value, Source={x:Reference board}, Converter={StaticResource IsNotNullConverter}}"
+                             IsEnabled="{Binding Path=BindingContext.Selected.Value, Source={x:Reference board}, Converter={StaticResource IsNotNullConverter}}"
                              Command="{Binding Path=BindingContext.DeleteKomaCommand, Source={x:Reference board}}"
                              BackgroundColor="Transparent"
                              Opacity="0.3">
                     <ImageButton.Triggers>
-                        <MultiTrigger TargetType="ImageButton">
-                            <MultiTrigger.Conditions>
-                                <BindingCondition Binding="{Binding Path=BindingContext.SelectedCell.Value, Source={x:Reference board}, Converter={StaticResource isNullConverter}}" Value="False"/>
-                                <BindingCondition Binding="{Binding Path=BindingContext.IsSelectingKoma.Value, Source={x:Reference board}}" Value="True"/>
-                            </MultiTrigger.Conditions>
+                        <DataTrigger TargetType="ImageButton" Binding="{Binding Path=BindingContext.IsSelectingKoma.Value, Source={x:Reference board}}" Value="True">
                             <Setter Property="Opacity" Value="1"/>
-                        </MultiTrigger>
+                        </DataTrigger>
                     </ImageButton.Triggers>
                 </ImageButton>
             </Grid>
