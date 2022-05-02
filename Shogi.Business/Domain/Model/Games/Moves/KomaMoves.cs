@@ -12,6 +12,11 @@ namespace Shogi.Business.Domain.Model.Moves
         [DataMember]
         public List<IKomaMove> Moves { get; private set; }
 
+        public KomaMoves()
+        {
+            Moves = new List<IKomaMove>();
+        }
+
         public KomaMoves(List<IKomaMove> moves)
         {
             Moves = moves;

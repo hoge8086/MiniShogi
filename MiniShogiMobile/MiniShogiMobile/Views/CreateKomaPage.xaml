@@ -2,8 +2,23 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:views="clr-namespace:MiniShogiMobile.Views"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateKomaPage"
              Title="駒作成">
-  
+
+            <ctrl:SquareCell2DGridControl Margin="0,12,0,12"
+                                          x:Name="board"
+                                          VerticalOptions="Center"
+                                          ItemsSource="{Binding Game.Board.Cells}">
+                <ctrl:SquareCell2DGridControl.ItemTemplate>
+                    <ControlTemplate>
+                        <views:CellView 
+                                        BindingContext="{TemplateBinding BindingContext}"
+                                        HeightRequest="50"
+                                        WidthRequest="50"/>
+                    </ControlTemplate>
+                </ctrl:SquareCell2DGridControl.ItemTemplate>
+            </ctrl:SquareCell2DGridControl>
 </ContentPage>

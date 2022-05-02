@@ -23,6 +23,14 @@ namespace Shogi.Business.Domain.Model.Komas
         public bool IsHu { get; private set; }
         public bool CanBeTransformed { get => TransformedMoves != null; }
 
+        public KomaType()
+        {
+            Id = string.Empty;
+            Moves = new KomaMoves();
+            TransformedMoves = null;
+            IsKing = false;
+            IsHu = false;
+        }
         public KomaType(
             string id,
             KomaMoves moves,

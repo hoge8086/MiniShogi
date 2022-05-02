@@ -11,6 +11,8 @@ namespace MiniShogiMobile.ViewModels
     public class BoardViewModel<T> where T : CellViewModel, new()
     {
         public ObservableCollection<ObservableCollection<T>> Cells { get; set; }
+        public int Height { get => Cells.Count; } 
+        public int Width { get => Cells.Count <= 0 ? 0 : Cells[0].Count; }
 
         public BoardViewModel()
         {
