@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using CarouselView.FormsPlugin.Android;
 using Prism;
 using Prism.Ioc;
 using Prism.Plugin.Popups;
@@ -20,6 +21,7 @@ namespace MiniShogiMobile.Droid
 
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             global::Rg.Plugins.Popup.Popup.Init(this);
+            CarouselViewRenderer.Init();
             LoadApplication(new App(new AndroidInitializer()));
         }
         public override void OnBackPressed()

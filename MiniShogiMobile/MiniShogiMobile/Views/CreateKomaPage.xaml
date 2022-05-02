@@ -4,21 +4,45 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
+             xmlns:tabview="clr-namespace:Xam.Plugin.TabView;assembly=Xam.Plugin.TabView"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateKomaPage"
              Title="駒作成">
-
-            <ctrl:SquareCell2DGridControl Margin="0,12,0,12"
-                                          x:Name="board"
-                                          VerticalOptions="Center"
-                                          ItemsSource="{Binding Game.Board.Cells}">
-                <ctrl:SquareCell2DGridControl.ItemTemplate>
-                    <ControlTemplate>
-                        <views:CellView 
-                                        BindingContext="{TemplateBinding BindingContext}"
-                                        HeightRequest="50"
-                                        WidthRequest="50"/>
-                    </ControlTemplate>
-                </ctrl:SquareCell2DGridControl.ItemTemplate>
-            </ctrl:SquareCell2DGridControl>
+    <StackLayout>
+        <Label Text="abc"/>
+        <tabview:TabViewControl
+                HeaderBackgroundColor="SkyBlue"
+                HeaderSelectionUnderlineColor="White"
+                HeaderTabTextColor="White"
+                HeaderTabTextFontAttributes="Bold"
+                HorizontalOptions="FillAndExpand"
+                IsSwipeEnabled="True"
+                TabHeaderSpacing="100"
+                VerticalOptions="FillAndExpand">
+            <tabview:TabViewControl.ItemSource>
+                <tabview:TabItem HeaderText="駒">
+                    <ctrl:SquareCell2DGridControl Margin="0,12,0,12"
+                                                  x:Name="board"
+                                                  VerticalOptions="Center"
+                                                  ItemsSource="{Binding Game.Board.Cells}">
+                        <ctrl:SquareCell2DGridControl.ItemTemplate>
+                            <ControlTemplate>
+                                <views:CellView 
+                                                BindingContext="{TemplateBinding BindingContext}"
+                                                HeightRequest="50"
+                                                WidthRequest="50"/>
+                            </ControlTemplate>
+                        </ctrl:SquareCell2DGridControl.ItemTemplate>
+                    </ctrl:SquareCell2DGridControl>
+                </tabview:TabItem>
+                <tabview:TabItem HeaderText="成り">
+                    <Label
+                        FontSize="Large"
+                        HorizontalOptions="Center"
+                        Text="Hello There!"
+                        VerticalOptions="Center" />
+                </tabview:TabItem>
+            </tabview:TabViewControl.ItemSource>
+        </tabview:TabViewControl>
+    </StackLayout>
 </ContentPage>

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using CarouselView.FormsPlugin.UWP;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -53,7 +55,9 @@ namespace MiniShogiMobile.UWP
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 Rg.Plugins.Popup.Popup.Init();
-                Xamarin.Forms.Forms.Init(e, Rg.Plugins.Popup.Popup.GetExtraAssemblies());
+                var assembliesToInclude = Rg.Plugins.Popup.Popup.GetExtraAssemblies().ToList();
+                assembliesToInclude.Add(typeof(CarouselViewRenderer).GetTypeInfo().Assembly);
+                Xamarin.Forms.Forms.Init(e, assembliesToInclude);
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
