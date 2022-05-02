@@ -12,15 +12,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shogi.Business", "Shogi.Business\Shogi.Business.csproj", "{C4117439-F4C4-4FB5-AC14-795CE0FE09FF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shogi.BusinessTests", "Shogi.BusinessTests\Shogi.BusinessTests.csproj", "{4D849E79-B0F8-49EA-81C9-F74F2AD02635}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniShogiMobile", "MiniShogiMobile\MiniShogiMobile\MiniShogiMobile.csproj", "{616F6639-5848-44CF-A995-D028EA4A0C06}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniShogiMobile.Android", "MiniShogiMobile\MiniShogiMobile.Android\MiniShogiMobile.Android.csproj", "{3193824E-860C-4D49-A733-44742381A335}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniShogiMobile.UWP", "MiniShogiMobile\MiniShogiMobile.UWP\MiniShogiMobile.UWP.csproj", "{9AA57090-43DB-425D-ADB0-9FB9F01BFA5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.NavigationEx", "Prism.NavigationEx\Prism.NavigationEx.csproj", "{4E68164E-DD08-4D7B-86C7-51092719F7E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prism.NavigationEx", "Prism.NavigationEx\Prism.NavigationEx.csproj", "{4E68164E-DD08-4D7B-86C7-51092719F7E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,22 +64,6 @@ Global
 		{C4117439-F4C4-4FB5-AC14-795CE0FE09FF}.Release|x64.Build.0 = Release|Any CPU
 		{C4117439-F4C4-4FB5-AC14-795CE0FE09FF}.Release|x86.ActiveCfg = Release|Any CPU
 		{C4117439-F4C4-4FB5-AC14-795CE0FE09FF}.Release|x86.Build.0 = Release|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Debug|ARM.Build.0 = Debug|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Debug|x64.Build.0 = Debug|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Debug|x86.Build.0 = Debug|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Release|ARM.ActiveCfg = Release|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Release|ARM.Build.0 = Release|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Release|x64.ActiveCfg = Release|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Release|x64.Build.0 = Release|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Release|x86.ActiveCfg = Release|Any CPU
-		{4D849E79-B0F8-49EA-81C9-F74F2AD02635}.Release|x86.Build.0 = Release|Any CPU
 		{616F6639-5848-44CF-A995-D028EA4A0C06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{616F6639-5848-44CF-A995-D028EA4A0C06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{616F6639-5848-44CF-A995-D028EA4A0C06}.Debug|ARM.ActiveCfg = Debug|Any CPU
