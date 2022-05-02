@@ -25,6 +25,8 @@ namespace Shogi.Business.Domain.Model.Komas
         [DataMember]
         public KomaTypeKind Kind { get; private set; }
 
+        public bool IsKing { get => Kind == KomaTypeKind.AsKing; }
+        public bool IsHu { get => Kind == KomaTypeKind.AsHu; }
         public KomaTypeId()
         {
             UniqueKey = Guid.Empty.ToString();

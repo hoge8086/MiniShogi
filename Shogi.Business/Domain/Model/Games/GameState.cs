@@ -42,7 +42,7 @@ namespace Shogi.Business.Domain.Model.Games
         public Koma FindKingOnBoard(PlayerType player, List<KomaType> komaTypes)
         {
             // [MEMO:プレイヤーの王は盤上に1つのみあることを前提]
-            return KomaList.FirstOrDefault(x => x.Player == player && komaTypes.Any(y => y.IsKing && y.Id == x.TypeId) && x.IsOnBoard);
+            return KomaList.FirstOrDefault(x => x.Player == player && x.TypeId.IsKing && x.IsOnBoard);
         }
         public Koma FindBoardKoma(BoardPosition fromPosition)
         {

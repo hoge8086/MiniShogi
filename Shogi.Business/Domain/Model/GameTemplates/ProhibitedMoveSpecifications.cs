@@ -18,10 +18,10 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         public bool IsSatisfiedBy(MoveCommand moveCommand, Game game)
         {
             return (moveCommand is HandKomaMoveCommand) && 
-                   game.GetKomaType(((HandKomaMoveCommand)moveCommand).KomaTypeId).IsHu &&
+                   ((HandKomaMoveCommand)moveCommand).KomaTypeId.IsHu &&
                    game.State.KomaList.Any(x =>
                                     x.Player == moveCommand.Player &&
-                                    game.GetKomaType(x).IsHu &&
+                                    x.TypeId.IsHu &&
                                     !x.IsTransformed &&
                                     x.IsOnBoard &&
                                     x.BoardPosition.X == moveCommand.ToPosition.X);
@@ -37,7 +37,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         {
 
             return (moveCommand is HandKomaMoveCommand) &&
-                   game.GetKomaType(((HandKomaMoveCommand)moveCommand).KomaTypeId).IsHu &&
+                   ((HandKomaMoveCommand)moveCommand).KomaTypeId.IsHu &&
                    game.Clone().PlayWithoutRecord(moveCommand).DoCheckmateWithoutHandMove(moveCommand.Player);
         }
     }

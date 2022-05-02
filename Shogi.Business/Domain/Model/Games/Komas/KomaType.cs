@@ -17,10 +17,6 @@ namespace Shogi.Business.Domain.Model.Komas
         public KomaMoves Moves { get; private set; }
         [DataMember]
         public KomaMoves TransformedMoves { get; private set; }
-        [DataMember]
-        public bool IsKing { get; private set; }
-        [DataMember]
-        public bool IsHu { get; private set; }
         public bool CanBeTransformed { get => TransformedMoves != null; }
 
         public KomaType()
@@ -28,21 +24,15 @@ namespace Shogi.Business.Domain.Model.Komas
             Id = new KomaTypeId();
             Moves = new KomaMoves();
             TransformedMoves = null;
-            IsKing = false;
-            IsHu = false;
         }
         public KomaType(
             KomaTypeId id,
             KomaMoves moves,
-            KomaMoves transformedMoves,
-            bool isKing,
-            bool isHu = false)
+            KomaMoves transformedMoves)
         {
             Id = id;
             Moves = moves;
             TransformedMoves = transformedMoves;
-            IsKing = isKing;
-            IsHu = isHu;
         }
         public BoardPositions GetMovableBoardPositions(
             PlayerType player,

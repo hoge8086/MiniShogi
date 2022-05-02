@@ -32,11 +32,11 @@ namespace Shogi.Business.Domain.Model.Games
 
         public Game(Board board, GameState state, CustomRule rule, List<KomaType> komaTypes)
         {
-            if (state.KomaList.Where(x => x.Player == PlayerType.Player1 && x.IsOnBoard && komaTypes.FirstOrDefault(y => y.Id == x.TypeId).IsKing).Count() != 1 ||
-                state.KomaList.Where(x => x.Player == PlayerType.Player1 && x.IsOnBoard && komaTypes.FirstOrDefault(y => y.Id == x.TypeId).IsKing).Count() != 1)
+            if (state.KomaList.Where(x => x.Player == PlayerType.Player1 && x.IsOnBoard && x.TypeId.IsKing).Count() != 1 ||
+                state.KomaList.Where(x => x.Player == PlayerType.Player1 && x.IsOnBoard && x.TypeId.IsKing).Count() != 1)
                 throw new Exception("各プレイヤーに1つずつ王が必要です.");
 
-            if (state.KomaList.Any(x => x.IsInHand && komaTypes.FirstOrDefault(y => y.Id == x.TypeId).IsKing))
+            if (state.KomaList.Any(x => x.IsInHand && x.TypeId.IsKing))
                 throw new Exception("王は手持ちに加えられません.");
 
             Board = board;
