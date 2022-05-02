@@ -8,39 +8,98 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateKomaPage"
              Title="駒作成">
-    <StackLayout>
-        <Label Text="abc"/>
+    <ContentPage.Resources>
+        <ControlTemplate x:Key="CellTemplate">
+            <!--セル-->
+            <Grid HorizontalOptions="FillAndExpand"
+                  VerticalOptions="FillAndExpand"
+                  BindingContext="{TemplateBinding BindingContext}"
+                  BackgroundColor="SandyBrown">
+                <!--駒-->
+                <ctrl:KomaView  DisplayName="{Binding Koma.Value.Name.Value}"
+                       HorizontalOptions="FillAndExpand"
+                       VerticalOptions="FillAndExpand"
+                       NameColor="Black">
+                    <ctrl:KomaView.Triggers>
+                        <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value, Converter={StaticResource isNullConverter}}" Value="True">
+                            <Setter Property="IsVisible" Value="False"/>
+                        </DataTrigger>
+                        <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value.IsTransformed.Value}" Value="True">
+                            <Setter Property="NameColor" Value="Red"/>
+                        </DataTrigger>
+                    </ctrl:KomaView.Triggers>
+                </ctrl:KomaView>
+                <!--丸表示(IsMarkedプロパティ)-->
+                <RelativeLayout IsVisible="false"
+                    VerticalOptions="FillAndExpand"
+                    HorizontalOptions="FillAndExpand">
+                    <Ellipse Fill="OrangeRed"
+                        RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"
+                        RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.4}"
+                        RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.2}"
+                        RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.2}"
+                        Opacity="0.6"/>
+                </RelativeLayout>
+            </Grid>
+        </ControlTemplate>
+    </ContentPage.Resources>
+    <StackLayout Margin="15">
+        <StackLayout Orientation="Horizontal">
+            <Label Text="駒の名前" VerticalOptions="Center" HorizontalOptions="Start"/>
+            <Entry Text=""  Margin="10,0,0,0" VerticalOptions="Center" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
+        <Label x:Name="label" Text="駒の動き"/>
         <tabview:TabViewControl
-                HeaderBackgroundColor="SkyBlue"
-                HeaderSelectionUnderlineColor="White"
-                HeaderTabTextColor="White"
-                HeaderTabTextFontAttributes="Bold"
+                HeaderBackgroundColor="Transparent"
+                HeaderSelectionUnderlineColor="LightGray"
+                HeaderTabTextColor="{Binding Source={x:Reference label}, Path=TextColor}"
+                HeaderTabTextFontSize="Body"
+                HeaderSelectionUnderlineThickness="2"
                 HorizontalOptions="FillAndExpand"
                 IsSwipeEnabled="True"
-                TabHeaderSpacing="100"
                 VerticalOptions="FillAndExpand">
             <tabview:TabViewControl.ItemSource>
                 <tabview:TabItem HeaderText="駒">
-                    <ctrl:SquareCell2DGridControl Margin="0,12,0,12"
-                                                  x:Name="board"
-                                                  VerticalOptions="Center"
-                                                  ItemsSource="{Binding Game.Board.Cells}">
-                        <ctrl:SquareCell2DGridControl.ItemTemplate>
-                            <ControlTemplate>
-                                <views:CellView 
-                                                BindingContext="{TemplateBinding BindingContext}"
-                                                HeightRequest="50"
-                                                WidthRequest="50"/>
-                            </ControlTemplate>
-                        </ctrl:SquareCell2DGridControl.ItemTemplate>
-                    </ctrl:SquareCell2DGridControl>
+                    <!--なぜか子に直接Marginが効かないのでGridを挟む-->
+                    <Grid >
+                        <StackLayout Margin="15">
+                            <StackLayout Orientation="Horizontal" VerticalOptions="Start">
+                                <Label Text="表示名(1文字のみ)" VerticalOptions="Center" HorizontalOptions="Start"/>
+                                <Entry Text="{Binding Koma.Value.Name.Value}" Margin="10,0,0,0" VerticalOptions="Center" HorizontalOptions="StartAndExpand" WidthRequest="200"/>
+                            </StackLayout>
+                            <Grid x:Name="board" VerticalOptions="FillAndExpand">
+                                <ctrl:SquareCell2DGridControl MaxHeight="{Binding Path=Height,Source={x:Reference board}}"
+                                                              MaxWidth="{Binding Path=Width,Source={x:Reference board}}"
+                                                              VerticalOptions="Center"
+                                                              ItemsSource="{Binding Game.Board.Cells}"
+                                                              ItemTemplate="{StaticResource CellTemplate}">
+                                </ctrl:SquareCell2DGridControl>
+                            </Grid>
+                        </StackLayout>
+                    </Grid>
                 </tabview:TabItem>
                 <tabview:TabItem HeaderText="成り">
-                    <Label
-                        FontSize="Large"
-                        HorizontalOptions="Center"
-                        Text="Hello There!"
-                        VerticalOptions="Center" />
+                    <!--なぜか子に直接Marginが効かないのでGridを挟む-->
+                    <Grid >
+                        <StackLayout Margin="15">
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" IsEnabled="{Binding CanTransform.Value}">
+                                <Label Text="成り" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+                                <ctrl:TextbaseSwitch WidthRequest="100" HorizontalOptions="End" IsToggled="True"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" VerticalOptions="Start">
+                                <Label Text="表示名(1文字のみ)" VerticalOptions="Center" HorizontalOptions="Start"/>
+                                <Entry Text="{Binding PromotedKoma.Value.Name.Value}" Margin="10,0,0,0" VerticalOptions="Center" HorizontalOptions="StartAndExpand" WidthRequest="200"/>
+                            </StackLayout>
+                            <Grid x:Name="board2" VerticalOptions="FillAndExpand">
+                                <ctrl:SquareCell2DGridControl MaxHeight="{Binding Path=Height,Source={x:Reference board2}}"
+                                                              MaxWidth="{Binding Path=Width,Source={x:Reference board2}}"
+                                                              VerticalOptions="Center"
+                                                              ItemsSource="{Binding PromotedGame.Board.Cells}"
+                                                              ItemTemplate="{StaticResource CellTemplate}">
+                                </ctrl:SquareCell2DGridControl>
+                            </Grid>
+                        </StackLayout>
+                    </Grid>
                 </tabview:TabItem>
             </tabview:TabViewControl.ItemSource>
         </tabview:TabViewControl>
