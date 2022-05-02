@@ -4,6 +4,7 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
              xmlns:tabview="clr-namespace:Xam.Plugin.TabView;assembly=Xam.Plugin.TabView"
              prism:ViewModelLocator.AutowireViewModel="True"
@@ -14,8 +15,15 @@
             <!--セル-->
             <Grid HorizontalOptions="FillAndExpand"
                   VerticalOptions="FillAndExpand"
+                  xct:TouchEffect.Command="{Binding Source={RelativeSource AncestorType={x:Type views:CreateKomaPage}}, Path=BindingContext.ChangeMoveCommand}"
+                  xct:TouchEffect.CommandParameter="{Binding .}"
                   BindingContext="{TemplateBinding BindingContext}"
                   BackgroundColor="SandyBrown">
+                <Grid.Triggers>
+                    <DataTrigger TargetType="Grid" Binding="{Binding CanMove.Value}" Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource HighlightColor}"/>
+                    </DataTrigger>
+                </Grid.Triggers>
                 <!--駒-->
                 <ctrl:KomaView  DisplayName="{Binding Koma.Value.Name.Value}"
                        HorizontalOptions="FillAndExpand"
@@ -33,21 +41,13 @@
                 <!--丸表示(IsMarkedプロパティ)-->
                 <RelativeLayout VerticalOptions="FillAndExpand"
                                 HorizontalOptions="FillAndExpand">
-                    <Rectangle Fill="Transparent"
-                               Stroke="DeepSkyBlue"
-                               IsVisible="{Binding CanMoveByRepeatableJump.Value}"
-                               StrokeThickness="4"
-                               RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.25}"
-                               RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.25}"
-                               RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.5}"
-                               RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.5}"/>
-                    <Rectangle Fill="DeepSkyBlue"
-                               IsVisible="{Binding MoveType.Value, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static vm:MoveType.RepeatableJump}}"
-                               RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.3}"
-                               RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.3}"
-                               RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"
-                               RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"/>
-                    <Ellipse Fill="orangeRed"
+                    <Ellipse Fill="DeepSkyBlue"
+                             IsVisible="{Binding MoveType.Value, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static vm:MoveType.RepeatableJump}}"
+                             RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.35}"
+                             RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.35}"
+                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.3}"
+                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.3}"/>
+                    <Ellipse Fill="OrangeRed"
                              IsVisible="{Binding MoveType.Value, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static vm:MoveType.Jump}}"
                              RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.35}"
                              RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.35}"
@@ -58,13 +58,6 @@
         </ControlTemplate>
     </ContentPage.Resources>
     <StackLayout Margin="15">
-        <!--
-        <StackLayout Orientation="Horizontal">
-            <Label Text="駒の名前" VerticalOptions="Center" HorizontalOptions="Start"/>
-            <Entry Text=""  Margin="10,0,0,0" VerticalOptions="Center" HorizontalOptions="FillAndExpand"/>
-        </StackLayout>
-        <Label x:Name="label" Text="駒の動き"/>
-        -->
         <tabview:TabViewControl
                 HeaderBackgroundColor="Transparent"
                 HeaderSelectionUnderlineColor="LightGray"

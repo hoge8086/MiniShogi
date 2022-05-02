@@ -14,6 +14,7 @@ using Shogi.Business.Domain.Model.Komas;
 using Shogi.Business.Domain.Model.Moves;
 using Shogi.Business.Domain.Model.PlayerTypes;
 using Shogi.Business.Domain.Model.Boards;
+using Xamarin.Forms.Internals;
 
 namespace MiniShogiMobile.ViewModels
 {
@@ -27,21 +28,21 @@ namespace MiniShogiMobile.ViewModels
     public class CellForCreateKomaViewModel : CellViewModel
     {
         public ReactiveProperty<MoveType> MoveType { get; set; } = new ReactiveProperty<MoveType>(MiniShogiMobile.ViewModels.MoveType.None);
-        public ReactiveProperty<bool> CanMoveByRepeatableJump { get; set; } = new ReactiveProperty<bool>(false);
+        public ReactiveProperty<bool> CanMove { get; set; } = new ReactiveProperty<bool>(false);
     }
 
     public class CreateKomaPageViewModel : NavigationViewModel<string>
     {
         public BoardViewModel<CellForCreateKomaViewModel> Board { get; set; }
         public BoardViewModel<CellForCreateKomaViewModel> PromotedBoard { get; set; }
-
+        public AsyncReactiveCommand<CellForCreateKomaViewModel> ChangeMoveCommand { get; set; }
         public ReactiveProperty<KomaViewModel> Koma { get; private set; }
         public ReactiveProperty<KomaViewModel> PromotedKoma { get; private set; }
         public ReactiveProperty<bool> CanBePromoted { get; private set; }
 
         private BoardPosition KomaPosition;
 
-        private readonly int BoardSize = 7;
+        private readonly int BoardSize = 9;
         public CreateKomaPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             Board = new BoardViewModel<CellForCreateKomaViewModel>();
@@ -51,6 +52,20 @@ namespace MiniShogiMobile.ViewModels
             CanBePromoted = new ReactiveProperty<bool>(false);
             Board.UpdateSize(BoardSize, BoardSize);
             PromotedBoard.UpdateSize(BoardSize, BoardSize);
+
+            ChangeMoveCommand = new AsyncReactiveCommand<CellForCreateKomaViewModel>();
+            ChangeMoveCommand.Subscribe(async x =>
+            {
+                if (x.Position == KomaPosition)
+                    return;
+
+                x.MoveType.Value = (MoveType)(((int)x.MoveType.Value + 1) % (int)(MoveType.RepeatableJump + 1));
+
+                // MEMO:不成と成りでコマンドを分けた方がよいがResourcesでControlTemplateを使ってるのでコマンドを分けれない
+                //      なので、両方の盤を更新する
+                UpdateCanMoveCellByRepeatableJump(Board);
+                UpdateCanMoveCellByRepeatableJump(PromotedBoard);
+            });
         }
 
         public override void Prepare(string parameter)
@@ -89,14 +104,18 @@ namespace MiniShogiMobile.ViewModels
 
         private void UpdateCanMoveCellByRepeatableJump(BoardViewModel<CellForCreateKomaViewModel> board)
         {
-            foreach(var repeatableJumpCell in board.Cells.SelectMany(x => x).Where(x => x.MoveType.Value == MoveType.RepeatableJump))
+            // 移動可能箇所をすべてクリア
+            board.Cells.SelectMany(x => x).ForEach(x => x.CanMove.Value = false);
+
+            // 移動箇所を再計算反映
+            foreach(var moveOnCell in board.Cells.SelectMany(x => x).Where(x => x.MoveType.Value != MoveType.None))
             {
-                var move = new KomaMoveBase(repeatableJumpCell.Position - KomaPosition, true);
+                var move = new KomaMoveBase(moveOnCell.Position - KomaPosition, moveOnCell.MoveType.Value == MoveType.RepeatableJump);
                 var boardModel = new Shogi.Business.Domain.Model.Boards.Board(BoardSize, BoardSize);
                 var movablePositions = move.GetMovableBoardPositions(PlayerType.Player1, KomaPosition, boardModel, new BoardPositions(), new BoardPositions());
                 foreach(var pos in movablePositions.Positions)
                 {
-                    board.Cells[pos.Y][pos.X].CanMoveByRepeatableJump.Value = true;
+                    board.Cells[pos.Y][pos.X].CanMove.Value = true;
                 }
             }
         }
