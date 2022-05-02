@@ -43,6 +43,10 @@ namespace Shogi.Business.Domain.Model.Boards
         {
             return HashCode.Combine(X, Y);
         }
+        public static RelativeBoardPosition operator -(BoardPosition left, BoardPosition right)
+        {
+            return new RelativeBoardPosition(left.X - right.X, left.Y - right.Y);
+        }
 
         public static bool operator ==(BoardPosition left, BoardPosition right)
         {

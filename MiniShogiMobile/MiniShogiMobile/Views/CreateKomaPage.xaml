@@ -4,6 +4,7 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
+             xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
              xmlns:tabview="clr-namespace:Xam.Plugin.TabView;assembly=Xam.Plugin.TabView"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateKomaPage"
@@ -30,29 +31,44 @@
                     </ctrl:KomaView.Triggers>
                 </ctrl:KomaView>
                 <!--丸表示(IsMarkedプロパティ)-->
-                <RelativeLayout IsVisible="false"
-                    VerticalOptions="FillAndExpand"
-                    HorizontalOptions="FillAndExpand">
-                    <Ellipse Fill="OrangeRed"
-                        RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"
-                        RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.4}"
-                        RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.2}"
-                        RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.2}"
-                        Opacity="0.6"/>
+                <RelativeLayout VerticalOptions="FillAndExpand"
+                                HorizontalOptions="FillAndExpand">
+                    <Rectangle Fill="Transparent"
+                               Stroke="DeepSkyBlue"
+                               IsVisible="{Binding CanMoveByRepeatableJump.Value}"
+                               StrokeThickness="4"
+                               RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.25}"
+                               RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.25}"
+                               RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.5}"
+                               RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.5}"/>
+                    <Rectangle Fill="DeepSkyBlue"
+                               IsVisible="{Binding MoveType.Value, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static vm:MoveType.RepeatableJump}}"
+                               RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.3}"
+                               RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.3}"
+                               RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"
+                               RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"/>
+                    <Ellipse Fill="orangeRed"
+                             IsVisible="{Binding MoveType.Value, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static vm:MoveType.Jump}}"
+                             RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.35}"
+                             RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.35}"
+                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.3}"
+                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.3}"/>
                 </RelativeLayout>
             </Grid>
         </ControlTemplate>
     </ContentPage.Resources>
     <StackLayout Margin="15">
+        <!--
         <StackLayout Orientation="Horizontal">
             <Label Text="駒の名前" VerticalOptions="Center" HorizontalOptions="Start"/>
             <Entry Text=""  Margin="10,0,0,0" VerticalOptions="Center" HorizontalOptions="FillAndExpand"/>
         </StackLayout>
         <Label x:Name="label" Text="駒の動き"/>
+        -->
         <tabview:TabViewControl
                 HeaderBackgroundColor="Transparent"
                 HeaderSelectionUnderlineColor="LightGray"
-                HeaderTabTextColor="{Binding Source={x:Reference label}, Path=TextColor}"
+                HeaderTabTextColor="Gray"
                 HeaderTabTextFontSize="Body"
                 HeaderSelectionUnderlineThickness="2"
                 HorizontalOptions="FillAndExpand"
@@ -71,7 +87,7 @@
                                 <ctrl:SquareCell2DGridControl MaxHeight="{Binding Path=Height,Source={x:Reference board}}"
                                                               MaxWidth="{Binding Path=Width,Source={x:Reference board}}"
                                                               VerticalOptions="Center"
-                                                              ItemsSource="{Binding Game.Board.Cells}"
+                                                              ItemsSource="{Binding Board.Cells}"
                                                               ItemTemplate="{StaticResource CellTemplate}">
                                 </ctrl:SquareCell2DGridControl>
                             </Grid>
@@ -82,22 +98,24 @@
                     <!--なぜか子に直接Marginが効かないのでGridを挟む-->
                     <Grid >
                         <StackLayout Margin="15">
-                            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" IsEnabled="{Binding CanTransform.Value}">
-                                <Label Text="成り" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
-                                <ctrl:TextbaseSwitch WidthRequest="100" HorizontalOptions="End" IsToggled="True"/>
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                <Label Text="成りの有効／無効" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+                                <ctrl:TextbaseSwitch WidthRequest="100" HorizontalOptions="End" IsToggled="{Binding CanBePromoted.Value}"/>
                             </StackLayout>
-                            <StackLayout Orientation="Horizontal" VerticalOptions="Start">
-                                <Label Text="表示名(1文字のみ)" VerticalOptions="Center" HorizontalOptions="Start"/>
-                                <Entry Text="{Binding PromotedKoma.Value.Name.Value}" Margin="10,0,0,0" VerticalOptions="Center" HorizontalOptions="StartAndExpand" WidthRequest="200"/>
+                            <StackLayout VerticalOptions="FillAndExpand" IsVisible="{Binding CanBePromoted.Value}">
+                                <StackLayout Orientation="Horizontal" VerticalOptions="Start">
+                                    <Label Text="表示名(1文字のみ)" VerticalOptions="Center" HorizontalOptions="Start"/>
+                                    <Entry Text="{Binding PromotedKoma.Value.Name.Value}" Margin="10,0,0,0" VerticalOptions="Center" HorizontalOptions="StartAndExpand" WidthRequest="200"/>
+                                </StackLayout>
+                                <Grid x:Name="board2" VerticalOptions="FillAndExpand">
+                                    <ctrl:SquareCell2DGridControl MaxHeight="{Binding Path=Height,Source={x:Reference board2}}"
+                                                                  MaxWidth="{Binding Path=Width,Source={x:Reference board2}}"
+                                                                  VerticalOptions="Center"
+                                                                  ItemsSource="{Binding PromotedBoard.Cells}"
+                                                                  ItemTemplate="{StaticResource CellTemplate}">
+                                    </ctrl:SquareCell2DGridControl>
+                                </Grid>
                             </StackLayout>
-                            <Grid x:Name="board2" VerticalOptions="FillAndExpand">
-                                <ctrl:SquareCell2DGridControl MaxHeight="{Binding Path=Height,Source={x:Reference board2}}"
-                                                              MaxWidth="{Binding Path=Width,Source={x:Reference board2}}"
-                                                              VerticalOptions="Center"
-                                                              ItemsSource="{Binding PromotedGame.Board.Cells}"
-                                                              ItemTemplate="{StaticResource CellTemplate}">
-                                </ctrl:SquareCell2DGridControl>
-                            </Grid>
                         </StackLayout>
                     </Grid>
                 </tabview:TabItem>
