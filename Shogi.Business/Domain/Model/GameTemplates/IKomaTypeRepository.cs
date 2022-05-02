@@ -5,10 +5,10 @@ namespace Shogi.Business.Domain.Model.GameTemplates
 {
     public interface IKomaTypeRepository
     {
-        KomaType FindById(string id);
+        KomaType FindById(KomaTypeId id);
         List<KomaType> FindAll();
         void Add(KomaType komaType);
-        void RemoveById(string id);
+        void RemoveById(KomaTypeId id);
     }
 }
 

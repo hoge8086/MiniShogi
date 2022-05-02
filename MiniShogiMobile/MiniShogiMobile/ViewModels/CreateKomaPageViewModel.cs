@@ -31,7 +31,7 @@ namespace MiniShogiMobile.ViewModels
         public ReactiveProperty<bool> CanMove { get; set; } = new ReactiveProperty<bool>(false);
     }
 
-    public class CreateKomaPageViewModel : NavigationViewModel<string>
+    public class CreateKomaPageViewModel : NavigationViewModel<KomaTypeId>
     {
         public BoardViewModel<CellForCreateKomaViewModel> Board { get; set; }
         public BoardViewModel<CellForCreateKomaViewModel> PromotedBoard { get; set; }
@@ -68,7 +68,7 @@ namespace MiniShogiMobile.ViewModels
             });
         }
 
-        public override void Prepare(string parameter)
+        public override void Prepare(KomaTypeId parameter)
         {
             KomaType komaType;
             if (parameter != null)

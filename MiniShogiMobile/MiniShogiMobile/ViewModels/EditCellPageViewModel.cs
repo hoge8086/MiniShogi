@@ -23,7 +23,7 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand OkCommand { get; }
         public AsyncReactiveCommand CancelCommand { get; }
         public AsyncReactiveCommand<object> ChangeKomaTypeCommand { get; }
-        private Dictionary<string, KomaType> KomaTypes { get; }
+        private Dictionary<KomaTypeId, KomaType> KomaTypes { get; }
 
         public CellViewModel EditingCell { get; private set; }
         public ReactiveProperty<bool> CanTransform { get; private set; }
@@ -34,7 +34,7 @@ namespace MiniShogiMobile.ViewModels
             CanTransform = new ReactiveProperty<bool>(false);
             EditingCell = new CellViewModel() { Koma = new ReactiveProperty<KomaViewModel>() };
             EditingCell.Koma.Value = new KomaViewModel(KomaTypes.First().Value.Id, PlayerType.Player1, false);
-            EditingCell.Koma.Value.Name.Subscribe(x =>
+            EditingCell.Koma.Value.KomaTypeId.Subscribe(x =>
             {
                 CanTransform.Value = KomaTypes[x].CanBeTransformed;
                 EditingCell.Koma.Value.IsTransformed.Value &= KomaTypes[x].CanBeTransformed;
@@ -54,11 +54,11 @@ namespace MiniShogiMobile.ViewModels
             ChangeKomaTypeCommand = new AsyncReactiveCommand<object>();
             ChangeKomaTypeCommand.Subscribe(async (x) =>
             {
-                var condition = new SelectKomaConditions(EditingCell.Koma.Value.Name.Value);
-                var result = await NavigateAsync<SelectKomaPageViewModel, SelectKomaConditions, string>(condition);
+                var condition = new SelectKomaConditions(EditingCell.Koma.Value.KomaTypeId.Value);
+                var result = await NavigateAsync<SelectKomaPageViewModel, SelectKomaConditions, KomaTypeId>(condition);
                 if (result.Success)
                 {
-                    EditingCell.Koma.Value.Name.Value = result.Data;
+                    EditingCell.Koma.Value.KomaTypeId.Value = result.Data;
                 }
             }).AddTo(this.Disposable);
         }

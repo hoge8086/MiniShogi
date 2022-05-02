@@ -13,13 +13,13 @@
             <CollectionView Margin="15"
                             ItemsLayout="VerticalGrid, 4"
                             HeightRequest="400"
-                            SelectedItem="{Binding SelectedKomaName.Value}"
-                            ItemsSource="{Binding KomaNameList}"
+                            SelectedItem="{Binding SelectedKomaTypeId.Value}"
+                            ItemsSource="{Binding KomaTypeIdList}"
                             SelectionMode="Single" >
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <ContentView HorizontalOptions="Center" VerticalOptions="Center">
-                            <ctrl:KomaView HeightRequest="80" WidthRequest="80" DisplayName="{Binding .}"/>
+                            <ctrl:KomaView HeightRequest="80" WidthRequest="80" DisplayName="{Binding Name}"/>
                         </ContentView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using Shogi.Business.Domain.Model.Komas;
+using System.Collections.Generic;
 
 namespace MiniShogiMobile.Conditions
 {
     public class SelectKomaConditions
     {
-        public string SelectedKoma;
+        public KomaTypeId SelectedKoma;
 
         public string Title;
 
-        public SelectKomaConditions(string selectedKoma, string title = null)
+        public SelectKomaConditions(KomaTypeId selectedKoma, string title = null)
         {
             SelectedKoma = selectedKoma;
             Title = title;

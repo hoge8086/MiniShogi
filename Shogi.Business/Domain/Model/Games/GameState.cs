@@ -48,7 +48,7 @@ namespace Shogi.Business.Domain.Model.Games
         {
             return KomaList.FirstOrDefault(x => x.BoardPosition == fromPosition);
         }
-        public Koma FindHandKoma(PlayerType player, string komaTypeId)
+        public Koma FindHandKoma(PlayerType player, KomaTypeId komaTypeId)
         {
             return KomaList.FirstOrDefault(x => x.Player == player && x.IsInHand && x.TypeId == komaTypeId);
         }

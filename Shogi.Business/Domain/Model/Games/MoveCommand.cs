@@ -67,9 +67,9 @@ namespace Shogi.Business.Domain.Model.Games
 
     public class HandKomaMoveCommand : MoveCommand
     {
-        public string KomaTypeId { get; set; }
+        public KomaTypeId KomaTypeId { get; set; }
 
-        public HandKomaMoveCommand(PlayerType player, BoardPosition toPosition, string komaTypeId) : base(player, toPosition)
+        public HandKomaMoveCommand(PlayerType player, BoardPosition toPosition, KomaTypeId komaTypeId) : base(player, toPosition)
         {
             KomaTypeId = komaTypeId;
         }

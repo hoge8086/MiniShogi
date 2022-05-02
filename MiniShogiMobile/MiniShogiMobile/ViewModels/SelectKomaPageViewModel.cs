@@ -7,6 +7,7 @@ using Prism.Services;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using Rg.Plugins.Popup.Pages;
+using Shogi.Business.Domain.Model.Komas;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,24 +15,24 @@ using System.Linq;
 
 namespace MiniShogiMobile.ViewModels
 {
-    public class SelectKomaPageViewModel : NavigationViewModel<SelectKomaConditions, string>
+    public class SelectKomaPageViewModel : NavigationViewModel<SelectKomaConditions, KomaTypeId>
     {
         public AsyncReactiveCommand OkCommand { get; }
         public AsyncReactiveCommand CancelCommand { get; }
-        public ObservableCollection<string> KomaNameList { get; }
-        public ReactiveProperty<string> SelectedKomaName { get; }
+        public ObservableCollection<KomaTypeId> KomaTypeIdList { get; }
+        public ReactiveProperty<KomaTypeId> SelectedKomaTypeId { get; }
 
         public SelectKomaPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             Title = "駒を選択してください";
             var komaList = App.CreateGameService.KomaTypeRepository.FindAll().ToDictionary(x => x.Id);
-            KomaNameList = new ObservableCollection<string>(komaList.Keys);
-            SelectedKomaName = new ReactiveProperty<string>();
+            KomaTypeIdList = new ObservableCollection<KomaTypeId>(komaList.Keys);
+            SelectedKomaTypeId = new ReactiveProperty<KomaTypeId>();
 
             OkCommand = new AsyncReactiveCommand();
             OkCommand.Subscribe(async () =>
             {
-                await GoBackAsync(SelectedKomaName.Value);
+                await GoBackAsync(SelectedKomaTypeId.Value);
 
             }).AddTo(this.Disposable);
             CancelCommand = new AsyncReactiveCommand();
@@ -44,9 +45,9 @@ namespace MiniShogiMobile.ViewModels
         public override void Prepare(SelectKomaConditions parameter)
         {
             if (parameter.SelectedKoma == null)
-                SelectedKomaName.Value = KomaNameList.FirstOrDefault();
+                SelectedKomaTypeId.Value = KomaTypeIdList.FirstOrDefault();
             else
-                SelectedKomaName.Value = parameter.SelectedKoma;
+                SelectedKomaTypeId.Value = parameter.SelectedKoma;
 
             if (parameter.Title != null)
                 Title = parameter.Title;

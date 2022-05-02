@@ -16,11 +16,11 @@ namespace Shogi.Business.Domain.Model.Komas
         [DataMember]
         public PlayerType Player { get; private set;}
         [DataMember]
-        public string TypeId { get; private set;}
+        public KomaTypeId TypeId { get; private set;}
         [DataMember]
         public IKomaState State { get; private set; }
 
-        public Koma(PlayerType player, string komaTypeId, IKomaState state)
+        public Koma(PlayerType player, KomaTypeId komaTypeId, IKomaState state)
         {
             Player = player;
             TypeId = komaTypeId;

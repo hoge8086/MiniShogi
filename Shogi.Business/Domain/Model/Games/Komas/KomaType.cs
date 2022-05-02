@@ -12,7 +12,7 @@ namespace Shogi.Business.Domain.Model.Komas
     public class KomaType
     {
         [DataMember]
-        public string Id { get; private set; }
+        public KomaTypeId Id { get; private set; }
         [DataMember]
         public KomaMoves Moves { get; private set; }
         [DataMember]
@@ -25,14 +25,14 @@ namespace Shogi.Business.Domain.Model.Komas
 
         public KomaType()
         {
-            Id = string.Empty;
+            Id = new KomaTypeId();
             Moves = new KomaMoves();
             TransformedMoves = null;
             IsKing = false;
             IsHu = false;
         }
         public KomaType(
-            string id,
+            KomaTypeId id,
             KomaMoves moves,
             KomaMoves transformedMoves,
             bool isKing,
@@ -60,7 +60,7 @@ namespace Shogi.Business.Domain.Model.Komas
 
         public override string ToString()
         {
-            return Id;
+            return Id.Name;
         }
 
         public override bool Equals(object obj)

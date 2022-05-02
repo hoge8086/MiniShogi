@@ -17,9 +17,9 @@ namespace MiniShogiMobile.ViewModels
             Hands = new ObservableCollection<T>();
         }
 
-        public void RemoveOne(string komaTypeId)
+        public void RemoveOne(KomaTypeId komaTypeId)
         {
-            var removed = Hands.FirstOrDefault(x => x.Name == komaTypeId);
+            var removed = Hands.FirstOrDefault(x => x.KomaTypeId == komaTypeId);
             if(removed != null)
             {
                 removed.Num.Value -= 1;
@@ -28,13 +28,13 @@ namespace MiniShogiMobile.ViewModels
             }
         }
 
-        public void AddOne(string komaTypeId, PlayerType player)
+        public void AddOne(KomaTypeId komaTypeId, PlayerType player)
         {
-            var added = Hands.FirstOrDefault(x => x.Name == komaTypeId);
+            var added = Hands.FirstOrDefault(x => x.KomaTypeId == komaTypeId);
             if(added != null)
                 added.Num.Value += 1;
             else
-                Hands.Add(new T() { Name = komaTypeId, Player = player});
+                Hands.Add(new T() { KomaTypeId = komaTypeId, Player = player});
         }
 
         public void Update(List<Koma> komaListOfPlayerHands)// ObservableCollection<HandKomaPlayingViewModel> hands, PlayerType player)
@@ -48,9 +48,9 @@ namespace MiniShogiMobile.ViewModels
             //App.GameService.GetGame().State.KomaList.Where(x => !x.IsOnBoard && x.Player == player).ForEach(koma =>
             komaListOfPlayerHands.ForEach(koma =>
             {
-                var hand = Hands.FirstOrDefault(x => x.Name == koma.TypeId);
+                var hand = Hands.FirstOrDefault(x => x.KomaTypeId == koma.TypeId);
                 if (hand == null)
-                    Hands.Add(new T() { Name = koma.TypeId, Player = koma.Player});
+                    Hands.Add(new T() { KomaTypeId = koma.TypeId, Player = koma.Player});
                 else
                     hand.Num.Value++;
             });

@@ -21,7 +21,7 @@ namespace Shogi.Business.Domain.Model.Games
         public List<KomaType> KomaTypes{ get; private set; }
 
         public KomaType GetKomaType(Koma koma) => KomaTypes.FirstOrDefault(x => x.Id == koma.TypeId);
-        public KomaType GetKomaType(string komaTypeId) => KomaTypes.FirstOrDefault(x => x.Id == komaTypeId);
+        public KomaType GetKomaType(KomaTypeId komaTypeId) => KomaTypes.FirstOrDefault(x => x.Id == komaTypeId);
 
         [DataMember]
         public CustomRule Rule { get; private set; }

@@ -35,7 +35,7 @@ namespace MiniShogiMobile.ViewModels
             if(cell is CellPlayingViewModel)
                 return game.State.FindBoardKoma(((CellPlayingViewModel)cell).Position);
             if(cell is HandKomaViewModel)
-                return game.State.FindHandKoma(((HandKomaViewModel)cell).Player, ((HandKomaViewModel)cell).Name);
+                return game.State.FindHandKoma(((HandKomaViewModel)cell).Player, ((HandKomaViewModel)cell).KomaTypeId);
 
             throw new InvalidProgramException("MoveCommandに不明なパラメータが渡されました.");
         }

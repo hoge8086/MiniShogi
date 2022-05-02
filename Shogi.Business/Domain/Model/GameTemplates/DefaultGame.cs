@@ -10,7 +10,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
     public class DefaultGame
     {
         public static readonly KomaType KomaHiyoko = new KomaType(
-            "ひ",
+            new KomaTypeId("ひ", "に", KomaTypeKind.AsHu),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(0, -1)),
@@ -29,7 +29,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             ),
             false);
         public static readonly KomaType KomaZou = new KomaType(
-            "ぞ",
+            new KomaTypeId("ぞ", KomaTypeKind.None),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(1, 1)),
@@ -41,7 +41,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             null,
             false);
         public static readonly KomaType KomaKirin = new KomaType(
-            "き",
+            new KomaTypeId("き", KomaTypeKind.None),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(0, 1)),
@@ -53,7 +53,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             null,
             false);
         public static readonly KomaType KomaRaion = new KomaType(
-            "ラ",
+            new KomaTypeId("ラ", KomaTypeKind.AsKing),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(0, 1)),
@@ -71,7 +71,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
 
 
         public static readonly KomaType KomaHu = new KomaType(
-            "歩",
+            new KomaTypeId("歩", "と", KomaTypeKind.AsHu),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(0, -1)),
@@ -88,7 +88,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             ),
             false, true);
         public static readonly KomaType KomaOu = new KomaType(
-            "王",
+            new KomaTypeId("王", KomaTypeKind.AsKing),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(0, 1)),
@@ -104,7 +104,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             null,
             true);
         public static readonly KomaType KomaKin = new KomaType(
-            "金",
+            new KomaTypeId("金", KomaTypeKind.None),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(0, 1)),
@@ -118,7 +118,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             null,
             false);
         public static readonly KomaType KomaGin = new KomaType(
-            "銀",
+            new KomaTypeId("銀", "全", KomaTypeKind.None),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(0, -1)),
@@ -140,7 +140,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             ),
             false);
         public static readonly KomaType KomaHisya= new KomaType(
-            "飛",
+            new KomaTypeId("飛", "龍", KomaTypeKind.None),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(0, -1), true),
@@ -163,7 +163,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             ),
             false);
         public static readonly KomaType KomaKaku = new KomaType(
-            "角",
+            new KomaTypeId("角", "馬", KomaTypeKind.None),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(1, -1), true),
@@ -187,7 +187,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             false);
 
         public static readonly KomaType KomaKyousya = new KomaType(
-            "香",
+            new KomaTypeId("香", "杏", KomaTypeKind.None),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(0, -1), true),
@@ -205,7 +205,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             false);
 
         public static readonly KomaType KomaKema = new KomaType(
-            "桂",
+            new KomaTypeId("桂", "圭", KomaTypeKind.None),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(1, -2)),

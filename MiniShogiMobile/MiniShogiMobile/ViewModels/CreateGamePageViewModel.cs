@@ -90,8 +90,8 @@ namespace MiniShogiMobile.ViewModels
                             else if(Selected.Value is HandKomaViewModel selectedHandKoma)
                             {
                                 // 持ち駒→盤上の駒へ移動
-                                Game.GetHands(selectedHandKoma.Player).RemoveOne(selectedHandKoma.Name);
-                                tappedCell.Koma.Value = new KomaViewModel(selectedHandKoma.Name, selectedHandKoma.Player, false);
+                                Game.GetHands(selectedHandKoma.Player).RemoveOne(selectedHandKoma.KomaTypeId);
+                                tappedCell.Koma.Value = new KomaViewModel(selectedHandKoma.KomaTypeId, selectedHandKoma.Player, false);
                             }
                         }
                         // 選択を解除
@@ -109,7 +109,7 @@ namespace MiniShogiMobile.ViewModels
                             // 駒がないい場合は駒を配置
 
                             Selected.Value = tappedCell;
-                            var selectedKomaType = await NavigateAsync<SelectKomaPageViewModel, SelectKomaConditions, string>(new SelectKomaConditions(null, "配置する駒を選択してください"));
+                            var selectedKomaType = await NavigateAsync<SelectKomaPageViewModel, SelectKomaConditions, KomaTypeId>(new SelectKomaConditions(null, "配置する駒を選択してください"));
 
                             // 駒を選んだか?
                             if(selectedKomaType.Success)
@@ -158,14 +158,14 @@ namespace MiniShogiMobile.ViewModels
                     if(Selected.Value is CellViewModel selectedCell)
                     {
                         // 盤上の駒→持ち駒へ移動
-                        Game.GetHands(x).AddOne(selectedCell.Koma.Value.Name.Value, x);
+                        Game.GetHands(x).AddOne(selectedCell.Koma.Value.KomaTypeId.Value, x);
                         selectedCell.Koma.Value = null;
                     }
                     else if (Selected.Value is HandKomaViewModel handKoma)
                     {
                         // 相手の持ち駒→自分の持ち駒へ移動
-                        Game.GetHands(handKoma.Player).RemoveOne(handKoma.Name);
-                        Game.GetHands(x).AddOne(handKoma.Name, x);
+                        Game.GetHands(handKoma.Player).RemoveOne(handKoma.KomaTypeId);
+                        Game.GetHands(x).AddOne(handKoma.KomaTypeId, x);
                     }
                     Selected.Value = null;
 
@@ -226,7 +226,7 @@ namespace MiniShogiMobile.ViewModels
 
                     if (Selected.Value is HandKomaViewModel selectedHandKoma)
                         // 持ち駒を削除
-                        Game.GetHands(selectedHandKoma.Player).RemoveOne(selectedHandKoma.Name);
+                        Game.GetHands(selectedHandKoma.Player).RemoveOne(selectedHandKoma.KomaTypeId);
 
                     Selected.Value = null;
                 });
@@ -236,7 +236,7 @@ namespace MiniShogiMobile.ViewModels
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-                    var selectedKomaType = await NavigateAsync<SelectKomaPageViewModel, SelectKomaConditions, string>(new SelectKomaConditions(null, "追加する駒を選択してください"));
+                    var selectedKomaType = await NavigateAsync<SelectKomaPageViewModel, SelectKomaConditions, KomaTypeId>(new SelectKomaConditions(null, "追加する駒を選択してください"));
                     if (selectedKomaType.Success)
                     {
                         Game.GetHands(x).AddOne(selectedKomaType.Data, x);
@@ -259,7 +259,7 @@ namespace MiniShogiMobile.ViewModels
                         var koma = cell.Koma.Value;
                         komaList.Add(new Koma(
                             koma.PlayerType.Value,
-                            koma.Name.Value,
+                            koma.KomaTypeId.Value,
                             new OnBoard(
                                 new BoardPosition(x, y),
                                 koma.IsTransformed.Value)

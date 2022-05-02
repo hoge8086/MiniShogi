@@ -26,7 +26,7 @@ namespace Shogi.Business.Infrastructure
             }catch(Exception ex){ }
         }
 
-        public KomaType FindById(string id)
+        public KomaType FindById(KomaTypeId id)
         {
             return cache.FirstOrDefault(x => x.Id == id);
         }
@@ -43,7 +43,7 @@ namespace Shogi.Business.Infrastructure
             repo.Save(jsonPath, cache);
         }
 
-        public void RemoveById(string id)
+        public void RemoveById(KomaTypeId id)
         {
             cache.RemoveAll(x => x.Id == id);
             var repo = new JsonRepository();

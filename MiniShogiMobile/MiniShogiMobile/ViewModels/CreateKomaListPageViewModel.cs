@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System.Reactive.Linq;
+using Shogi.Business.Domain.Model.Komas;
 
 namespace MiniShogiMobile.ViewModels
 {
@@ -18,13 +19,13 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand CreateCommand { get; }
         public AsyncReactiveCommand EditCommand { get; }
         public AsyncReactiveCommand DeleteCommand { get; }
-        public ObservableCollection<string> KomaNameList { get; }
-        public ReactiveProperty<string> SelectedKomaName { get; }
+        public ObservableCollection<KomaTypeId> KomaTypeIdList { get; }
+        public ReactiveProperty<KomaTypeId> SelectedKomaTypeId { get; }
         public CreateKomaListPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             var komaList = App.CreateGameService.KomaTypeRepository.FindAll().ToDictionary(x => x.Id);
-            KomaNameList = new ObservableCollection<string>(komaList.Keys);
-            SelectedKomaName = new ReactiveProperty<string>();
+            KomaTypeIdList = new ObservableCollection<KomaTypeId>(komaList.Keys);
+            SelectedKomaTypeId = new ReactiveProperty<KomaTypeId>();
 
             CreateCommand = new AsyncReactiveCommand();
             CreateCommand.Subscribe(async () =>
@@ -34,11 +35,11 @@ namespace MiniShogiMobile.ViewModels
                     bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "新規作成しますか?", "はい", "いいえ");
                     if (doDelete)
                     {
-                        await NavigateAsync<CreateKomaPageViewModel, string>(null);
+                        await NavigateAsync<CreateKomaPageViewModel, KomaTypeId>(null);
                     }
                 });
             }).AddTo(this.Disposable);
-            EditCommand = SelectedKomaName.Select(x => !string.IsNullOrEmpty(x)).ToAsyncReactiveCommand().AddTo(this.Disposable);
+            EditCommand = SelectedKomaTypeId.Select(x => x != null).ToAsyncReactiveCommand().AddTo(this.Disposable);
             EditCommand.Subscribe(async () =>
             {
                 await this.CatchErrorWithMessageAsync(async () =>
@@ -46,11 +47,11 @@ namespace MiniShogiMobile.ViewModels
                     bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "編集しますか?", "はい", "いいえ");
                     if (doDelete)
                     {
-                        await NavigateAsync<CreateKomaPageViewModel, string>(SelectedKomaName.Value);
+                        await NavigateAsync<CreateKomaPageViewModel, KomaTypeId>(SelectedKomaTypeId.Value);
                     }
                 });
             }).AddTo(this.Disposable);
-            DeleteCommand = SelectedKomaName.Select(x => !string.IsNullOrEmpty(x)).ToAsyncReactiveCommand().AddTo(this.Disposable);
+            DeleteCommand = SelectedKomaTypeId.Select(x => x != null).ToAsyncReactiveCommand().AddTo(this.Disposable);
             DeleteCommand.Subscribe(async () =>
             {
                 await this.CatchErrorWithMessageAsync(async () =>
@@ -58,9 +59,9 @@ namespace MiniShogiMobile.ViewModels
                     bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "削除しますか?", "はい", "いいえ");
                     if (doDelete)
                     {
-                        App.CreateGameService.KomaTypeRepository.RemoveById(SelectedKomaName.Value);
-                        KomaNameList.Remove(SelectedKomaName.Value);
-                        SelectedKomaName.Value = null;
+                        App.CreateGameService.KomaTypeRepository.RemoveById(SelectedKomaTypeId.Value);
+                        KomaTypeIdList.Remove(SelectedKomaTypeId.Value);
+                        SelectedKomaTypeId.Value = null;
                     }
                 });
             }).AddTo(this.Disposable);
