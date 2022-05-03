@@ -11,14 +11,17 @@
              x:Name="self">
     <Grid RowDefinitions="*,Auto">
         <StackLayout x:Name="gameField"
+              Spacing="0"
               Margin="10"
               Grid.Row="0">
             <views:PlayerWithHandsView BindingContext="{Binding Game.HandsOfPlayer2}"
+                                       VerticalOptions="EndAndExpand"
                                        HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.1)'}"
                                        IsRotated="True"
                                        PlayerColor="{StaticResource Player2Color}"
                                        ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"/>
             <ctrl:SquareCell2DGridControl x:Name="board"
+                                          VerticalOptions="Center"
                                           ItemsSource="{Binding Game.Board.Cells}"
                                           Margin="0,12,0,12"
                                           MaxWidth="{Binding Source={x:Reference gameField}, Path=Width}"
@@ -35,6 +38,7 @@
                 </ctrl:SquareCell2DGridControl.ItemTemplate>
             </ctrl:SquareCell2DGridControl>
             <views:PlayerWithHandsView BindingContext="{Binding Game.HandsOfPlayer1}"
+                                       VerticalOptions="StartAndExpand"
                                        HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.1)'}"
                                        IsRotated="False"
                                        PlayerColor="{StaticResource Player1Color}"
