@@ -2,6 +2,7 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
              x:Class="MiniShogiMobile.Views.PlayerWithHandsView"
              x:Name="self">
@@ -22,29 +23,39 @@
                     </DataTrigger>
                 </ctrl:PlayerView.Triggers>
             </ctrl:PlayerView>
-            <ctrl:KomadaiView
-                Grid.Column="1"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand"
-                ItemsSource="{Binding Hands}">
-                <ctrl:KomadaiView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
-                            <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}" IsHighlight="{Binding IsSelected.Value}"/>
-                            <!--なぜかDataTemplate内でx:Referenceが効かないのでRelativeSourceを使う-->
-                            <!--参考:https://social.msdn.microsoft.com/Forums/en-US/bbfd3371-b913-4f0e-9ee3-c811a7282193/xreference-not-working?forum=xamarinforms-->
-                            <Button CommandParameter="{Binding}"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type views:PlayerWithHandsView}}, Path=ClickCommand}"
-                                BackgroundColor="Transparent">
-                            </Button>
-                        </Grid>
-                    </DataTemplate>
-                </ctrl:KomadaiView.ItemTemplate>
+            <ctrl:KomadaiView Grid.Column="1"
+                              HorizontalOptions="FillAndExpand"
+                              VerticalOptions="FillAndExpand">
                 <ctrl:KomadaiView.Triggers>
                     <DataTrigger TargetType="ctrl:KomadaiView" Binding="{Binding Path=IsRotated, Source={x:Reference self}}" Value="True">
                         <Setter Property="Rotation" Value="180"/>
                     </DataTrigger>
                 </ctrl:KomadaiView.Triggers>
+                <StackLayout Spacing="0" Orientation="Horizontal">
+                    <!--持ち駒-->
+                    <ScrollView Orientation="Horizontal"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="FillAndExpand">
+                        <StackLayout Orientation="Horizontal"
+                                     HorizontalOptions="FillAndExpand"
+                                     VerticalOptions="FillAndExpand"
+                                     Spacing="0"
+                                     BindableLayout.ItemsSource="{Binding Hands}">
+                            <BindableLayout.ItemTemplate>
+
+                               <DataTemplate>
+                                   <!--なぜかDataTemplate内でx:Referenceが効かないのでRelativeSourceを使う-->
+                                   <!--参考:https://social.msdn.microsoft.com/Forums/en-US/bbfd3371-b913-4f0e-9ee3-c811a7282193/xreference-not-working?forum=xamarinforms-->
+                                   <Grid WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
+                                         xct:TouchEffect.Command="{Binding Source={RelativeSource AncestorType={x:Type views:PlayerWithHandsView}}, Path=ClickCommand}"
+                                         xct:TouchEffect.CommandParameter="{Binding .}">
+                                       <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}" IsHighlight="{Binding IsSelected.Value}"/>
+                                   </Grid>
+                               </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+                    </ScrollView>
+                </StackLayout>
             </ctrl:KomadaiView>
         </Grid>
   </ContentView.Content>
