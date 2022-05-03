@@ -114,5 +114,6 @@
                 </tabview:TabItem>
             </tabview:TabViewControl.ItemSource>
         </tabview:TabViewControl>
+        <Button Text="保存" HorizontalOptions="FillAndExpand" Command="{Binding SaveCommand}"/>
     </StackLayout>
 </ContentPage>

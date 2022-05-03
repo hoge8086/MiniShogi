@@ -9,6 +9,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         List<KomaType> FindAll();
         void Add(KomaType komaType);
         void RemoveById(KomaTypeId id);
+        void Replace(KomaType newKomaType, KomaType oldKomaType);
     }
 }
 

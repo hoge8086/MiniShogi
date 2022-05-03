@@ -41,15 +41,18 @@ namespace MiniShogiMobile.ViewModels
         public ReactiveProperty<bool> CanMove { get; set; } = new ReactiveProperty<bool>(false);
     }
 
-    public class CreateKomaPageViewModel : NavigationViewModel<KomaTypeId>
+    // MEMO:NavigationViewModelのResultは本来いらないが、Resultを指定しないと呼び出し元で待機しないので、仕方なくつける(要NavigationViewModelの改善)
+    public class CreateKomaPageViewModel : NavigationViewModel<KomaTypeId, bool>
     {
         public BoardViewModel<CellForCreateKomaViewModel, CreatingKomaViewModel> Board { get; set; }
         public BoardViewModel<CellForCreateKomaViewModel, CreatingKomaViewModel> PromotedBoard { get; set; }
         public AsyncReactiveCommand<CellForCreateKomaViewModel> ChangeMoveCommand { get; set; }
+        public AsyncReactiveCommand SaveCommand { get; set; }
         public ReactiveProperty<CreatingKomaViewModel> Koma { get; private set; }
         public ReactiveProperty<CreatingKomaViewModel> PromotedKoma { get; private set; }
         public ReactiveProperty<bool> CanBePromoted { get; private set; }
 
+        private KomaType OldKomaType;
         private BoardPosition KomaPosition;
 
         private readonly int BoardSize = 9;
@@ -72,19 +75,59 @@ namespace MiniShogiMobile.ViewModels
                 x.MoveType.Value = (MoveType)(((int)x.MoveType.Value + 1) % (int)(MoveType.RepeatableJump + 1));
 
                 // MEMO:不成と成りでコマンドを分けた方がよいがResourcesでControlTemplateを使ってるのでコマンドを分けれない
-                //      なので、両方の盤を更新する
+                //      なので、両方の盤を更新する(他に何か用方法があれば)
                 UpdateCanMoveCellByRepeatableJump(Board);
                 UpdateCanMoveCellByRepeatableJump(PromotedBoard);
             });
+            SaveCommand = new AsyncReactiveCommand();
+            SaveCommand.Subscribe(async x =>
+            {
+                await this.CatchErrorWithMessageAsync(async () =>
+                {
+                    if(OldKomaType != null)
+                    {
+                        bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "既にゲームへ配置済みの駒は変更されません。よろしいですか？", "はい", "いいえ");
+                        if (!doDelete)
+                            return;
+                    }
+                    App.CreateGameService.KomaTypeRepository.Replace(CreateKomaTypeFromBoard(), OldKomaType);
+                    await GoBackAsync(true);
+                });
+            });
         }
+        private KomaType CreateKomaTypeFromBoard()
+        {
+            return new KomaType(
+                new KomaTypeId(Koma.Value.Name.Value, PromotedKoma.Value.Name.Value, KomaTypeKind.None),
+                new KomaMoves(CreateMovesFrom(Board)),
+                new KomaMoves(CreateMovesFrom(PromotedBoard))
+                );
+        }
+
+        private List<IKomaMove> CreateMovesFrom(BoardViewModel<CellForCreateKomaViewModel, CreatingKomaViewModel> board)
+        {
+            var moves = new List<IKomaMove>();
+            foreach(var moveOnCell in board.Cells.SelectMany(x => x).Where(x => x.MoveType.Value != MoveType.None))
+            {
+                moves.Add(new KomaMoveBase(moveOnCell.Position - KomaPosition, moveOnCell.MoveType.Value == MoveType.RepeatableJump));
+            }
+            return moves;
+        }
+
 
         public override void Prepare(KomaTypeId parameter)
         {
             KomaType komaType;
             if (parameter != null)
+            {
                 komaType = App.CreateGameService.KomaTypeRepository.FindById(parameter);
+                OldKomaType = komaType;
+            }
             else
+            {
                 komaType = new KomaType();
+                OldKomaType = null; 
+            }
 
             KomaPosition = new BoardPosition(Board.Width / 2, Board.Height / 2);
             Koma.Value = new CreatingKomaViewModel(komaType.Id.Name, false);
@@ -118,9 +161,8 @@ namespace MiniShogiMobile.ViewModels
             board.Cells.SelectMany(x => x).ForEach(x => x.CanMove.Value = false);
 
             // 移動箇所を再計算反映
-            foreach(var moveOnCell in board.Cells.SelectMany(x => x).Where(x => x.MoveType.Value != MoveType.None))
+            foreach(var move in CreateMovesFrom(board))
             {
-                var move = new KomaMoveBase(moveOnCell.Position - KomaPosition, moveOnCell.MoveType.Value == MoveType.RepeatableJump);
                 var boardModel = new Shogi.Business.Domain.Model.Boards.Board(BoardSize, BoardSize);
                 var movablePositions = move.GetMovableBoardPositions(PlayerType.Player1, KomaPosition, boardModel, new BoardPositions(), new BoardPositions());
                 foreach(var pos in movablePositions.Positions)

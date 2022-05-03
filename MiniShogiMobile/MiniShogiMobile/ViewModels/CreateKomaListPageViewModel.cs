@@ -23,9 +23,9 @@ namespace MiniShogiMobile.ViewModels
         public ReactiveProperty<KomaTypeId> SelectedKomaTypeId { get; }
         public CreateKomaListPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
-            var komaList = App.CreateGameService.KomaTypeRepository.FindAll().ToDictionary(x => x.Id);
-            KomaTypeIdList = new ObservableCollection<KomaTypeId>(komaList.Keys);
+            KomaTypeIdList = new ObservableCollection<KomaTypeId>();
             SelectedKomaTypeId = new ReactiveProperty<KomaTypeId>();
+            UpdateKomaList();
 
             CreateCommand = new AsyncReactiveCommand();
             CreateCommand.Subscribe(async () =>
@@ -35,7 +35,8 @@ namespace MiniShogiMobile.ViewModels
                     bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "新規作成しますか?", "はい", "いいえ");
                     if (doDelete)
                     {
-                        await NavigateAsync<CreateKomaPageViewModel, KomaTypeId>(null);
+                        await NavigateAsync<CreateKomaPageViewModel, KomaTypeId, bool>(null);
+                        UpdateKomaList();
                     }
                 });
             }).AddTo(this.Disposable);
@@ -47,7 +48,8 @@ namespace MiniShogiMobile.ViewModels
                     bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "編集しますか?", "はい", "いいえ");
                     if (doDelete)
                     {
-                        await NavigateAsync<CreateKomaPageViewModel, KomaTypeId>(SelectedKomaTypeId.Value);
+                        await NavigateAsync<CreateKomaPageViewModel, KomaTypeId, bool>(SelectedKomaTypeId.Value);
+                        UpdateKomaList();
                     }
                 });
             }).AddTo(this.Disposable);
@@ -60,11 +62,19 @@ namespace MiniShogiMobile.ViewModels
                     if (doDelete)
                     {
                         App.CreateGameService.KomaTypeRepository.RemoveById(SelectedKomaTypeId.Value);
-                        KomaTypeIdList.Remove(SelectedKomaTypeId.Value);
                         SelectedKomaTypeId.Value = null;
+                        UpdateKomaList();
                     }
                 });
             }).AddTo(this.Disposable);
+        }
+
+        private void UpdateKomaList()
+        {
+            var komaList = App.CreateGameService.KomaTypeRepository.FindAll().ToDictionary(x => x.Id);
+            KomaTypeIdList.Clear();
+            foreach (var koma in komaList.Keys)
+                KomaTypeIdList.Add(koma);
         }
     }
 }

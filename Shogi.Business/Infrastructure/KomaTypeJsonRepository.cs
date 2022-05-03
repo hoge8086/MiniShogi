@@ -36,6 +36,23 @@ namespace Shogi.Business.Infrastructure
             return new List<KomaType>(cache);
         }
 
+        public void Replace(KomaType newKomaType, KomaType oldKomaType)
+        {
+            if (oldKomaType == null)
+            {
+                Add(newKomaType);
+                return;
+            }
+
+            var index = cache.FindIndex(x => x.Id == oldKomaType.Id);
+            if(index < 0)
+            {
+                throw new InvalidOperationException("Relpace not found old KomaType");
+            }
+            cache[index] = newKomaType;
+            var repo = new JsonRepository();
+            repo.Save(jsonPath, cache);
+        }
         public void Add(KomaType komaType)
         {
             cache.Add(komaType);
