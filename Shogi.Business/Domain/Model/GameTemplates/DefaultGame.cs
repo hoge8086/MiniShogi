@@ -10,7 +10,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
     public class DefaultGame
     {
         public static readonly KomaType KomaHiyoko = new KomaType(
-            new KomaTypeId("ひ", "に", KomaTypeKind.AsHu),
+            new KomaTypeId("🐥", "🐓", KomaTypeKind.AsHu),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(0, -1)),
@@ -28,7 +28,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             }
             ));
         public static readonly KomaType KomaZou = new KomaType(
-            new KomaTypeId("ぞ", KomaTypeKind.None),
+            new KomaTypeId("🐘", KomaTypeKind.None),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(1, 1)),
@@ -39,7 +39,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             ),
             null);
         public static readonly KomaType KomaKirin = new KomaType(
-            new KomaTypeId("き", KomaTypeKind.None),
+            new KomaTypeId("🦒", KomaTypeKind.None),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(0, 1)),
@@ -50,7 +50,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             ),
             null);
         public static readonly KomaType KomaRaion = new KomaType(
-            new KomaTypeId("ラ", KomaTypeKind.AsKing),
+            new KomaTypeId("🦁", KomaTypeKind.AsKing),
             new KomaMoves(new List<IKomaMove>()
             {
                 new KomaMoveBase(new RelativeBoardPosition(0, 1)),
