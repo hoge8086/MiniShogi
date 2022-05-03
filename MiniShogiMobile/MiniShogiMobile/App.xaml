@@ -14,6 +14,7 @@
     <utils:ImageSourceConverter x:Key="ImageSourceConverter"/>
     <utils:IsTypeOfConverter x:Key="IsTypeOfConverter"/>
     <utils:EqualsMultiConverter x:Key="EqualsMultiConverter"/>
+    <utils:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
     <xct:MathExpressionConverter x:Key="MathExpressionConverter" />
     <xct:MultiMathExpressionConverter x:Key="MultiMathExpressionConverter" />
     <xct:EnumToBoolConverter x:Key="EnumToBoolConverter" />

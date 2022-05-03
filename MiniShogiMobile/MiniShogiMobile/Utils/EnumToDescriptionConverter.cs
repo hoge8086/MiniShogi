@@ -6,10 +6,10 @@ using Xamarin.Forms;
 
 namespace MiniShogiMobile.Utils
 {
-    public class EnumToDescriptionConverter<T> : IValueConverter
+    public class EnumToDescriptionConverter : IValueConverter
     {
-        private static string DisplayName(T value) {
-            var fileInfo = value.GetType().GetField(value.ToString());
+        private static string DisplayName(object value, Type type) {
+            var fileInfo = type.GetField(value.ToString());
             var descriptionAttribute = (DescriptionAttribute)fileInfo
                 .GetCustomAttributes(typeof(DescriptionAttribute), false)
                 .FirstOrDefault();
@@ -18,7 +18,11 @@ namespace MiniShogiMobile.Utils
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return DisplayName((T)value);
+            var type = parameter as Type;
+            if(type == null)
+                throw new ArgumentException("EnumToDescriptionConverter");
+
+            return DisplayName(value, type);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

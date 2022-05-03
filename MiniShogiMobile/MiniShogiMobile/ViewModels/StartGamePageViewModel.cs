@@ -29,10 +29,8 @@ namespace MiniShogiMobile.ViewModels
     };
 
     public class EnumPlayerTypeProvider : EnumListProvider<PlayerThinkingType> { }
-    public class PlayerTypeConverter : EnumToDescriptionConverter<PlayerThinkingType> { }
 
     public class EnumSelectFirstTurnPlayerProvider : EnumListProvider<SelectFirstTurnPlayer> { }
-    public class SelectFirstTurnPlayerConverter : EnumToDescriptionConverter<SelectFirstTurnPlayer> { }
     public enum SelectFirstTurnPlayer
     {
         [Description("ランダム")]

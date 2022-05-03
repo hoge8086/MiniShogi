@@ -15,9 +15,11 @@ using Shogi.Business.Domain.Model.Moves;
 using Shogi.Business.Domain.Model.PlayerTypes;
 using Shogi.Business.Domain.Model.Boards;
 using Xamarin.Forms.Internals;
+using MiniShogiMobile.Utils;
 
 namespace MiniShogiMobile.ViewModels
 {
+    public class EnumKomaTypeKindProvider : EnumListProvider<KomaTypeKind> { }
     public enum MoveType
     {
         None,
@@ -44,13 +46,14 @@ namespace MiniShogiMobile.ViewModels
     // MEMO:NavigationViewModelのResultは本来いらないが、Resultを指定しないと呼び出し元で待機しないので、仕方なくつける(要NavigationViewModelの改善)
     public class CreateKomaPageViewModel : NavigationViewModel<KomaTypeId, bool>
     {
-        public BoardViewModel<CellForCreateKomaViewModel, CreatingKomaViewModel> Board { get; set; }
-        public BoardViewModel<CellForCreateKomaViewModel, CreatingKomaViewModel> PromotedBoard { get; set; }
         public AsyncReactiveCommand<CellForCreateKomaViewModel> ChangeMoveCommand { get; set; }
         public AsyncReactiveCommand SaveCommand { get; set; }
+        public BoardViewModel<CellForCreateKomaViewModel, CreatingKomaViewModel> Board { get; set; }
+        public BoardViewModel<CellForCreateKomaViewModel, CreatingKomaViewModel> PromotedBoard { get; set; }
         public ReactiveProperty<CreatingKomaViewModel> Koma { get; private set; }
         public ReactiveProperty<CreatingKomaViewModel> PromotedKoma { get; private set; }
         public ReactiveProperty<bool> CanBePromoted { get; private set; }
+        public ReactiveProperty<KomaTypeKind> KomaTypeKind { get; private set; }
 
         private KomaType OldKomaType;
         private BoardPosition KomaPosition;
@@ -62,6 +65,7 @@ namespace MiniShogiMobile.ViewModels
             PromotedBoard = new BoardViewModel<CellForCreateKomaViewModel, CreatingKomaViewModel>();
             Koma = new ReactiveProperty<CreatingKomaViewModel>();
             PromotedKoma = new ReactiveProperty<CreatingKomaViewModel>();
+            KomaTypeKind = new ReactiveProperty<KomaTypeKind>();
             CanBePromoted = new ReactiveProperty<bool>(false);
             Board.UpdateSize(BoardSize, BoardSize);
             PromotedBoard.UpdateSize(BoardSize, BoardSize);
@@ -98,7 +102,7 @@ namespace MiniShogiMobile.ViewModels
         private KomaType CreateKomaTypeFromBoard()
         {
             return new KomaType(
-                new KomaTypeId(Koma.Value.Name.Value, PromotedKoma.Value.Name.Value, KomaTypeKind.None),
+                new KomaTypeId(Koma.Value.Name.Value, PromotedKoma.Value.Name.Value, KomaTypeKind.Value),
                 new KomaMoves(CreateMovesFrom(Board)),
                 new KomaMoves(CreateMovesFrom(PromotedBoard))
                 );
@@ -128,10 +132,10 @@ namespace MiniShogiMobile.ViewModels
                 komaType = new KomaType();
                 OldKomaType = null; 
             }
-
             KomaPosition = new BoardPosition(Board.Width / 2, Board.Height / 2);
             Koma.Value = new CreatingKomaViewModel(komaType.Id.Name, false);
             PromotedKoma.Value = new CreatingKomaViewModel(komaType.Id.PromotedName, true);
+            KomaTypeKind.Value = komaType.Id.Kind;
             Board.Cells[KomaPosition.X][KomaPosition.Y].Koma.Value = Koma.Value;
             PromotedBoard.Cells[KomaPosition.X][KomaPosition.Y].Koma.Value = PromotedKoma.Value;
             SetMoves(Board, komaType.Moves.Moves);

@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 namespace MiniShogiMobile.ViewModels
 {
     public class EnumWinConditionTypeProvider : EnumListProvider<WinConditionType> { }
-    public class WinConditionTypeConverter : EnumToDescriptionConverter<WinConditionType> { }
     public class EditGameSettingsPageViewModel : NavigationViewModel<GameTemplate, GameTemplate>
     {
         public AsyncReactiveCommand OkCommand { get; }

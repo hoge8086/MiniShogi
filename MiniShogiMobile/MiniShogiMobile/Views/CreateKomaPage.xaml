@@ -6,6 +6,7 @@
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
+             xmlns:model="clr-namespace:Shogi.Business.Domain.Model.Komas;assembly=Shogi.Business"
              xmlns:tabview="clr-namespace:Xam.Plugin.TabView;assembly=Xam.Plugin.TabView"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateKomaPage"
@@ -76,6 +77,14 @@
                                 <Label Text="表示名(1文字のみ)" VerticalOptions="Center" HorizontalOptions="Start"/>
                                 <Entry Text="{Binding Koma.Value.Name.Value}" Margin="10,0,0,0" VerticalOptions="Center" HorizontalOptions="StartAndExpand" WidthRequest="200"/>
                             </StackLayout>
+
+                            <Picker Title="駒種別"
+                                    FontSize="Small"
+                                    HorizontalTextAlignment="Center"
+                                    VerticalOptions="Start"
+                                    ItemsSource="{Binding Source={vm:EnumKomaTypeKindProvider}}"
+                                    ItemDisplayBinding="{Binding Converter={StaticResource EnumToDescriptionConverter}, ConverterParameter={x:Type model:KomaTypeKind}}"
+                                    SelectedItem="{Binding KomaTypeKind.Value}"/>
                             <Grid x:Name="board" VerticalOptions="FillAndExpand">
                                 <ctrl:SquareCell2DGridControl MaxHeight="{Binding Path=Height,Source={x:Reference board}}"
                                                               MaxWidth="{Binding Path=Width,Source={x:Reference board}}"

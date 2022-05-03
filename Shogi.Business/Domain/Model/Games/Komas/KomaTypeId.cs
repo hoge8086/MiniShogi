@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.Komas
@@ -7,9 +8,12 @@ namespace Shogi.Business.Domain.Model.Komas
 
     public enum KomaTypeKind
     {
+        [Description("指定なし")]
         None,
-        AsHu,
+        [Description("王として扱う")]
         AsKing,
+        [Description("歩として扱う")]
+        AsHu,
     }
 
     [DataContract]
