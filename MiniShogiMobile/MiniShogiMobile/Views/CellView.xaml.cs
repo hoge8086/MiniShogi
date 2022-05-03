@@ -17,17 +17,6 @@ namespace MiniShogiMobile.Views
             InitializeComponent();
         }
 
-        public static readonly BindableProperty ClickCommandProperty =
-            BindableProperty.Create(
-                nameof(ClickCommand), typeof(ICommand), typeof(CellView),
-                defaultValue: new Command((obj) => System.Diagnostics.Debug.WriteLine("CellView Tapped")));
-
-        public ICommand ClickCommand
-        {
-            get { return (ICommand)GetValue(ClickCommandProperty); }
-            set { SetValue(ClickCommandProperty, value); }
-        }
-
         public static readonly BindableProperty IsMarkedProperty =
             BindableProperty.Create(
                 nameof(IsMarked), typeof(bool), typeof(CellView), false);

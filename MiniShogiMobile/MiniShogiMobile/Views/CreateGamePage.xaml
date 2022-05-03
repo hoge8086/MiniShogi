@@ -64,12 +64,14 @@
                 <ctrl:SquareCell2DGridControl.ItemTemplate>
                     <ControlTemplate>
                         <RelativeLayout BindingContext="{TemplateBinding BindingContext}">
+                            <!--セル-->
                             <views:CellView
                                 RelativeLayout.XConstraint="0"
                                 RelativeLayout.YConstraint="0"
                                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
                                 RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"
-                                ClickCommand="{Binding Path=BindingContext.TapCellCommand, Source={x:Reference board}}">
+                                xct:TouchEffect.Command="{Binding Path=BindingContext.TapCellCommand, Source={x:Reference board}}"
+                                xct:TouchEffect.CommandParameter="{Binding .}">
                                 <views:CellView.IsHighlight>
                                   <!--選択中のセルが自身のセルならハイライト-->
                                   <MultiBinding Converter="{StaticResource EqualsMultiConverter}">
@@ -88,6 +90,7 @@
                                     </MultiTrigger>
                                 </views:CellView.Triggers>
                             </views:CellView>
+                            <!--編集ボタン-->
                             <ImageButton
                                 Source="{utils:ImageResource MiniShogiMobile.Images.EditIcon.png}" 
                                 CommandParameter="{Binding}"

@@ -48,10 +48,6 @@
                 RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.2}"
                 Opacity="0.6"/>
         </RelativeLayout>
-        <Button CommandParameter="{Binding}"
-            Command="{Binding Path=ClickCommand, Source={x:Reference cell}}"
-            BackgroundColor="Transparent">
-        </Button>
     </Grid>
   </ContentView.Content>
 </ContentView>

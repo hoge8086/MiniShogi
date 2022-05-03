@@ -4,6 +4,7 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:ctrls="clr-namespace:MiniShogiMobile.Controls"
              xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              prism:ViewModelLocator.AutowireViewModel="True"
@@ -18,7 +19,8 @@
                     <views:CellView BindingContext="{Binding EditingCell}" HeightRequest="100" WidthRequest="{Binding Path=Height, Source={RelativeSource Self}}"
                                     HorizontalOptions="Center"
                                     VerticalOptions="Center"
-                                    ClickCommand="{Binding Path=BindingContext.ChangeKomaTypeCommand, Source={x:Reference root}}"/>
+                                    xct:TouchEffect.Command="{Binding Path=BindingContext.ChangeKomaTypeCommand, Source={x:Reference root}}"
+                                    xct:TouchEffect.CommandParameter="{Binding .}"/>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                     <Label Text="駒の向き" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />

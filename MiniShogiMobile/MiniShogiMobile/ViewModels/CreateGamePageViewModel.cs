@@ -118,18 +118,12 @@ namespace MiniShogiMobile.ViewModels
                                 var newKoma = new KomaViewModel(selectedKomaType.Data, owner, false);
                                 var result = await NavigateAsync<EditCellPageViewModel, KomaViewModel, KomaViewModel>(newKoma);
                                 if(result.Success)
-                                {
-                                    //選択を解除
-                                    Selected.Value = null;
                                     //駒を配置
                                     tappedCell.Koma.Value = result.Data;
-                                }
                             }
-                            else
-                            {
-                                // キャンセル時は選択解除
-                                Selected.Value = null;
-                            }
+
+                            // キャンセル時は選択解除
+                            Selected.Value = null;
                         }
                     }
                 });
@@ -179,11 +173,11 @@ namespace MiniShogiMobile.ViewModels
                     var result = await NavigateAsync<EditCellPageViewModel, KomaViewModel, KomaViewModel>(x.Koma.Value);
                     if(result.Success)
                     {
-                        //選択を解除
-                        Selected.Value = null;
                         //駒を配置
                         x.Koma.Value = result.Data;
                     }
+                    //選択を解除
+                    Selected.Value = null;
                 });
             }).AddTo(this.Disposable);
             SaveCommand = new AsyncReactiveCommand();

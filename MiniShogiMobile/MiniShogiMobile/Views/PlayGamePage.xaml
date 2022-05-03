@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.PlayGamePage"
@@ -25,9 +26,10 @@
                 <ctrl:SquareCell2DGridControl.ItemTemplate>
                     <ControlTemplate>
                         <views:CellView BindingContext="{TemplateBinding BindingContext}"
-                                        ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
                                         IsMarked="{Binding CanMove.Value}"
-                                        IsHighlight="{Binding IsSelected.Value}">
+                                        IsHighlight="{Binding IsSelected.Value}"
+                                        xct:TouchEffect.Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
+                                        xct:TouchEffect.CommandParameter="{Binding .}">
                         </views:CellView>
                     </ControlTemplate>
                 </ctrl:SquareCell2DGridControl.ItemTemplate>
