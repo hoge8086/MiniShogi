@@ -179,7 +179,7 @@ namespace MiniShogiMobile.ViewModels
         }
     }
 
-    public class CellPlayingViewModel : CellViewModel, ISelectable
+    public class CellPlayingViewModel : CellViewModel<KomaViewModel>, ISelectable
     {
         public ReactiveProperty<List<MoveCommand>> MoveCommands { get; set; }
 

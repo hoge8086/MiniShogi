@@ -8,9 +8,9 @@ using Xamarin.Forms.Internals;
 
 namespace MiniShogiMobile.ViewModels
 {
-    public class GameViewModel<BoardCell, Hands, HandCell> where BoardCell : CellViewModel, new () where Hands : HandsViewModel<HandCell>, new()  where HandCell : HandKomaViewModel, new()
+    public class GameViewModel<BoardCell, Hands, HandCell> where BoardCell : CellViewModel<KomaViewModel>, new () where Hands : HandsViewModel<HandCell>, new()  where HandCell : HandKomaViewModel, new()
     {
-        public BoardViewModel<BoardCell> Board { get; set; }
+        public BoardViewModel<BoardCell, KomaViewModel> Board { get; set; }
         public Hands HandsOfPlayer1 { get; set; }
         public Hands HandsOfPlayer2 { get; set; }
 
@@ -22,12 +22,12 @@ namespace MiniShogiMobile.ViewModels
         {
             HandsOfPlayer1 = new Hands();
             HandsOfPlayer2 = new Hands();
-            Board = new BoardViewModel<BoardCell>();
+            Board = new BoardViewModel<BoardCell, KomaViewModel>();
         }
 
         public void Update(int height, int width, List<Koma> komaList)
         {
-            Board.Update(height, width, komaList);
+            Board.Update(height, width, komaList, koma => new KomaViewModel(koma));
             HandsOfPlayer1.Update(komaList.Where(x => x.IsInHand && x.Player == PlayerType.Player1).ToList());
             HandsOfPlayer2.Update(komaList.Where(x => x.IsInHand && x.Player == PlayerType.Player2).ToList());
         }

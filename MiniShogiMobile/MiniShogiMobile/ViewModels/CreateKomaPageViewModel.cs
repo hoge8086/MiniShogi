@@ -25,7 +25,17 @@ namespace MiniShogiMobile.ViewModels
         RepeatableJump,
     }
 
-    public class CellForCreateKomaViewModel : CellViewModel
+    public class CreatingKomaViewModel
+    {
+        public ReactiveProperty<string> Name { get; private set; } = new ReactiveProperty<string>();
+        public ReactiveProperty<bool> IsTransformed { get; private set; } = new ReactiveProperty<bool>();
+        public CreatingKomaViewModel(string name, bool isTransformed)
+        {
+            Name.Value = name;
+            IsTransformed.Value = isTransformed;
+        }
+    }
+    public class CellForCreateKomaViewModel : CellViewModel<CreatingKomaViewModel>
     {
         public ReactiveProperty<MoveType> MoveType { get; set; } = new ReactiveProperty<MoveType>(MiniShogiMobile.ViewModels.MoveType.None);
         public ReactiveProperty<bool> CanMove { get; set; } = new ReactiveProperty<bool>(false);
@@ -33,11 +43,11 @@ namespace MiniShogiMobile.ViewModels
 
     public class CreateKomaPageViewModel : NavigationViewModel<KomaTypeId>
     {
-        public BoardViewModel<CellForCreateKomaViewModel> Board { get; set; }
-        public BoardViewModel<CellForCreateKomaViewModel> PromotedBoard { get; set; }
+        public BoardViewModel<CellForCreateKomaViewModel, CreatingKomaViewModel> Board { get; set; }
+        public BoardViewModel<CellForCreateKomaViewModel, CreatingKomaViewModel> PromotedBoard { get; set; }
         public AsyncReactiveCommand<CellForCreateKomaViewModel> ChangeMoveCommand { get; set; }
-        public ReactiveProperty<KomaViewModel> Koma { get; private set; }
-        public ReactiveProperty<KomaViewModel> PromotedKoma { get; private set; }
+        public ReactiveProperty<CreatingKomaViewModel> Koma { get; private set; }
+        public ReactiveProperty<CreatingKomaViewModel> PromotedKoma { get; private set; }
         public ReactiveProperty<bool> CanBePromoted { get; private set; }
 
         private BoardPosition KomaPosition;
@@ -45,10 +55,10 @@ namespace MiniShogiMobile.ViewModels
         private readonly int BoardSize = 9;
         public CreateKomaPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
-            Board = new BoardViewModel<CellForCreateKomaViewModel>();
-            PromotedBoard = new BoardViewModel<CellForCreateKomaViewModel>();
-            Koma = new ReactiveProperty<KomaViewModel>();
-            PromotedKoma = new ReactiveProperty<KomaViewModel>();
+            Board = new BoardViewModel<CellForCreateKomaViewModel, CreatingKomaViewModel>();
+            PromotedBoard = new BoardViewModel<CellForCreateKomaViewModel, CreatingKomaViewModel>();
+            Koma = new ReactiveProperty<CreatingKomaViewModel>();
+            PromotedKoma = new ReactiveProperty<CreatingKomaViewModel>();
             CanBePromoted = new ReactiveProperty<bool>(false);
             Board.UpdateSize(BoardSize, BoardSize);
             PromotedBoard.UpdateSize(BoardSize, BoardSize);
@@ -77,8 +87,8 @@ namespace MiniShogiMobile.ViewModels
                 komaType = new KomaType();
 
             KomaPosition = new BoardPosition(Board.Width / 2, Board.Height / 2);
-            Koma.Value = new KomaViewModel(komaType.Id, PlayerType.Player1, false);
-            PromotedKoma.Value = new KomaViewModel(komaType.Id, PlayerType.Player1, true);
+            Koma.Value = new CreatingKomaViewModel(komaType.Id.Name, false);
+            PromotedKoma.Value = new CreatingKomaViewModel(komaType.Id.PromotedName, true);
             Board.Cells[KomaPosition.X][KomaPosition.Y].Koma.Value = Koma.Value;
             PromotedBoard.Cells[KomaPosition.X][KomaPosition.Y].Koma.Value = PromotedKoma.Value;
             SetMoves(Board, komaType.Moves.Moves);
@@ -89,7 +99,7 @@ namespace MiniShogiMobile.ViewModels
             }
         }
 
-        private void SetMoves(BoardViewModel<CellForCreateKomaViewModel> board, List<IKomaMove> moves)
+        private void SetMoves(BoardViewModel<CellForCreateKomaViewModel, CreatingKomaViewModel> board, List<IKomaMove> moves)
         {
             foreach(var move in moves)
             {
@@ -102,7 +112,7 @@ namespace MiniShogiMobile.ViewModels
             UpdateCanMoveCellByRepeatableJump(board);
         }
 
-        private void UpdateCanMoveCellByRepeatableJump(BoardViewModel<CellForCreateKomaViewModel> board)
+        private void UpdateCanMoveCellByRepeatableJump(BoardViewModel<CellForCreateKomaViewModel, CreatingKomaViewModel> board)
         {
             // 移動可能箇所をすべてクリア
             board.Cells.SelectMany(x => x).ForEach(x => x.CanMove.Value = false);

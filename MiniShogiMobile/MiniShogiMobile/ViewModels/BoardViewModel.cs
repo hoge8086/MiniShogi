@@ -8,18 +8,18 @@ using Xamarin.Forms.Internals;
 
 namespace MiniShogiMobile.ViewModels
 {
-    public class BoardViewModel<T> where T : CellViewModel, new()
+    public class BoardViewModel<TCell, TKoma> where TCell : CellViewModel<TKoma>, new() where TKoma : class
     {
-        public ObservableCollection<ObservableCollection<T>> Cells { get; set; }
+        public ObservableCollection<ObservableCollection<TCell>> Cells { get; set; }
         public int Height { get => Cells.Count; } 
         public int Width { get => Cells.Count <= 0 ? 0 : Cells[0].Count; }
 
         public BoardViewModel()
         {
-            Cells = new ObservableCollection<ObservableCollection<T>>();
+            Cells = new ObservableCollection<ObservableCollection<TCell>>();
         }
 
-        public void Update(int height, int width, List<Koma> komaList)
+        public void Update(int height, int width, List<Koma> komaList, Func<Koma, TKoma> komaViewModelCreater)
         {
             UpdateSize(height, width);
 
@@ -32,7 +32,7 @@ namespace MiniShogiMobile.ViewModels
                 if (koma.BoardPosition != null)
                 {
                     var cell = Cells[koma.BoardPosition.Y][koma.BoardPosition.X];
-                    cell.Koma.Value = new KomaViewModel(koma.TypeId, koma.Player, koma.IsTransformed);
+                    cell.Koma.Value = komaViewModelCreater(koma);
                 }
             }
         }

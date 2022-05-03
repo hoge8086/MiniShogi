@@ -8,14 +8,14 @@ using System.Reactive.Linq;
 
 namespace MiniShogiMobile.ViewModels
 {
-    public class CellViewModel : BindableBase
+    public class CellViewModel<TKoma> : BindableBase where TKoma : class
     {
         public BoardPosition Position { get; set; }
-        public ReactiveProperty<KomaViewModel> Koma { get; set; }
+        public ReactiveProperty<TKoma> Koma { get; set; }
 
         public CellViewModel()
         {
-            Koma = new ReactiveProperty<KomaViewModel>();
+            Koma = new ReactiveProperty<TKoma>();
         }
         public virtual void ToEmpty()
         {

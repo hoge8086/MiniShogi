@@ -24,10 +24,10 @@ namespace MiniShogiMobile.ViewModels
 {
     public class CreateGamePageViewModel : NavigationViewModel<CreateGameCondition>
     {
-        public GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
-        public AsyncReactiveCommand<CellViewModel> EditCellCommand { get; set; }
+        public GameViewModel<CellViewModel<KomaViewModel>, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
+        public AsyncReactiveCommand<CellViewModel<KomaViewModel>> EditCellCommand { get; set; }
         public AsyncReactiveCommand DeleteKomaCommand { get; set; }
-        public AsyncReactiveCommand<CellViewModel> TapCellCommand { get; set; }
+        public AsyncReactiveCommand<CellViewModel<KomaViewModel>> TapCellCommand { get; set; }
         public AsyncReactiveCommand EditSettingCommand {get;}
         public AsyncReactiveCommand SaveCommand { get; set; }
 
@@ -54,7 +54,7 @@ namespace MiniShogiMobile.ViewModels
         public CreateGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             GameTemplate = new GameTemplate();
-            Game = new GameViewModel<CellViewModel, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
+            Game = new GameViewModel<CellViewModel<KomaViewModel>, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
             Selected = new ReactiveProperty<BindableBase>();
             CanMoveToPlayer1Komadai = CreateCanMoveToKomadaiReactiveProperty(PlayerType.Player1);
             CanMoveToPlayer2Komadai = CreateCanMoveToKomadaiReactiveProperty(PlayerType.Player2);
@@ -64,12 +64,12 @@ namespace MiniShogiMobile.ViewModels
                 if (x == null)
                     return false;
 
-                if(x is CellViewModel cell)
+                if(x is CellViewModel<KomaViewModel> cell)
                     return cell.Koma.Value != null;
 
                 return x is HandKomaViewModel;
             }).ToReadOnlyReactivePropertySlim().AddTo(Disposable);
-            TapCellCommand = new AsyncReactiveCommand<CellViewModel>();
+            TapCellCommand = new AsyncReactiveCommand<CellViewModel<KomaViewModel>>();
             TapCellCommand.Subscribe(async tappedCell =>
             {
                 await this.CatchErrorWithMessageAsync(async () =>
@@ -81,7 +81,7 @@ namespace MiniShogiMobile.ViewModels
                         {
                             // すでに駒が選択中の場合で、空セルをタップした場合は駒移動
 
-                            if(Selected.Value is CellViewModel selectedCell)
+                            if(Selected.Value is CellViewModel<KomaViewModel> selectedCell)
                             {
                                 // 盤上の駒→盤上の駒へ移動
                                 tappedCell.Koma.Value = selectedCell.Koma.Value;
@@ -155,7 +155,7 @@ namespace MiniShogiMobile.ViewModels
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-                    if(Selected.Value is CellViewModel selectedCell)
+                    if(Selected.Value is CellViewModel<KomaViewModel> selectedCell)
                     {
                         // 盤上の駒→持ち駒へ移動
                         Game.GetHands(x).AddOne(selectedCell.Koma.Value.KomaTypeId.Value, x);
@@ -171,7 +171,7 @@ namespace MiniShogiMobile.ViewModels
 
                 });
             }).AddTo(this.Disposable);
-            EditCellCommand = new AsyncReactiveCommand<CellViewModel>();
+            EditCellCommand = new AsyncReactiveCommand<CellViewModel<KomaViewModel>>();
             EditCellCommand.Subscribe(async x =>
             {
                 await this.CatchErrorWithMessageAsync(async () =>
@@ -220,7 +220,7 @@ namespace MiniShogiMobile.ViewModels
                 {
                     // 駒削除、選択を解除
 
-                    if (Selected.Value is CellViewModel selectedCell)
+                    if (Selected.Value is CellViewModel<KomaViewModel> selectedCell)
                         // 盤上の駒を削除
                         selectedCell.Koma.Value = null;
 
@@ -291,7 +291,7 @@ namespace MiniShogiMobile.ViewModels
             return Selected.Select(x =>
             {
                 // 盤の駒は常に手持ちへ移動可
-                if(x is CellViewModel cell)
+                if(x is CellViewModel<KomaViewModel> cell)
                     return cell.Koma.Value != null;
 
                 // 相手の持ち駒なら自身の手持ちへ移動可能

@@ -13,35 +13,40 @@ namespace MiniShogiMobile.ViewModels
         public ReadOnlyReactiveProperty<string> Name { get; private set; }
         public ReactiveProperty<KomaTypeId> KomaTypeId = new ReactiveProperty<KomaTypeId>();
 
+        private ReadOnlyReactiveProperty<string> CreateNameReactiveProperty()
+        {
+            return IsTransformed.CombineLatest(KomaTypeId, Tuple.Create)
+                                     .Select(x  => IsTransformed.Value  ? this.KomaTypeId.Value.PromotedName : this.KomaTypeId.Value.Name)
+                                     .ToReadOnlyReactiveProperty(); 
+                                     // Fix: AddTo(Disposableをどうする?ここは不要?)
+        }
+        public KomaViewModel(Koma koma)
+        {
+            this.KomaTypeId.Value = koma.TypeId;
+            this.IsTransformed.Value = koma.IsTransformed;
+            this.PlayerType.Value = koma.Player;
+            this.Name = CreateNameReactiveProperty();
+        }
         public KomaViewModel(KomaTypeId komaTypeId, PlayerType playerType, bool isTransformed)
         {
             this.KomaTypeId.Value = komaTypeId;
             this.IsTransformed.Value = isTransformed;
             this.PlayerType.Value = playerType;
-            this.Name = IsTransformed.CombineLatest(KomaTypeId, Tuple.Create)
-                                     .Select(x  => IsTransformed.Value  ? this.KomaTypeId.Value.PromotedName : this.KomaTypeId.Value.Name)
-                                     .ToReadOnlyReactiveProperty(); 
-                                    // Fix: AddTo(Disposableをどうする?ここは不要?)
+            this.Name = CreateNameReactiveProperty();
         }
         public KomaViewModel(KomaViewModel other)
         {
             this.KomaTypeId.Value = other.KomaTypeId.Value;
             this.IsTransformed.Value = other.IsTransformed.Value;
             this.PlayerType.Value = other.PlayerType.Value;
-            this.Name = IsTransformed.CombineLatest(KomaTypeId, Tuple.Create)
-                                     .Select(x  => IsTransformed.Value  ? this.KomaTypeId.Value.PromotedName : this.KomaTypeId.Value.Name)
-                                     .ToReadOnlyReactiveProperty(); 
-                                    // Fix: AddTo(Disposableをどうする?ここは不要?)
+            this.Name = CreateNameReactiveProperty();
         }
         public KomaViewModel()
         {
             this.KomaTypeId.Value = new KomaTypeId();
             this.IsTransformed.Value = false;
             this.PlayerType.Value = Shogi.Business.Domain.Model.PlayerTypes.PlayerType.Player1;
-            this.Name = IsTransformed.CombineLatest(KomaTypeId, Tuple.Create)
-                                     .Select(x  => IsTransformed.Value  ? this.KomaTypeId.Value.PromotedName : this.KomaTypeId.Value.Name)
-                                     .ToReadOnlyReactiveProperty(); 
-                                    // Fix: AddTo(Disposableをどうする?ここは不要?)
+            this.Name = CreateNameReactiveProperty();
         }
 
 

@@ -25,14 +25,14 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand<object> ChangeKomaTypeCommand { get; }
         private Dictionary<KomaTypeId, KomaType> KomaTypes { get; }
 
-        public CellViewModel EditingCell { get; private set; }
+        public CellViewModel<KomaViewModel> EditingCell { get; private set; }
         public ReactiveProperty<bool> CanTransform { get; private set; }
 
         public EditCellPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             KomaTypes =  App.CreateGameService.KomaTypeRepository.FindAll().ToDictionary(x => x.Id);
             CanTransform = new ReactiveProperty<bool>(false);
-            EditingCell = new CellViewModel() { Koma = new ReactiveProperty<KomaViewModel>() };
+            EditingCell = new CellViewModel<KomaViewModel>() { Koma = new ReactiveProperty<KomaViewModel>() };
             EditingCell.Koma.Value = new KomaViewModel(KomaTypes.First().Value.Id, PlayerType.Player1, false);
             EditingCell.Koma.Value.KomaTypeId.Subscribe(x =>
             {
