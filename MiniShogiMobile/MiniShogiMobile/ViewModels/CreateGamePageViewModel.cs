@@ -25,7 +25,7 @@ namespace MiniShogiMobile.ViewModels
     public class CreateGamePageViewModel : NavigationViewModel<CreateGameCondition>
     {
         public GameViewModel<CellViewModel<KomaViewModel>, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
-        public AsyncReactiveCommand<CellViewModel<KomaViewModel>> EditCellCommand { get; set; }
+        public AsyncReactiveCommand EditCellCommand { get; set; }
         public AsyncReactiveCommand DeleteKomaCommand { get; set; }
         public AsyncReactiveCommand<CellViewModel<KomaViewModel>> TapCellCommand { get; set; }
         public AsyncReactiveCommand EditSettingCommand {get;}
@@ -165,16 +165,26 @@ namespace MiniShogiMobile.ViewModels
 
                 });
             }).AddTo(this.Disposable);
-            EditCellCommand = new AsyncReactiveCommand<CellViewModel<KomaViewModel>>();
+            EditCellCommand = Selected.Select(x =>
+            {
+                if (x == null)
+                    return false;
+
+                if(x is CellViewModel<KomaViewModel> cell)
+                    return cell.Koma.Value != null;
+
+                return false;
+            }).ToAsyncReactiveCommand().AddTo(Disposable);
             EditCellCommand.Subscribe(async x =>
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-                    var result = await NavigateAsync<EditCellPageViewModel, KomaViewModel, KomaViewModel>(x.Koma.Value);
+                    var cell = Selected.Value as CellViewModel<KomaViewModel>;
+                    var result = await NavigateAsync<EditCellPageViewModel, KomaViewModel, KomaViewModel>(cell.Koma.Value);
                     if(result.Success)
                     {
                         //駒を配置
-                        x.Koma.Value = result.Data;
+                        cell.Koma.Value = result.Data;
                     }
                     //選択を解除
                     Selected.Value = null;
@@ -185,9 +195,13 @@ namespace MiniShogiMobile.ViewModels
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-                    GameTemplate.KomaList = CreateKomaList();
-                    App.CreateGameService.CreateGame(GameTemplate);
-                    await navigationService .GoBackToRootAsync();
+                    bool doSave = await pageDialogService.DisplayAlertAsync("確認", "作成を完了しますか?\n完了後、ホーム画面に戻ります。", "はい", "いいえ");
+                    if (doSave)
+                    {
+                        GameTemplate.KomaList = CreateKomaList();
+                        App.CreateGameService.CreateGame(GameTemplate);
+                        await navigationService .GoBackToRootAsync();
+                    }
                 });
 
             }).AddTo(this.Disposable);
@@ -207,7 +221,7 @@ namespace MiniShogiMobile.ViewModels
                 });
 
             }).AddTo(this.Disposable);
-            DeleteKomaCommand = new AsyncReactiveCommand();
+            DeleteKomaCommand = IsSelectingKoma.ToAsyncReactiveCommand().AddTo(this.Disposable);
             DeleteKomaCommand.Subscribe(async () =>
             {
                 await this.CatchErrorWithMessageAsync(async () =>

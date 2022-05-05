@@ -17,27 +17,37 @@
             <Setter Property="Opacity" Value="0.3"/>
             <Setter Property="BackgroundColor" Value="Transparent"/>
         </Style>
-            
         </ContentPage.Resources>
         <Grid RowDefinitions="Auto,*">
             <StackLayout Grid.Row="0"
-                         Orientation="Horizontal"
-                         HeightRequest="40"
-                         Margin="10">
-            <ImageButton Source="{utils:ImageResource MiniShogiMobile.Images.PlusIcon.png}" 
-                             Command="{Binding Path=CreateCommand}"
-                             HorizontalOptions="EndAndExpand">
-            </ImageButton>
-            <ImageButton Source="{utils:ImageResource MiniShogiMobile.Images.EditIcon.png}" 
-                             Command="{Binding Path=EditCommand}"
-                             HorizontalOptions="End">
-            </ImageButton>
-            <ImageButton Source="{utils:ImageResource MiniShogiMobile.Images.DeleteIcon.png}" 
-                             Command="{Binding Path=DeleteCommand}"
-                             HorizontalOptions="End">
-            </ImageButton>
+                             Orientation="Horizontal"
+                             HeightRequest="40"
+                             Margin="10"
+                             HorizontalOptions="FillAndExpand"
+                             Spacing="10">
+                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 
+                                 Text="削除"
+                                 Command="{Binding DeleteCommand}"
+                                 HorizontalOptions="CenterAndExpand"
+                                 BackgroundColor="Transparent"/>
+                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
+                                 Text="編集"
+                                 Command="{Binding EditCommand}"
+                                 HorizontalOptions="CenterAndExpand"
+                                 BackgroundColor="Transparent"/>
+                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
+                                 Text="コピー"
+                                 Command="{Binding Copyommand}"
+                                 HorizontalOptions="CenterAndExpand"
+                                 BackgroundColor="Transparent"/>
+                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" 
+                                 Text="新規追加"
+                                 Command="{Binding CreateCommand}"
+                                 HorizontalOptions="CenterAndExpand"
+                                 BackgroundColor="Transparent"/>
             </StackLayout>
             <CollectionView Grid.Row="1"
+                            VerticalOptions="FillAndExpand"
                             Margin="15"
                             ItemsLayout="VerticalGrid, 5"
                             SelectedItem="{Binding SelectedKomaTypeId.Value}"

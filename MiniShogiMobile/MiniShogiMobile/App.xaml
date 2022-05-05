@@ -18,6 +18,7 @@
     <xct:MathExpressionConverter x:Key="MathExpressionConverter" />
     <xct:MultiMathExpressionConverter x:Key="MultiMathExpressionConverter" />
     <xct:EnumToBoolConverter x:Key="EnumToBoolConverter" />
+    <Color x:Key="AppThemeColor">#3aabd2</Color>
     <Color x:Key="Player1Color">DodgerBlue</Color>
     <Color x:Key="Player2Color">#eb233d</Color>
     <Color x:Key="BoardFrameColor">Chocolate</Color>

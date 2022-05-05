@@ -11,18 +11,68 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateGamePage"
              Title="ゲーム作成">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="設定"
+                     Order="Secondary"
+                     Priority="0" />
+        <ToolbarItem Text="完了"
+                     Command="{Binding SaveCommand}"
+                     Order="Primary"
+                     Priority="1" />
+    </ContentPage.ToolbarItems>
     <Grid RowDefinitions="Auto,*,Auto" ColumnDefinitions="10,*,10">
         <!--メニュー-->
-        <StackLayout
-            Grid.Column="1"
-            Grid.Row="0"
-            Orientation="Horizontal"
-            HorizontalOptions="FillAndExpand">
-            <Label Text="{Binding Path=Height, Source={x:Reference board} }"/>
-            <Label Text="{Binding Path=MaxHeight, Source={x:Reference board} }"/>
-            <Label Text="{Binding Path=Width, Source={x:Reference board} }"/>
-            <Label Text="{Binding Path=MaxWidth, Source={x:Reference board} }"/>
-            <Button Text="設定" Command="{Binding EditSettingCommand}" Margin="5" HorizontalOptions="EndAndExpand"/>
+        <StackLayout Grid.Column="1"
+                     Margin="0,5,0,0"
+                     Grid.Row="0">
+            <Frame BackgroundColor="White"
+                   BorderColor="{StaticResource AppThemeColor}"
+                   Padding="2"
+                   HasShadow="False"
+                   HorizontalOptions="FillAndExpand">
+                <StackLayout Orientation="Horizontal" Margin="4">
+                    <Label Text="タイトル:"
+                           TextColor="{StaticResource AppThemeColor}"
+                           VerticalOptions="Center"/>
+                    <StackLayout Spacing="0" HorizontalOptions="FillAndExpand" >
+                        <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand">
+                            <Label Text="あいうえお"
+                                   TextColor="{StaticResource AppThemeColor}"
+                                   HorizontalOptions="FillAndExpand"
+                                   VerticalOptions="Center"/>
+                            <ImageButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}"
+                                         HeightRequest="25"
+                                         BackgroundColor="Transparent"/>
+                        </StackLayout>
+                        <BoxView BackgroundColor="{StaticResource AppThemeColor}" HeightRequest="1" HorizontalOptions="FillAndExpand" />
+                    </StackLayout>
+                </StackLayout>
+            </Frame>
+            <StackLayout Orientation="Horizontal"
+                         HorizontalOptions="FillAndExpand"
+                         Spacing="12"
+                         Margin="10"
+                         HeightRequest="35">
+                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.EditBoard.png}" 
+                             Text="盤編集"
+                             Command="{Binding EditSettingCommand}"
+                             HorizontalOptions="CenterAndExpand"
+                             BackgroundColor="Transparent"/>
+                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.EditKoma.png}" 
+                             Text="駒編集"
+                             Command="{Binding EditCellCommand}"
+                             HorizontalOptions="CenterAndExpand"
+                             BackgroundColor="Transparent"/>
+                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
+                             Text="コピー"
+                             HorizontalOptions="CenterAndExpand"
+                             BackgroundColor="Transparent"/>
+                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.DeleteKoma.png}" 
+                             Text="削除"
+                             Command="{Binding DeleteKomaCommand}"
+                             HorizontalOptions="CenterAndExpand"
+                             BackgroundColor="Transparent"/>
+            </StackLayout>
         </StackLayout>
         <!--ゲーム-->
         <StackLayout
@@ -90,36 +140,6 @@
                                     </MultiTrigger>
                                 </views:CellView.Triggers>
                             </views:CellView>
-                            <!--編集ボタン-->
-                            <ImageButton
-                                Source="{utils:ImageResource MiniShogiMobile.Images.EditIcon.png}" 
-                                CommandParameter="{Binding}"
-                                Command="{Binding Path=BindingContext.EditCellCommand, Source={x:Reference board}}"
-                                BackgroundColor="Transparent"
-                                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.6}"
-                                RelativeLayout.YConstraint="0"
-                                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"
-                                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.4}"
-                                IsVisible="False">
-                                <ImageButton.Triggers>
-                                    <!--選択中のセルが自身のセルかつ、駒が存在するなら編集ボタン表示-->
-                                    <MultiTrigger TargetType="ImageButton">
-                                        <MultiTrigger.Conditions>
-                                            <BindingCondition  Value="True">
-                                                <BindingCondition.Binding>
-                                                    <MultiBinding Converter="{StaticResource EqualsMultiConverter}">
-                                                        <Binding Path="BindingContext.Selected.Value" Source="{x:Reference board}"/>
-                                                        <Binding />
-                                                    </MultiBinding>
-                                                </BindingCondition.Binding>
-                                            </BindingCondition>
-                                            <BindingCondition Binding="{Binding Path=BindingContext.IsSelectingKoma.Value, Source={x:Reference board}}" Value="True"/>
-                                            <BindingCondition Binding="{Binding Koma.Value, Converter={StaticResource IsNotNullConverter}}" Value="True"/>
-                                        </MultiTrigger.Conditions>
-                                        <Setter Property="IsVisible" Value="True"/>
-                                    </MultiTrigger>
-                                </ImageButton.Triggers>
-                            </ImageButton>
                         </RelativeLayout>
                     </ControlTemplate>
                 </ctrl:SquareCell2DGridControl.ItemTemplate>
@@ -142,26 +162,17 @@
                                              TapKomadaiHighlightCommand="{Binding Path=BindingContext.TapKomadaiCommand, Source={x:Reference board}}"
                                              AddKomaCommand="{Binding Path=BindingContext.AddHandKomaCommand, Source={x:Reference board}}"
                                              PlayerType="{Binding Source={x:Static player:PlayerType.Player1}}"/>
-                <!--ゴミ箱-->
-                <ImageButton Grid.Column="2"
-                             Source="{utils:ImageResource MiniShogiMobile.Images.DeleteIcon.png}" 
-                             IsEnabled="{Binding Path=BindingContext.Selected.Value, Source={x:Reference board}, Converter={StaticResource IsNotNullConverter}}"
-                             Command="{Binding Path=BindingContext.DeleteKomaCommand, Source={x:Reference board}}"
-                             BackgroundColor="Transparent"
-                             Opacity="0.3">
-                    <ImageButton.Triggers>
-                        <DataTrigger TargetType="ImageButton" Binding="{Binding Path=BindingContext.IsSelectingKoma.Value, Source={x:Reference board}}" Value="True">
-                            <Setter Property="Opacity" Value="1"/>
-                        </DataTrigger>
-                    </ImageButton.Triggers>
-                </ImageButton>
             </Grid>
         </StackLayout>
-        <StackLayout
-            Grid.Column="1"
-            Grid.Row="2">
-            <Button Text="保存" Command="{Binding SaveCommand}" VerticalOptions="CenterAndExpand"/>
-        </StackLayout>
+        <Label Grid.Row="2"
+               Grid.Column="0"
+               Grid.ColumnSpan="3"
+               HeightRequest="50"
+               WidthRequest="320"
+               Text="広告"
+               HorizontalTextAlignment="Center"
+               VerticalTextAlignment="Center"
+               Background="Pink"/>
     </Grid>
   
 </ContentPage>

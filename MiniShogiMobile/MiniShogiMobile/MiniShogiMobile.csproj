@@ -4,16 +4,18 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Images\DeleteIcon.png" />
-    <None Remove="Images\EditIcon.png" />
-    <None Remove="Images\PlusIcon.png" />
-  </ItemGroup>
+
 
   <ItemGroup>
-    <EmbeddedResource Include="Images\DeleteIcon.png" />
-    <EmbeddedResource Include="Images\EditIcon.png" />
-    <EmbeddedResource Include="Images\PlusIcon.png" />
+    <EmbeddedResource Include="Images\Copy.png" />
+    <EmbeddedResource Include="Images\CopyKoma.png" />
+    <EmbeddedResource Include="Images\Delete.png" />
+    <EmbeddedResource Include="Images\DeleteKoma.png" />
+    <EmbeddedResource Include="Images\Edit.png" />
+    <EmbeddedResource Include="Images\EditBoard.png" />
+    <EmbeddedResource Include="Images\EditKoma.png" />
+    <EmbeddedResource Include="Images\Floppy.png" />
+    <EmbeddedResource Include="Images\Plus.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +50,9 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Controls\HandKomaView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Controls\ImageTextButton.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Controls\KomadaiView.xaml">
