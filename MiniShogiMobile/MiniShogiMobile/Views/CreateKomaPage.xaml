@@ -75,7 +75,7 @@
                         <StackLayout Margin="15">
                             <StackLayout Orientation="Horizontal" VerticalOptions="Start">
                                 <Label Text="表示名(1文字のみ)" VerticalOptions="Center" HorizontalOptions="Start"/>
-                                <Entry Text="{Binding Koma.Value.Name.Value}" Margin="10,0,0,0" VerticalOptions="Center" HorizontalOptions="StartAndExpand" WidthRequest="200"/>
+                                <ctrl:BorderlessEntry Text="{Binding Koma.Value.Name.Value}" Margin="10,0,0,0" VerticalOptions="Center" HorizontalOptions="StartAndExpand" WidthRequest="200"/>
                             </StackLayout>
 
                             <Picker Title="駒種別"
