@@ -25,28 +25,11 @@
         <StackLayout Grid.Column="1"
                      Margin="0,5,0,0"
                      Grid.Row="0">
-            <Frame BackgroundColor="White"
-                   BorderColor="{StaticResource AppThemeColor}"
-                   Padding="0"
-                   CornerRadius="10"
-                   HasShadow="False"
-                   HeightRequest="35"
-                   HorizontalOptions="FillAndExpand">
-                <Grid ColumnDefinitions="Auto,*">
-                    <Label Grid.Column="0"
-                           Text="タイトル"
-                           TextColor="White"
-                           BackgroundColor="{StaticResource AppThemeColor}"
-                           VerticalTextAlignment="Center"
-                           Padding="6,0,6,0"
-                           VerticalOptions="FillAndExpand"/>
-                    <ctrl:BorderlessEntry Grid.Column="1"
-                                          Text="{Binding GameTitle.Value}"
-                                          TextColor="{StaticResource AppThemeColor}"
-                                          HorizontalOptions="FillAndExpand"
-                                          VerticalOptions="Center"/>
-                </Grid>
-            </Frame>
+            <ctrl:EntryWithLabel HeightRequest="35"
+                                 HorizontalOptions="FillAndExpand"
+                                 LabelText="タイトル"
+                                 Placeholder="必須項目"
+                                 EntryText="{Binding GameTitle.Value}"/>
             <StackLayout Orientation="Horizontal"
                          HorizontalOptions="FillAndExpand"
                          Spacing="12"

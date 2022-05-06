@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             x:Class="MiniShogiMobile.Controls.EntryWithLabel"
+             x:Name="self">
+  <ContentView.Content>
+    <Frame BackgroundColor="White"
+           BorderColor="{StaticResource AppThemeColor}"
+           Padding="0"
+           CornerRadius="10"
+           HasShadow="False"
+           HeightRequest="35"
+           HorizontalOptions="FillAndExpand">
+        <Grid ColumnDefinitions="Auto,*">
+            <Label Grid.Column="0"
+                   Text="{Binding Path=LabelText, Source={x:Reference self}}"
+                   TextColor="White"
+                   BackgroundColor="{StaticResource AppThemeColor}"
+                   VerticalTextAlignment="Center"
+                   Padding="6,0,6,0"
+                   VerticalOptions="FillAndExpand"/>
+            <ctrl:BorderlessEntry Grid.Column="1"
+                                  Text="{Binding Path=EntryText, Source={x:Reference self}}"
+                                  Placeholder="{Binding Path=Placeholder, Source={x:Reference self}}"
+                                  HorizontalOptions="FillAndExpand"
+                                  VerticalOptions="Center"/>
+        </Grid>
+    </Frame>
+  </ContentView.Content>
+</ContentView>
