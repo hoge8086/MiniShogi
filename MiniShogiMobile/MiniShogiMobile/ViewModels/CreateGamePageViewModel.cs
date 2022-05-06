@@ -52,6 +52,7 @@ namespace MiniShogiMobile.ViewModels
 
         // TODO:複雑になってきたのでStateパターンを適用する
         public ReactiveProperty<bool> IsCopying { get; set; }
+        public ReactiveProperty<string> GameTitle { get; set; }
 
         private GameTemplate GameTemplate;
 
@@ -63,6 +64,7 @@ namespace MiniShogiMobile.ViewModels
             IsCopying = new ReactiveProperty<bool>(false);
             CanMoveToPlayer1Komadai = CreateCanMoveToKomadaiReactiveProperty(PlayerType.Player1);
             CanMoveToPlayer2Komadai = CreateCanMoveToKomadaiReactiveProperty(PlayerType.Player2);
+            GameTitle = new ReactiveProperty<string>();
 
             IsSelectingKoma = Selected.Select(x =>
             {
@@ -223,6 +225,7 @@ namespace MiniShogiMobile.ViewModels
                     if (doSave)
                     {
                         GameTemplate.KomaList = CreateKomaList();
+                        GameTemplate.Name = GameTitle.Value;
                         App.CreateGameService.CreateGame(GameTemplate);
                         await navigationService .GoBackToRootAsync();
                     }
@@ -240,7 +243,6 @@ namespace MiniShogiMobile.ViewModels
                     {
                         GameTemplate = result.Data;
                         Game.Board.UpdateSize(GameTemplate.Height, GameTemplate.Width);
-                        Title = GameTemplate.Name;
                     }
                 });
 
@@ -323,7 +325,7 @@ namespace MiniShogiMobile.ViewModels
                 GameTemplate = new GameTemplate();
 
             Game.Update(GameTemplate.Height, GameTemplate.Width, GameTemplate.KomaList);
-            Title = GameTemplate.Name;
+            GameTitle.Value = GameTemplate.Name;
 
         }
         /// <summary>
