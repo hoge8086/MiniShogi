@@ -30,6 +30,7 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand<CellViewModel<KomaViewModel>> TapCellCommand { get; set; }
         public AsyncReactiveCommand EditSettingCommand {get;}
         public AsyncReactiveCommand SaveCommand { get; set; }
+        public AsyncReactiveCommand CopyKomaCommand { get; set; }
 
         /// <summary>
         /// 選択中のCellViewModelかHandKomaViewModelのいずれかが入る
@@ -47,7 +48,10 @@ namespace MiniShogiMobile.ViewModels
         // TODO:コマンドの有効無を表示と紐づけると分かり易い
         public ReadOnlyReactiveProperty<bool> CanMoveToPlayer2Komadai { get; set; }
         #endregion
-        public ReadOnlyReactivePropertySlim<bool> IsSelectingKoma{ get; set; }
+        public ReadOnlyReactivePropertySlim<bool> IsSelectingKoma { get; set; }
+
+        // TODO:複雑になってきたのでStateパターンを適用する
+        public ReactiveProperty<bool> IsCopying { get; set; }
 
         private GameTemplate GameTemplate;
 
@@ -56,6 +60,7 @@ namespace MiniShogiMobile.ViewModels
             GameTemplate = new GameTemplate();
             Game = new GameViewModel<CellViewModel<KomaViewModel>, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
             Selected = new ReactiveProperty<BindableBase>();
+            IsCopying = new ReactiveProperty<bool>(false);
             CanMoveToPlayer1Komadai = CreateCanMoveToKomadaiReactiveProperty(PlayerType.Player1);
             CanMoveToPlayer2Komadai = CreateCanMoveToKomadaiReactiveProperty(PlayerType.Player2);
 
@@ -69,6 +74,14 @@ namespace MiniShogiMobile.ViewModels
 
                 return x is HandKomaViewModel;
             }).ToReadOnlyReactivePropertySlim().AddTo(Disposable);
+
+            // コピー中解除
+            IsSelectingKoma.Where(x => !x).Subscribe(x =>
+            {
+                if (Selected.Value == null)
+                    IsCopying.Value = false;
+            }).AddTo(Disposable);
+
             TapCellCommand = new AsyncReactiveCommand<CellViewModel<KomaViewModel>>();
             TapCellCommand.Subscribe(async tappedCell =>
             {
@@ -83,19 +96,30 @@ namespace MiniShogiMobile.ViewModels
 
                             if(Selected.Value is CellViewModel<KomaViewModel> selectedCell)
                             {
-                                // 盤上の駒→盤上の駒へ移動
+                                // 盤上の駒→盤上の駒へ移動 (コピー中の場合は元の駒を削除しない)
                                 tappedCell.Koma.Value = selectedCell.Koma.Value;
-                                selectedCell.Koma.Value = null;
+                                if(!IsCopying.Value)
+                                    selectedCell.Koma.Value = null;
                             }
                             else if(Selected.Value is HandKomaViewModel selectedHandKoma)
                             {
-                                // 持ち駒→盤上の駒へ移動
-                                Game.GetHands(selectedHandKoma.Player).RemoveOne(selectedHandKoma.KomaTypeId);
+                                // 持ち駒→盤上の駒へ移動 (コピー中の場合は元の駒を削除しない)
                                 tappedCell.Koma.Value = new KomaViewModel(selectedHandKoma.KomaTypeId, selectedHandKoma.Player, false);
+
+                                if(!IsCopying.Value)
+                                    Game.GetHands(selectedHandKoma.Player).RemoveOne(selectedHandKoma.KomaTypeId);
                             }
+
+                            if(!IsCopying.Value)
+                                // 選択を解除 (コピー中は選択解除しない)
+                                Selected.Value = null;
+
+                        }else
+                        {
+                            // 駒→駒を選択する捜査は、選択解除
+                            Selected.Value = null;
                         }
-                        // 選択を解除
-                        Selected.Value = null;
+
                     }else
                     {
                         // 駒未選択の場合
@@ -251,6 +275,19 @@ namespace MiniShogiMobile.ViewModels
                     }
                 });
             }).AddTo(this.Disposable);
+
+            CopyKomaCommand = IsSelectingKoma.ToAsyncReactiveCommand().AddTo(this.Disposable);
+            CopyKomaCommand.Subscribe(async () =>
+            {
+                await this.CatchErrorWithMessageAsync(async () =>
+                {
+                    if (IsCopying.Value)
+                        Selected.Value = null;
+                    else
+                        IsCopying.Value = true;
+                });
+            }).AddTo(this.Disposable);
+
         }
 
         private List<Koma> CreateKomaList()

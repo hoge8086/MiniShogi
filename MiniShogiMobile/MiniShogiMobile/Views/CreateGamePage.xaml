@@ -63,10 +63,18 @@
                              Command="{Binding EditCellCommand}"
                              HorizontalOptions="CenterAndExpand"
                              BackgroundColor="Transparent"/>
+                <!--TODO:コピー中はコピー解除という名称にして、コピー解除できるようにする-->
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
+                             Command="{Binding CopyKomaCommand}"
                              Text="コピー"
                              HorizontalOptions="CenterAndExpand"
-                             BackgroundColor="Transparent"/>
+                             BackgroundColor="Transparent">
+                    <ctrl:ImageTextButton.Triggers>
+                        <DataTrigger TargetType="ctrl:ImageTextButton" Binding="{Binding IsCopying.Value}" Value="True">
+                            <Setter Property="Text" Value="コピー解除"/>
+                        </DataTrigger>
+                    </ctrl:ImageTextButton.Triggers>
+                </ctrl:ImageTextButton>
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.DeleteKoma.png}" 
                              Text="削除"
                              Command="{Binding DeleteKomaCommand}"
