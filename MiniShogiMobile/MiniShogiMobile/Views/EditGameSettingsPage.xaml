@@ -14,14 +14,18 @@
             <Entry Text="{Binding Name.Value}" HorizontalOptions="FillAndExpand"/>
         </StackLayout>
         <StackLayout Spacing="6" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
-            <Label Text="盤の高さ" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
-            <Label Text="{Binding Height.Value, StringFormat='{0}マス'}" VerticalTextAlignment="Center"/>
-            <Stepper Value="{Binding Height.Value}" Increment="1" Minimum="1" Maximum="10"/>
+            <Label Text="盤の高さ" VerticalTextAlignment="Center" />
+            <ctrl:StepperWithLabel Value="{Binding Height.Value}"
+                                   UnitLabel="マス"
+                                   MinimumValue="1"
+                                   MaximumValue="10"/>
         </StackLayout>
         <StackLayout Spacing="6" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
-            <Label Text="盤の幅" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
-            <Label Text="{Binding Width.Value, StringFormat='{0}マス'}" VerticalTextAlignment="Center"/>
-            <Stepper Value="{Binding Width.Value}" Increment="1" Minimum="1" Maximum="10"/>
+            <Label Text="盤の幅" VerticalTextAlignment="Center" />
+            <ctrl:StepperWithLabel Value="{Binding Width.Value}"
+                                   UnitLabel="マス"
+                                   MinimumValue="1"
+                                   MaximumValue="10"/>
         </StackLayout>
         <StackLayout Spacing="6" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
             <Label Text="自陣の高さ" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />

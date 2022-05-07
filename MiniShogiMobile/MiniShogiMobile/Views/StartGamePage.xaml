@@ -18,29 +18,33 @@
                     DisplayConverter="{StaticResource EnumToDescriptionConverter}"
                     ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
                     SelectedItem="{Binding Player1.PlayerType.Value}"/>
-            <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                 <StackLayout.Triggers>
                     <DataTrigger TargetType="StackLayout" Binding="{Binding Player1.PlayerType.Value}" Value="Human">
                         <Setter Property="IsVisible" Value="False"/>
                     </DataTrigger>
                 </StackLayout.Triggers>
                 <Label Text="読みの深さ" VerticalTextAlignment="Center"/>
-                <Label Text="{Binding Player1.AIThinkDepth.Value, StringFormat='{0}手'}" VerticalTextAlignment="Center"/>
-                <Stepper Value="{Binding Player1.AIThinkDepth.Value}" Increment="1" Minimum="1" Maximum="10"/>
+                <ctrl:StepperWithLabel Value="{Binding Player1.AIThinkDepth.Value}"
+                                       UnitLabel="手"
+                                       MinimumValue="1"
+                                       MaximumValue="10"/>
             </StackLayout>
             <ctrl:SwitchablePicker  HorizontalOptions="Center"
                     DisplayConverter="{StaticResource EnumToDescriptionConverter}"
                     ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
                     SelectedItem="{Binding Player2.PlayerType.Value}"/>
-            <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                 <StackLayout.Triggers>
                     <DataTrigger TargetType="StackLayout" Binding="{Binding Player2.PlayerType.Value}" Value="Human">
                         <Setter Property="IsVisible" Value="False"/>
                     </DataTrigger>
                 </StackLayout.Triggers>
                 <Label Text="読みの深さ" VerticalTextAlignment="Center"/>
-                <Label Text="{Binding Player2.AIThinkDepth.Value, StringFormat='{0}手'}" VerticalTextAlignment="Center"/>
-                <Stepper Value="{Binding Player2.AIThinkDepth.Value}" Increment="1" Minimum="1" Maximum="10"/>
+                <ctrl:StepperWithLabel Value="{Binding Player2.AIThinkDepth.Value}"
+                                       UnitLabel="手"
+                                       MinimumValue="1"
+                                       MaximumValue="10"/>
             </StackLayout>
             <ctrl:SwitchablePicker  HorizontalOptions="Center"
                     DisplayConverter="{StaticResource EnumToDescriptionConverter}"

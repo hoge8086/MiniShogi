@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MiniShogiMobile.Controls.StepperWithLabel"
+             x:Name="self">
+  <ContentView.Content>
+    <Frame BackgroundColor="White"
+           BorderColor="{StaticResource AppThemeColor}"
+           Padding="0"
+           HorizontalOptions="FillAndExpand"
+           CornerRadius="10"
+           HasShadow="False">
+        <StackLayout Spacing="0"
+                     Orientation="Horizontal"
+                     HorizontalOptions="FillAndExpand"
+                     VerticalOptions="FillAndExpand">
+            <Button x:Name="minusButton"
+                    Text="－"
+                    WidthRequest="40"
+                    BackgroundColor="Transparent"
+                    VerticalOptions="Center"
+                    TextColor="{StaticResource AppThemeColor}"
+                    FontAttributes="Bold"/>
+            <BoxView WidthRequest="1" BackgroundColor="{StaticResource AppThemeColor}" VerticalOptions="FillAndExpand"/>
+            <StackLayout Orientation="Horizontal"
+                         Margin="10,0,10,0"
+                         HorizontalOptions="CenterAndExpand">
+                <Label HorizontalOptions="Center"
+                       VerticalTextAlignment="Center"
+                       FontSize="Default"
+                       TextColor="{StaticResource AppThemeColor}"
+                       Text="{Binding Path=Value, Source={x:Reference self}}"/>
+                <Label HorizontalOptions="Center"
+                       VerticalTextAlignment="Center"
+                       TextColor="{StaticResource AppThemeColor}"
+                       FontSize="10"
+                       Text="{Binding Path=UnitLabel, Source={x:Reference self}}"/>
+            </StackLayout>
+            <BoxView WidthRequest="1" BackgroundColor="{StaticResource AppThemeColor}" VerticalOptions="FillAndExpand"/>
+            <Button x:Name="plusButton"
+                    Text="＋"
+                    WidthRequest="42"
+                    VerticalOptions="Center"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource AppThemeColor}"
+                    FontAttributes="Bold"/>
+        </StackLayout>
+    </Frame>
+  </ContentView.Content>
+</ContentView>
