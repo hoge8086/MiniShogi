@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:local="clr-namespace:MiniShogiMobile.ViewModels"
              xmlns:model="clr-namespace:Shogi.Business.Domain.Model.GameTemplates;assembly=Shogi.Business"
              prism:ViewModelLocator.AutowireViewModel="True"
@@ -31,11 +32,9 @@
 
         <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
             <Label Text="勝利判定" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
-            <Picker HorizontalOptions="FillAndExpand"
-                    HorizontalTextAlignment="Center"
-                    VerticalOptions="Start"
+            <ctrl:SwitchablePicker  HorizontalOptions="Center"
+                    DisplayConverter="{StaticResource EnumToDescriptionConverter}"
                     ItemsSource="{Binding Source={local:EnumWinConditionTypeProvider}}"
-                    ItemDisplayBinding="{Binding Converter={StaticResource EnumToDescriptionConverter}, ConverterParameter={x:Type model:WinConditionType}}"
                     SelectedItem="{Binding WinCondition.Value}"/>
         </StackLayout>
         <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0" IsEnabled="{Binding CanTransform.Value}">

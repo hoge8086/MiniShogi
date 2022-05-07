@@ -77,12 +77,9 @@
                                                  LabelText="表示名"
                                                  Placeholder="先頭一文字のみ表示"
                                                  EntryText="{Binding Koma.Value.Name.Value}"/>
-                            <Picker Title="駒種別"
-                                    FontSize="Small"
-                                    HorizontalTextAlignment="Center"
-                                    VerticalOptions="Start"
+                            <ctrl:SwitchablePicker  HorizontalOptions="Center"
+                                    DisplayConverter="{StaticResource EnumToDescriptionConverter}"
                                     ItemsSource="{Binding Source={vm:EnumKomaTypeKindProvider}}"
-                                    ItemDisplayBinding="{Binding Converter={StaticResource EnumToDescriptionConverter}, ConverterParameter={x:Type model:KomaTypeKind}}"
                                     SelectedItem="{Binding KomaTypeKind.Value}"/>
                             <Grid x:Name="board" VerticalOptions="FillAndExpand">
                                 <ctrl:SquareCell2DGridControl MaxHeight="{Binding Path=Height,Source={x:Reference board}}"
