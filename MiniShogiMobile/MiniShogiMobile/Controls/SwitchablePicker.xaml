@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MiniShogiMobile.Controls.SwitchablePicker"
+             x:Name="self">
+  <ContentView.Content>
+        <Frame BackgroundColor="White"
+               BorderColor="{StaticResource AppThemeColor}"
+               Padding="0"
+               HorizontalOptions="FillAndExpand"
+               CornerRadius="10"
+               HasShadow="False">
+            <StackLayout Spacing="0"
+                         Orientation="Horizontal"
+                         HorizontalOptions="FillAndExpand"
+                         VerticalOptions="FillAndExpand"
+                         ChildAdded="StackLayout_ChildAdded"
+                         BindableLayout.ItemsSource="{Binding Path=ItemsSource, Source={x:Reference self}}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <!--GridのBackgroundColorを白にすると、上のFrameの枠線が塗りつぶされてしまうので、縦線(Column=1)を別途用意する-->
+                        <!--最後の縦線がFrameの枠線と合わせて2ドットになってしまうと思うが、Frameの枠線と重なるっぽいので、そうはならないっぽい-->
+                        <Grid ColumnDefinitions="*,1"
+                              BackgroundColor="Transparent"
+                              HorizontalOptions="FillAndExpand"
+                              VerticalOptions="FillAndExpand">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnItemTapped"/>
+                            </Grid.GestureRecognizers>
+                            <Label Grid.Column="0"
+                                   TextColor="LightGray"
+                                   Margin="5"
+                                   WidthRequest="100"
+                                   VerticalTextAlignment="Center"
+                                   HorizontalTextAlignment="Center">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Value="True">
+                                        <DataTrigger.Binding>
+                                            <MultiBinding Converter="{StaticResource EqualsMultiConverter}">
+                                                <Binding Path="SelectedItem" Source="{x:Reference self}"/>
+                                                <Binding />
+                                            </MultiBinding>
+                                        </DataTrigger.Binding>
+                                        <Setter Property="TextColor" Value="White"/>
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <BoxView Grid.Column="1" BackgroundColor="{StaticResource AppThemeColor}"/>
+                            <Grid.Triggers>
+                                <DataTrigger TargetType="Grid" Value="True">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource EqualsMultiConverter}">
+                                            <Binding Path="SelectedItem" Source="{x:Reference self}"/>
+                                            <Binding />
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource AppThemeColor}"/>
+                                </DataTrigger>
+                            </Grid.Triggers>
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
+    </Frame>
+  </ContentView.Content>
+</ContentView>

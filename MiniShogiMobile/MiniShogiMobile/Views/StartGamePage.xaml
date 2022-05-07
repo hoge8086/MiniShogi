@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:local="clr-namespace:MiniShogiMobile.ViewModels"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.StartGamePage"
              Title="はじめる">
@@ -13,11 +14,9 @@
                     VerticalOptions="Start"
                     ItemsSource="{Binding GameNameList}"
                     SelectedItem="{Binding GameName.Value}"/>
-            <Picker Title="プレイヤー1"
-                    HorizontalTextAlignment="Center"
-                    VerticalOptions="Start"
+            <ctrl:SwitchablePicker  HorizontalOptions="Center"
+                    DisplayConverter="{StaticResource EnumToDescriptionConverter}"
                     ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
-                    ItemDisplayBinding="{Binding Converter={StaticResource EnumToDescriptionConverter}, ConverterParameter={x:Type local:PlayerThinkingType}}"
                     SelectedItem="{Binding Player1.PlayerType.Value}"/>
             <StackLayout Orientation="Horizontal" HorizontalOptions="End">
                 <StackLayout.Triggers>
@@ -29,11 +28,9 @@
                 <Label Text="{Binding Player1.AIThinkDepth.Value, StringFormat='{0}手'}" VerticalTextAlignment="Center"/>
                 <Stepper Value="{Binding Player1.AIThinkDepth.Value}" Increment="1" Minimum="1" Maximum="10"/>
             </StackLayout>
-            <Picker Title="プレイヤー2"
-                    HorizontalTextAlignment="Center"
-                    VerticalOptions="Start"
+            <ctrl:SwitchablePicker  HorizontalOptions="Center"
+                    DisplayConverter="{StaticResource EnumToDescriptionConverter}"
                     ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
-                    ItemDisplayBinding="{Binding Converter={StaticResource EnumToDescriptionConverter}, ConverterParameter={x:Type local:PlayerThinkingType}}"
                     SelectedItem="{Binding Player2.PlayerType.Value}"/>
             <StackLayout Orientation="Horizontal" HorizontalOptions="End">
                 <StackLayout.Triggers>
@@ -45,11 +42,9 @@
                 <Label Text="{Binding Player2.AIThinkDepth.Value, StringFormat='{0}手'}" VerticalTextAlignment="Center"/>
                 <Stepper Value="{Binding Player2.AIThinkDepth.Value}" Increment="1" Minimum="1" Maximum="10"/>
             </StackLayout>
-            <Picker Title="先手のプレイヤー"
-                    HorizontalTextAlignment="Center"
-                    VerticalOptions="Start"
+            <ctrl:SwitchablePicker  HorizontalOptions="Center"
+                    DisplayConverter="{StaticResource EnumToDescriptionConverter}"
                     ItemsSource="{Binding Source={local:EnumSelectFirstTurnPlayerProvider}}"
-                    ItemDisplayBinding="{Binding Converter={StaticResource EnumToDescriptionConverter}, ConverterParameter={x:Type local:SelectFirstTurnPlayer}}"
                     SelectedItem="{Binding FirstTurnPlayer.Value}"/>
         </StackLayout>
         <Button Text="ゲーム開始" Command="{Binding PlayGameCommand}" VerticalOptions="End"/>

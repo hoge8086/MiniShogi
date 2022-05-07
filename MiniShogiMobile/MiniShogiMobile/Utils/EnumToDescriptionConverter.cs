@@ -8,21 +8,20 @@ namespace MiniShogiMobile.Utils
 {
     public class EnumToDescriptionConverter : IValueConverter
     {
-        private static string DisplayName(object value, Type type) {
+        private static string DisplayName(object value){
+            if (value == null)
+                return string.Empty;
+
+            var type = value.GetType();
             var fileInfo = type.GetField(value.ToString());
             var descriptionAttribute = (DescriptionAttribute)fileInfo
                 .GetCustomAttributes(typeof(DescriptionAttribute), false)
                 .FirstOrDefault();
             return descriptionAttribute.Description;
         }
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var type = parameter as Type;
-            if(type == null)
-                throw new ArgumentException("EnumToDescriptionConverter");
-
-            return DisplayName(value, type);
+            return DisplayName(value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
