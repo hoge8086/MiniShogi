@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 
 namespace MiniShogiMobile.ViewModels
 {
@@ -19,27 +20,28 @@ namespace MiniShogiMobile.ViewModels
         public ReactiveProperty<string> SelectedGameName { get; }
         public ObservableCollection<string> GameNameList { get; }
         public AsyncReactiveCommand EditCommand { get; set; }
-        public AsyncReactiveCommand<string> DeleteCommand {get;}
+        public AsyncReactiveCommand DeleteCommand {get;}
+        public AsyncReactiveCommand CopyCommand { get; }
         public AsyncReactiveCommand CreateNewCommand {get;}
         public CreateGameListPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             SelectedGameName = new ReactiveProperty<string>();
             GameNameList = new ObservableCollection<string>(App.CreateGameService.GameTemplateRepository.FindAllName());
-            EditCommand = new AsyncReactiveCommand();
+            EditCommand = SelectedGameName.Select(x => x != null).ToAsyncReactiveCommand().AddTo(this.Disposable);
             EditCommand.Subscribe(async () =>
             {
                 await NavigateAsync<CreateGamePageViewModel, CreateGameCondition>(new CreateGameCondition(SelectedGameName.Value));
             }).AddTo(Disposable);
 
-            DeleteCommand = new AsyncReactiveCommand<string>();
-            DeleteCommand.Subscribe(async (name) =>
+            DeleteCommand = SelectedGameName.Select(x => x != null).ToAsyncReactiveCommand().AddTo(this.Disposable);
+            DeleteCommand.Subscribe(async () =>
             {
                 bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "削除しますか?", "はい", "いいえ");
-                if (doDelete && name != null)
+                if (doDelete && SelectedGameName.Value != null)
                 {
-                    var temp = App.CreateGameService.GameTemplateRepository.FindByName(name);
+                    var temp = App.CreateGameService.GameTemplateRepository.FindByName(SelectedGameName.Value);
                     App.CreateGameService.GameTemplateRepository.RemoveById(temp.Id);
-                    GameNameList.Remove(name);
+                    GameNameList.Remove(SelectedGameName.Value);
                 }
 
             }).AddTo(Disposable);
@@ -48,6 +50,19 @@ namespace MiniShogiMobile.ViewModels
             {
                 await NavigateAsync<CreateGamePageViewModel, CreateGameCondition>(new CreateGameCondition(null));
             }).AddTo(Disposable);
+
+            CopyCommand = SelectedGameName.Select(x => x != null).ToAsyncReactiveCommand().AddTo(this.Disposable);
+            CopyCommand.Subscribe(async () =>
+            {
+                await this.CatchErrorWithMessageAsync(async () =>
+                {
+                    bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "コピーしますか?", "はい", "いいえ");
+                    if (doDelete)
+                    {
+                        App.CreateGameService.CopyGame(SelectedGameName.Value);
+                    }
+                });
+            }).AddTo(this.Disposable);
         }
     }
 }

@@ -39,6 +39,11 @@ namespace Shogi.Business.Domain.Model.Komas
             Kind = KomaTypeKind.None;
         }
 
+        public KomaTypeId NewId()
+        {
+            return new KomaTypeId(Name, PromotedName, Kind);
+        }
+
         public override string ToString()
         {
             return Name;

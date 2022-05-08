@@ -37,7 +37,7 @@
                                  BackgroundColor="Transparent"/>
                     <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
                                  Text="コピー"
-                                 Command="{Binding Copyommand}"
+                                 Command="{Binding CopyCommand}"
                                  HorizontalOptions="CenterAndExpand"
                                  BackgroundColor="Transparent"/>
                     <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" 

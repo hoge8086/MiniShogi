@@ -38,7 +38,6 @@ namespace Shogi.Business.Domain.Model.GameTemplates
     [DataContract]
     public class GameTemplate
     {
-
         [DataMember]
         public string Id{ get; set; }
         [DataMember]
@@ -83,6 +82,17 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             ProhibitedMoves = prohibitedMoves;
             WinCondition = winCondition;
             KomaList = komaList;
+        }
+        public GameTemplate Copy()
+        {
+            return new GameTemplate(
+                        Name + "_コピー",
+                        Width,
+                        Height,
+                        TerritoryBoundary,
+                        WinCondition,
+                        KomaList,
+                        ProhibitedMoves);
         }
     }
 

@@ -19,6 +19,7 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand CreateCommand { get; }
         public AsyncReactiveCommand EditCommand { get; }
         public AsyncReactiveCommand DeleteCommand { get; }
+        public AsyncReactiveCommand CopyCommand { get; }
         public ObservableCollection<KomaTypeId> KomaTypeIdList { get; }
         public ReactiveProperty<KomaTypeId> SelectedKomaTypeId { get; }
         public CreateKomaListPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
@@ -48,6 +49,7 @@ namespace MiniShogiMobile.ViewModels
                     bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "編集しますか?", "はい", "いいえ");
                     if (doDelete)
                     {
+                        // MEMO:戻り値(bool)は使わないが、登録の完了を待つ必要があるため、bool値を持たせる。(戻り値を指定しないとPrism.NavigationExが待たないため)
                         await NavigateAsync<CreateKomaPageViewModel, KomaTypeId, bool>(SelectedKomaTypeId.Value);
                         UpdateKomaList();
                     }
@@ -63,6 +65,19 @@ namespace MiniShogiMobile.ViewModels
                     {
                         App.CreateGameService.KomaTypeRepository.RemoveById(SelectedKomaTypeId.Value);
                         SelectedKomaTypeId.Value = null;
+                        UpdateKomaList();
+                    }
+                });
+            }).AddTo(this.Disposable);
+            CopyCommand = SelectedKomaTypeId.Select(x => x != null).ToAsyncReactiveCommand().AddTo(this.Disposable);
+            CopyCommand.Subscribe(async () =>
+            {
+                await this.CatchErrorWithMessageAsync(async () =>
+                {
+                    bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "コピーしますか?", "はい", "いいえ");
+                    if (doDelete)
+                    {
+                        App.CreateGameService.CopyKomaType(SelectedKomaTypeId.Value);
                         UpdateKomaList();
                     }
                 });

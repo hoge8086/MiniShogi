@@ -3,31 +3,51 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:xct="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateGameListPage"
              Title="ゲーム作成"
              x:Name="root">
         <StackLayout VerticalOptions="FillAndExpand">
+            <StackLayout Grid.Row="0"
+                             Orientation="Horizontal"
+                             HeightRequest="40"
+                             Margin="10"
+                             HorizontalOptions="FillAndExpand"
+                             Spacing="10">
+                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 
+                                 Text="削除"
+                                 Command="{Binding DeleteCommand}"
+                                 HorizontalOptions="CenterAndExpand"
+                                 BackgroundColor="Transparent"/>
+                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
+                                 Text="編集"
+                                 Command="{Binding EditCommand}"
+                                 HorizontalOptions="CenterAndExpand"
+                                 BackgroundColor="Transparent"/>
+                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
+                                 Text="コピー"
+                                 Command="{Binding CopyCommand}"
+                                 HorizontalOptions="CenterAndExpand"
+                                 BackgroundColor="Transparent"/>
+                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" 
+                                 Text="新規追加"
+                                 Command="{Binding CreateNewCommand}"
+                                 HorizontalOptions="CenterAndExpand"
+                                 BackgroundColor="Transparent"/>
+            </StackLayout>
+
             <ListView ItemsSource="{Binding GameNameList}" SelectedItem="{Binding SelectedGameName.Value}">
-            <ListView.Behaviors>
-                <xct:EventToCommandBehavior
-                    EventName="ItemTapped"
-                    Command="{Binding EditCommand}"/>
-            </ListView.Behaviors>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="5,0,5,0">
                                 <Label FontSize="Large" Text="{Binding .}" HorizontalOptions="FillAndExpand"/>
-                                <Button Text="削除"
-                                        HorizontalOptions="End"
-                                        Command="{Binding Path=BindingContext.DeleteCommand, Source={x:Reference root}}"
-                                        CommandParameter="{Binding}"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button  Text="新規作成" Command="{Binding CreateNewCommand}" />
         </StackLayout>
 </ContentPage>

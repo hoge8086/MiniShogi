@@ -65,5 +65,18 @@ namespace Shogi.Business.Application
 
             KomaTypeRepository.Add(komaType);
         }
+
+        public void CopyKomaType(KomaTypeId id)
+        {
+            var komaType = KomaTypeRepository.FindById(id);
+            var copied = new KomaType(komaType.Id.NewId(), komaType.Moves, komaType.TransformedMoves);
+            KomaTypeRepository.Add(copied);
+        }
+
+        public void CopyGame(string gameName)
+        {
+            var templateGame = GameTemplateRepository.FindByName(gameName);
+            GameTemplateRepository.Add(templateGame.Copy());
+        }
     }
 }
