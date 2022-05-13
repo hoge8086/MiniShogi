@@ -6,11 +6,10 @@ namespace Shogi.Business.Domain.Model.GameTemplates
     {
         GameTemplate First();
         GameTemplate FindByName(string name);
-        GameTemplate FindById(string id);
         List<string> FindAllName();
         void Add(GameTemplate gameTemplate);
-        void RemoveById(string id);
         List<GameTemplate> FindAll();
+        void RemoveByName(string name);
     }
 }
 

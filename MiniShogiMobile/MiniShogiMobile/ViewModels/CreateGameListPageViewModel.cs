@@ -39,8 +39,7 @@ namespace MiniShogiMobile.ViewModels
                 bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "削除しますか?", "はい", "いいえ");
                 if (doDelete && SelectedGameName.Value != null)
                 {
-                    var temp = App.CreateGameService.GameTemplateRepository.FindByName(SelectedGameName.Value);
-                    App.CreateGameService.GameTemplateRepository.RemoveById(temp.Id);
+                    App.CreateGameService.GameTemplateRepository.RemoveByName(SelectedGameName.Value);
                     GameNameList.Remove(SelectedGameName.Value);
                 }
 
