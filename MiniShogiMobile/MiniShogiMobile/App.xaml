@@ -24,7 +24,7 @@
 
     <!--アプリテーマ色-->
         <Color x:Key="AppBackgroundColor">#f8f4e6</Color>
-        <Color x:Key="AppFontDarkColor">#000b00</Color>
+        <Color x:Key="AppFontDarkColor">#250d00</Color>
         <Color x:Key="AppFontLightColor">White  </Color>
         <Color x:Key="AppControlDarkColor">#8c6432</Color>
         <Color x:Key="AppControlDarkColor2">#543f32</Color>

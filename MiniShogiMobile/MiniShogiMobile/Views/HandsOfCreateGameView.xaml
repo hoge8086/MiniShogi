@@ -51,6 +51,7 @@
                  </ScrollView>
                  <!--駒追加ボタン-->
                  <ImageButton Command="{Binding Source={x:Reference self}, Path=AddKomaCommand}"
+                              xct:IconTintColorEffect.TintColor="{StaticResource AppControlDarkColor}"
                               CommandParameter="{Binding Source={x:Reference self}, Path=PlayerType}"
                               BackgroundColor="Transparent"
                               Margin="5,0,5,0"
