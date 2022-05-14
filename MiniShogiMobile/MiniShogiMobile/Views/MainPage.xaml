@@ -16,6 +16,6 @@
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
         <Button Text="はじめる" Command="{Binding StartGameCommand}"/>
         <Button Text="つづきから" Command="{Binding ContinueGameCommand}"/>
-        <Button Text="ゲームを作る" Command="{Binding CreateGameCommand}"/>
+        <Button Text="作る" Command="{Binding CreateGameCommand}"/>
     </StackLayout>
 </ContentPage>

@@ -5,8 +5,8 @@
              x:Name="self"
              HeightRequest="35">
   <ContentView.Content>
-    <Frame BackgroundColor="{StaticResource AppControlLowlightColor}"
-           BorderColor="{StaticResource AppControlHighlightColor}"
+    <Frame BackgroundColor="{StaticResource AppControlLightColor}"
+           BorderColor="{StaticResource AppControlDarkColor}"
            Padding="0"
            HorizontalOptions="FillAndExpand"
            CornerRadius="10"
@@ -22,7 +22,7 @@
                WidthRequest="60">
           <Label.Triggers>
             <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="True">
-                <Setter Property="TextColor" Value="{StaticResource AppFontLowlightColor}"/>
+                <Setter Property="TextColor" Value="{StaticResource AppFontLightColor}"/>
             </DataTrigger>
             <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="False">
                 <Setter Property="TextColor" Value="White"/>
@@ -40,7 +40,7 @@
                WidthRequest="60">
           <Label.Triggers>
             <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="False">
-                <Setter Property="TextColor" Value="{StaticResource AppFontLowlightColor}"/>
+                <Setter Property="TextColor" Value="{StaticResource AppFontLightColor}"/>
             </DataTrigger>
             <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="True">
                 <Setter Property="TextColor" Value="White"/>

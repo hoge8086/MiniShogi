@@ -8,8 +8,8 @@
         <Style TargetType="Button"/>
     </ContentView.Resources>
   <ContentView.Content>
-    <Frame BackgroundColor="{StaticResource AppControlLowlightColor}"
-           BorderColor="{StaticResource AppControlHighlightColor}"
+    <Frame BackgroundColor="{StaticResource AppControlLightColor}"
+           BorderColor="{StaticResource AppControlDarkColor}"
            Padding="0"
            HorizontalOptions="FillAndExpand"
            CornerRadius="10"
@@ -23,30 +23,30 @@
                     WidthRequest="40"
                     BackgroundColor="Transparent"
                     VerticalOptions="Center"
-                    TextColor="{StaticResource AppControlHighlightColor}"
+                    TextColor="{StaticResource AppControlDarkColor}"
                     FontAttributes="Bold"/>
-            <BoxView WidthRequest="1" BackgroundColor="{StaticResource AppControlHighlightColor}" VerticalOptions="FillAndExpand"/>
+            <BoxView WidthRequest="1" BackgroundColor="{StaticResource AppControlDarkColor}" VerticalOptions="FillAndExpand"/>
             <StackLayout Orientation="Horizontal"
                          Margin="10,0,10,0"
                          HorizontalOptions="CenterAndExpand">
                 <Label HorizontalOptions="Center"
                        VerticalTextAlignment="Center"
                        FontSize="Default"
-                       TextColor="{StaticResource AppFontHighlightColor}"
+                       TextColor="{StaticResource AppFontDarkColor}"
                        Text="{Binding Path=Value, Source={x:Reference self}}"/>
                 <Label HorizontalOptions="Center"
                        VerticalTextAlignment="Center"
-                       TextColor="{StaticResource AppFontHighlightColor}"
+                       TextColor="{StaticResource AppFontDarkColor}"
                        FontSize="10"
                        Text="{Binding Path=UnitLabel, Source={x:Reference self}}"/>
             </StackLayout>
-            <BoxView WidthRequest="1" BackgroundColor="{StaticResource AppControlHighlightColor}" VerticalOptions="FillAndExpand"/>
+            <BoxView WidthRequest="1" BackgroundColor="{StaticResource AppControlDarkColor}" VerticalOptions="FillAndExpand"/>
             <Button x:Name="plusButton"
                     Text="＋"
                     WidthRequest="42"
                     VerticalOptions="Center"
                     BackgroundColor="Transparent"
-                    TextColor="{StaticResource AppControlHighlightColor}"
+                    TextColor="{StaticResource AppControlDarkColor}"
                     FontAttributes="Bold"/>
         </StackLayout>
     </Frame>

@@ -5,15 +5,17 @@
     <!--ページ専用スタイル-->
     <!--ラベル-->
         <Style TargetType="Label">
-            <Setter Property="TextColor" Value="{StaticResource AppFontHighlightColor}"/>
+            <Setter Property="TextColor" Value="{StaticResource AppFontDarkColor}"/>
         </Style>
     <!--ボタン-->
         <Style TargetType="Button">
-            <Setter Property="BackgroundColor" Value="{StaticResource AppControlLowlightColor}"/>
-            <Setter Property="TextColor" Value="{StaticResource AppFontHighlightColor}"/>
+            <Setter Property="BackgroundColor" Value="{StaticResource AppControlDarkColor2}"/>
+            <Setter Property="TextColor" Value="{StaticResource AppFontLightColor}"/>
             <Setter Property="CornerRadius" Value="25"/>
             <Setter Property="HeightRequest" Value="40"/>
-            <Setter Property="BorderWidth" Value="1"/>
-            <Setter Property="BorderColor" Value="{StaticResource AppControlHighlightColor}"/>
+            <Setter Property="BorderWidth" Value="0"/>
+            <!--
+            <Setter Property="BorderColor" Value="{StaticResource AppControlDarkColor}"/>
+            -->
         </Style>
 </ResourceDictionary>

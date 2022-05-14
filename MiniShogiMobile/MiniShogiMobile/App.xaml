@@ -23,60 +23,58 @@
         <xct:EnumToBoolConverter x:Key="EnumToBoolConverter" />
 
     <!--アプリテーマ色-->
-        <!--
-        <Color x:Key="AppThemeColor">#3aabd2</Color>
-        -->
-        <Color x:Key="AppBackgroundColor">#091F2D</Color>
-        <Color x:Key="AppFontHighlightColor">#76DE92</Color>
-        <Color x:Key="AppFontLowlightColor">LightGray</Color>
-        <Color x:Key="AppControlHighlightColor">#076670</Color>
-        <Color x:Key="AppControlLowlightColor">#091F2D</Color>
+        <Color x:Key="AppBackgroundColor">#f8f4e6</Color>
+        <Color x:Key="AppFontDarkColor">#000b00</Color>
+        <Color x:Key="AppFontLightColor">White  </Color>
+        <Color x:Key="AppControlDarkColor">#8c6432</Color>
+        <Color x:Key="AppControlDarkColor2">#543f32</Color>
+        <Color x:Key="AppControlLightColor">#fAfAf6</Color>
     <!--プレイヤー色-->
-        <Color x:Key="Player1Color">DodgerBlue</Color>
-        <Color x:Key="Player2Color">#eb233d</Color>
+        <Color x:Key="Player1Color">#1e50a2</Color>
+        <Color x:Key="Player2Color">#ba2636</Color>
       
     <!--盤色-->
-        <!--
-        <Color x:Key="BoardBorderColor">Chocolate</Color>
+        <Color x:Key="BoardBorderColor">#bb5535</Color>
         <Color x:Key="BoardBackgroundColor">SandyBrown</Color>
-        -->
+        <!--
         <Color x:Key="BoardBorderColor">#76DE92</Color>
         <Color x:Key="BoardBackgroundColor">#091F2D</Color>
+        -->
     <!--セル色-->
         <Color x:Key="CellHighlightColor">#FBCA4C</Color>
-        <Color x:Key="HandKomaNumCircleColor">MidnightBlue</Color>
+        <Color x:Key="HandKomaNumCircleColor">#192f60</Color>
         <Color x:Key="HandKomaNumTextColor">White</Color>
     <!--駒色-->
-        <!--
-        <Color x:Key="KomaFontColor">Black</Color>
-        <Color x:Key="KomaPromotedFontColor">Red</Color>
+        <Color x:Key="KomaFontColor">#16160e</Color>
+        <Color x:Key="KomaPromotedFontColor">#ba2636</Color>
         <Color x:Key="KomaColor">Moccasin</Color>
         <Color x:Key="KomaBorderColor">Oldlace</Color>
-        -->
+        <!--
         <Color x:Key="KomaFontColor">#76DE92</Color>
         <Color x:Key="KomaPromotedFontColor">Red</Color>
         <Color x:Key="KomaColor">#076670</Color>
         <Color x:Key="KomaBorderColor">#76DE92</Color>
+        -->
 
       
     <!--タブ-->
         <!--
         <Style TargetType="tabview:TabViewControl">
             <Setter Property="HeaderBackgroundColor" Value="Transparent"/>
-            <Setter Property="HeaderSelectionUnderlineColor" Value="{StaticResource AppControlHighlightColor}"/>
-            <Setter Property="HeaderTabTextColor" Value="{StaticResource AppFontHighlightColor}"/>
+            <Setter Property="HeaderSelectionUnderlineColor" Value="{StaticResource AppControlDarkColor}"/>
+            <Setter Property="HeaderTabTextColor" Value="{StaticResource AppFontDarkColor}"/>
         </Style>
         -->
       
     <!--ナビゲーションバー-->
         <Style TargetType="NavigationPage">
             <Setter Property="BarBackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
-            <Setter Property="BarTextColor" Value="White"/>
+            <Setter Property="BarTextColor" Value="{StaticResource AppFontDarkColor}"/>
         </Style>
 
     <!--スイッチ-->
         <Style TargetType="ctrl:TextbaseSwitch">
-            <Setter Property="OnColor" Value="{StaticResource AppControlHighlightColor}"/>
+            <Setter Property="OnColor" Value="{StaticResource AppControlDarkColor}"/>
             <Setter Property="OffColor" Value="Gray"/>
         </Style>
     <!--ラベル-->
@@ -88,10 +86,10 @@
         <Style x:Key="TabbedPageStyle" TargetType="TabbedPage">
             <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
             <Setter Property="BarBackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
-            <Setter Property="BarTextColor" Value="{StaticResource AppFontHighlightColor}"/>
+            <Setter Property="BarTextColor" Value="{StaticResource AppFontDarkColor}"/>
             <!--意味不明だが以下動作してないので消す
-            <Setter Property="SelectedTabColor" Value="{StaticResource AppControlHighlightColor}"/>
-            <Setter Property="UnselectedTabColor" Value="{StaticResource AppControlLowlightColor}"/>
+            <Setter Property="SelectedTabColor" Value="{StaticResource AppControlDarkColor}"/>
+            <Setter Property="UnselectedTabColor" Value="{StaticResource AppControlLightColor}"/>
             -->
         </Style>
         <Style x:Key="PopupPageStyle" TargetType="Page">

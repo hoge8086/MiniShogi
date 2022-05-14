@@ -4,8 +4,8 @@
              x:Class="MiniShogiMobile.Controls.SwitchablePicker"
              x:Name="self">
   <ContentView.Content>
-        <Frame BackgroundColor="{StaticResource AppControlLowlightColor}"
-               BorderColor="{StaticResource AppControlHighlightColor}"
+        <Frame BackgroundColor="{StaticResource AppControlLightColor}"
+               BorderColor="{StaticResource AppControlDarkColor}"
                Padding="0"
                HorizontalOptions="FillAndExpand"
                CornerRadius="10"
@@ -28,7 +28,7 @@
                                 <TapGestureRecognizer Tapped="OnItemTapped"/>
                             </Grid.GestureRecognizers>
                             <Label Grid.Column="0"
-                                   TextColor="{StaticResource AppFontLowlightColor}"
+                                   TextColor="{StaticResource AppFontDarkColor}"
                                    Margin="5"
                                    WidthRequest="100"
                                    VerticalTextAlignment="Center"
@@ -41,11 +41,11 @@
                                                 <Binding />
                                             </MultiBinding>
                                         </DataTrigger.Binding>
-                                        <Setter Property="TextColor" Value="{StaticResource AppFontHighlightColor}"/>
+                                        <Setter Property="TextColor" Value="{StaticResource AppFontLightColor}"/>
                                     </DataTrigger>
                                 </Label.Triggers>
                             </Label>
-                            <BoxView Grid.Column="1" BackgroundColor="{StaticResource AppControlHighlightColor}"/>
+                            <BoxView Grid.Column="1" BackgroundColor="{StaticResource AppControlDarkColor}"/>
                             <Grid.Triggers>
                                 <DataTrigger TargetType="Grid" Value="True">
                                     <DataTrigger.Binding>
@@ -54,7 +54,7 @@
                                             <Binding />
                                         </MultiBinding>
                                     </DataTrigger.Binding>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource AppControlHighlightColor}"/>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource AppControlDarkColor}"/>
                                 </DataTrigger>
                             </Grid.Triggers>
                         </Grid>

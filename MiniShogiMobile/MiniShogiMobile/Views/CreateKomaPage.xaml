@@ -65,8 +65,8 @@
     <StackLayout Margin="15">
         <tabview:TabViewControl
                 HeaderBackgroundColor="Transparent"
-                HeaderSelectionUnderlineColor="{StaticResource AppControlHighlightColor}"
-                HeaderTabTextColor="{StaticResource AppFontHighlightColor}"
+                HeaderSelectionUnderlineColor="{StaticResource AppControlDarkColor}"
+                HeaderTabTextColor="{StaticResource AppFontDarkColor}"
                 HeaderTabTextFontSize="Body"
                 HeaderSelectionUnderlineThickness="2"
                 HorizontalOptions="FillAndExpand"
