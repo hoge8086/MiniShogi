@@ -74,15 +74,6 @@
             <Setter Property="BarTextColor" Value="White"/>
         </Style>
 
-    <!--ボタン-->
-        <Style x:Key="ButtonStyle" TargetType="Button">
-            <Setter Property="BackgroundColor" Value="{StaticResource AppControlLowlightColor}"/>
-            <Setter Property="TextColor" Value="{StaticResource AppFontHighlightColor}"/>
-            <Setter Property="CornerRadius" Value="25"/>
-            <Setter Property="HeightRequest" Value="40"/>
-            <Setter Property="BorderWidth" Value="1"/>
-            <Setter Property="BorderColor" Value="{StaticResource AppControlHighlightColor}"/>
-        </Style>
     <!--スイッチ-->
         <Style TargetType="ctrl:TextbaseSwitch">
             <Setter Property="OnColor" Value="{StaticResource AppControlHighlightColor}"/>

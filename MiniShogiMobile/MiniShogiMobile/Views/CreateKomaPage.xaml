@@ -5,6 +5,7 @@
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
              xmlns:model="clr-namespace:Shogi.Business.Domain.Model.Komas;assembly=Shogi.Business"
              xmlns:tabview="clr-namespace:Xam.Plugin.TabView;assembly=Xam.Plugin.TabView"
@@ -13,6 +14,11 @@
              Style="{StaticResource PageStyle}"
              Title="駒作成">
     <ContentPage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <styles:PageResourceDictionary/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
         <ControlTemplate x:Key="CellTemplate">
             <!--セル-->
             <Grid HorizontalOptions="FillAndExpand"

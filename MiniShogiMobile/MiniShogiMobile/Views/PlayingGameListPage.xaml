@@ -3,11 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:xct="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.PlayingGameListPage"
              Title="つづきから"
              Style="{StaticResource PageStyle}"
              x:Name="root">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <styles:PageResourceDictionary/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ContentPage.Resources>
         <StackLayout VerticalOptions="FillAndExpand">
             <ListView ItemsSource="{Binding PlayingGameList}" SelectedItem="{Binding SelectedPlayingGame.Value}">
                 <ListView.Behaviors>

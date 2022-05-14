@@ -4,12 +4,20 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.PlayGamePage"
              Title="{Binding Title}"
              Style="{StaticResource PageStyle}"
              x:Name="self">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <styles:PageResourceDictionary/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <Grid RowDefinitions="*,Auto">
         <StackLayout x:Name="gameField"
               Spacing="0"

@@ -4,12 +4,20 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:xct="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateGameListPage"
              Title="ゲーム作成"
              Style="{StaticResource PageStyle}"
              x:Name="root">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <styles:PageResourceDictionary/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ContentPage.Resources>
         <StackLayout VerticalOptions="FillAndExpand">
             <StackLayout Grid.Row="0"
                              Orientation="Horizontal"

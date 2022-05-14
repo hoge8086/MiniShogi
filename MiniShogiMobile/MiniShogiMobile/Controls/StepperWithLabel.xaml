@@ -3,6 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MiniShogiMobile.Controls.StepperWithLabel"
              x:Name="self">
+    <ContentView.Resources>
+        <!--スタイルを継承しない-->
+        <Style TargetType="Button"/>
+    </ContentView.Resources>
   <ContentView.Content>
     <Frame BackgroundColor="{StaticResource AppControlLowlightColor}"
            BorderColor="{StaticResource AppControlHighlightColor}"

@@ -4,10 +4,18 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:local="clr-namespace:MiniShogiMobile.ViewModels"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              prism:ViewModelLocator.AutowireViewModel="True"
              Style="{StaticResource PageStyle}"
              x:Class="MiniShogiMobile.Views.StartGamePage"
              Title="はじめる">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <styles:PageResourceDictionary/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <StackLayout VerticalOptions="FillAndExpand" Margin="20" Spacing="40">
         <Picker Title="ゲームを選択してください"
                 HorizontalTextAlignment="Center"
@@ -52,6 +60,6 @@
                 DisplayConverter="{StaticResource EnumToDescriptionConverter}"
                 ItemsSource="{Binding Source={local:EnumSelectFirstTurnPlayerProvider}}"
                 SelectedItem="{Binding FirstTurnPlayer.Value}"/>
-        <Button Text="対局開始" Style="{StaticResource ButtonStyle}" Command="{Binding PlayGameCommand}"/>
+        <Button Text="対局開始" Command="{Binding PlayGameCommand}"/>
     </StackLayout>
 </ContentPage>

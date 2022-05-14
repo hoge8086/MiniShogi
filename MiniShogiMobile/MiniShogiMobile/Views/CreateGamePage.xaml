@@ -4,6 +4,7 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
+             xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              xmlns:player="clr-namespace:Shogi.Business.Domain.Model.PlayerTypes;assembly=Shogi.Business"
@@ -12,6 +13,13 @@
              x:Class="MiniShogiMobile.Views.CreateGamePage"
              Style="{StaticResource PageStyle}"
              Title="ゲーム作成">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <styles:PageResourceDictionary/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="設定"
                      Order="Secondary"
