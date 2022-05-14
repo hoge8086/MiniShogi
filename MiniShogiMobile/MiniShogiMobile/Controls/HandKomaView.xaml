@@ -6,13 +6,12 @@
              x:Name="self">
   <ContentView.Triggers>
       <DataTrigger TargetType="ctrl:HandKomaView" Binding="{Binding Path=IsHighlight, Source={x:Reference self} }" Value="True">
-          <Setter Property="BackgroundColor" Value="DarkOrange"/>
+          <Setter Property="BackgroundColor" Value="{StaticResource CellHighlightColor}"/>
       </DataTrigger>
   </ContentView.Triggers>
   <ContentView.Content>
         <RelativeLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <ctrl:KomaView
-                NameColor="Black"
                 DisplayName="{Binding Path=DisplayName, Source={x:Reference self}}"
                 RelativeLayout.XConstraint="0"
                 RelativeLayout.YConstraint="0"
@@ -28,9 +27,9 @@
                         <Setter Property="IsVisible" Value="False"/>
                     </DataTrigger>
                 </Grid.Triggers>
-                <Ellipse Fill="MidnightBlue" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
+                <Ellipse Fill="{StaticResource HandKomaNumCircleColor}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
                 <Label Text="{Binding Path=Number, Source={x:Reference self}}"
-                       TextColor="White"
+                       TextColor="{StaticResource HandKomaNumTextColor}"
                        FontAttributes="Bold"
                        HorizontalOptions="Center"
                        VerticalOptions="Center"/>

@@ -67,20 +67,20 @@ namespace MiniShogiMobile.Controls
         }
         #endregion
 
-        #region NameColor
-        public static readonly BindableProperty NameColorProperty = BindableProperty.Create(
-                                                                            nameof(NameColor),
-                                                                            typeof(Color),
+        #region IsRotated
+        public static readonly BindableProperty IsPromotedProperty = BindableProperty.Create(
+                                                                            nameof(IsPromoted),
+                                                                            typeof(bool),
                                                                             typeof(KomaView),
-                                                                            null);
+                                                                            false);
  
         /// <summary>
-        /// 表示名
+        /// 反転
         /// </summary>
-        public Color NameColor
+        public bool IsPromoted
         {
-            get { return (Color)GetValue(NameColorProperty); }
-            set { SetValue(NameColorProperty, value); }
+            get { return (bool)GetValue(IsPromotedProperty); }
+            set { SetValue(IsPromotedProperty, value); }
         }
         #endregion
     }

@@ -9,6 +9,7 @@
              xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.EditCellPage"
+             Style="{StaticResource PopupPageStyle}"
              Title="駒の編集"
              x:Name="root">
     <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="250">

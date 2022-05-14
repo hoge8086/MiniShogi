@@ -10,6 +10,7 @@
              xmlns:tabview="clr-namespace:Xam.Plugin.TabView;assembly=Xam.Plugin.TabView"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateKomaPage"
+             Style="{StaticResource PageStyle}"
              Title="駒作成">
     <ContentPage.Resources>
         <ControlTemplate x:Key="CellTemplate">
@@ -19,23 +20,20 @@
                   xct:TouchEffect.Command="{Binding Source={RelativeSource AncestorType={x:Type views:CreateKomaPage}}, Path=BindingContext.ChangeMoveCommand}"
                   xct:TouchEffect.CommandParameter="{Binding .}"
                   BindingContext="{TemplateBinding BindingContext}"
-                  BackgroundColor="SandyBrown">
+                  BackgroundColor="{StaticResource BoardBackgroundColor}">
                 <Grid.Triggers>
                     <DataTrigger TargetType="Grid" Binding="{Binding CanMove.Value}" Value="True">
-                        <Setter Property="BackgroundColor" Value="{StaticResource HighlightColor}"/>
+                        <Setter Property="BackgroundColor" Value="{StaticResource CellHighlightColor}"/>
                     </DataTrigger>
                 </Grid.Triggers>
                 <!--駒-->
                 <ctrl:KomaView  DisplayName="{Binding Koma.Value.Name.Value}"
                        HorizontalOptions="FillAndExpand"
                        VerticalOptions="FillAndExpand"
-                       NameColor="Black">
+                       IsPromoted="{Binding Koma.Value.IsTransformed.Value}">
                     <ctrl:KomaView.Triggers>
                         <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value, Converter={StaticResource isNullConverter}}" Value="True">
                             <Setter Property="IsVisible" Value="False"/>
-                        </DataTrigger>
-                        <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value.IsTransformed.Value}" Value="True">
-                            <Setter Property="NameColor" Value="Red"/>
                         </DataTrigger>
                     </ctrl:KomaView.Triggers>
                 </ctrl:KomaView>
@@ -61,8 +59,8 @@
     <StackLayout Margin="15">
         <tabview:TabViewControl
                 HeaderBackgroundColor="Transparent"
-                HeaderSelectionUnderlineColor="{StaticResource AppThemeColor}"
-                HeaderTabTextColor="{StaticResource AppThemeColor}"
+                HeaderSelectionUnderlineColor="{StaticResource AppControlHighlightColor}"
+                HeaderTabTextColor="{StaticResource AppFontHighlightColor}"
                 HeaderTabTextFontSize="Body"
                 HeaderSelectionUnderlineThickness="2"
                 HorizontalOptions="FillAndExpand"

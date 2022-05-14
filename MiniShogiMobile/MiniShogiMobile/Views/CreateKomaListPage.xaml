@@ -6,6 +6,7 @@
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateKomaListPage"
+             Style="{StaticResource PageStyle}"
              Title="駒作成">
         <ContentPage.Resources>
         <Style TargetType="{x:Type ImageButton}">

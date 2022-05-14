@@ -9,17 +9,19 @@
         <!--TODO：枠線幅のプロパティ化(.csのセルサイズの計算に影響あり)-->
         <!--TODO：線色とバックグランドのプロパティ化-->
         <!--各セルの左線と下線をかこっていないので、2Dグリッド全体の左線と下線を書く-->
-        <Frame BackgroundColor="SandyBrown"
+        <Frame BackgroundColor="{StaticResource BoardBackgroundColor}"
                Padding="0"
                CornerRadius="0"
                HorizontalOptions="Center"
-               VerticalOptions="Center">
+               VerticalOptions="Center"
+               HasShadow="False">
             <Frame Padding="0,0,1,1"
                    Margin="10"
-                   BackgroundColor="Chocolate"
+                   BackgroundColor="{StaticResource BoardBorderColor}"
                    CornerRadius="0"
                    HorizontalOptions="Center"
-                   VerticalOptions="Center">
+                   VerticalOptions="Center"
+                   HasShadow="False">
                 <!--行-->
                 <!--子の数が変わったときに時にセルのサイズを調整する-->
                 <StackLayout x:Name="board"
@@ -46,8 +48,9 @@
                                         <!--セルの枠線を囲ってしまうと、StackLayoutの隙間が目立つので、右線と上線のみ表示する-->
                                         <!--↑そのためだけに、ContentTemplateを使ってめんどくさい実装をしている(Frameをコントロールを使う側でやりたくなかったので)-->
                                         <Frame Padding="1,1,0,0"
-                                               BackgroundColor="Chocolate"
-                                               CornerRadius="0">
+                                               BackgroundColor="{StaticResource BoardBorderColor}"
+                                               CornerRadius="0"
+                                               HasShadow="False">
                                             <ContentView
                                                 ControlTemplate="{Binding Path=ItemTemplate, Source={x:Reference self}}"/>
                                         </Frame>

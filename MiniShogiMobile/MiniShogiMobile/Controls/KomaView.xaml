@@ -17,13 +17,13 @@
                  HorizontalOptions="Center"
                  VerticalOptions="Center"
                  Margin="0"
-                 Fill="Moccasin"
-                 Stroke="Oldlace"
+                 Fill="{StaticResource KomaColor}"
+                 Stroke="{StaticResource KomaBorderColor}"
                  StrokeThickness="2"/>
             <!--駒の形的に少し駒の名前を下げるといい感じの見た目になる-->
             <RelativeLayout>
                 <Label Text="{Binding Path=DisplayName, Source={x:Reference koma}}"
-                       TextColor="{Binding Path=NameColor, Source={x:Reference koma}}"
+                       TextColor="{StaticResource KomaFontColor}"
                        VerticalTextAlignment="Center"
                        HorizontalTextAlignment="Center"
                        RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
@@ -31,7 +31,13 @@
                        RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1.0}"
                        RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.97}"
                        FontAttributes="Bold"
-                       FontSize="{Binding Source={x:Reference polygon}, Path=Width, Converter={StaticResource multipleDoubleConverter}, ConverterParameter=0.5}"/>
+                       FontSize="{Binding Source={x:Reference polygon}, Path=Width, Converter={StaticResource multipleDoubleConverter}, ConverterParameter=0.5}">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding Path=IsPromoted, Source={x:Reference koma}}" Value="True">
+                            <Setter Property="TextColor" Value="{StaticResource KomaPromotedFontColor}"/>
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
             </RelativeLayout>
             <!--反転プロパティ公開-->
             <Grid.Triggers>

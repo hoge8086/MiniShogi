@@ -8,6 +8,7 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.PlayGamePage"
              Title="{Binding Title}"
+             Style="{StaticResource PageStyle}"
              x:Name="self">
     <Grid RowDefinitions="*,Auto">
         <StackLayout x:Name="gameField"

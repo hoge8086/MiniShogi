@@ -3,13 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              x:Class="MiniShogiMobile.Views.MainPage"
+             Style="{StaticResource PageStyle}"
              Title="ミニ将棋">
-
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Button Text="はじめる" Command="{Binding StartGameCommand}"/>
-        <Button Text="つづきから" Command="{Binding ContinueGameCommand}"/>
-        <Button Text="ゲームを作る" Command="{Binding CreateGameCommand}"/>
-        <ctrl:TextbaseSwitch/>
+        <Button Text="はじめる" Style="{StaticResource ButtonStyle}"  Command="{Binding StartGameCommand}"/>
+        <Button Text="つづきから" Style="{StaticResource ButtonStyle}" Command="{Binding ContinueGameCommand}"/>
+        <Button Text="ゲームを作る" Style="{StaticResource ButtonStyle}" Command="{Binding CreateGameCommand}"/>
+        <Label Text="aiueo"/>
     </StackLayout>
-
 </ContentPage>

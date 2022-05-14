@@ -4,8 +4,8 @@
              x:Class="MiniShogiMobile.Controls.StepperWithLabel"
              x:Name="self">
   <ContentView.Content>
-    <Frame BackgroundColor="White"
-           BorderColor="{StaticResource AppThemeColor}"
+    <Frame BackgroundColor="{StaticResource AppControlLowlightColor}"
+           BorderColor="{StaticResource AppControlHighlightColor}"
            Padding="0"
            HorizontalOptions="FillAndExpand"
            CornerRadius="10"
@@ -19,30 +19,30 @@
                     WidthRequest="40"
                     BackgroundColor="Transparent"
                     VerticalOptions="Center"
-                    TextColor="{StaticResource AppThemeColor}"
+                    TextColor="{StaticResource AppControlHighlightColor}"
                     FontAttributes="Bold"/>
-            <BoxView WidthRequest="1" BackgroundColor="{StaticResource AppThemeColor}" VerticalOptions="FillAndExpand"/>
+            <BoxView WidthRequest="1" BackgroundColor="{StaticResource AppControlHighlightColor}" VerticalOptions="FillAndExpand"/>
             <StackLayout Orientation="Horizontal"
                          Margin="10,0,10,0"
                          HorizontalOptions="CenterAndExpand">
                 <Label HorizontalOptions="Center"
                        VerticalTextAlignment="Center"
                        FontSize="Default"
-                       TextColor="{StaticResource AppThemeColor}"
+                       TextColor="{StaticResource AppFontHighlightColor}"
                        Text="{Binding Path=Value, Source={x:Reference self}}"/>
                 <Label HorizontalOptions="Center"
                        VerticalTextAlignment="Center"
-                       TextColor="{StaticResource AppThemeColor}"
+                       TextColor="{StaticResource AppFontHighlightColor}"
                        FontSize="10"
                        Text="{Binding Path=UnitLabel, Source={x:Reference self}}"/>
             </StackLayout>
-            <BoxView WidthRequest="1" BackgroundColor="{StaticResource AppThemeColor}" VerticalOptions="FillAndExpand"/>
+            <BoxView WidthRequest="1" BackgroundColor="{StaticResource AppControlHighlightColor}" VerticalOptions="FillAndExpand"/>
             <Button x:Name="plusButton"
                     Text="＋"
                     WidthRequest="42"
                     VerticalOptions="Center"
                     BackgroundColor="Transparent"
-                    TextColor="{StaticResource AppThemeColor}"
+                    TextColor="{StaticResource AppControlHighlightColor}"
                     FontAttributes="Bold"/>
         </StackLayout>
     </Frame>

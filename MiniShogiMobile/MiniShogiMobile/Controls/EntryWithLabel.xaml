@@ -5,8 +5,8 @@
              x:Class="MiniShogiMobile.Controls.EntryWithLabel"
              x:Name="self">
   <ContentView.Content>
-    <Frame BackgroundColor="White"
-           BorderColor="{StaticResource AppThemeColor}"
+    <Frame BackgroundColor="{StaticResource AppControlLowlightColor}"
+           BorderColor="{StaticResource AppControlHighlightColor}"
            Padding="0"
            CornerRadius="10"
            HasShadow="False"
@@ -15,12 +15,14 @@
         <Grid ColumnDefinitions="Auto,*">
             <Label Grid.Column="0"
                    Text="{Binding Path=LabelText, Source={x:Reference self}}"
-                   TextColor="White"
-                   BackgroundColor="{StaticResource AppThemeColor}"
+                   TextColor="{StaticResource AppFontLowlightColor}"
+                   BackgroundColor="{StaticResource AppControlHighlightColor}"
                    VerticalTextAlignment="Center"
                    Padding="6,0,6,0"
                    VerticalOptions="FillAndExpand"/>
             <ctrl:BorderlessEntry Grid.Column="1"
+                                  BackgroundColor="Transparent"
+                                  TextColor="{StaticResource AppFontHighlightColor}"
                                   Text="{Binding Path=EntryText, Source={x:Reference self}}"
                                   Placeholder="{Binding Path=Placeholder, Source={x:Reference self}}"
                                   HorizontalOptions="FillAndExpand"

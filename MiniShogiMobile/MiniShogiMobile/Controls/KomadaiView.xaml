@@ -5,12 +5,12 @@
              x:Name="self">
     <ContentView.ControlTemplate>
         <ControlTemplate>
-            <Frame BackgroundColor="{StaticResource BoardFrameColor}"
+            <Frame BackgroundColor="{StaticResource BoardBorderColor}"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand"
                 Padding="0"
                 CornerRadius="0">
-                <Frame BackgroundColor="{StaticResource BoardBackground}"
+                <Frame BackgroundColor="{StaticResource BoardBackgroundColor}"
                     Margin="1"
                     Padding="0"
                     CornerRadius="0"

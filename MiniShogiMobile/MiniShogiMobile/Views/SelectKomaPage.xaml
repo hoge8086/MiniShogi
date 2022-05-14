@@ -5,6 +5,7 @@
              xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              prism:ViewModelLocator.AutowireViewModel="True"
+             Style="{StaticResource PopupPageStyle}"
              x:Class="MiniShogiMobile.Views.SelectKomaPage">
     <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="400">
         <StackLayout BackgroundColor="white" >

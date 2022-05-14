@@ -5,6 +5,7 @@
             xmlns:views="clr-namespace:MiniShogiMobile.Views"
             prism:ViewModelLocator.AutowireViewModel="True"
             x:Class="MiniShogiMobile.Views.CreateTabbedPage"
+            Style="{StaticResource TabbedPageStyle}"
             Title="作成">
     <!--TODO:アイコン付けてかっこよくしたい-->
     <views:CreateGameListPage/>

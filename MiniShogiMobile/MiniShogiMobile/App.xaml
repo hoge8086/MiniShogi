@@ -3,26 +3,107 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:tabview="clr-namespace:Xam.Plugin.TabView;assembly=Xam.Plugin.TabView"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="MiniShogiMobile.App">
   <Application.Resources>
     <!-- Application resource dictionary -->
-    <utils:InverseBooleanConverter x:Key="InvertedBoolConverter" />
-    <utils:PlayerTypeToBoolConverter x:Key="PlayerTypeToBoolConverter" />
-    <utils:IsNullConverter x:Key="isNullConverter"/>
-    <utils:IsNotNullConverter x:Key="IsNotNullConverter"/>
-    <utils:ImageSourceConverter x:Key="ImageSourceConverter"/>
-    <utils:IsTypeOfConverter x:Key="IsTypeOfConverter"/>
-    <utils:EqualsMultiConverter x:Key="EqualsMultiConverter"/>
-    <utils:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
-    <xct:MathExpressionConverter x:Key="MathExpressionConverter" />
-    <xct:MultiMathExpressionConverter x:Key="MultiMathExpressionConverter" />
-    <xct:EnumToBoolConverter x:Key="EnumToBoolConverter" />
-    <Color x:Key="AppThemeColor">#3aabd2</Color>
-    <Color x:Key="Player1Color">DodgerBlue</Color>
-    <Color x:Key="Player2Color">#eb233d</Color>
-    <Color x:Key="BoardFrameColor">Chocolate</Color>
-    <Color x:Key="BoardBackground">SandyBrown</Color>
-    <Color x:Key="HighlightColor">DarkOrange</Color>
-  </Application.Resources>
+    <!-- 共通コンバーター-->
+        <utils:InverseBooleanConverter x:Key="InvertedBoolConverter" />
+        <utils:PlayerTypeToBoolConverter x:Key="PlayerTypeToBoolConverter" />
+        <utils:IsNullConverter x:Key="isNullConverter"/>
+        <utils:IsNotNullConverter x:Key="IsNotNullConverter"/>
+        <utils:ImageSourceConverter x:Key="ImageSourceConverter"/>
+        <utils:IsTypeOfConverter x:Key="IsTypeOfConverter"/>
+        <utils:EqualsMultiConverter x:Key="EqualsMultiConverter"/>
+        <utils:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
+        <xct:MathExpressionConverter x:Key="MathExpressionConverter" />
+        <xct:MultiMathExpressionConverter x:Key="MultiMathExpressionConverter" />
+        <xct:EnumToBoolConverter x:Key="EnumToBoolConverter" />
+
+    <!--アプリテーマ色-->
+        <!--
+        <Color x:Key="AppThemeColor">#3aabd2</Color>
+        -->
+        <Color x:Key="AppBackgroundColor">#091F2D</Color>
+        <Color x:Key="AppFontHighlightColor">#76DE92</Color>
+        <Color x:Key="AppFontLowlightColor">LightGray</Color>
+        <Color x:Key="AppControlHighlightColor">#076670</Color>
+        <Color x:Key="AppControlLowlightColor">#091F2D</Color>
+    <!--プレイヤー色-->
+        <Color x:Key="Player1Color">DodgerBlue</Color>
+        <Color x:Key="Player2Color">#eb233d</Color>
+      
+    <!--盤色-->
+        <!--
+        <Color x:Key="BoardBorderColor">Chocolate</Color>
+        <Color x:Key="BoardBackgroundColor">SandyBrown</Color>
+        -->
+        <Color x:Key="BoardBorderColor">#76DE92</Color>
+        <Color x:Key="BoardBackgroundColor">#091F2D</Color>
+    <!--セル色-->
+        <Color x:Key="CellHighlightColor">#FBCA4C</Color>
+        <Color x:Key="HandKomaNumCircleColor">MidnightBlue</Color>
+        <Color x:Key="HandKomaNumTextColor">White</Color>
+    <!--駒色-->
+        <!--
+        <Color x:Key="KomaFontColor">Black</Color>
+        <Color x:Key="KomaPromotedFontColor">Red</Color>
+        <Color x:Key="KomaColor">Moccasin</Color>
+        <Color x:Key="KomaBorderColor">Oldlace</Color>
+        -->
+        <Color x:Key="KomaFontColor">#76DE92</Color>
+        <Color x:Key="KomaPromotedFontColor">Red</Color>
+        <Color x:Key="KomaColor">#076670</Color>
+        <Color x:Key="KomaBorderColor">#76DE92</Color>
+
+      
+    <!--タブ-->
+        <!--
+        <Style TargetType="tabview:TabViewControl">
+            <Setter Property="HeaderBackgroundColor" Value="Transparent"/>
+            <Setter Property="HeaderSelectionUnderlineColor" Value="{StaticResource AppControlHighlightColor}"/>
+            <Setter Property="HeaderTabTextColor" Value="{StaticResource AppFontHighlightColor}"/>
+        </Style>
+        -->
+      
+    <!--ナビゲーションバー-->
+        <Style TargetType="NavigationPage">
+            <Setter Property="BarBackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
+            <Setter Property="BarTextColor" Value="White"/>
+        </Style>
+
+    <!--ボタン-->
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="{StaticResource AppControlLowlightColor}"/>
+            <Setter Property="TextColor" Value="{StaticResource AppFontHighlightColor}"/>
+            <Setter Property="CornerRadius" Value="25"/>
+            <Setter Property="HeightRequest" Value="40"/>
+            <Setter Property="BorderWidth" Value="1"/>
+            <Setter Property="BorderColor" Value="{StaticResource AppControlHighlightColor}"/>
+        </Style>
+    <!--スイッチ-->
+        <Style TargetType="ctrl:TextbaseSwitch">
+            <Setter Property="OnColor" Value="{StaticResource AppControlHighlightColor}"/>
+            <Setter Property="OffColor" Value="Gray"/>
+        </Style>
+    <!--ラベル-->
+
+    <!--ページ-->
+        <Style x:Key="PageStyle" TargetType="Page">
+            <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
+        </Style>
+        <Style x:Key="TabbedPageStyle" TargetType="TabbedPage">
+            <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
+            <Setter Property="BarBackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
+            <Setter Property="BarTextColor" Value="{StaticResource AppFontHighlightColor}"/>
+            <!--意味不明だが以下動作してないので消す
+            <Setter Property="SelectedTabColor" Value="{StaticResource AppControlHighlightColor}"/>
+            <Setter Property="UnselectedTabColor" Value="{StaticResource AppControlLowlightColor}"/>
+            -->
+        </Style>
+        <Style x:Key="PopupPageStyle" TargetType="Page">
+        </Style>
+    </Application.Resources>
 </prism:PrismApplication>

@@ -5,11 +5,15 @@
              x:Name="self"
              HeightRequest="35">
   <ContentView.Content>
-    <Frame CornerRadius="10" Padding="0">
+    <Frame BackgroundColor="{StaticResource AppControlLowlightColor}"
+           BorderColor="{StaticResource AppControlHighlightColor}"
+           Padding="0"
+           HorizontalOptions="FillAndExpand"
+           CornerRadius="10"
+           HasShadow="False">
       <Grid ColumnDefinitions="*,*" ColumnSpacing="0" RowSpacing="0">
         <Label Grid.Column="0"
                FontAttributes="Bold"
-               TextColor="DarkGray"
                HorizontalOptions="FillAndExpand"
                HorizontalTextAlignment="Center"
                Text="{Binding Path=OffText, Source={x:Reference self}}"
@@ -18,8 +22,7 @@
                WidthRequest="60">
           <Label.Triggers>
             <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="True">
-                <Setter Property="TextColor" Value="DarkGray"/>
-                <Setter Property="BackgroundColor" Value="White"/>
+                <Setter Property="TextColor" Value="{StaticResource AppFontLowlightColor}"/>
             </DataTrigger>
             <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="False">
                 <Setter Property="TextColor" Value="White"/>
@@ -31,15 +34,13 @@
                FontAttributes="Bold"
                HorizontalOptions="FillAndExpand"
                HorizontalTextAlignment="Center"
-               TextColor="DarkGray"
                Text="{Binding Path=OnText, Source={x:Reference self}}"
                VerticalOptions="FillAndExpand"
                VerticalTextAlignment="Center"
                WidthRequest="60">
           <Label.Triggers>
             <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="False">
-                <Setter Property="TextColor" Value="DarkGray"/>
-                <Setter Property="BackgroundColor" Value="White"/>
+                <Setter Property="TextColor" Value="{StaticResource AppFontLowlightColor}"/>
             </DataTrigger>
             <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="True">
                 <Setter Property="TextColor" Value="White"/>

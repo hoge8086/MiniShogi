@@ -40,7 +40,7 @@
                                                             <Binding/>
                                                         </MultiBinding>
                                                     </DataTrigger.Binding>
-                                                    <Setter Property="BackgroundColor" Value="{StaticResource HighlightColor}"/>
+                                                    <Setter Property="BackgroundColor" Value="{StaticResource CellHighlightColor}"/>
                                                 </DataTrigger>
                                             </ctrl:HandKomaView.Triggers>
                                         </ctrl:HandKomaView>
@@ -69,7 +69,7 @@
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand"
                 Stroke="OrangeRed"
-                Fill="{StaticResource HighlightColor}"
+                Fill="{StaticResource CellHighlightColor}"
                 Opacity="0.5"
                 StrokeThickness="4"
                 StrokeDashArray="2,2"/>

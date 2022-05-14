@@ -10,6 +10,7 @@
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateGamePage"
+             Style="{StaticResource PageStyle}"
              Title="ゲーム作成">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="設定"

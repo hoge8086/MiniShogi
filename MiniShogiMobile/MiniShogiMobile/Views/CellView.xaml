@@ -6,31 +6,28 @@
              xmlns:util="clr-namespace:MiniShogiMobile.Utils"
              x:Class="MiniShogiMobile.Views.CellView"
              x:Name="cell"
-             BackgroundColor="SandyBrown">
+             BackgroundColor="{StaticResource BoardBackgroundColor}">
     <ContentView.Resources>
     </ContentView.Resources>
     <ContentView.Triggers>
         <DataTrigger TargetType="ContentView" Binding="{Binding IsHighlight, Source={x:Reference cell}}" Value="True">
-            <Setter Property="BackgroundColor" Value="DarkOrange"/>
+            <Setter Property="BackgroundColor" Value="{StaticResource CellHighlightColor}"/>
         </DataTrigger>
     </ContentView.Triggers>
   <ContentView.Content>
     <!--セル-->
     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <!--駒-->
-        <ctrl:KomaView  DisplayName="{Binding Koma.Value.Name.Value}"
+            <ctrl:KomaView  DisplayName="{Binding Koma.Value.Name.Value}"
                HorizontalOptions="FillAndExpand"
                VerticalOptions="FillAndExpand"
-               NameColor="Black">
+               IsPromoted="{Binding Koma.Value.IsTransformed.Value}">
             <ctrl:KomaView.Triggers>
                 <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value.PlayerType.Value.Id}" Value="Player2">
                     <Setter Property="IsRotated" Value="True"/>
                 </DataTrigger>
                 <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value, Converter={StaticResource isNullConverter}}" Value="True">
                     <Setter Property="IsVisible" Value="False"/>
-                </DataTrigger>
-                <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding Koma.Value.IsTransformed.Value}" Value="True">
-                    <Setter Property="NameColor" Value="Red"/>
                 </DataTrigger>
                 <DataTrigger TargetType="ctrl:KomaView" Binding="{Binding IsKomaHidden, Source={x:Reference cell}}" Value="True">
                     <Setter Property="IsVisible" Value="False"/>
@@ -41,7 +38,7 @@
         <RelativeLayout IsVisible="{Binding IsMarked, Source={x:Reference cell}}"
             VerticalOptions="FillAndExpand"
             HorizontalOptions="FillAndExpand">
-            <Ellipse Fill="OrangeRed"
+            <Ellipse Fill="{StaticResource CellHighlightColor}"
                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"
                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.4}"
                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.2}"
