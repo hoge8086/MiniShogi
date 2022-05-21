@@ -135,7 +135,7 @@ namespace MiniShogiMobile.ViewModels
                             // 駒がないい場合は駒を配置
 
                             Selected.Value = tappedCell;
-                            var selectedKomaType = await NavigateAsync<SelectKomaPageViewModel, SelectKomaConditions, KomaTypeId>(new SelectKomaConditions(null, "配置する駒を選択してください"));
+                            var selectedKomaType = await NavigateAsync<SelectKomaPopupPageViewModel, SelectKomaConditions, KomaTypeId>(new SelectKomaConditions(null, "配置する駒を選択してください"));
 
                             // 駒を選んだか?
                             if(selectedKomaType.Success)
@@ -270,7 +270,7 @@ namespace MiniShogiMobile.ViewModels
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-                    var selectedKomaType = await NavigateAsync<SelectKomaPageViewModel, SelectKomaConditions, KomaTypeId>(new SelectKomaConditions(null, "追加する駒を選択してください"));
+                    var selectedKomaType = await NavigateAsync<SelectKomaPopupPageViewModel, SelectKomaConditions, KomaTypeId>(new SelectKomaConditions(null, "追加する駒を選択してください"));
                     if (selectedKomaType.Success)
                     {
                         Game.GetHands(x).AddOne(selectedKomaType.Data, x);

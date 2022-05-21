@@ -46,6 +46,9 @@
     <Compile Update="Views\EditGameSettingsPage.xaml.cs">
       <DependentUpon>EditGameSettingsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\SelectKomaPopupPage.xaml.cs">
+      <DependentUpon>SelectKomaPopupPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -118,7 +121,7 @@
     <EmbeddedResource Update="Views\SaveGamePopupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\SelectKomaPage.xaml">
+    <EmbeddedResource Update="Views\SelectKomaPopupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\StartGamePage.xaml">

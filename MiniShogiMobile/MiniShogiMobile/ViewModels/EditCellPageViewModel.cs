@@ -55,7 +55,7 @@ namespace MiniShogiMobile.ViewModels
             ChangeKomaTypeCommand.Subscribe(async (x) =>
             {
                 var condition = new SelectKomaConditions(EditingCell.Koma.Value.KomaTypeId.Value);
-                var result = await NavigateAsync<SelectKomaPageViewModel, SelectKomaConditions, KomaTypeId>(condition);
+                var result = await NavigateAsync<SelectKomaPopupPageViewModel, SelectKomaConditions, KomaTypeId>(condition);
                 if (result.Success)
                 {
                     EditingCell.Koma.Value.KomaTypeId.Value = result.Data;

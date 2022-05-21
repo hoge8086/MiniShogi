@@ -3,9 +3,9 @@ using Xamarin.Forms;
 
 namespace MiniShogiMobile.Views
 {
-    public partial class SelectKomaPage : PopupPage
+    public partial class SelectKomaPopupPage : PopupPage
     {
-        public SelectKomaPage()
+        public SelectKomaPopupPage()
         {
             InitializeComponent();
         }
