@@ -3,9 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              Style="{StaticResource PopupPageStyle}"
              x:Class="MiniShogiMobile.Views.SaveGamePopupPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <styles:PageResourceDictionary/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="300">
         <StackLayout BackgroundColor="white" >
             <StackLayout Orientation="Horizontal" Margin="15">
@@ -16,8 +24,8 @@
                 ColumnDefinitions="*,*"
                 ColumnSpacing="1"
                 BackgroundColor="Gray">
-                <Button Grid.Column="0" Command="{Binding CancelCommand}" Text="キャンセル" VerticalOptions="FillAndExpand" CornerRadius="0"/>
-                <Button Grid.Column="1" Command="{Binding OkCommand}" Text="保存" VerticalOptions="FillAndExpand" CornerRadius="0"/>
+                <Button Grid.Column="0" Command="{Binding CancelCommand}" Text="キャンセル" />
+                <Button Grid.Column="1" Command="{Binding OkCommand}" Text="保存" />
             </Grid>
         </StackLayout>
     </Frame>

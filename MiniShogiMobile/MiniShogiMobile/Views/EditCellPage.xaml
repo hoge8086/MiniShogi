@@ -5,6 +5,7 @@
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              xmlns:ctrls="clr-namespace:MiniShogiMobile.Controls"
              xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              prism:ViewModelLocator.AutowireViewModel="True"
@@ -12,6 +13,13 @@
              Style="{StaticResource PopupPageStyle}"
              Title="駒の編集"
              x:Name="root">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <styles:PageResourceDictionary/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="250">
         <StackLayout BackgroundColor="white" >
             <StackLayout Spacing="15" Margin="10">
@@ -41,8 +49,8 @@
                 ColumnDefinitions="*,*"
                 ColumnSpacing="1"
                 BackgroundColor="Gray">
-                <Button Grid.Column="0" Command="{Binding CancelCommand}" Text="キャンセル" VerticalOptions="FillAndExpand" CornerRadius="0"/>
-                <Button Grid.Column="1" Command="{Binding OkCommand}" Text="OK" VerticalOptions="FillAndExpand" CornerRadius="0"/>
+                <Button Grid.Column="0" Command="{Binding CancelCommand}" Text="キャンセル" />
+                <Button Grid.Column="1" Command="{Binding OkCommand}" Text="OK" />
             </Grid>
         </StackLayout>
     </Frame>
