@@ -8,6 +8,7 @@
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateGameListPage"
+             xmlns:tabview="clr-namespace:Xam.Plugin.TabView;assembly=Xam.Plugin.TabView"
              Title="ゲーム作成"
              Style="{StaticResource PageStyle}"
              x:Name="root">
@@ -18,45 +19,107 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </ContentPage.Resources>
-        <StackLayout VerticalOptions="FillAndExpand">
-            <StackLayout Grid.Row="0"
-                             Orientation="Horizontal"
-                             HeightRequest="50"
-                             Margin="10"
-                             HorizontalOptions="FillAndExpand"
-                             Spacing="10">
-                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 
-                                 Text="削除"
-                                 Command="{Binding DeleteCommand}"
-                                 HorizontalOptions="CenterAndExpand"
-                                 BackgroundColor="Transparent"/>
-                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
-                                 Text="編集"
-                                 Command="{Binding EditCommand}"
-                                 HorizontalOptions="CenterAndExpand"
-                                 BackgroundColor="Transparent"/>
-                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
-                                 Text="コピー"
-                                 Command="{Binding CopyCommand}"
-                                 HorizontalOptions="CenterAndExpand"
-                                 BackgroundColor="Transparent"/>
-                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" 
-                                 Text="新規追加"
-                                 Command="{Binding CreateNewCommand}"
-                                 HorizontalOptions="CenterAndExpand"
-                                 BackgroundColor="Transparent"/>
-            </StackLayout>
+    <Grid Margin="10">
+        <tabview:TabViewControl
+                HeaderBackgroundColor="Transparent"
+                HeaderSelectionUnderlineColor="{StaticResource AppControlDarkColor}"
+                HeaderTabTextColor="{StaticResource AppFontDarkColor}"
+                HeaderTabTextFontSize="Body"
+                HeaderSelectionUnderlineThickness="2"
+                HorizontalOptions="FillAndExpand"
+                IsSwipeEnabled="True"
+                VerticalOptions="FillAndExpand">
+            <tabview:TabViewControl.ItemSource>
+                <tabview:TabItem HeaderText="駒">
+                    <StackLayout VerticalOptions="FillAndExpand">
+                        <StackLayout Grid.Row="0"
+                                         Orientation="Horizontal"
+                                         HeightRequest="50"
+                                         Margin="10"
+                                         HorizontalOptions="FillAndExpand"
+                                         Spacing="10">
+                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 
+                                             Text="削除"
+                                             Command="{Binding DeleteGameCommand}"
+                                             HorizontalOptions="CenterAndExpand"
+                                             BackgroundColor="Transparent"/>
+                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
+                                             Text="編集"
+                                             Command="{Binding EditGameCommand}"
+                                             HorizontalOptions="CenterAndExpand"
+                                             BackgroundColor="Transparent"/>
+                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
+                                             Text="コピー"
+                                             Command="{Binding CopyGameCommand}"
+                                             HorizontalOptions="CenterAndExpand"
+                                             BackgroundColor="Transparent"/>
+                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" 
+                                             Text="新規追加"
+                                             Command="{Binding CreateNewGameCommand}"
+                                             HorizontalOptions="CenterAndExpand"
+                                             BackgroundColor="Transparent"/>
+                        </StackLayout>
 
-            <ListView ItemsSource="{Binding GameNameList}" SelectedItem="{Binding SelectedGameName.Value}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="5,0,5,0">
-                                <Label FontSize="Large" Text="{Binding .}" HorizontalOptions="FillAndExpand"/>
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </StackLayout>
+                        <ListView ItemsSource="{Binding GameNameList}" SelectedItem="{Binding SelectedGameName.Value}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="5,0,5,0">
+                                            <Label FontSize="Large" Text="{Binding .}" HorizontalOptions="FillAndExpand"/>
+                                        </StackLayout>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackLayout>
+                </tabview:TabItem>
+                <tabview:TabItem HeaderText="成り">
+                    <Grid RowDefinitions="Auto,*">
+                        <StackLayout Grid.Row="0"
+                                         Orientation="Horizontal"
+                                         HeightRequest="50"
+                                         Margin="10"
+                                         HorizontalOptions="FillAndExpand"
+                                         Spacing="10">
+                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 
+                                             Text="削除"
+                                             Command="{Binding DeleteKomaCommand}"
+                                             HorizontalOptions="CenterAndExpand"
+                                             BackgroundColor="Transparent"/>
+                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
+                                             Text="編集"
+                                             Command="{Binding EditKomaCommand}"
+                                             HorizontalOptions="CenterAndExpand"
+                                             BackgroundColor="Transparent"/>
+                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
+                                             Text="コピー"
+                                             Command="{Binding CopyKomaCommand}"
+                                             HorizontalOptions="CenterAndExpand"
+                                             BackgroundColor="Transparent"/>
+                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" 
+                                             Text="新規追加"
+                                             Command="{Binding CreateKomaCommand}"
+                                             HorizontalOptions="CenterAndExpand"
+                                             BackgroundColor="Transparent"/>
+                        </StackLayout>
+                        <CollectionView Grid.Row="1"
+                                        VerticalOptions="FillAndExpand"
+                                        Margin="15"
+                                        ItemsLayout="VerticalGrid, 5"
+                                        SelectedItem="{Binding SelectedKomaTypeId.Value}"
+                                        ItemsSource="{Binding KomaTypeIdList}"
+                                        SelectionMode="Single" >
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <ContentView HorizontalOptions="Center" VerticalOptions="Center">
+                                        <ctrl:KomaView HeightRequest="80" WidthRequest="80" DisplayName="{Binding Name}"/>
+                                    </ContentView>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Grid>
+                </tabview:TabItem>
+            </tabview:TabViewControl.ItemSource>
+        </tabview:TabViewControl>
+    </Grid>
 </ContentPage>
