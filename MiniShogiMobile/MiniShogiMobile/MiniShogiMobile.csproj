@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -48,6 +48,9 @@
     </Compile>
     <Compile Update="Views\EditGameSettingsPopupPage.xaml.cs">
       <DependentUpon>EditGameSettingsPopupPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\InputNamePopupPage.xaml.cs">
+      <DependentUpon>InputNamePopupPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\SelectKomaPopupPage.xaml.cs">
       <DependentUpon>SelectKomaPopupPage.xaml</DependentUpon>
@@ -121,7 +124,7 @@
     <EmbeddedResource Update="Views\PlayingGameListPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\SaveGamePopupPage.xaml">
+    <EmbeddedResource Update="Views\InputNamePopupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\SelectKomaPopupPage.xaml">

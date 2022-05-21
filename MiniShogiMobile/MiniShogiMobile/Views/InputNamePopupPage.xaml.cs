@@ -3,9 +3,9 @@ using Xamarin.Forms;
 
 namespace MiniShogiMobile.Views
 {
-    public partial class SaveGamePopupPage : PopupPage
+    public partial class InputNamePopupPage : PopupPage
     {
-        public SaveGamePopupPage()
+        public InputNamePopupPage()
         {
             InitializeComponent();
         }

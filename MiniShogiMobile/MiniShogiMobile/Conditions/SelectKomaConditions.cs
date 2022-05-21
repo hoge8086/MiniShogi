@@ -1,5 +1,4 @@
 ﻿using Shogi.Business.Domain.Model.Komas;
-using System.Collections.Generic;
 
 namespace MiniShogiMobile.Conditions
 {

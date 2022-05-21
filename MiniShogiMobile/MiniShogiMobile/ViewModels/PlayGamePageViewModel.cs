@@ -61,7 +61,18 @@ namespace MiniShogiMobile.ViewModels
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-                    App.GameService.SaveCurrent($"{DateTime.Now.ToString(System.Globalization.CultureInfo.CreateSpecificCulture("ja-JP"))}_{PlayingGame.GameTemplate.Name}");
+
+                    var gameNameList = App.GameService.PlayingGameRepository.FindAll().Select(y => y.Name).ToList();
+                    var savingName = await NavigateAsync<InputNamePopupPageViewModel, InputNameCondition, string>(
+                        new InputNameCondition(
+                            $"{DateTime.Now.ToString(System.Globalization.CultureInfo.CreateSpecificCulture("ja-JP"))}_{PlayingGame.GameTemplate.Name}",
+                            "保存",
+                            gameNameList,
+                            null,
+                            (n) => gameNameList.Contains(n) ? "既にその名前は使用しています。上書きしますか?" : null
+                            ));
+                    if(savingName != null)
+                        App.GameService.SaveCurrent(savingName.Data);
                 });
 
             }).AddTo(Disposable);

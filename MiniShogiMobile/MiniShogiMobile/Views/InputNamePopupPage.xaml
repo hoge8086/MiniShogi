@@ -6,26 +6,34 @@
              xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              Style="{StaticResource PopupPageStyle}"
-             x:Class="MiniShogiMobile.Views.SaveGamePopupPage">
+             x:Class="MiniShogiMobile.Views.InputNamePopupPage">
     <ContentPage.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <styles:PageResourceDictionary/>
+                <styles:PopupPageResourceDictionary/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="300">
+    <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center">
         <StackLayout BackgroundColor="white" >
-            <StackLayout Orientation="Horizontal" Margin="15">
+            <StackLayout Orientation="Horizontal" Spacing="10" Margin="15">
                 <Label Text="名前" HorizontalOptions="Start" VerticalOptions="Center"/>
-                <Entry HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center"/>
+                <Entry Text="{Binding Name.Value}" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" WidthRequest="150"/>
+                <Button Text="..." Command="{Binding SelectCommand}" HorizontalOptions="Center" Padding="10,0,10,0">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding NameList.Count}" Value="0">
+                            <Setter Property="IsVisible" Value="False"/>
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
             </StackLayout>
             <Grid
                 ColumnDefinitions="*,*"
                 ColumnSpacing="1"
                 BackgroundColor="Gray">
                 <Button Grid.Column="0" Command="{Binding CancelCommand}" Text="キャンセル" />
-                <Button Grid.Column="1" Command="{Binding OkCommand}" Text="保存" />
+                <Button Grid.Column="1" Command="{Binding OkCommand}" Text="{Binding OkButtonText.Value}" />
             </Grid>
         </StackLayout>
     </Frame>
