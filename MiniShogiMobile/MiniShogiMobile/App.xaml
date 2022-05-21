@@ -68,8 +68,12 @@
       
     <!--ナビゲーションバー-->
         <Style TargetType="NavigationPage">
+            <!--
             <Setter Property="BarBackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
             <Setter Property="BarTextColor" Value="{StaticResource AppFontDarkColor}"/>
+            -->
+            <Setter Property="BarBackgroundColor" Value="{StaticResource AppControlDarkColor2}"/>
+            <Setter Property="BarTextColor" Value="White"/>
         </Style>
 
     <!--スイッチ-->

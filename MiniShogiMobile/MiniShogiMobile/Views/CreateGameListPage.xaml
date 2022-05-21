@@ -9,7 +9,7 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateGameListPage"
              xmlns:tabview="clr-namespace:Xam.Plugin.TabView;assembly=Xam.Plugin.TabView"
-             Title="ゲーム作成"
+             Title="作る"
              Style="{StaticResource PageStyle}"
              x:Name="root">
     <ContentPage.Resources>
@@ -30,7 +30,7 @@
                 IsSwipeEnabled="True"
                 VerticalOptions="FillAndExpand">
             <tabview:TabViewControl.ItemSource>
-                <tabview:TabItem HeaderText="駒">
+                <tabview:TabItem HeaderText="ゲーム作成">
                     <StackLayout VerticalOptions="FillAndExpand">
                         <StackLayout Grid.Row="0"
                                          Orientation="Horizontal"
@@ -73,7 +73,7 @@
                         </ListView>
                     </StackLayout>
                 </tabview:TabItem>
-                <tabview:TabItem HeaderText="成り">
+                <tabview:TabItem HeaderText="駒作成">
                     <Grid RowDefinitions="Auto,*">
                         <StackLayout Grid.Row="0"
                                          Orientation="Horizontal"
