@@ -19,7 +19,7 @@ namespace MiniShogiMobile.ViewModels
     public class EditGameSettingsPopupPageViewModel : NavigationViewModel<GameTemplate, GameTemplate>
     {
         public AsyncReactiveCommand OkCommand { get; }
-        public ReactiveProperty<string> Name { get; }
+        public AsyncReactiveCommand CancelCommand { get; }
         public ReactiveProperty<int> Height { get; }
         public ReactiveProperty<int> Width { get; }
         public ReactiveProperty<int> TerritoryBoundary { get; }
@@ -31,7 +31,6 @@ namespace MiniShogiMobile.ViewModels
 
         public EditGameSettingsPopupPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
-            Name = new ReactiveProperty<string>();
             Height = new ReactiveProperty<int>();
             Width = new ReactiveProperty<int>();
             TerritoryBoundary = new ReactiveProperty<int>();
@@ -45,7 +44,6 @@ namespace MiniShogiMobile.ViewModels
             OkCommand.Subscribe(async () =>
             {
                 var gameTemplate = new GameTemplate();
-                gameTemplate.Name = Name.Value;
                 gameTemplate.Height = Height.Value;
                 gameTemplate.Width = Width.Value;
                 gameTemplate.TerritoryBoundary = TerritoryBoundary.Value;
@@ -56,11 +54,16 @@ namespace MiniShogiMobile.ViewModels
                 gameTemplate.ProhibitedMoves.EnableLeaveOte = EnableLeaveOte.Value;
                 await GoBackAsync(gameTemplate);
             }).AddTo(this.Disposable);
+
+            CancelCommand = new AsyncReactiveCommand();
+            CancelCommand.Subscribe(async () =>
+            {
+                await GoBackAsync();
+            }).AddTo(this.Disposable);
         }
 
         public override void Prepare(GameTemplate parameter)
         {
-            Name.Value = parameter.Name;
             Height.Value = parameter.Height;
             Width.Value = parameter.Width;
             TerritoryBoundary.Value = parameter.TerritoryBoundary;
