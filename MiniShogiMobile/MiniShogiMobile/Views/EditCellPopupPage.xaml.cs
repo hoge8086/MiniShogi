@@ -3,9 +3,9 @@ using Xamarin.Forms;
 
 namespace MiniShogiMobile.Views
 {
-    public partial class EditCellPage : PopupPage
+    public partial class EditCellPopupPage : PopupPage
     {
-        public EditCellPage()
+        public EditCellPopupPage()
         {
             InitializeComponent();
         }

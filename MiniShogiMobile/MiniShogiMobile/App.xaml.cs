@@ -52,7 +52,7 @@ namespace MiniShogiMobile
             containerRegistry.RegisterForNavigation<PlayGamePage, PlayGamePageViewModel>();
             containerRegistry.RegisterForNavigation<StartGamePage, StartGamePageViewModel>();
             containerRegistry.RegisterForNavigation<CreateGamePage, CreateGamePageViewModel>();
-            containerRegistry.RegisterForNavigation<EditCellPage, EditCellPageViewModel>();
+            containerRegistry.RegisterForNavigation<EditCellPopupPage, EditCellPopupPageViewModel>();
             containerRegistry.RegisterForNavigation<EditGameSettingsPage, EditGameSettingsPageViewModel>();
             containerRegistry.RegisterForNavigation<CreateGameListPage, CreateGameListPageViewModel>();
             containerRegistry.RegisterForNavigation<PlayingGameListPage, PlayingGameListPageViewModel>();

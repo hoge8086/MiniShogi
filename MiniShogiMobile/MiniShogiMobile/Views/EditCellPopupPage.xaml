@@ -9,7 +9,7 @@
              xmlns:ctrls="clr-namespace:MiniShogiMobile.Controls"
              xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="MiniShogiMobile.Views.EditCellPage"
+             x:Class="MiniShogiMobile.Views.EditCellPopupPage"
              Style="{StaticResource PopupPageStyle}"
              Title="駒の編集"
              x:Name="root">

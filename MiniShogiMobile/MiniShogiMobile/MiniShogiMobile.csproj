@@ -43,6 +43,9 @@
     <Compile Update="Controls\SquareCell2DGridControl.xaml.cs">
       <DependentUpon>SquareCell2DGridControl.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\EditCellPopupPage.xaml.cs">
+      <DependentUpon>EditCellPopupPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\EditGameSettingsPage.xaml.cs">
       <DependentUpon>EditGameSettingsPage.xaml</DependentUpon>
     </Compile>
@@ -100,7 +103,7 @@
     <EmbeddedResource Update="Views\CreateKomaPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\EditCellPage.xaml">
+    <EmbeddedResource Update="Views\EditCellPopupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\EditGameSettingsPage.xaml">

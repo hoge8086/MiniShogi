@@ -142,7 +142,7 @@ namespace MiniShogiMobile.ViewModels
                             {
                                 var owner = ((GameTemplate.Height/ 2) > tappedCell.Position.Y) ? PlayerType.Player2 : PlayerType.Player1;
                                 var newKoma = new KomaViewModel(selectedKomaType.Data, owner, false);
-                                var result = await NavigateAsync<EditCellPageViewModel, KomaViewModel, KomaViewModel>(newKoma);
+                                var result = await NavigateAsync<EditCellPopupPageViewModel, KomaViewModel, KomaViewModel>(newKoma);
                                 if(result.Success)
                                     //駒を配置
                                     tappedCell.Koma.Value = result.Data;
@@ -206,7 +206,7 @@ namespace MiniShogiMobile.ViewModels
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
                     var cell = Selected.Value as CellViewModel<KomaViewModel>;
-                    var result = await NavigateAsync<EditCellPageViewModel, KomaViewModel, KomaViewModel>(cell.Koma.Value);
+                    var result = await NavigateAsync<EditCellPopupPageViewModel, KomaViewModel, KomaViewModel>(cell.Koma.Value);
                     if(result.Success)
                     {
                         //駒を配置

@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace MiniShogiMobile.ViewModels
 {
-    public class EditCellPageViewModel : NavigationViewModel<KomaViewModel, KomaViewModel>
+    public class EditCellPopupPageViewModel : NavigationViewModel<KomaViewModel, KomaViewModel>
     {
         public AsyncReactiveCommand OkCommand { get; }
         public AsyncReactiveCommand CancelCommand { get; }
@@ -28,7 +28,7 @@ namespace MiniShogiMobile.ViewModels
         public CellViewModel<KomaViewModel> EditingCell { get; private set; }
         public ReactiveProperty<bool> CanTransform { get; private set; }
 
-        public EditCellPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
+        public EditCellPopupPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             KomaTypes =  App.CreateGameService.KomaTypeRepository.FindAll().ToDictionary(x => x.Id);
             CanTransform = new ReactiveProperty<bool>(false);
