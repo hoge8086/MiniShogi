@@ -23,11 +23,6 @@
                BackgroundColor="Transparent"
                WidthRequest="60">
           <Label.Triggers>
-            <!--
-            <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="True">
-                <Setter Property="TextColor" Value="{StaticResource AppFontDarkColor}"/>
-            </DataTrigger>
-            -->
             <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="False">
                 <Setter Property="TextColor" Value="White"/>
                 <Setter Property="BackgroundColor" Value="{Binding Path=OffColor, Source={x:Reference self}}"/>
@@ -45,11 +40,6 @@
                BackgroundColor="Transparent"
                WidthRequest="60">
           <Label.Triggers>
-            <!--
-            <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="False">
-                <Setter Property="TextColor" Value=""/>
-            </DataTrigger>
-            -->
             <DataTrigger TargetType="Label" Binding="{Binding Path=IsToggled, Source={x:Reference self}}" Value="True">
                 <Setter Property="TextColor" Value="White"/>
                 <Setter Property="BackgroundColor" Value="{Binding Path=OnColor, Source={x:Reference self}}"/>
