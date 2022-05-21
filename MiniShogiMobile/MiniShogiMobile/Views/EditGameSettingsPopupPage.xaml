@@ -23,7 +23,6 @@
                 <Label Text="盤設定" FontSize="Medium" VerticalTextAlignment="Center" HorizontalOptions="Center"/>
                 <BoxView HeightRequest="1" Style="{StaticResource HorizontalLine}"/>
                 <Label Text="盤のサイズ" VerticalTextAlignment="Center" HorizontalOptions="Center"/>
-                <!--
                 <Grid ColumnDefinitions="*,*">
                     <Label Grid.Column="0" Text="高さ" VerticalTextAlignment="Center" HorizontalOptions="Center"/>
                     <ctrl:StepperWithLabel Grid.Column="1"
@@ -33,33 +32,26 @@
                                            MinimumValue="1"
                                            MaximumValue="10"/>
                 </Grid>
-                -->
-                <StackLayout Spacing="6" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
-                    <Label Text="高さ" VerticalTextAlignment="Center" HorizontalOptions="Start"/>
-                    <ctrl:StepperWithLabel Value="{Binding Height.Value}"
-                                           HorizontalOptions="EndAndExpand"
+                <Grid ColumnDefinitions="*,*">
+                    <Label Grid.Column="0" Text="幅" VerticalTextAlignment="Center" HorizontalOptions="Center"/>
+                    <ctrl:StepperWithLabel Grid.Column="1"
+                                           Value="{Binding Width.Value}"
+                                           HorizontalOptions="Center"
                                            UnitLabel="マス"
                                            MinimumValue="1"
                                            MaximumValue="10"/>
-                </StackLayout>
-                <StackLayout Spacing="6" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
-                    <Label Text="幅" VerticalTextAlignment="Center" HorizontalOptions="Start"/>
-                    <ctrl:StepperWithLabel Value="{Binding Width.Value}"
-                                           HorizontalOptions="EndAndExpand"
-                                           UnitLabel="マス"
-                                           MinimumValue="1"
-                                           MaximumValue="10"/>
-                </StackLayout>
+                </Grid>
                 <BoxView HeightRequest="1" Style="{StaticResource HorizontalLine}"/>
-                <StackLayout Spacing="6" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
-                    <Label Text="自陣の高さ" HorizontalOptions="Start" VerticalTextAlignment="Center" />
+                <Grid ColumnDefinitions="*,*">
+                    <Label Grid.Column="0" Text="自陣の高さ" HorizontalOptions="Center" VerticalTextAlignment="Center" />
                     <!--TOOD:盤の高さの半分以下(切り捨て)をMaximumにBindingする-->
-                    <ctrl:StepperWithLabel Value="{Binding TerritoryBoundary.Value}"
-                                           HorizontalOptions="EndAndExpand"
+                    <ctrl:StepperWithLabel Grid.Column="1"
+                                           Value="{Binding TerritoryBoundary.Value}"
+                                           HorizontalOptions="Center"
                                            UnitLabel="段目"
                                            MinimumValue="1"
                                            MaximumValue="10"/>
-                </StackLayout>
+                </Grid>
                 <BoxView HeightRequest="1" Style="{StaticResource HorizontalLine}"/>
                 <StackLayout HorizontalOptions="FillAndExpand" Margin="10,0,10,0">
                     <Label Text="勝利判定" HorizontalOptions="Center" VerticalTextAlignment="Center" />
@@ -70,22 +62,22 @@
                 </StackLayout>
                 <BoxView HeightRequest="1" Style="{StaticResource HorizontalLine}"/>
                 <Label Text="禁じ手" VerticalTextAlignment="Center" HorizontalOptions="Center"/>
-                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0" IsEnabled="{Binding CanTransform.Value}">
-                    <Label Text="二歩" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
-                    <ctrl:TextbaseSwitch HorizontalOptions="End" IsToggled="{Binding EnableNiHu.Value}" WidthRequest="100"/>
-                </StackLayout>
-                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0" IsEnabled="{Binding CanTransform.Value}">
-                    <Label Text="打ち歩詰め" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
-                    <ctrl:TextbaseSwitch  HorizontalOptions="End" IsToggled="{Binding EnableCheckmateByHandHu.Value}" WidthRequest="100"/>
-                </StackLayout>
-                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0" IsEnabled="{Binding CanTransform.Value}">
-                    <Label Text="動かせない駒" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
-                    <ctrl:TextbaseSwitch  HorizontalOptions="End" IsToggled="{Binding EnableKomaCannotMove.Value}" WidthRequest="100"/>
-                </StackLayout>
-                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,0" IsEnabled="{Binding CanTransform.Value}">
-                    <Label Text="王手放置" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
-                    <ctrl:TextbaseSwitch  HorizontalOptions="End" IsToggled="{Binding EnableLeaveOte.Value}" WidthRequest="100"/>
-                </StackLayout>
+                <Grid ColumnDefinitions="*,*">
+                    <Label Grid.Column="0" Text="二歩" HorizontalOptions="Center" VerticalTextAlignment="Center" />
+                    <ctrl:TextbaseSwitch Grid.Column="1" HorizontalOptions="Center" IsToggled="{Binding EnableNiHu.Value}" WidthRequest="100"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                    <Label Grid.Column="0" Text="打ち歩詰め" HorizontalOptions="Center" VerticalTextAlignment="Center" />
+                    <ctrl:TextbaseSwitch  Grid.Column="1" HorizontalOptions="Center" IsToggled="{Binding EnableCheckmateByHandHu.Value}" WidthRequest="100"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                    <Label Grid.Column="0" Text="動かせない駒" HorizontalOptions="Center" VerticalTextAlignment="Center" />
+                    <ctrl:TextbaseSwitch  Grid.Column="1" HorizontalOptions="Center" IsToggled="{Binding EnableKomaCannotMove.Value}" WidthRequest="100"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                    <Label Grid.Column="0" Text="王手放置" HorizontalOptions="Center" VerticalTextAlignment="Center" />
+                    <ctrl:TextbaseSwitch Grid.Column="1" HorizontalOptions="Center" IsToggled="{Binding EnableLeaveOte.Value}" WidthRequest="100"/>
+                </Grid>
             </StackLayout>
             <Grid
                 ColumnDefinitions="*,*"
