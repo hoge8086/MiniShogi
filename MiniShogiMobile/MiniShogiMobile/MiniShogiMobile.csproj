@@ -46,8 +46,8 @@
     <Compile Update="Views\EditCellPopupPage.xaml.cs">
       <DependentUpon>EditCellPopupPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\EditGameSettingsPage.xaml.cs">
-      <DependentUpon>EditGameSettingsPage.xaml</DependentUpon>
+    <Compile Update="Views\EditGameSettingsPopupPage.xaml.cs">
+      <DependentUpon>EditGameSettingsPopupPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\SelectKomaPopupPage.xaml.cs">
       <DependentUpon>SelectKomaPopupPage.xaml</DependentUpon>
@@ -106,7 +106,7 @@
     <EmbeddedResource Update="Views\EditCellPopupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\EditGameSettingsPage.xaml">
+    <EmbeddedResource Update="Views\EditGameSettingsPopupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\HandsOfCreateGameView.xaml">

@@ -238,7 +238,7 @@ namespace MiniShogiMobile.ViewModels
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-                    var result = await NavigateAsync<EditGameSettingsPageViewModel, GameTemplate, GameTemplate>(GameTemplate);
+                    var result = await NavigateAsync<EditGameSettingsPopupPageViewModel, GameTemplate, GameTemplate>(GameTemplate);
                     if(result.Success)
                     {
                         GameTemplate = result.Data;

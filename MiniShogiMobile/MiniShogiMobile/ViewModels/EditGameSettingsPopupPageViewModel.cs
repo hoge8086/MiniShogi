@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace MiniShogiMobile.ViewModels
 {
     public class EnumWinConditionTypeProvider : EnumListProvider<WinConditionType> { }
-    public class EditGameSettingsPageViewModel : NavigationViewModel<GameTemplate, GameTemplate>
+    public class EditGameSettingsPopupPageViewModel : NavigationViewModel<GameTemplate, GameTemplate>
     {
         public AsyncReactiveCommand OkCommand { get; }
         public ReactiveProperty<string> Name { get; }
@@ -29,7 +29,7 @@ namespace MiniShogiMobile.ViewModels
         public ReactiveProperty<bool> EnableKomaCannotMove { get; }
         public ReactiveProperty<bool> EnableLeaveOte { get; }
 
-        public EditGameSettingsPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
+        public EditGameSettingsPopupPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             Name = new ReactiveProperty<string>();
             Height = new ReactiveProperty<int>();
