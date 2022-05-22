@@ -15,9 +15,10 @@ namespace MiniShogiMobile.ViewModels
 {
     public class InputNamePopupPageViewModel : NavigationViewModel<InputNameCondition, string>
     {
-        public ObservableCollection<string> NameList { get; private set; } = new ObservableCollection<string>();
+        public ReactiveProperty<string> Title { get; private set; } = new ReactiveProperty<string>();
         public ReactiveProperty<string> Name { get; private set; } = new ReactiveProperty<string>();
         public ReactiveProperty<string> OkButtonText { get; private set; } = new ReactiveProperty<string>();
+        public ObservableCollection<string> NameList { get; private set; } = new ObservableCollection<string>();
 
         private Func<string, string> NameErrorChecker;
         private Func<string, string> NameConfirmer;
@@ -67,6 +68,7 @@ namespace MiniShogiMobile.ViewModels
         {
             if(parameter.NameList != null)
                 parameter.NameList.ForEach((x) => NameList.Add(x));
+            Title.Value = parameter.Title;
             Name.Value = parameter.DefaultName;
             OkButtonText.Value = parameter.OkButtonText;
             NameConfirmer = parameter.NameConfirmer;

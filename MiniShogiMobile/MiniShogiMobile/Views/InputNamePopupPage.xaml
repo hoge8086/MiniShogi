@@ -16,17 +16,20 @@
     </ContentPage.Resources>
     <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center">
         <StackLayout BackgroundColor="white" >
-            <StackLayout Orientation="Horizontal" Spacing="10" Margin="15">
-                <Label Text="名前" HorizontalOptions="Start" VerticalOptions="Center"/>
-                <Entry Text="{Binding Name.Value}" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" WidthRequest="150"/>
-                <Button Text="..." Command="{Binding SelectCommand}" HorizontalOptions="Center" Padding="10,0,10,0">
-                    <Button.Triggers>
-                        <DataTrigger TargetType="Button" Binding="{Binding NameList.Count}" Value="0">
-                            <Setter Property="IsVisible" Value="False"/>
-                        </DataTrigger>
-                    </Button.Triggers>
-                </Button>
-
+            <StackLayout Margin="10">
+                <Label Text="{Binding Title.Value}" HorizontalOptions="Start" VerticalOptions="Center"/>
+                <BoxView Style="{StaticResource HorizontalLine}"/>
+                <StackLayout Orientation="Horizontal" Spacing="10" Margin="15">
+                    <Label Text="名前" HorizontalOptions="Start" VerticalOptions="Center"/>
+                    <Entry Text="{Binding Name.Value}" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" WidthRequest="150"/>
+                    <Button Text="..." Command="{Binding SelectCommand}" HorizontalOptions="Center" Padding="10,0,10,0">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding NameList.Count}" Value="0">
+                                <Setter Property="IsVisible" Value="False"/>
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </StackLayout>
             </StackLayout>
             <Grid
                 ColumnDefinitions="*,*"

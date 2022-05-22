@@ -86,7 +86,7 @@
             <Setter Property="TextColor" Value="{StaticResource AppFontDarkColor}"/>
         </Style>
 
-        <!--ページ-->
+    <!--ページ-->
         <Style x:Key="PageStyle" TargetType="Page">
             <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
         </Style>
@@ -103,6 +103,7 @@
             <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
         </Style>
 
+    <!--ライン-->
         <Style x:Key="HorizontalLine" TargetType="BoxView">
             <Setter Property="HeightRequest" Value="1"/>
             <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
