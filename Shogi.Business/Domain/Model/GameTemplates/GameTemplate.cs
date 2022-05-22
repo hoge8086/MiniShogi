@@ -79,10 +79,10 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             WinCondition = winCondition;
             KomaList = komaList;
         }
-        public GameTemplate Copy()
+        public GameTemplate Copy(string newTemplateName)
         {
             return new GameTemplate(
-                        Name + "_コピー",
+                        newTemplateName,
                         Width,
                         Height,
                         TerritoryBoundary,

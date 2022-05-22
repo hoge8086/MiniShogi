@@ -69,8 +69,7 @@ namespace MiniShogiMobile.ViewModels
                             "保存",
                             gameNameList,
                             null,
-                            (n) => gameNameList.Contains(n) ? "既にその名前は使用しています。上書きしますか?" : null
-                            ));
+                            (n) => gameNameList.Contains(n) ? "既にその名前は使用しています。上書きしますか?" : null));
                     if(savingName != null)
                         App.GameService.SaveCurrent(savingName.Data);
                 });

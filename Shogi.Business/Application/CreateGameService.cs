@@ -73,10 +73,10 @@ namespace Shogi.Business.Application
             KomaTypeRepository.Add(copied);
         }
 
-        public void CopyGame(string gameName)
+        public void CopyGame(string newTemplateName, string srcTemplateName)
         {
-            var templateGame = GameTemplateRepository.FindByName(gameName);
-            GameTemplateRepository.Add(templateGame.Copy());
+            var srcTemplateGame = GameTemplateRepository.FindByName(srcTemplateName);
+            GameTemplateRepository.Add(srcTemplateGame.Copy(newTemplateName));
         }
     }
 }

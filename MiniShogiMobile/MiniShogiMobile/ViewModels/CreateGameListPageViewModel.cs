@@ -74,7 +74,18 @@ namespace MiniShogiMobile.ViewModels
                     bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "コピーしますか?", "はい", "いいえ");
                     if (doDelete)
                     {
-                        App.CreateGameService.CopyGame(SelectedGameName.Value);
+                        var gameNameList = App.GameService.GameTemplateRepository.FindAllName();
+                        var savingName = await NavigateAsync<InputNamePopupPageViewModel, InputNameCondition, string>(
+                            new InputNameCondition(
+                                $"{SelectedGameName.Value}_コピー",
+                                "OK",
+                                null,
+                                (n) => gameNameList.Contains(n) ? "既にその名前は使用しているため、使用できません。" : null));
+                        if(savingName != null)
+                        {
+                            App.CreateGameService.CopyGame(savingName.Data, SelectedGameName.Value);
+                            GameNameList.Add(savingName.Data);
+                        }
                     }
                 });
             }).AddTo(this.Disposable);
