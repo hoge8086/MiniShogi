@@ -61,7 +61,6 @@ namespace MiniShogiMobile.ViewModels
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-
                     var gameNameList = App.GameService.PlayingGameRepository.FindAll().Select(y => y.Name).ToList();
                     var result = await NavigateAsync<InputNamePopupPageViewModel, InputNameCondition, string>(
                         new InputNameCondition(

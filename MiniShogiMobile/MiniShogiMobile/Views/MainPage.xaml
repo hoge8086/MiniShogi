@@ -13,9 +13,12 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Button Text="はじめる" Command="{Binding StartGameCommand}"/>
-        <Button Text="つづきから" Command="{Binding ContinueGameCommand}"/>
-        <Button Text="作る" Command="{Binding CreateGameCommand}"/>
-    </StackLayout>
+    <Grid>
+        <ctrl:BackgroundWebView AssetFileName="BackgroundFlowImage.html"/>
+        <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+            <Button Text="はじめる" Command="{Binding StartGameCommand}"/>
+            <Button Text="つづきから" Command="{Binding ContinueGameCommand}"/>
+            <Button Text="作る" Command="{Binding CreateGameCommand}"/>
+        </StackLayout>
+    </Grid>
 </ContentPage>

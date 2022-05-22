@@ -135,4 +135,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="WebResources\HTML\" />
+    <Folder Include="WebResources\Images\" />
+  </ItemGroup>
+
 </Project>

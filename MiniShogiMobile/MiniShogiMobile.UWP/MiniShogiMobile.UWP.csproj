@@ -97,7 +97,9 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renderers\BackgroundWebViewRenderer.cs" />
     <Compile Include="Renderers\BorderlessEntryRenderer.cs" />
+    <Compile Include="Service\BaseUrl.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -105,6 +107,12 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\MiniShogiMobile\WebResources\HTML\BackgroundFlowImage.html">
+      <Link>Assets\BackgroundFlowImage.html</Link>
+    </Content>
+    <Content Include="..\MiniShogiMobile\WebResources\Images\BackgroundCloud.png">
+      <Link>Assets\BackgroundCloud.png</Link>
+    </Content>
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

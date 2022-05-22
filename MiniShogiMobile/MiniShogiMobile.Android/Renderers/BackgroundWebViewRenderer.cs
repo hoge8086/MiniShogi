@@ -1,0 +1,21 @@
+﻿using MiniShogiMobile.Controls;
+using MiniShogiMobile.Droid.Renderers;
+using Xamarin.Forms;
+using Xamarin.Forms.Platform.Android;
+
+// 参考:<https://qiita.com/microwavePC/items/a5af22d68d17e8210868>
+
+[assembly: ExportRenderer(typeof(BackgroundWebView), typeof(BackgroundWebViewRenderer))]
+namespace MiniShogiMobile.Droid.Renderers
+{
+    public class BackgroundWebViewRenderer : WebViewRenderer
+    {
+        protected override void OnElementChanged(ElementChangedEventArgs<WebView> e)
+        {
+            base.OnElementChanged(e);
+
+            // 背景を透過
+            this.Control.SetBackgroundColor(Android.Graphics.Color.Transparent);
+        }
+    }
+}
