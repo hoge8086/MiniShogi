@@ -4,16 +4,17 @@ using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Shogi.Business.Domain.Model.GameTemplates
 {
     public class ProhibitedMoves
     {
-        public bool EnableNiHu { get; set; }= false;
-        public bool EnableCheckmateByHandHu { get; set; } = false;
-        public bool EnableKomaCannotMove { get; set; } = false;
-        public bool EnableLeaveOte { get; set; } = false;
+        public bool EnableNiHu { get; private set; }= false;
+        public bool EnableCheckmateByHandHu { get; private set; } = false;
+        public bool EnableKomaCannotMove { get; private set; } = false;
+        public bool EnableLeaveOte { get; private set; } = false;
 
         public ProhibitedMoves() { }
         public ProhibitedMoves(bool enableNiHu, bool enableCheckmateByHandHu, bool enableKomaCannotMove, bool enableLeaveOte)
@@ -23,7 +24,6 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             EnableKomaCannotMove = enableKomaCannotMove;
             EnableLeaveOte = enableLeaveOte;
         }
-
     }
     public enum WinConditionType
     {
@@ -69,7 +69,12 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             // [Fix:保存時に種別一覧をリソルブしなくてもよいように、保存用とDTOに分ける?]
             KomaTypes = null;
         }
-        public GameTemplate(string name, int width, int height, int territoryBoundary, WinConditionType winCondition, List<Koma> komaList, ProhibitedMoves prohibitedMoves)//, PlayerType turnPlayer)
+        private GameTemplate(string name, int width, int height, int territoryBoundary, WinConditionType winCondition, List<Koma> komaList, ProhibitedMoves prohibitedMoves, List<KomaType> komaTypes)
+        :this(name, width, height, territoryBoundary, winCondition, komaList, prohibitedMoves)
+        {
+            KomaTypes = komaTypes?.ToList();
+        }
+        public GameTemplate(string name, int width, int height, int territoryBoundary, WinConditionType winCondition, List<Koma> komaList, ProhibitedMoves prohibitedMoves)
         {
             Name = name;
             Width = width;
@@ -79,6 +84,19 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             WinCondition = winCondition;
             KomaList = komaList;
         }
+
+        public GameTemplate Clone()
+        {
+            return new GameTemplate(
+                        Name,
+                        Width,
+                        Height,
+                        TerritoryBoundary,
+                        WinCondition,
+                        KomaList.Select(x => x.Clone()).ToList(),
+                        ProhibitedMoves,
+                        KomaTypes);
+        }
         public GameTemplate Copy(string newTemplateName)
         {
             return new GameTemplate(
@@ -87,8 +105,9 @@ namespace Shogi.Business.Domain.Model.GameTemplates
                         Height,
                         TerritoryBoundary,
                         WinCondition,
-                        KomaList,
-                        ProhibitedMoves);
+                        KomaList.Select(x => x.Clone()).ToList(),
+                        ProhibitedMoves,
+                        KomaTypes);
         }
     }
 

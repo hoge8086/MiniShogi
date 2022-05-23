@@ -30,11 +30,11 @@ namespace Shogi.Business.Infrastructure
 
         public GameTemplate First()
         {
-            return cache.First();
+            return cache.FirstOrDefault()?.Clone();
         }
         public void Add(GameTemplate gameTemplate)
         {
-            cache.Add(gameTemplate);
+            cache.Add(gameTemplate.Clone());
             var repo = new JsonRepository();
             repo.Save(jsonPath, cache);
         }
@@ -46,7 +46,7 @@ namespace Shogi.Business.Infrastructure
 
         public GameTemplate FindByName(string name)
         {
-            return cache.FirstOrDefault(x => x.Name == name);
+            return cache.FirstOrDefault(x => x.Name == name)?.Clone();
         }
         public void RemoveByName(string name)
         {
@@ -57,7 +57,7 @@ namespace Shogi.Business.Infrastructure
 
         public List<GameTemplate> FindAll()
         {
-            return  new List<GameTemplate>(cache);
+            return  cache.Select(x => x.Clone()).ToList();
         }
     }
 }

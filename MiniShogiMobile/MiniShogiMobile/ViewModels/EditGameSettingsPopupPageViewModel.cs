@@ -43,15 +43,18 @@ namespace MiniShogiMobile.ViewModels
             OkCommand = new AsyncReactiveCommand();
             OkCommand.Subscribe(async () =>
             {
+
                 var gameTemplate = new GameTemplate();
                 gameTemplate.Height = Height.Value;
                 gameTemplate.Width = Width.Value;
                 gameTemplate.TerritoryBoundary = TerritoryBoundary.Value;
                 gameTemplate.WinCondition = WinCondition.Value;
-                gameTemplate.ProhibitedMoves.EnableNiHu = EnableNiHu.Value;
-                gameTemplate.ProhibitedMoves.EnableKomaCannotMove = EnableKomaCannotMove.Value;
-                gameTemplate.ProhibitedMoves.EnableCheckmateByHandHu = EnableCheckmateByHandHu.Value;
-                gameTemplate.ProhibitedMoves.EnableLeaveOte = EnableLeaveOte.Value;
+                gameTemplate.ProhibitedMoves = new ProhibitedMoves(
+                    EnableNiHu.Value,
+                    EnableCheckmateByHandHu.Value,
+                    EnableKomaCannotMove.Value,
+                    EnableLeaveOte.Value
+                    );
                 await GoBackAsync(gameTemplate);
             }).AddTo(this.Disposable);
 
