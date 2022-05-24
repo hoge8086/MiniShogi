@@ -50,6 +50,7 @@ namespace Shogi.Business.Application
             ResolveKomaTypes(gameTemplate);
 
             // 既に勝敗がついていないかチェック(ついている場合は例外)
+            // FIX：正常系で例外は使ってはいけない
             new GameFactory().Create(gameTemplate, PlayerType.Player1);
 
             if(GameTemplateRepository.FindByName(gameTemplate.Name) != null)
