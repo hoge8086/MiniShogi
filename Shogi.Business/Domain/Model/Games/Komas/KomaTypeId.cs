@@ -21,7 +21,7 @@ namespace Shogi.Business.Domain.Model.Komas
     {
 
         [DataMember]
-        public string UniqueKey { get; private set; }
+        private string UniqueKey { get; set; }
         [DataMember]
         public string Name { get; private set; }
         [DataMember]
