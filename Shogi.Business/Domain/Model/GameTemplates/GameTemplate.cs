@@ -39,6 +39,8 @@ namespace Shogi.Business.Domain.Model.GameTemplates
     public class GameTemplate
     {
         [DataMember]
+        public string Id { get; private set; }
+        [DataMember]
         public string Name { get; set; }
         [DataMember]
         public int Width { get; set; }
@@ -47,35 +49,39 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         [DataMember]
         public int TerritoryBoundary { get; set; }
         [DataMember]
-        public ProhibitedMoves ProhibitedMoves { get; set;}
+        public ProhibitedMoves ProhibitedMoves { get; set; }
         [DataMember]
         public WinConditionType WinCondition { get; set; }
         [DataMember]
         public List<Koma> KomaList { get; set; }
         [DataMember]
 
+        // [Fix:保存時に種別一覧をリソルブしなくてもよいように、保存用とDTOに分ける?]
         public List<KomaType> KomaTypes;
 
-        public GameTemplate()
-        {
-            Name = "新しい将棋";
-            Width = 3;
-            Height = 4;
-            TerritoryBoundary = 1;
-            ProhibitedMoves = new ProhibitedMoves();
-            WinCondition = WinConditionType.Checkmate;
-            KomaList = new List<Koma>();
-
-            // [Fix:保存時に種別一覧をリソルブしなくてもよいように、保存用とDTOに分ける?]
-            KomaTypes = null;
-        }
+        public GameTemplate() : this("新しい将棋", 3, 4, 1, WinConditionType.Checkmate, new List<Koma>(), new ProhibitedMoves(), null) { }
         private GameTemplate(string name, int width, int height, int territoryBoundary, WinConditionType winCondition, List<Koma> komaList, ProhibitedMoves prohibitedMoves, List<KomaType> komaTypes)
-        :this(name, width, height, territoryBoundary, winCondition, komaList, prohibitedMoves)
+        : this(name, width, height, territoryBoundary, winCondition, komaList, prohibitedMoves)
         {
             KomaTypes = komaTypes?.ToList();
         }
+
+        public GameTemplate(GameTemplate gameTemplate)
+        {
+            Id = gameTemplate.Id;
+            Name = gameTemplate.Name;
+            Width = gameTemplate.Width;
+            Height = gameTemplate.Height;
+            TerritoryBoundary = gameTemplate.TerritoryBoundary;
+            ProhibitedMoves = gameTemplate.ProhibitedMoves;
+            WinCondition = gameTemplate.WinCondition;
+            KomaList = gameTemplate.KomaList;
+            KomaTypes = gameTemplate.KomaTypes;
+        }
+
         public GameTemplate(string name, int width, int height, int territoryBoundary, WinConditionType winCondition, List<Koma> komaList, ProhibitedMoves prohibitedMoves)
         {
+            Id = Guid.NewGuid().ToString();
             Name = name;
             Width = width;
             Height = height;
@@ -87,16 +93,9 @@ namespace Shogi.Business.Domain.Model.GameTemplates
 
         public GameTemplate Clone()
         {
-            return new GameTemplate(
-                        Name,
-                        Width,
-                        Height,
-                        TerritoryBoundary,
-                        WinCondition,
-                        KomaList.Select(x => x.Clone()).ToList(),
-                        ProhibitedMoves,
-                        KomaTypes);
+            return new GameTemplate(this);
         }
+
         public GameTemplate Copy(string newTemplateName)
         {
             return new GameTemplate(

@@ -24,7 +24,7 @@ namespace Shogi.Business.Application
             if (GameTemplateRepository.FindAllName().Count == 0)
                 foreach (var temp in DefaultGame.DefaltGameTemplate)
                     //GameTemplateRepository.Add(new GameFactory(KomaTypeRepository).Create(temp));
-                    GameTemplateRepository.Add(ResolveKomaTypes(temp));
+                    GameTemplateRepository.Save(ResolveKomaTypes(temp));
         }
 
         /// <summary>
@@ -42,23 +42,23 @@ namespace Shogi.Business.Application
             return template;
         }
 
-        public void CreateGame(GameTemplate createGameCommand)
+        public void SaveGameTemplate(GameTemplate gameTemplate)
         {
-            if (GameTemplateRepository.FindByName(createGameCommand.Name) != null)
+            if (GameTemplateRepository.FindAll().Any(x => x.Id != gameTemplate.Id && x.Name == gameTemplate.Name))
                 throw new Exception("既に存在する名前は作成できません");
 
-            ResolveKomaTypes(createGameCommand);
+            ResolveKomaTypes(gameTemplate);
 
             // 既に勝敗がついていないかチェック(ついている場合は例外)
-            new GameFactory().Create(createGameCommand, PlayerType.Player1);
+            new GameFactory().Create(gameTemplate, PlayerType.Player1);
 
-            if(GameTemplateRepository.FindByName(createGameCommand.Name) != null)
-                GameTemplateRepository.RemoveByName(createGameCommand.Name);
+            if(GameTemplateRepository.FindByName(gameTemplate.Name) != null)
+                GameTemplateRepository.RemoveByName(gameTemplate.Name);
 
-            GameTemplateRepository.Add(createGameCommand);
+            GameTemplateRepository.Save(gameTemplate);
         }
 
-        public void CreateKomaType(KomaType komaType)
+        public void SaveKomaType(KomaType komaType)
         {
             if (KomaTypeRepository.FindById(komaType.Id) != null)
                 throw new Exception("既に存在する駒は作成できません");
@@ -76,7 +76,7 @@ namespace Shogi.Business.Application
         public void CopyGame(string newTemplateName, string srcTemplateName)
         {
             var srcTemplateGame = GameTemplateRepository.FindByName(srcTemplateName);
-            GameTemplateRepository.Add(srcTemplateGame.Copy(newTemplateName));
+            GameTemplateRepository.Save(srcTemplateGame.Copy(newTemplateName));
         }
     }
 }

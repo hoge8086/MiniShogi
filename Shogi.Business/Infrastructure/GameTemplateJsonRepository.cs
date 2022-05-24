@@ -32,9 +32,14 @@ namespace Shogi.Business.Infrastructure
         {
             return cache.FirstOrDefault()?.Clone();
         }
-        public void Add(GameTemplate gameTemplate)
+        public void Save(GameTemplate gameTemplate)
         {
-            cache.Add(gameTemplate.Clone());
+            var index = cache.FindIndex(x => x.Id == gameTemplate.Id);
+            if (index >= 0)
+                cache[index] = gameTemplate;
+            else
+                cache.Add(gameTemplate.Clone());
+
             var repo = new JsonRepository();
             repo.Save(jsonPath, cache);
         }
