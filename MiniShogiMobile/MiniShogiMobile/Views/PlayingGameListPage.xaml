@@ -1,21 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ctrl:BasePage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:xct="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.PlayingGameListPage"
              Title="つづきから"
-             Style="{StaticResource PageStyle}"
              x:Name="root">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <styles:PageResourceDictionary/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </ContentPage.Resources>
         <StackLayout VerticalOptions="FillAndExpand">
             <ListView ItemsSource="{Binding PlayingGameList}" SelectedItem="{Binding SelectedPlayingGame.Value}">
                 <ListView.Behaviors>
@@ -38,4 +31,4 @@
                 </ListView.ItemTemplate>
             </ListView>
         </StackLayout>
-</ContentPage>
+</ctrl:BasePage>

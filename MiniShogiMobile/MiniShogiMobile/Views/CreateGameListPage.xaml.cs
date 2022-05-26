@@ -1,8 +1,9 @@
-﻿using Xamarin.Forms;
+﻿using MiniShogiMobile.Controls;
+using Xamarin.Forms;
 
 namespace MiniShogiMobile.Views
 {
-    public partial class CreateGameListPage : ContentPage
+    public partial class CreateGameListPage : BasePage
     {
         public CreateGameListPage()
         {

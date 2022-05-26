@@ -1,24 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ctrl:BasePage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              x:Class="MiniShogiMobile.Views.MainPage"
              Style="{StaticResource PageStyle}"
              Title="ミニ将棋">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <styles:PageResourceDictionary/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </ContentPage.Resources>
-    <Grid>
-        <ctrl:BackgroundWebView AssetFileName="BackgroundFlowImage.html"/>
-        <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-            <Button Text="はじめる" Command="{Binding StartGameCommand}"/>
-            <Button Text="つづきから" Command="{Binding ContinueGameCommand}"/>
-            <Button Text="作る" Command="{Binding CreateGameCommand}"/>
-        </StackLayout>
-    </Grid>
-</ContentPage>
+    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+        <Button Text="はじめる" Command="{Binding StartGameCommand}"/>
+        <Button Text="つづきから" Command="{Binding ContinueGameCommand}"/>
+        <Button Text="作る" Command="{Binding CreateGameCommand}"/>
+    </StackLayout>
+</ctrl:BasePage>

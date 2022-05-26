@@ -15,7 +15,10 @@ namespace MiniShogiMobile.UWP.Renderers
             base.OnElementChanged(e);
 
             // 背景を透過
-            this.Control.DefaultBackgroundColor = Windows.UI.Colors.Transparent;
+            if(this.Control != null)
+            {
+                this.Control.DefaultBackgroundColor = Windows.UI.Colors.Transparent;
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ctrl:BasePage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
@@ -11,24 +11,19 @@
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateGamePage"
-             Style="{StaticResource PageStyle}"
+             x:Name="page"
              Title="ゲーム作成">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <styles:PageResourceDictionary/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </ContentPage.Resources>
-    <ContentPage.ToolbarItems>
+    <!--ContentPage.ControlTemplateを使用するとToolbarItemのBindingが機能しない-->
+    <!--https://github.com/PrismLibrary/Prism/issues/1399-->
+    <ctrl:BasePage.ToolbarItems>
         <ToolbarItem Text="設定"
                      Order="Secondary"
                      Priority="0" />
         <ToolbarItem Text="完了"
-                     Command="{Binding SaveCommand}"
+                     Command="{Binding BindingContext.SaveCommand, Source={x:Reference page}}"
                      Order="Primary"
                      Priority="1" />
-    </ContentPage.ToolbarItems>
+    </ctrl:BasePage.ToolbarItems>
     <Grid RowDefinitions="Auto,*,Auto" ColumnDefinitions="10,*,10">
         <!--メニュー-->
         <StackLayout Grid.Column="1"
@@ -174,4 +169,4 @@
                Background="Pink"/>
     </Grid>
   
-</ContentPage>
+</ctrl:BasePage>

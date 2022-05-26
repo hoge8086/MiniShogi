@@ -1,8 +1,9 @@
-﻿using Xamarin.Forms;
+﻿using MiniShogiMobile.Controls;
+using Xamarin.Forms;
 
 namespace MiniShogiMobile.Views
 {
-    public partial class StartGamePage : ContentPage
+    public partial class StartGamePage : BasePage
     {
         public StartGamePage()
         {

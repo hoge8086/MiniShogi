@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ctrl:BasePage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:xct="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
@@ -10,15 +10,7 @@
              x:Class="MiniShogiMobile.Views.CreateGameListPage"
              xmlns:tabview="clr-namespace:Xam.Plugin.TabView;assembly=Xam.Plugin.TabView"
              Title="作る"
-             Style="{StaticResource PageStyle}"
              x:Name="root">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <styles:PageResourceDictionary/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </ContentPage.Resources>
     <Grid Margin="10">
         <tabview:TabViewControl
                 HeaderBackgroundColor="Transparent"
@@ -122,4 +114,4 @@
             </tabview:TabViewControl.ItemSource>
         </tabview:TabViewControl>
     </Grid>
-</ContentPage>
+</ctrl:BasePage>
