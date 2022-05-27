@@ -11,6 +11,7 @@
              xmlns:tabview="clr-namespace:Xam.Plugin.TabView;assembly=Xam.Plugin.TabView"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.CreateKomaPage"
+             x:Name="page"
              Title="駒作成">
     <!--ContentPage.ControlTemplateを使用するとToolbarItemのBindingが機能しない-->
     <!--https://github.com/PrismLibrary/Prism/issues/1399-->
