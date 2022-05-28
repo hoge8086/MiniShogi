@@ -24,7 +24,7 @@
                      Order="Primary"
                      Priority="1" />
     </ctrl:BasePage.ToolbarItems>
-    <Grid RowDefinitions="Auto,*,Auto" ColumnDefinitions="10,*,10">
+    <Grid RowDefinitions="Auto,*" ColumnDefinitions="10,*,10">
         <!--メニュー-->
         <StackLayout Grid.Column="1"
                      Margin="0,5,0,0"
@@ -158,15 +158,5 @@
                                              PlayerType="{Binding Source={x:Static player:PlayerType.Player1}}"/>
             </Grid>
         </StackLayout>
-        <Label Grid.Row="2"
-               Grid.Column="0"
-               Grid.ColumnSpan="3"
-               HeightRequest="50"
-               WidthRequest="320"
-               Text="広告"
-               HorizontalTextAlignment="Center"
-               VerticalTextAlignment="Center"
-               Background="Pink"/>
     </Grid>
-  
 </ctrl:BasePage>

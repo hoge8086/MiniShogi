@@ -68,80 +68,71 @@
             </Grid>
         </ControlTemplate>
     </ContentPage.Resources>
-    <Grid RowDefinitions="*,Auto">
-        <StackLayout>
-            <tabview:TabViewControl
-                    Grid.Row="0"
-                    HeaderBackgroundColor="Transparent"
-                    HeaderSelectionUnderlineColor="{StaticResource AppControlDarkColor}"
-                    HeaderTabTextColor="{StaticResource AppFontDarkColor}"
-                    HeaderTabTextFontSize="Body"
-                    HeaderSelectionUnderlineThickness="2"
-                    HorizontalOptions="FillAndExpand"
-                    IsSwipeEnabled="True"
-                    VerticalOptions="FillAndExpand">
-                <tabview:TabViewControl.ItemSource>
-                    <tabview:TabItem HeaderText="駒">
-                        <!--なぜか子に直接Marginが効かないのでGridを挟む-->
-                        <Grid >
-                            <StackLayout Margin="15">
+    <StackLayout>
+        <tabview:TabViewControl
+                Grid.Row="0"
+                HeaderBackgroundColor="Transparent"
+                HeaderSelectionUnderlineColor="{StaticResource AppControlDarkColor}"
+                HeaderTabTextColor="{StaticResource AppFontDarkColor}"
+                HeaderTabTextFontSize="Body"
+                HeaderSelectionUnderlineThickness="2"
+                HorizontalOptions="FillAndExpand"
+                IsSwipeEnabled="True"
+                VerticalOptions="FillAndExpand">
+            <tabview:TabViewControl.ItemSource>
+                <tabview:TabItem HeaderText="駒">
+                    <!--なぜか子に直接Marginが効かないのでGridを挟む-->
+                    <Grid >
+                        <StackLayout Margin="15">
+                            <ctrl:EntryWithLabel HorizontalOptions="FillAndExpand"
+                                                 LabelText="表示名"
+                                                 Placeholder="先頭一文字のみ表示"
+                                                 EntryText="{Binding Koma.Value.Name.Value}"/>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="駒の種別" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <ctrl:SwitchablePicker Margin="20,0,0,0"
+                                                       HorizontalOptions="Center"
+                                                       DisplayConverter="{StaticResource EnumToDescriptionConverter}"
+                                                       ItemsSource="{Binding Source={vm:EnumKomaTypeKindProvider}}"
+                                                       SelectedItem="{Binding KomaTypeKind.Value}"/>
+                            </StackLayout>
+                            <Grid x:Name="board" VerticalOptions="FillAndExpand">
+                                <ctrl:SquareCell2DGridControl MaxHeight="{Binding Path=Height,Source={x:Reference board}}"
+                                                              MaxWidth="{Binding Path=Width,Source={x:Reference board}}"
+                                                              VerticalOptions="Center"
+                                                              ItemsSource="{Binding Board.Cells}"
+                                                              ItemTemplate="{StaticResource CellTemplate}">
+                                </ctrl:SquareCell2DGridControl>
+                            </Grid>
+                        </StackLayout>
+                    </Grid>
+                </tabview:TabItem>
+                <tabview:TabItem HeaderText="成り">
+                    <!--なぜか子に直接Marginが効かないのでGridを挟む-->
+                    <Grid >
+                        <StackLayout Margin="15">
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                <Label Text="成りの有効／無効" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
+                                <ctrl:TextbaseSwitch WidthRequest="100" HorizontalOptions="End" IsToggled="{Binding CanBePromoted.Value}"/>
+                            </StackLayout>
+                            <StackLayout VerticalOptions="FillAndExpand" IsVisible="{Binding CanBePromoted.Value}">
                                 <ctrl:EntryWithLabel HorizontalOptions="FillAndExpand"
                                                      LabelText="表示名"
-                                                     Placeholder="先頭一文字のみ表示"
-                                                     EntryText="{Binding Koma.Value.Name.Value}"/>
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="駒の種別" HorizontalOptions="Center" VerticalOptions="Center"/>
-                                    <ctrl:SwitchablePicker Margin="20,0,0,0"
-                                                           HorizontalOptions="Center"
-                                                           DisplayConverter="{StaticResource EnumToDescriptionConverter}"
-                                                           ItemsSource="{Binding Source={vm:EnumKomaTypeKindProvider}}"
-                                                           SelectedItem="{Binding KomaTypeKind.Value}"/>
-                                </StackLayout>
-                                <Grid x:Name="board" VerticalOptions="FillAndExpand">
-                                    <ctrl:SquareCell2DGridControl MaxHeight="{Binding Path=Height,Source={x:Reference board}}"
-                                                                  MaxWidth="{Binding Path=Width,Source={x:Reference board}}"
+                                                     Placeholder="頭一文字のみ表示"
+                                                     EntryText="{Binding PromotedKoma.Value.Name.Value}"/>
+                                <Grid x:Name="board2" VerticalOptions="FillAndExpand">
+                                    <ctrl:SquareCell2DGridControl MaxHeight="{Binding Path=Height,Source={x:Reference board2}}"
+                                                                  MaxWidth="{Binding Path=Width,Source={x:Reference board2}}"
                                                                   VerticalOptions="Center"
-                                                                  ItemsSource="{Binding Board.Cells}"
+                                                                  ItemsSource="{Binding PromotedBoard.Cells}"
                                                                   ItemTemplate="{StaticResource CellTemplate}">
                                     </ctrl:SquareCell2DGridControl>
                                 </Grid>
                             </StackLayout>
-                        </Grid>
-                    </tabview:TabItem>
-                    <tabview:TabItem HeaderText="成り">
-                        <!--なぜか子に直接Marginが効かないのでGridを挟む-->
-                        <Grid >
-                            <StackLayout Margin="15">
-                                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                                    <Label Text="成りの有効／無効" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
-                                    <ctrl:TextbaseSwitch WidthRequest="100" HorizontalOptions="End" IsToggled="{Binding CanBePromoted.Value}"/>
-                                </StackLayout>
-                                <StackLayout VerticalOptions="FillAndExpand" IsVisible="{Binding CanBePromoted.Value}">
-                                    <ctrl:EntryWithLabel HorizontalOptions="FillAndExpand"
-                                                         LabelText="表示名"
-                                                         Placeholder="頭一文字のみ表示"
-                                                         EntryText="{Binding PromotedKoma.Value.Name.Value}"/>
-                                    <Grid x:Name="board2" VerticalOptions="FillAndExpand">
-                                        <ctrl:SquareCell2DGridControl MaxHeight="{Binding Path=Height,Source={x:Reference board2}}"
-                                                                      MaxWidth="{Binding Path=Width,Source={x:Reference board2}}"
-                                                                      VerticalOptions="Center"
-                                                                      ItemsSource="{Binding PromotedBoard.Cells}"
-                                                                      ItemTemplate="{StaticResource CellTemplate}">
-                                        </ctrl:SquareCell2DGridControl>
-                                    </Grid>
-                                </StackLayout>
-                            </StackLayout>
-                        </Grid>
-                    </tabview:TabItem>
-                </tabview:TabViewControl.ItemSource>
-            </tabview:TabViewControl>
-        </StackLayout>
-        <Label Grid.Row="1"
-               HeightRequest="50"
-               WidthRequest="320"
-               Text="広告"
-               HorizontalTextAlignment="Center"
-               VerticalTextAlignment="Center"
-               Background="Pink"/>
-    </Grid>
+                        </StackLayout>
+                    </Grid>
+                </tabview:TabItem>
+            </tabview:TabViewControl.ItemSource>
+        </tabview:TabViewControl>
+    </StackLayout>
 </ctrl:BasePage>

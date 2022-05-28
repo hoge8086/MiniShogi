@@ -14,9 +14,18 @@
     </ContentPage.Resources>
     <ContentPage.ControlTemplate>
         <ControlTemplate>
-            <Grid>
-                <ctrl:BackgroundWebView AssetFileName="BackgroundFlowImage.html"/>
-                <ContentPresenter/>
+            <Grid RowDefinitions="*,Auto">
+                <Grid Grid.Row="0">
+                    <ctrl:BackgroundWebView AssetFileName="BackgroundFlowImage.html"/>
+                    <ContentPresenter/>
+                </Grid>
+                <Label Grid.Row="1"
+                       HeightRequest="50"
+                       WidthRequest="320"
+                       Text="広告"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"
+                       Background="Pink"/>
             </Grid>
         </ControlTemplate>
     </ContentPage.ControlTemplate>
