@@ -59,9 +59,9 @@ namespace MiniShogiMobile.ViewModels
                     var doTransform = await vm.PageDialogService.DisplayAlertAsync("確認", "成りますか?", "はい", "いいえ");
                     move = boardCell.MoveCommands.Value.FirstOrDefault(x => x.DoTransform == doTransform);
                 }
-                await vm.AppServiceCallCommandAsync(service =>
+                await vm.AppServiceCallWithWaitAsync((service, cancelToken) =>
                 {
-                    service.Play(move, CancellationToken.None);
+                    service.Play(move, cancelToken);
                 });
             }
             else
@@ -72,7 +72,7 @@ namespace MiniShogiMobile.ViewModels
         }
     }
 
-    public class ViewStateGameEnd: IViewState
+    public class ViewStateGameStudying: IViewState
     {
         public async Task HandleAsync(PlayGamePageViewModel vm, ISelectable cell)
         {
@@ -87,7 +87,4 @@ namespace MiniShogiMobile.ViewModels
             return;
         }
     }
-
-
-
 }

@@ -39,8 +39,15 @@ namespace MiniShogiMobile.ViewModels
         private ReactiveProperty<IViewState> ViewState;
         public void ChangeState(IViewState state) => ViewState.Value = state;
         public GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel> Game { get; set; }
-        public AsyncReactiveCommand<ISelectable> MoveCommand { get; set; }
-        public AsyncReactiveCommand SaveCommand { get; set; }
+        public AsyncReactiveCommand<ISelectable> MoveCommand { get; private set; }
+        public AsyncReactiveCommand SaveCommand { get; private set; }
+        public AsyncReactiveCommand StopCommand { get; private set; }
+        public AsyncReactiveCommand ResumeCommand { get; private set; }
+        public AsyncReactiveCommand UndoCommand { get; private set; }
+        public AsyncReactiveCommand RedoCommand { get; private set; }
+
+        private CancellationTokenSource cancelWaiting;
+
 
         public PlayGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
@@ -56,7 +63,9 @@ namespace MiniShogiMobile.ViewModels
                 });
             }).AddTo(Disposable);
 
-            SaveCommand = new AsyncReactiveCommand();
+            SaveCommand = ViewState.Select(state => !(state is ViewStateWaiting))
+                            .ToAsyncReactiveCommand()
+                            .AddTo(this.Disposable);
             SaveCommand.Subscribe(async x =>
             {
                 await this.CatchErrorWithMessageAsync(async () =>
@@ -76,19 +85,76 @@ namespace MiniShogiMobile.ViewModels
 
             }).AddTo(Disposable);
 
+            StopCommand = ViewState.Select(state => !(state is ViewStateGameStudying))
+                            .ToAsyncReactiveCommand()
+                            .AddTo(this.Disposable);
+            StopCommand.Subscribe(async x =>
+            {
+                if (cancelWaiting != null)
+                    cancelWaiting?.Cancel();
+                else
+                    ChangeState(new ViewStateGameStudying());
+                
+                UpdateView();   // [駒選択中の場合のハイライトをなくすため]
+
+            }).AddTo(Disposable);
+            
+            ResumeCommand = ViewState.Select(state => state is ViewStateGameStudying)
+                            .ToAsyncReactiveCommand()
+                            .AddTo(this.Disposable);
+            ResumeCommand.Subscribe(async x =>
+            {
+                await AppServiceCallWithWaitAsync((gameService, cancelToken) =>
+                {
+                    gameService.Resume(cancelToken);
+                });
+            }).AddTo(Disposable);
+
+            UndoCommand = ViewState.Select(state => state is ViewStateGameStudying)
+                            .ToAsyncReactiveCommand()
+                            .AddTo(this.Disposable);
+            UndoCommand.Subscribe(async x =>
+            {
+                await this.CatchErrorWithMessageAsync(async () =>
+                {
+                    App.GameService.Undo(Shogi.Business.Domain.Model.Games.Game.UndoType.Undo);
+                    UpdateView();
+                });
+            }).AddTo(Disposable);
+            RedoCommand = ViewState.Select(state => state is ViewStateGameStudying)
+                            .ToAsyncReactiveCommand()
+                            .AddTo(this.Disposable);
+            RedoCommand.Subscribe(async x =>
+            {
+                await this.CatchErrorWithMessageAsync(async () =>
+                {
+                    App.GameService.Undo(Shogi.Business.Domain.Model.Games.Game.UndoType.Redo);
+                    UpdateView();
+                });
+            }).AddTo(Disposable);
         }
 
-        public async Task AppServiceCallCommandAsync(Action<GameService> action)
+        public async Task AppServiceCallWithWaitAsync(Action<GameService, CancellationToken> action)
         {
-            ChangeState(new ViewStateWaiting());
-            await Task.Run(() =>
+            try
             {
-                action(App.GameService);
-            });
-            if (PlayingGame.Game.State.IsEnd)
-                ChangeState(new ViewStateGameEnd());
-            else
-                ChangeState(new ViewStateHumanThinkingForMoveFrom());
+                cancelWaiting = new CancellationTokenSource();
+                ChangeState(new ViewStateWaiting());
+                await Task.Run(() =>
+                {
+                    action(App.GameService, cancelWaiting.Token);
+                });
+                if (PlayingGame.Game.State.IsEnd)
+                    ChangeState(new ViewStateGameStudying());
+                else
+                    ChangeState(new ViewStateHumanThinkingForMoveFrom());
+
+            }
+            catch(OperationCanceledException ex)
+            {
+                ChangeState(new ViewStateGameStudying());
+            }
+            cancelWaiting = null;
         }
 
         public void UpdateView()
@@ -148,18 +214,16 @@ namespace MiniShogiMobile.ViewModels
 
                 if (parameter.PlayMode == PlayMode.NewGame)
                 {
-                    var cancelTokenSource = new CancellationTokenSource();
-                    await AppServiceCallCommandAsync(service =>
+                    await AppServiceCallWithWaitAsync((service, cancelToken) =>
                     {
-                        service.Start(parameter.Player1, parameter.Player2, parameter.FirstTurnPlayer, parameter.Name, cancelTokenSource.Token);
+                        service.Start(parameter.Player1, parameter.Player2, parameter.FirstTurnPlayer, parameter.Name, cancelToken);
                     });
                 }
                 else if(parameter.PlayMode == PlayMode.ContinueGame)
                 {
-                    var cancelTokenSource = new CancellationTokenSource();
-                    await AppServiceCallCommandAsync(service =>
+                    await AppServiceCallWithWaitAsync((service, cancelToken) =>
                     {
-                        service.Continue(parameter.Name, cancelTokenSource.Token);
+                        service.Continue(parameter.Name, cancelToken);
                     });
                 }
                 else

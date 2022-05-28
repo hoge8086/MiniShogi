@@ -68,6 +68,7 @@ namespace Shogi.Business.Application
                 var current = CurrentPlayingGameRepository.Current();
                 GameListener?.OnStarted(current.Clone());
                 Next(current, cancellation);
+                CurrentPlayingGameRepository.Save(current);
             }
         }
 
@@ -105,6 +106,8 @@ namespace Shogi.Business.Application
                 var playingGame = CurrentPlayingGameRepository.Current();
                 playingGame.Game.Undo(undoType);
 
+                // [Fix:OnPlayedじゃないので専用か何かを用意する]
+                GameListener?.OnPlayed(playingGame.Clone());
                 CurrentPlayingGameRepository.Save(playingGame);
             }
         }
@@ -145,8 +148,7 @@ namespace Shogi.Business.Application
             playingGame.TurnPlayer.Play(playingGame.Game, cancellation);
             GameListener?.OnPlayed(playingGame.Clone());
 
-            if (cancellation.IsCancellationRequested)
-                return;
+            cancellation.ThrowIfCancellationRequested();
 
             Next(playingGame, cancellation);
         }
@@ -157,6 +159,8 @@ namespace Shogi.Business.Application
             {
                 var playingGame = CurrentPlayingGameRepository.Current();
                 Next(playingGame, cancellation);
+
+                CurrentPlayingGameRepository.Save(playingGame);
             }
         }
     }

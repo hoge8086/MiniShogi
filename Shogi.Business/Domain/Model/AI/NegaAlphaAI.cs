@@ -101,8 +101,7 @@ namespace Shogi.Business.Domain.Model.AI
             var alpha = GameEvaluation.DefaultNegativeEvaluation;
             var beta = GameEvaluation.DefaultPositiveEvaluation; 
 
-            if (cancellation.IsCancellationRequested)
-                return null;
+            cancellation.ThrowIfCancellationRequested();
 
             if (game.State.IsEnd || depth <= 0)
                 throw new System.InvalidOperationException("すでに決着がついているため手の探索は不正です.");
@@ -139,8 +138,7 @@ namespace Shogi.Business.Domain.Model.AI
 
         private GameEvaluation SearchSub(Game game, PlayerType player, GameEvaluation alpha, GameEvaluation beta, int depth, CancellationToken cancellation)
         {
-            if (cancellation.IsCancellationRequested)
-                return null;
+            cancellation.ThrowIfCancellationRequested();
 
             if (game.State.IsEnd || depth <= 0) // [深さが最大に達したかゲームに決着がついた]
             {
