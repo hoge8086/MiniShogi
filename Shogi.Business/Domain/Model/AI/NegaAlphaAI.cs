@@ -11,7 +11,7 @@ namespace Shogi.Business.Domain.Model.AI
     [DataContract]
     public class NegaAlphaAI : AI
     {
-        public override string Name => "AI (" + Depth.ToString() + "手読み)";
+        public override string ToString() => "AI (" + Depth.ToString() + "手読み)";
         [DataMember]
         private int Depth { get; set;}
         private bool debug = true;

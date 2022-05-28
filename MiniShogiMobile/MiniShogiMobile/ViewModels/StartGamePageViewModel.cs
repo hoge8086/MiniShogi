@@ -104,9 +104,9 @@ namespace MiniShogiMobile.ViewModels
             public Player CreatePlayer()
             {
                 if (PlayerType.Value == ViewModels.PlayerThinkingType.Human)
-                    return new Human();
+                    return new Player();
                 else
-                    return new NegaAlphaAI(AIThinkDepth.Value);
+                    return new Player(new NegaAlphaAI(AIThinkDepth.Value));
             }
         }
     }

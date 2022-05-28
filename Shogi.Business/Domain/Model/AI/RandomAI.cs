@@ -6,7 +6,7 @@ namespace Shogi.Business.Domain.Model.AI
     public class RandomAI : AI
     {
 
-        public override string Name => "ランダムAI";
+        public override string ToString() => "ランダムAI";
         public override MoveCommand SelectMove(Game game, CancellationToken cancellation)
         {
             if (cancellation.IsCancellationRequested)

@@ -9,10 +9,6 @@ using System;
 namespace Shogi.Business.Domain.Model.PlayingGames
 {
     [DataContract]
-    [KnownType(typeof(AI.AI))]
-    [KnownType(typeof(AI.NegaAlphaAI))]
-    [KnownType(typeof(Players.Human))]
-    [KnownType(typeof(Players.Player))]
     public class PlayingGame
     {
         [DataMember]

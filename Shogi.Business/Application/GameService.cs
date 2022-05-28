@@ -137,18 +137,16 @@ namespace Shogi.Business.Application
                 return;
             }
 
-            if(playingGame.TurnPlayer.IsHuman)//.Players[PlayingGame.Game.State.TurnPlayer] is Human)
+            if(playingGame.TurnPlayer.IsHuman)
             {
-                // [人]
                 return;
             }
 
-            // [AI]
-            var ai = playingGame.TurnPlayer as AI;
-            ai.Play(playingGame.Game, cancellation);
+            playingGame.TurnPlayer.Play(playingGame.Game, cancellation);
+            GameListener?.OnPlayed(playingGame.Clone());
+
             if (cancellation.IsCancellationRequested)
                 return;
-            GameListener?.OnPlayed(playingGame.Clone());
 
             Next(playingGame, cancellation);
         }

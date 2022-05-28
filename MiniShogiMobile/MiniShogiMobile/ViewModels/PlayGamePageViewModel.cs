@@ -232,7 +232,7 @@ namespace MiniShogiMobile.ViewModels
         public string GetName() {
             if (Player.Value == null || Type.Value == null)
                 return "";
-            return Player.Value.IsAI ? "CPU" : (Type.Value == PlayerType.Player1 ? "P1" : "P2");
+            return Player.Value.IsComputer ? "CPU" : (Type.Value == PlayerType.Player1 ? "P1" : "P2");
         }
 
         public PlayerWithHandPlayingViewModel()
