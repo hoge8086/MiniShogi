@@ -37,7 +37,7 @@ namespace Shogi.Business.Domain.Model.Games
 
         public override string ToString()
         {
-            return string.Format("{0}->{1},{2}", FromPosition.ToString(), ToPosition.ToString(), (DoTransform ? "@" : "-"));
+            return $"{FromPosition}->{ToPosition}{(DoTransform ? "@" : "")}";
         }
         public override bool Equals(object obj)
         {

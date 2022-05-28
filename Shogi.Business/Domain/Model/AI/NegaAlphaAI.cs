@@ -7,6 +7,22 @@ using System.Threading;
 
 namespace Shogi.Business.Domain.Model.AI
 {
+    public class MoveEvaluation
+    {
+        public MoveEvaluation(MoveCommand moveCommand, GameEvaluation gameEvaluation)
+        {
+            MoveCommand = moveCommand;
+            GameEvaluation = gameEvaluation;
+        }
+        public MoveCommand MoveCommand { get; private set; }
+        public GameEvaluation GameEvaluation { get; private set; }
+
+        public override string ToString()
+        {
+            return $"{MoveCommand.ToString()}, eval={GameEvaluation.Value}\n{GameEvaluation.Game.ToString()}";
+        }
+    }
+
     [DataContract]
     public class NegaAlphaAI : AI
     {
@@ -21,23 +37,39 @@ namespace Shogi.Business.Domain.Model.AI
         }
         public override MoveCommand SelectMove(Game game, CancellationToken cancellation)
         {
-            // [MEMO:アルファベータ法は枝刈りを行うので複数の最善手を得られない?]
-            var bestMoveCommands = new List<MoveCommand>();
-            //Search(game, game.State.TurnPlayer, -InfiniteEvaluationValue-1, InfiniteEvaluationValue+1, Depth, bestMoveCommands, cancellation);
-            var eval = Search(game, game.State.TurnPlayer, GameEvaluation.DefaultNegativeEvaluation, GameEvaluation.DefaultPositiveEvaluation, Depth, bestMoveCommands, cancellation);
+            if(debug)
+            {
+                System.Diagnostics.Debug.WriteLine("▽▽▽▽▽▽▽▽▽▽[探索開始]▽▽▽▽▽▽▽▽▽▽");
+                System.Diagnostics.Debug.WriteLine("深さ：" + Depth.ToString()) ;
+                System.Diagnostics.Debug.WriteLine("---------盤面------------") ;
+                System.Diagnostics.Debug.WriteLine(game.ToString()) ;
+                System.Diagnostics.Debug.WriteLine("手番：" + game.State.TurnPlayer.ToString()) ;
+                System.Diagnostics.Debug.WriteLine("---------[探索結果]------------") ;
+            }
 
-            if (eval == null)
+            // [MEMO:アルファベータ法は枝刈りを行うので複数の最善手を得られない?]
+            var bestMove = Search(game, game.State.TurnPlayer, Depth, cancellation);
+
+            if (bestMove == null)
             {
                 System.Diagnostics.Debug.WriteLine("キャンセル") ;
                 return null;
             }
 
-            if(debug)
+            if (debug)
             {
-                System.Diagnostics.Debug.WriteLine("---------ベスト手------------") ;
-                System.Diagnostics.Debug.WriteLine(string.Join("\n", bestMoveCommands)) ;
+
+                System.Diagnostics.Debug.WriteLine("---------[ベスト手]------------") ;
+                var temp = bestMove.GameEvaluation.Game.Clone();
+                System.Diagnostics.Debug.WriteLine($"{temp.ToString()}");
+                while(temp.CanUndo(Game.UndoType.Undo))
+                {
+                    temp.Undo(Game.UndoType.Undo);
+                    System.Diagnostics.Debug.WriteLine($"{temp.ToString()}");
+                }
+                System.Diagnostics.Debug.WriteLine("△△△△△△△△△△[探索終了]△△△△△△△△△△");
             }
-            return bestMoveCommands[new System.Random().Next(0, bestMoveCommands.Count)];
+            return bestMove.MoveCommand;
         }
 
 
@@ -59,9 +91,53 @@ namespace Shogi.Business.Domain.Model.AI
                     sorted.Add(move);
             }
             return sorted;
+
+
+        }
+        private MoveEvaluation Search(Game game, PlayerType player, int depth, CancellationToken cancellation)
+        {
+            MoveEvaluation bestMove = null;
+
+            var alpha = GameEvaluation.DefaultNegativeEvaluation;
+            var beta = GameEvaluation.DefaultPositiveEvaluation; 
+
+            if (cancellation.IsCancellationRequested)
+                return null;
+
+            if (game.State.IsEnd || depth <= 0)
+                throw new System.InvalidOperationException("すでに決着がついているため手の探索は不正です.");
+
+            var moveCommands = game.CreateAvailableMoveCommand();
+
+            // [αβ法は良い手の順に探索を行うと最も効率が良い]
+            moveCommands = SortByBetterMove(moveCommands, game);
+
+
+            // [全ての子ノードを展開し，再帰的に評価]
+            for(int i=0; i<moveCommands.Count; i++)
+            {
+                var gameTmp = game.Clone().PlayWithoutCheck(moveCommands[i]);
+                var eval = SearchSub(gameTmp, player.Opponent, beta.Reverse(), alpha.Reverse(), depth - 1,cancellation).Reverse();
+                if (eval == null)
+                    return null;
+
+                // [最善手(MAX)を求める]
+                if(alpha.Value < eval.Value)
+                {
+                    alpha = eval;   // [α値の更新]
+                    bestMove = new MoveEvaluation(moveCommands[i], eval);
+                }
+
+                if(debug)
+                {
+                    System.Diagnostics.Debug.WriteLine(string.Join("\n", new MoveEvaluation(moveCommands[i], eval))) ;
+                }
+            }
+
+            return bestMove;
         }
 
-        private GameEvaluation Search(Game game, PlayerType player, GameEvaluation alpha, GameEvaluation beta, int depth, List<MoveCommand> bestMoveCommands, CancellationToken cancellation)
+        private GameEvaluation SearchSub(Game game, PlayerType player, GameEvaluation alpha, GameEvaluation beta, int depth, CancellationToken cancellation)
         {
             if (cancellation.IsCancellationRequested)
                 return null;
@@ -72,19 +148,6 @@ namespace Shogi.Business.Domain.Model.AI
             }
 
             var moveCommands = game.CreateAvailableMoveCommand();
-            if(debug)
-            {
-                if(depth == this.Depth)
-                {
-                  System.Diagnostics.Debug.WriteLine("------------------------------------") ;
-                  System.Diagnostics.Debug.WriteLine("深さ：" + depth.ToString()) ;
-                  System.Diagnostics.Debug.WriteLine("---------盤面------------") ;
-                  System.Diagnostics.Debug.WriteLine(game.ToString()) ;
-                  System.Diagnostics.Debug.WriteLine("手番：" + game.State.TurnPlayer.ToString()) ;
-                  System.Diagnostics.Debug.WriteLine("---------着手可能手------------") ;
-                  System.Diagnostics.Debug.WriteLine(string.Join("\n", moveCommands)) ;
-                }
-            }
 
             if(moveCommands.Count == 0){
                 // 着手可能手0の場合は、IsEndがtureのはずなので、ここには来ないはず
@@ -105,35 +168,20 @@ namespace Shogi.Business.Domain.Model.AI
 
                 // [現在，既に自分は最低でもα値の手が存在するため，相手が相手にとって-α値より良い手を見つけても]
                 // [無意味となるため(自分はその手を指さないだけ)，-α値が相手の探索の上限となる．]
-
-                // [MEMO:枝刈りした場合、最善手と同じ評価値を返しているのでα値と同じ値が返っても、]
-                // [最善手ではないので注意(相手側がより最善の手があるので)]
                 //var eval = -Search(gameTmp, player.Opponent, -beta, -alpha, depth - 1, null, cancellation);
-                var eval = Search(gameTmp, player.Opponent, beta.Reverse(), alpha.Reverse(), depth - 1, null, cancellation).Reverse();
+                var eval = SearchSub(gameTmp, player.Opponent, beta.Reverse(), alpha.Reverse(), depth - 1, cancellation).Reverse();
 
-                // [MEMO:キャンセルした場合は、候補手一覧は空にするため、ここでリターンする]
+                // [MEMO:キャンセルした場合]
                 if (eval == null)
                     return null;
 
                 // [最善手(MAX)を求める]
                 if(alpha.Value < eval.Value)
-                {
                     alpha = eval;		// [α値の更新]
 
-                    if (bestMoveCommands != null)
-                    {
-                        bestMoveCommands.Clear();
-                        bestMoveCommands.Add(moveCommands[i]);
-                    }
-                }
-
-                if(debug)
-                    if(depth == this.Depth)
-                        System.Diagnostics.Debug.WriteLine("評価値：" + moveCommands[i].ToString() + " -> " + eval.Value.ToString()) ;
-                        //System.Diagnostics.Debug.WriteLine((new string(' ', Depth- depth)) + "評価値：" + moveCommands[i].ToString() + " -> " + val.ToString()) ;
-
-
-                if(alpha.Value >= beta.Value){	// [より良い手がないと枝切りを行う]
+                // [MEMO:枝刈りした場合、最善手と同じ評価値を返しているのでα値と同じ値が返っても、]
+                // [最善手ではないので注意(相手側がより最善の手があるので)]
+                if(alpha.Value >= beta.Value){
                     return alpha;
                 }
             }
