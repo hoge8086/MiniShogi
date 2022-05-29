@@ -14,7 +14,7 @@ namespace Shogi.Business.Application
     // [TODO:ゲームの進行をDomainServiceに移す]
     // [MEMO:ApplicationServiceからGetGmae()やGetPlayingGmae()で直接取れないようにすることで、マルチスレッドアクセスを可能にする]
     // [     Clone()したPlayingGameが返る]
-    public interface GameListener
+    public interface GameListener : IProgress<ProgressInfoOfAIThinking>
     {
         void OnStarted(PlayingGame playingGame);
         void OnPlayed(PlayingGame playingGame);
@@ -145,7 +145,7 @@ namespace Shogi.Business.Application
                 return;
             }
 
-            playingGame.TurnPlayer.Play(playingGame.Game, cancellation);
+            playingGame.TurnPlayer.Computer.Play(playingGame.Game, cancellation, GameListener);
             GameListener?.OnPlayed(playingGame.Clone());
 
             cancellation.ThrowIfCancellationRequested();

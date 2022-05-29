@@ -6,6 +6,7 @@ using Prism.Services;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using Shogi.Business.Application;
+using Shogi.Business.Domain.Model.AI;
 using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Games;
 using Shogi.Business.Domain.Model.Komas;
@@ -204,7 +205,18 @@ namespace MiniShogiMobile.ViewModels
                      "OK");
             });
         }
+        public void Report(ProgressInfoOfAIThinking value)
+        {
+            Device.InvokeOnMainThreadAsync(() =>
+            {
+                var player = Game.GetHands(value.PlayerType);
+                player.ProgressOfComputerThinking.Value = value.ProgressRate;
+                //ProgressOfComputerThinking.Value = value.ProgressRate;
 
+                //if(value.ProgressType == ProgressTypeOfAIThinking.Completed)
+                //    Evaluation.Value = value.GameEvaluation.Value;
+            });
+        }
         public override async Task PrepareAsync(PlayGameCondition parameter)
         {
             await this.CatchErrorWithMessageAsync(async () =>
@@ -293,6 +305,8 @@ namespace MiniShogiMobile.ViewModels
         public  ReadOnlyReactiveProperty<string> Name { get; }
         public  ReadOnlyReactiveProperty<string> TurnTypeName { get; }
 
+        public ReactiveProperty<double> ProgressOfComputerThinking { get; private set; } = new ReactiveProperty<double>();
+
         public string GetName() {
             if (Player.Value == null || Type.Value == null)
                 return "";
@@ -307,6 +321,7 @@ namespace MiniShogiMobile.ViewModels
             Name = Player.CombineLatest(Type, (x, y) => GetName()).ToReadOnlyReactiveProperty();
             TurnType = new ReactiveProperty<TurnType>();
             TurnTypeName = TurnType.Select(x => x == ViewModels.TurnType.FirstTurn ? "先手" : "後手").ToReadOnlyReactiveProperty();
+            ProgressOfComputerThinking = new ReactiveProperty<double>();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Shogi.Business.Domain.Model.Games;
 using Shogi.Business.Domain.Model.PlayerTypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -7,22 +8,6 @@ using System.Threading;
 
 namespace Shogi.Business.Domain.Model.AI
 {
-    public class MoveEvaluation
-    {
-        public MoveEvaluation(MoveCommand moveCommand, GameEvaluation gameEvaluation)
-        {
-            MoveCommand = moveCommand;
-            GameEvaluation = gameEvaluation;
-        }
-        public MoveCommand MoveCommand { get; private set; }
-        public GameEvaluation GameEvaluation { get; private set; }
-
-        public override string ToString()
-        {
-            return $"{MoveCommand.ToString()}, eval={GameEvaluation.Value}\n{GameEvaluation.Game.ToString()}";
-        }
-    }
-
     [DataContract]
     public class NegaAlphaAI : AI
     {
@@ -35,7 +20,7 @@ namespace Shogi.Business.Domain.Model.AI
         {
             this.Depth = depth;
         }
-        public override MoveCommand SelectMove(Game game, CancellationToken cancellation)
+        public override MoveEvaluation SelectMove(Game game, CancellationToken cancellation, IProgress<ProgressInfoOfAIThinking> progress)
         {
             if(debug)
             {
@@ -48,13 +33,7 @@ namespace Shogi.Business.Domain.Model.AI
             }
 
             // [MEMO:アルファベータ法は枝刈りを行うので複数の最善手を得られない?]
-            var bestMove = Search(game, game.State.TurnPlayer, Depth, cancellation);
-
-            if (bestMove == null)
-            {
-                System.Diagnostics.Debug.WriteLine("キャンセル") ;
-                return null;
-            }
+            var bestMove = Search(game, game.State.TurnPlayer, Depth, cancellation, progress);
 
             if (debug)
             {
@@ -69,7 +48,8 @@ namespace Shogi.Business.Domain.Model.AI
                 }
                 System.Diagnostics.Debug.WriteLine("△△△△△△△△△△[探索終了]△△△△△△△△△△");
             }
-            return bestMove.MoveCommand;
+
+            return bestMove;
         }
 
 
@@ -94,7 +74,7 @@ namespace Shogi.Business.Domain.Model.AI
 
 
         }
-        private MoveEvaluation Search(Game game, PlayerType player, int depth, CancellationToken cancellation)
+        private MoveEvaluation Search(Game game, PlayerType player, int depth, CancellationToken cancellation, IProgress<ProgressInfoOfAIThinking> progress)
         {
             MoveEvaluation bestMove = null;
 
@@ -117,8 +97,6 @@ namespace Shogi.Business.Domain.Model.AI
             {
                 var gameTmp = game.Clone().PlayWithoutCheck(moveCommands[i]);
                 var eval = SearchSub(gameTmp, player.Opponent, beta.Reverse(), alpha.Reverse(), depth - 1,cancellation).Reverse();
-                if (eval == null)
-                    return null;
 
                 // [最善手(MAX)を求める]
                 if(alpha.Value < eval.Value)
@@ -131,7 +109,10 @@ namespace Shogi.Business.Domain.Model.AI
                 {
                     System.Diagnostics.Debug.WriteLine(string.Join("\n", new MoveEvaluation(moveCommands[i], eval))) ;
                 }
+
+                progress?.Report(new ProgressInfoOfAIThinking(ProgressTypeOfAIThinking.Thinking, ((double)i+1) / moveCommands.Count, game.State.TurnPlayer, null));
             }
+
 
             return bestMove;
         }
@@ -168,10 +149,6 @@ namespace Shogi.Business.Domain.Model.AI
                 // [無意味となるため(自分はその手を指さないだけ)，-α値が相手の探索の上限となる．]
                 //var eval = -Search(gameTmp, player.Opponent, -beta, -alpha, depth - 1, null, cancellation);
                 var eval = SearchSub(gameTmp, player.Opponent, beta.Reverse(), alpha.Reverse(), depth - 1, cancellation).Reverse();
-
-                // [MEMO:キャンセルした場合]
-                if (eval == null)
-                    return null;
 
                 // [最善手(MAX)を求める]
                 if(alpha.Value < eval.Value)

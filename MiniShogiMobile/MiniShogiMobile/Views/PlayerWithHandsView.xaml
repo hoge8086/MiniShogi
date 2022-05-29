@@ -8,21 +8,33 @@
              x:Name="self">
   <ContentView.Content>
         <Grid ColumnDefinitions="Auto,*,Auto">
-            <ctrl:PlayerView
-                Grid.Column="0"
-                Text="{Binding Name.Value}"
-                SubText="{Binding TurnTypeName.Value}"
-                WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
-                BackgroundColor="{Binding Path=PlayerColor, Source={x:Reference self}}">
-                <ctrl:PlayerView.Triggers>
-                    <DataTrigger TargetType="ctrl:PlayerView" Binding="{Binding Path=IsRotated, Source={x:Reference self}}" Value="True">
+            <!--プレイヤー-->
+            <StackLayout Grid.Column="0" Spacing="4">
+                <StackLayout.Triggers>
+                    <DataTrigger TargetType="StackLayout" Binding="{Binding Path=IsRotated, Source={x:Reference self}}" Value="True">
                         <Setter Property="Grid.Column" Value="2"/>
                     </DataTrigger>
-                    <DataTrigger TargetType="ctrl:PlayerView" Binding="{Binding IsCurrentTurn.Value}" Value="False">
-                        <Setter Property="BackgroundColor" Value="DimGray"/>
-                    </DataTrigger>
-                </ctrl:PlayerView.Triggers>
-            </ctrl:PlayerView>
+                </StackLayout.Triggers>
+                <!--プログレスバー-->
+                <Grid HeightRequest="10">
+                    <ProgressBar Progress="{Binding ProgressOfComputerThinking.Value}"
+                                 HorizontalOptions="FillAndExpand"/>
+                </Grid>
+                <!--プレイヤーアイコン-->
+                <ctrl:PlayerView
+                    VerticalOptions="FillAndExpand"
+                    Text="{Binding Name.Value}"
+                    SubText="{Binding TurnTypeName.Value}"
+                    WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
+                    BackgroundColor="{Binding Path=PlayerColor, Source={x:Reference self}}">
+                    <ctrl:PlayerView.Triggers>
+                        <DataTrigger TargetType="ctrl:PlayerView" Binding="{Binding IsCurrentTurn.Value}" Value="False">
+                            <Setter Property="BackgroundColor" Value="DimGray"/>
+                        </DataTrigger>
+                    </ctrl:PlayerView.Triggers>
+                </ctrl:PlayerView>
+            </StackLayout>
+            <!--持ち駒の台-->
             <ctrl:KomadaiView Grid.Column="1"
                               HorizontalOptions="FillAndExpand"
                               VerticalOptions="FillAndExpand">

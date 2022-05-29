@@ -14,18 +14,14 @@ namespace Shogi.Business.Domain.Model.Players
     public class Player
     {
         public string Name { get => IsComputer ? Computer.ToString() : "あなた"; }
-        public AI.AI Computer { get; }
+
+        [DataMember]
+        public AI.AI Computer { get; private set; }
 
         public Player(AI.AI ai = null)
         {
             Computer = ai;
         }
-        public void Play(Game game, CancellationToken cancellation)
-        {
-            if (IsComputer)
-                Computer.Play(game, cancellation);
-        }
-
         public bool IsComputer => Computer != null;
         public bool IsHuman => !IsComputer;
     }

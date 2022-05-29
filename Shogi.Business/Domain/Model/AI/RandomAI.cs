@@ -1,4 +1,5 @@
 ﻿using Shogi.Business.Domain.Model.Games;
+using System;
 using System.Threading;
 
 namespace Shogi.Business.Domain.Model.AI
@@ -7,12 +8,12 @@ namespace Shogi.Business.Domain.Model.AI
     {
 
         public override string ToString() => "ランダムAI";
-        public override MoveCommand SelectMove(Game game, CancellationToken cancellation)
+        public override MoveEvaluation SelectMove(Game game, CancellationToken cancellation, IProgress<ProgressInfoOfAIThinking> progress)
         {
             cancellation.ThrowIfCancellationRequested();
             System.Threading.Thread.Sleep(1000);
             var moveCommands = game.CreateAvailableMoveCommand();
-            return moveCommands[new System.Random().Next(0, moveCommands.Count)];
+            return new MoveEvaluation(moveCommands[new System.Random().Next(0, moveCommands.Count)], new GameEvaluation(game, game.State.TurnPlayer));
         }
 
     }
