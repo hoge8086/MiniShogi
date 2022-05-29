@@ -28,7 +28,7 @@ namespace MiniShogiMobile
         {
             InitializeComponent();
 
-            var isCacheMode = false;
+            var isCacheMode = true;
 
             var dataDir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);
             var gameTemplateJsonRepository = new GameTemplateJsonRepository(Path.Combine(dataDir, "games.json"), isCacheMode);

@@ -5,6 +5,7 @@ using Shogi.Business.Domain.Model.Players;
 using Shogi.Business.Domain.Model.GameTemplates;
 using System.Runtime.Serialization;
 using System;
+using System.Linq;
 
 namespace Shogi.Business.Domain.Model.PlayingGames
 {
@@ -14,21 +15,26 @@ namespace Shogi.Business.Domain.Model.PlayingGames
         [DataMember]
         public string Name { get; private set; }
         [DataMember]
-        private Dictionary<string, Player> Players;
+        //private Dictionary<string, Player> Players;
+        private List<Player> Players;
         [DataMember]
         public Game Game { get; private set; }
         [DataMember]
         public GameTemplate GameTemplate { get; private set;}
 
-        public Player TurnPlayer => Players[Game.State.TurnPlayer.Id];
-        public Player GerPlayer(PlayerType pleyerType) => Players[pleyerType.Id];
+        public Player TurnPlayer => Players.First(player => player.PlayerType == Game.State.TurnPlayer);
+        public Player GerPlayer(PlayerType playerType) => Players.First(player => player.PlayerType == playerType);
 
-        public PlayingGame(Player firstPlayer, Player secondPlayer, Game game, GameTemplate gameTemplate)
+        public PlayingGame(List<Player> players, Game game, GameTemplate gameTemplate)
         {
+            if(players.Count != 2 ||
+               !players.Any(x => x.PlayerType == PlayerType.Player1) ||
+               !players.Any(x => x.PlayerType == PlayerType.Player2))
+            {
+                throw new ArgumentException("プレイヤーがP1とP2が一人ずつではありません.");
+            }
             Name = null;
-            Players = new Dictionary<string, Player>();
-            Players.Add(PlayerType.Player1.Id, firstPlayer);
-            Players.Add(PlayerType.Player2.Id, secondPlayer);
+            Players = players;
             GameTemplate = gameTemplate;
             Game = game.Clone();
         }

@@ -18,8 +18,12 @@ namespace Shogi.Business.Domain.Model.Players
         [DataMember]
         public AI.AI Computer { get; private set; }
 
-        public Player(AI.AI ai = null)
+        [DataMember]
+        public PlayerType PlayerType { get; private set; }
+
+        public Player(PlayerType playerType, AI.AI ai = null)
         {
+            PlayerType = playerType;
             Computer = ai;
         }
         public bool IsComputer => Computer != null;

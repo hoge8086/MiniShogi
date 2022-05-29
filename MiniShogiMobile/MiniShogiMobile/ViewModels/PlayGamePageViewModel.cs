@@ -228,7 +228,7 @@ namespace MiniShogiMobile.ViewModels
                 {
                     await AppServiceCallWithWaitAsync((service, cancelToken) =>
                     {
-                        service.Start(parameter.Player1, parameter.Player2, parameter.FirstTurnPlayer, parameter.Name, cancelToken);
+                        service.Start(new List<Player> { parameter.Player1, parameter.Player2 }, parameter.FirstTurnPlayer, parameter.Name, cancelToken);
                     });
                 }
                 else if(parameter.PlayMode == PlayMode.ContinueGame)

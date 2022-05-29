@@ -68,8 +68,8 @@ namespace MiniShogiMobile.ViewModels
                     new PlayGameCondition(
                         PlayMode.NewGame,
                         GameName.Value,
-                        Player1.CreatePlayer(),
-                        Player2.CreatePlayer(),
+                        Player1.CreatePlayer(PlayerType.Player1),
+                        Player2.CreatePlayer(PlayerType.Player2),
                         GetFirstTurnPlayer()));
             }).AddTo(Disposable);
 
@@ -101,12 +101,12 @@ namespace MiniShogiMobile.ViewModels
                 AIThinkDepth = new ReactiveProperty<int>(depth);
             }
 
-            public Player CreatePlayer()
+            public Player CreatePlayer(PlayerType playerType)
             {
                 if (PlayerType.Value == ViewModels.PlayerThinkingType.Human)
-                    return new Player();
+                    return new Player(playerType);
                 else
-                    return new Player(new NegaAlphaAI(AIThinkDepth.Value));
+                    return new Player(playerType, new NegaAlphaAI(AIThinkDepth.Value));
             }
         }
     }

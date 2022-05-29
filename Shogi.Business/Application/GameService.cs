@@ -7,6 +7,7 @@ using Shogi.Business.Domain.Model.AI;
 using System.Threading;
 using Shogi.Business.Domain.Model.GameTemplates;
 using Shogi.Business.Domain.Model.PlayingGames;
+using System.Collections.Generic;
 
 namespace Shogi.Business.Application
 {
@@ -72,13 +73,13 @@ namespace Shogi.Business.Application
             }
         }
 
-        public void Start(Player player1, Player player2, PlayerType firstTurnPlayer, string gameName, CancellationToken cancellation)
+        public void Start(List<Player> players, PlayerType firstTurnPlayer, string gameName, CancellationToken cancellation)
         {
             lock (thisLock)
             {
                 var template = GameTemplateRepository.FindByName(gameName);
                 var game = new GameFactory().Create(template, firstTurnPlayer);
-                var playingGame = new PlayingGame(player1, player2, game, template);
+                var playingGame = new PlayingGame(players, game, template);
                 GameListener?.OnStarted(playingGame.Clone());
                 Next(playingGame, cancellation);
 
