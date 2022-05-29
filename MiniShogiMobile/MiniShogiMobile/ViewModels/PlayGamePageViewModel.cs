@@ -16,6 +16,7 @@ using Shogi.Business.Domain.Model.PlayingGames;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
@@ -175,10 +176,8 @@ namespace MiniShogiMobile.ViewModels
                 // [TODO:かっこ悪いので直す]
                 // [プレイヤー]
                 Game.HandsOfPlayer1.Player.Value = playingGame.GerPlayer(PlayerType.Player1);
-                Game.HandsOfPlayer1.Type.Value = PlayerType.Player1;
                 Game.HandsOfPlayer1.TurnType.Value = playingGame.Game.State.TurnPlayer == PlayerType.Player1 ? TurnType.FirstTurn : TurnType.SecondTurn;
                 Game.HandsOfPlayer2.Player.Value = playingGame.GerPlayer(PlayerType.Player2);
-                Game.HandsOfPlayer2.Type.Value = PlayerType.Player2;
                 Game.HandsOfPlayer2.TurnType.Value = playingGame.Game.State.TurnPlayer == PlayerType.Player2 ? TurnType.FirstTurn : TurnType.SecondTurn;
 
                 UpdateView();
@@ -292,35 +291,27 @@ namespace MiniShogiMobile.ViewModels
     }
     public enum TurnType
     {
+        [Description("先手")]
         FirstTurn,
+        [Description("後手")]
         SecondTurn,
     }
 
     public class PlayerWithHandPlayingViewModel : HandsViewModel<HandKomaPlayingViewModel>
     {
         public ReactiveProperty<Player> Player { get; set; }
-        public ReactiveProperty<PlayerType> Type { get; set; }
         public ReactiveProperty<TurnType> TurnType { get; set; }
         public  ReactiveProperty<bool> IsCurrentTurn { get; }
         public  ReadOnlyReactiveProperty<string> Name { get; }
-        public  ReadOnlyReactiveProperty<string> TurnTypeName { get; }
-
+        public  ReadOnlyReactiveProperty<bool> IsComputer { get; }
         public ReactiveProperty<double> ProgressOfComputerThinking { get; private set; } = new ReactiveProperty<double>();
-
-        public string GetName() {
-            if (Player.Value == null || Type.Value == null)
-                return "";
-            return Player.Value.IsComputer ? "CPU" : (Type.Value == PlayerType.Player1 ? "P1" : "P2");
-        }
-
         public PlayerWithHandPlayingViewModel()
         {
             Player = new ReactiveProperty<Player>();
-            Type = new ReactiveProperty<PlayerType>();
             IsCurrentTurn = new ReactiveProperty<bool>();
-            Name = Player.CombineLatest(Type, (x, y) => GetName()).ToReadOnlyReactiveProperty();
             TurnType = new ReactiveProperty<TurnType>();
-            TurnTypeName = TurnType.Select(x => x == ViewModels.TurnType.FirstTurn ? "先手" : "後手").ToReadOnlyReactiveProperty();
+            Name = Player.Select(x => x?.Name).ToReadOnlyReactiveProperty();
+            IsComputer = Player.Select(x => x == null ? false : x.IsComputer).ToReadOnlyReactiveProperty();
             ProgressOfComputerThinking = new ReactiveProperty<double>();
         }
     }
