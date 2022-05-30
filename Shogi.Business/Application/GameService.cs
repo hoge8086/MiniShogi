@@ -107,12 +107,17 @@ namespace Shogi.Business.Application
                 var playingGame = CurrentPlayingGameRepository.Current();
                 playingGame.Game.Undo(undoType);
 
-                // [Fix:OnPlayedじゃないので専用か何かを用意する]
-                GameListener?.OnPlayed(playingGame.Clone());
                 CurrentPlayingGameRepository.Save(playingGame);
             }
         }
 
+        public PlayingGame GetCurrentPlayingGame()
+        {
+            lock (thisLock)
+            {
+                return CurrentPlayingGameRepository.Current().Clone();
+            }
+        }
 
         public void Play(MoveCommand moveCommand, CancellationToken cancellation)
         {

@@ -120,6 +120,7 @@ namespace MiniShogiMobile.ViewModels
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
                     App.GameService.Undo(Shogi.Business.Domain.Model.Games.Game.UndoType.Undo);
+                    PlayingGame = App.GameService.GetCurrentPlayingGame();
                     UpdateView();
                 });
             }).AddTo(Disposable);
@@ -131,6 +132,7 @@ namespace MiniShogiMobile.ViewModels
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
                     App.GameService.Undo(Shogi.Business.Domain.Model.Games.Game.UndoType.Redo);
+                    PlayingGame = App.GameService.GetCurrentPlayingGame();
                     UpdateView();
                 });
             }).AddTo(Disposable);
@@ -186,6 +188,8 @@ namespace MiniShogiMobile.ViewModels
 
         public void OnPlayed(PlayingGame playingGame)
         {
+            // Note:MoveCommandを取得して、それによって描画更新を行えば、アニメーションに対応できる
+            //      また、最後の着手手が分かるので、最後の着手手をハイライトできる
             Device.InvokeOnMainThreadAsync(() =>
             {
                 PlayingGame = playingGame;

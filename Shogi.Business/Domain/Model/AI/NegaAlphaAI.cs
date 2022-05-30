@@ -137,6 +137,7 @@ namespace Shogi.Business.Domain.Model.AI
 
             // [αβ法は良い手の順に探索を行うと最も効率が良い]
             moveCommands = SortByBetterMove(moveCommands, game);
+            moveCommands = CutffByHeuristic(moveCommands);
 
             // [★勝ち確のときに遊ぶのを何とかしたい]
 
@@ -161,6 +162,13 @@ namespace Shogi.Business.Domain.Model.AI
                 }
             }
             return alpha;
+        }
+
+        private List<MoveCommand> CutffByHeuristic(List<MoveCommand> moveCommands)
+        {
+            // ヒューリスティックにより枝狩りを行う
+            // 例えば、駒の損得だけであれば、最後の1手で駒を打つ手は評価が変わらないので、どれか一つに枝狩りしても問題ないはず
+            return moveCommands;
         }
     }
 }
