@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MiniShogiMobile.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,6 +46,11 @@ namespace MiniShogiMobile.Views
         {
             get { return (bool)GetValue(IsKomaHiddenProperty); }
             set { SetValue(IsKomaHiddenProperty, value); }
+        }
+
+        public KomaView GetKomaView()
+        {
+            return koma;
         }
     }
 }

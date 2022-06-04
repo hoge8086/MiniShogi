@@ -50,6 +50,7 @@ namespace MiniShogiMobile.ViewModels
 
         private CancellationTokenSource cancelWaiting;
 
+        public Func<MoveCommand, Task> AnimateKomaMoving;
 
         public PlayGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
@@ -186,15 +187,16 @@ namespace MiniShogiMobile.ViewModels
             });
         }
 
-        public void OnPlayed(PlayingGame playingGame)
+        public void OnPlayed(PlayingGame playingGame, MoveCommand moveCommand)
         {
             // Note:MoveCommandを取得して、それによって描画更新を行えば、アニメーションに対応できる
             //      また、最後の着手手が分かるので、最後の着手手をハイライトできる
-            Device.InvokeOnMainThreadAsync(() =>
+            Device.InvokeOnMainThreadAsync(async () =>
             {
                 PlayingGame = playingGame;
+                await AnimateKomaMoving?.Invoke(moveCommand);
                 UpdateView();
-            });
+            }).Wait();
         }
 
         public void OnEnded(PlayerType winner)
@@ -320,3 +322,4 @@ namespace MiniShogiMobile.ViewModels
         }
     }
 }
+

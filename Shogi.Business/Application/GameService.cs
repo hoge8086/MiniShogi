@@ -18,7 +18,7 @@ namespace Shogi.Business.Application
     public interface GameListener : IProgress<ProgressInfoOfAIThinking>
     {
         void OnStarted(PlayingGame playingGame);
-        void OnPlayed(PlayingGame playingGame);
+        void OnPlayed(PlayingGame playingGame, MoveCommand moveCommand);
         void OnEnded(PlayerType winner);
     }
     public class GameService
@@ -125,7 +125,7 @@ namespace Shogi.Business.Application
             {
                 var playingGame = CurrentPlayingGameRepository.Current();
                 playingGame.Game.Play(moveCommand);
-                GameListener?.OnPlayed(playingGame.Clone());
+                GameListener?.OnPlayed(playingGame.Clone(), moveCommand);
                 Next(playingGame, cancellation);
 
                 CurrentPlayingGameRepository.Save(playingGame);
@@ -151,8 +151,8 @@ namespace Shogi.Business.Application
                 return;
             }
 
-            playingGame.TurnPlayer.Computer.Play(playingGame.Game, cancellation, GameListener);
-            GameListener?.OnPlayed(playingGame.Clone());
+            var moveCommand = playingGame.TurnPlayer.Computer.Play(playingGame.Game, cancellation, GameListener);
+            GameListener?.OnPlayed(playingGame.Clone(), moveCommand);
 
             cancellation.ThrowIfCancellationRequested();
 

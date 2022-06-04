@@ -19,39 +19,42 @@
             <Button Text="戻る" Command="{Binding UndoCommand}"/>
             <Button Text="進む" Command="{Binding RedoCommand}"/>
         </StackLayout>
-        <StackLayout x:Name="gameField"
-                     VerticalOptions="FillAndExpand"
-                     Spacing="0"
-                     Margin="10">
-            <views:PlayerWithHandsView BindingContext="{Binding Game.HandsOfPlayer2}"
-                                       VerticalOptions="EndAndExpand"
-                                       HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.15)'}"
-                                       IsRotated="True"
-                                       PlayerColor="{StaticResource Player2Color}"
-                                       ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"/>
-            <ctrl:SquareCell2DGridControl x:Name="board"
-                                          VerticalOptions="Center"
-                                          ItemsSource="{Binding Game.Board.Cells}"
-                                          Margin="0,12,0,12"
-                                          MaxWidth="{Binding Source={x:Reference gameField}, Path=Width}"
-                                          MaxHeight="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.7) - 24'}">
-                <ctrl:SquareCell2DGridControl.ItemTemplate>
-                    <ControlTemplate>
-                        <views:CellView BindingContext="{TemplateBinding BindingContext}"
-                                        IsMarked="{Binding CanMove.Value}"
-                                        IsHighlight="{Binding IsSelected.Value}"
-                                        xct:TouchEffect.Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
-                                        xct:TouchEffect.CommandParameter="{Binding .}">
-                        </views:CellView>
-                    </ControlTemplate>
-                </ctrl:SquareCell2DGridControl.ItemTemplate>
-            </ctrl:SquareCell2DGridControl>
-            <views:PlayerWithHandsView BindingContext="{Binding Game.HandsOfPlayer1}"
-                                       VerticalOptions="StartAndExpand"
-                                       HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.15)'}"
-                                       IsRotated="False"
-                                       PlayerColor="{StaticResource Player1Color}"
-                                       ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"/>
-        </StackLayout>
+        <Grid x:Name="field" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <StackLayout x:Name="gameField"
+                         VerticalOptions="FillAndExpand"
+                         Spacing="0"
+                         Margin="10">
+                <views:PlayerWithHandsView BindingContext="{Binding Game.HandsOfPlayer2}"
+                                           VerticalOptions="EndAndExpand"
+                                           HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.15)'}"
+                                           IsRotated="True"
+                                           PlayerColor="{StaticResource Player2Color}"
+                                           ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"/>
+                <ctrl:SquareCell2DGridControl x:Name="board"
+                                              VerticalOptions="Center"
+                                              ItemsSource="{Binding Game.Board.Cells}"
+                                              Margin="0,12,0,12"
+                                              MaxWidth="{Binding Source={x:Reference gameField}, Path=Width}"
+                                              MaxHeight="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.7) - 24'}">
+                    <ctrl:SquareCell2DGridControl.ItemTemplate>
+                        <ControlTemplate>
+                            <views:CellView BindingContext="{TemplateBinding BindingContext}"
+                                            IsMarked="{Binding CanMove.Value}"
+                                            IsHighlight="{Binding IsSelected.Value}"
+                                            xct:TouchEffect.Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
+                                            xct:TouchEffect.CommandParameter="{Binding .}">
+                            </views:CellView>
+                        </ControlTemplate>
+                    </ctrl:SquareCell2DGridControl.ItemTemplate>
+                </ctrl:SquareCell2DGridControl>
+                <views:PlayerWithHandsView BindingContext="{Binding Game.HandsOfPlayer1}"
+                                           VerticalOptions="StartAndExpand"
+                                           HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.15)'}"
+                                           IsRotated="False"
+                                           PlayerColor="{StaticResource Player1Color}"
+                                           ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"/>
+            </StackLayout>
+            <AbsoluteLayout x:Name="movingLayer"  IsVisible="False"/>
+        </Grid>
     </StackLayout>
 </ctrl:BasePage>

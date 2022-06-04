@@ -22,5 +22,4 @@ namespace MiniShogiMobile.ViewModels
             Koma.Value = null;
         }
     }
-
 }

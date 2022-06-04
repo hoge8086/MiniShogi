@@ -50,13 +50,14 @@ namespace Shogi.Business.Domain.Model.AI
     {
         public abstract MoveEvaluation SelectMove(Game game, CancellationToken cancellation, IProgress<ProgressInfoOfAIThinking> progress);
 
-        public void Play(Game game, CancellationToken cancellation, IProgress<ProgressInfoOfAIThinking> progress)
+        public MoveCommand Play(Game game, CancellationToken cancellation, IProgress<ProgressInfoOfAIThinking> progress)
         {
             progress?.Report(new ProgressInfoOfAIThinking(ProgressTypeOfAIThinking.Started, 0.0, game.State.TurnPlayer, null));
             var computer = game.State.TurnPlayer;
             var moveEval = SelectMove(game, cancellation, progress);
             progress?.Report(new ProgressInfoOfAIThinking(ProgressTypeOfAIThinking.Completed, 1.0, game.State.TurnPlayer, moveEval.GameEvaluation));
             game.Play(moveEval.MoveCommand);
+            return moveEval.MoveCommand;
         }
     }
 }

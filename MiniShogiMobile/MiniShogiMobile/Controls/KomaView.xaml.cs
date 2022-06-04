@@ -17,6 +17,16 @@ namespace MiniShogiMobile.Controls
             InitializeComponent();
         }
 
+        public KomaView(KomaView koma)
+        {
+            InitializeComponent();
+            this.DisplayName = koma.DisplayName;
+            this.IsRotated = koma.IsRotated;
+            this.IsPromoted = koma.IsPromoted;
+            this.HeightRequest = koma.Height;
+            this.WidthRequest = koma.Width;
+        }
+
         private void koma_SizeChanged(object sender, EventArgs e)
         {
             // [将棋の駒の形]
@@ -67,7 +77,7 @@ namespace MiniShogiMobile.Controls
         }
         #endregion
 
-        #region IsRotated
+        #region IsPromoted
         public static readonly BindableProperty IsPromotedProperty = BindableProperty.Create(
                                                                             nameof(IsPromoted),
                                                                             typeof(bool),

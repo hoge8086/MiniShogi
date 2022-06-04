@@ -158,5 +158,24 @@ namespace MiniShogiMobile.Controls
                 }
             }
         }
+
+        public View GetCell(int x, int y)
+        {
+            if (board.Children.Count <= y)
+                return null;
+
+            var row = board.Children[y] as StackLayout;
+            if (row.Children.Count <= x)
+                return null;
+
+            var frame = row.Children[x] as Frame;
+            if (frame == null)
+                return null;
+            var contentView = frame.Content as ContentView;
+            if (contentView == null)
+                return null;
+
+            return contentView.Children[0] as View;
+        }
     }
 }
