@@ -24,7 +24,8 @@
                          VerticalOptions="FillAndExpand"
                          Spacing="0"
                          Margin="10">
-                <views:PlayerWithHandsView BindingContext="{Binding Game.HandsOfPlayer2}"
+                <views:PlayerWithHandsView x:Name="player2View"
+                                           BindingContext="{Binding Game.HandsOfPlayer2}"
                                            VerticalOptions="EndAndExpand"
                                            HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.15)'}"
                                            IsRotated="True"
@@ -47,14 +48,15 @@
                         </ControlTemplate>
                     </ctrl:SquareCell2DGridControl.ItemTemplate>
                 </ctrl:SquareCell2DGridControl>
-                <views:PlayerWithHandsView BindingContext="{Binding Game.HandsOfPlayer1}"
+                <views:PlayerWithHandsView x:Name="player1View"
+                                           BindingContext="{Binding Game.HandsOfPlayer1}"
                                            VerticalOptions="StartAndExpand"
                                            HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.15)'}"
                                            IsRotated="False"
                                            PlayerColor="{StaticResource Player1Color}"
                                            ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"/>
             </StackLayout>
-            <AbsoluteLayout x:Name="movingLayer"  IsVisible="False"/>
+            <AbsoluteLayout x:Name="movingLayer" InputTransparent="True"/>
         </Grid>
     </StackLayout>
 </ctrl:BasePage>

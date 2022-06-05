@@ -61,6 +61,13 @@ namespace MiniShogiMobile.ViewModels
                 Hands.Remove(item);
         }
 
+        public List<Koma> CreateKomaList()
+        {
+            return Hands.SelectMany(x =>
+                        Enumerable.Range(1, x.Num.Value)
+                        .Select(i => new Koma(x.Player, x.KomaTypeId, InHand.State)))
+                    .ToList();
+        }
     }
 
 }

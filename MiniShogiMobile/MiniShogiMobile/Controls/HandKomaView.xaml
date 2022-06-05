@@ -11,12 +11,21 @@
   </ContentView.Triggers>
   <ContentView.Content>
         <RelativeLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-            <ctrl:KomaView
-                DisplayName="{Binding Path=DisplayName, Source={x:Reference self}}"
-                RelativeLayout.XConstraint="0"
-                RelativeLayout.YConstraint="0"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"
-                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"/>
+            <!--数が0の場合は非表示(アニメーション用)-->
+            <RelativeLayout.Triggers>
+                <DataTrigger TargetType="RelativeLayout" Binding="{Binding Path=Number, Source={x:Reference self}}" Value="0">
+                    <Setter Property="IsVisible" Value="False"/>
+                </DataTrigger>
+            </RelativeLayout.Triggers>
+            <!--駒-->
+            <ctrl:KomaView x:Name="koma"
+                           IsRotated="{Binding Path=IsRotated, Source={x:Reference self}}"
+                           DisplayName="{Binding Path=DisplayName, Source={x:Reference self}}"
+                           RelativeLayout.XConstraint="0"
+                           RelativeLayout.YConstraint="0"
+                           RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"
+                           RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"/>
+            <!--駒数-->
             <Grid
                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.6}"
                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0}"
@@ -25,6 +34,10 @@
                 <Grid.Triggers>
                     <DataTrigger TargetType="Grid" Binding="{Binding Path=Number, Source={x:Reference self}}" Value="1">
                         <Setter Property="IsVisible" Value="False"/>
+                    </DataTrigger>
+                    <!--反転した際は右下に駒数を表示-->
+                    <DataTrigger TargetType="Grid" Binding="{Binding Path=IsRotated, Source={x:Reference self}}" Value="True">
+                        <Setter Property="RelativeLayout.YConstraint" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.6}"/>
                     </DataTrigger>
                 </Grid.Triggers>
                 <Ellipse Fill="{StaticResource HandKomaNumCircleColor}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>

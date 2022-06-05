@@ -126,9 +126,8 @@ namespace Shogi.Business.Application
                 var playingGame = CurrentPlayingGameRepository.Current();
                 playingGame.Game.Play(moveCommand);
                 GameListener?.OnPlayed(playingGame.Clone(), moveCommand);
-                Next(playingGame, cancellation);
-
                 CurrentPlayingGameRepository.Save(playingGame);
+                Next(playingGame, cancellation);
             }
         }
         /// <summary>
@@ -153,6 +152,7 @@ namespace Shogi.Business.Application
 
             var moveCommand = playingGame.TurnPlayer.Computer.Play(playingGame.Game, cancellation, GameListener);
             GameListener?.OnPlayed(playingGame.Clone(), moveCommand);
+            CurrentPlayingGameRepository.Save(playingGame);
 
             cancellation.ThrowIfCancellationRequested();
 

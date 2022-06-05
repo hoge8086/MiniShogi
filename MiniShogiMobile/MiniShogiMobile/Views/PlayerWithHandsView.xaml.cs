@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MiniShogiMobile.Controls;
+using Shogi.Business.Domain.Model.Komas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -57,5 +59,13 @@ namespace MiniShogiMobile.Views
             set { SetValue(PlayerColorProperty, value); }
         }
         #endregion
+        public IEnumerable<HandKomaView> GetHandKomaViews()
+        {
+            return handsStackLayout.Children.Select(x =>
+            {
+                var grid = x as Grid;
+                return grid.Children[0] as HandKomaView;
+            });
+        }
     }
 }

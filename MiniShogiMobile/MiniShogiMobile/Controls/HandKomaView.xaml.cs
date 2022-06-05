@@ -54,6 +54,27 @@ namespace MiniShogiMobile.Controls
             set { SetValue(IsHighlightProperty, value); }
         }
 
+
+        #region IsRotated
+        public static readonly BindableProperty IsRotatedProperty = BindableProperty.Create(
+                                                                            nameof(IsRotated),
+                                                                            typeof(bool),
+                                                                            typeof(HandKomaView),
+                                                                            null);
+ 
+        /// <summary>
+        /// 反転
+        /// </summary>
+        public bool IsRotated
+        {
+            get { return (bool)GetValue(IsRotatedProperty); }
+            set { SetValue(IsRotatedProperty, value); }
+        }
+        #endregion
+        public KomaView GetKoma()
+        {
+            return koma;
+        }
     }
 
 }

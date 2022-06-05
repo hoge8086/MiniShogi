@@ -12,6 +12,9 @@ namespace MiniShogiMobile.Utils
             var result = new Point(view.X, view.Y);
             while (view.Parent is VisualElement parent && view.Parent != root)
             {
+                if(view is ScrollView scrollView)
+                    result = result.Offset(-scrollView.ScrollX, -scrollView.ScrollY);
+                    
                 result = result.Offset(parent.X, parent.Y);
                 view = parent;
             }

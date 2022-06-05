@@ -50,7 +50,8 @@ namespace MiniShogiMobile.ViewModels
 
         private CancellationTokenSource cancelWaiting;
 
-        public Func<MoveCommand, Task> AnimateKomaMoving;
+        public Func<MoveCommand, Task> StartAnimationOfKomaMoving;
+        public Func<Task> EndAnimationOfKomaMoving;
 
         public PlayGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
@@ -172,7 +173,7 @@ namespace MiniShogiMobile.ViewModels
 
         public void OnStarted(PlayingGame playingGame)
         {
-            Device.InvokeOnMainThreadAsync(() =>
+            Device.InvokeOnMainThreadAsync(async () =>
             {
                 Title = playingGame.GameTemplate.Name;
                 PlayingGame = playingGame;
@@ -182,9 +183,12 @@ namespace MiniShogiMobile.ViewModels
                 Game.HandsOfPlayer1.TurnType.Value = playingGame.Game.State.TurnPlayer == PlayerType.Player1 ? TurnType.FirstTurn : TurnType.SecondTurn;
                 Game.HandsOfPlayer2.Player.Value = playingGame.GerPlayer(PlayerType.Player2);
                 Game.HandsOfPlayer2.TurnType.Value = playingGame.Game.State.TurnPlayer == PlayerType.Player2 ? TurnType.FirstTurn : TurnType.SecondTurn;
-
                 UpdateView();
-            });
+                // MEMO:初手がCPUだと描画が完了する前に手を指してしまい?、
+                // 移動用駒が最大化して表示されてしまうため少し待ちを入れる.(CPU側もWait()してるので処理も止まる)
+                // 条件: どうぶつ将棋、CPU(4手) vs CPU(4手)、先手:2P
+                await Task.Delay(100);
+            }).Wait();
         }
 
         public void OnPlayed(PlayingGame playingGame, MoveCommand moveCommand)
@@ -194,8 +198,9 @@ namespace MiniShogiMobile.ViewModels
             Device.InvokeOnMainThreadAsync(async () =>
             {
                 PlayingGame = playingGame;
-                await AnimateKomaMoving?.Invoke(moveCommand);
+                await StartAnimationOfKomaMoving?.Invoke(moveCommand);
                 UpdateView();
+                await EndAnimationOfKomaMoving?.Invoke();
             }).Wait();
         }
 

@@ -67,34 +67,39 @@
                               HorizontalOptions="FillAndExpand"
                               VerticalOptions="FillAndExpand"
                               Margin="0,0,0,20">
-                <ctrl:KomadaiView.Triggers>
-                    <DataTrigger TargetType="ctrl:KomadaiView" Binding="{Binding Path=IsRotated, Source={x:Reference self}}" Value="True">
-                        <Setter Property="Rotation" Value="180"/>
-                    </DataTrigger>
-                </ctrl:KomadaiView.Triggers>
                 <StackLayout Spacing="0" Orientation="Horizontal">
                     <!--持ち駒-->
                     <ScrollView Orientation="Horizontal"
                                 HorizontalOptions="FillAndExpand"
                                 VerticalOptions="FillAndExpand">
-                        <StackLayout Orientation="Horizontal"
+                        <!-- レイアウト変更がGetKomaView()へ影響あり -->
+                        <FlexLayout x:Name="handsStackLayout"
                                      HorizontalOptions="FillAndExpand"
                                      VerticalOptions="FillAndExpand"
-                                     Spacing="0"
+                                     Direction="Row"
                                      BindableLayout.ItemsSource="{Binding Hands}">
+                            <FlexLayout.Triggers>
+                                <!--TODO:DirectionにRowReverseを指定するとレイアウトが崩れるのでWidhRequestを1000にしている.対処方法は以下をウォッチ-->
+                                <!--https://github.com/xamarin/Xamarin.Forms/issues/15085-->
+                                <DataTrigger TargetType="FlexLayout" Binding="{Binding Path=IsRotated, Source={x:Reference self}}" Value="True">
+                                    <Setter Property="Direction" Value="RowReverse"/>
+                                </DataTrigger>
+                            </FlexLayout.Triggers>
                             <BindableLayout.ItemTemplate>
-
                                <DataTemplate>
                                    <!--なぜかDataTemplate内でx:Referenceが効かないのでRelativeSourceを使う-->
                                    <!--参考:https://social.msdn.microsoft.com/Forums/en-US/bbfd3371-b913-4f0e-9ee3-c811a7282193/xreference-not-working?forum=xamarinforms-->
                                    <Grid WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
                                          xct:TouchEffect.Command="{Binding Source={RelativeSource AncestorType={x:Type views:PlayerWithHandsView}}, Path=ClickCommand}"
                                          xct:TouchEffect.CommandParameter="{Binding .}">
-                                       <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}" IsHighlight="{Binding IsSelected.Value}"/>
+                                       <ctrl:HandKomaView Number="{Binding Num.Value}"
+                                                          DisplayName="{Binding Name}"
+                                                          IsHighlight="{Binding IsSelected.Value}"
+                                                          IsRotated="{Binding Path=IsRotated, Source={RelativeSource AncestorType={x:Type views:PlayerWithHandsView}}}"/>
                                    </Grid>
                                </DataTemplate>
                             </BindableLayout.ItemTemplate>
-                        </StackLayout>
+                        </FlexLayout>
                     </ScrollView>
                 </StackLayout>
             </ctrl:KomadaiView>

@@ -314,6 +314,8 @@ namespace MiniShogiMobile.ViewModels
                     }
                 }
             }
+            komaList.AddRange(Game.HandsOfPlayer1.CreateKomaList());
+            komaList.AddRange(Game.HandsOfPlayer2.CreateKomaList());
             return komaList;
         }
 
