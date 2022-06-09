@@ -13,7 +13,7 @@ namespace Shogi.Business.Domain.Model.AI
             cancellation.ThrowIfCancellationRequested();
             System.Threading.Thread.Sleep(1000);
             var moveCommands = game.CreateAvailableMoveCommand();
-            return new MoveEvaluation(moveCommands[new System.Random().Next(0, moveCommands.Count)], new GameEvaluation(game, game.State.TurnPlayer));
+            return new MoveEvaluation(moveCommands[new System.Random().Next(0, moveCommands.Count)], new GameEvaluation(0, 100, game, game.State.TurnPlayer));
         }
 
     }

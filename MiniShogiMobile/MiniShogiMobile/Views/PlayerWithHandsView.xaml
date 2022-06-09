@@ -43,24 +43,36 @@
                        VerticalOptions="FillAndExpand"
                        HorizontalOptions="FillAndExpand"/>
                 <!--名前-->
-                <Grid Grid.Row="1" Grid.Column="1" RowDefinitions="*,*" Margin="8,0,8,0">
+                <StackLayout Grid.Row="1" Grid.Column="1"
+                             HorizontalOptions="FillAndExpand"
+                             VerticalOptions="FillAndExpand"
+                             Margin="8,0,8,0">
                     <Label Grid.Row="0"
                            FontSize="Micro"
                            TextColor="White"
                            VerticalTextAlignment="Center"
                            HorizontalOptions="CenterAndExpand"
-                           VerticalOptions="FillAndExpand"
+                           VerticalOptions="CenterAndExpand"
                            Text="{Binding Name.Value}"/>
                     <!--先手/後手-->
                     <Label Grid.Row="1"
                            HorizontalOptions="CenterAndExpand"
                            VerticalTextAlignment="Center"
-                           VerticalOptions="FillAndExpand"
+                           VerticalOptions="CenterAndExpand"
                            FontSize="Micro"
                            TextColor="White"
                            Text="{Binding TurnType.Value, Converter={StaticResource EnumToDescriptionConverter}}">
                     </Label>
-                </Grid>
+                    <!--評価値-->
+                    <Label Grid.Row="1"
+                           HorizontalOptions="CenterAndExpand"
+                           VerticalTextAlignment="Center"
+                           VerticalOptions="CenterAndExpand"
+                           FontSize="Micro"
+                           TextColor="White"
+                           Text="{Binding Evaluation.Value}">
+                    </Label>
+                </StackLayout>
             </Grid>
             <!--持ち駒の台-->
             <ctrl:KomadaiView Grid.Column="1"

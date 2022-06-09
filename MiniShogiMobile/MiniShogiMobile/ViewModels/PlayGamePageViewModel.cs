@@ -221,6 +221,8 @@ namespace MiniShogiMobile.ViewModels
             {
                 var player = Game.GetHands(value.PlayerType);
                 player.ProgressOfComputerThinking.Value = value.ProgressRate;
+                if(value.ProgressType == ProgressTypeOfAIThinking.Completed)
+                    player.Evaluation.Value = $"{(int)(value.GameEvaluation.Value / (double)value.GameEvaluation.MaxValue * 100)} ({value.GameEvaluation.Value}/{value.GameEvaluation.MaxValue})";
                 //ProgressOfComputerThinking.Value = value.ProgressRate;
 
                 //if(value.ProgressType == ProgressTypeOfAIThinking.Completed)
@@ -316,6 +318,7 @@ namespace MiniShogiMobile.ViewModels
         public  ReadOnlyReactiveProperty<string> Name { get; }
         public  ReadOnlyReactiveProperty<bool> IsComputer { get; }
         public ReactiveProperty<double> ProgressOfComputerThinking { get; private set; } = new ReactiveProperty<double>();
+        public ReactiveProperty<string> Evaluation { get; private set; } = new ReactiveProperty<string>("-");
         public PlayerWithHandPlayingViewModel()
         {
             Player = new ReactiveProperty<Player>();
