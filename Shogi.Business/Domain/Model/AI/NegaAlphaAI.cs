@@ -21,7 +21,7 @@ namespace Shogi.Business.Domain.Model.AI
         {
             this.Depth = depth;
         }
-        public override MoveEvaluation SelectMove(Game game, CancellationToken cancellation, IProgress<ProgressInfoOfAIThinking> progress)
+        public MoveEvaluation SelectMove(Game game, CancellationToken cancellation, Action<ProgressRate> progress)
         {
             // MEMO:できればコンストラクタでやりたい
             evaluator = new LossAndGainOfKomaEvaluator(game);
@@ -76,10 +76,8 @@ namespace Shogi.Business.Domain.Model.AI
                     sorted.Add(move);
             }
             return sorted;
-
-
         }
-        private MoveEvaluation Search(Game game, PlayerType player, int depth, CancellationToken cancellation, IProgress<ProgressInfoOfAIThinking> progress)
+        private MoveEvaluation Search(Game game, PlayerType player, int depth, CancellationToken cancellation, Action<ProgressRate> progress)
         {
             MoveEvaluation bestMove = null;
 
@@ -115,7 +113,7 @@ namespace Shogi.Business.Domain.Model.AI
                     System.Diagnostics.Debug.WriteLine(string.Join("\n", new MoveEvaluation(moveCommands[i], eval))) ;
                 }
 
-                progress?.Report(new ProgressInfoOfAIThinking(ProgressTypeOfAIThinking.Thinking, ((double)i+1) / moveCommands.Count, game.State.TurnPlayer, null));
+                progress?.Invoke(new ProgressRate(i+1, moveCommands.Count));
             }
 
 

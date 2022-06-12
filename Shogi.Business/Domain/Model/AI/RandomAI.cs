@@ -8,7 +8,7 @@ namespace Shogi.Business.Domain.Model.AI
     {
 
         public override string ToString() => "ランダムAI";
-        public override MoveEvaluation SelectMove(Game game, CancellationToken cancellation, IProgress<ProgressInfoOfAIThinking> progress)
+        public MoveEvaluation SelectMove(Game game, CancellationToken cancellation, Action<ProgressRate> progress)
         {
             cancellation.ThrowIfCancellationRequested();
             System.Threading.Thread.Sleep(1000);

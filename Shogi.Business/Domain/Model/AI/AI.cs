@@ -14,21 +14,19 @@ namespace Shogi.Business.Domain.Model.AI
         Thinking,
         Completed,
     }
-    public class ProgressInfoOfAIThinking
+    public class ProgressRate
     {
-        public ProgressInfoOfAIThinking(ProgressTypeOfAIThinking progressType, double progressRate, PlayerType playerType, GameEvaluation game)
+        public ProgressRate(int current, int total)
         {
-            ProgressRate = progressRate;
-            PlayerType = playerType;
-            GameEvaluation = game;
-            ProgressType = progressType;
+            Current = current;
+            Total = total;
         }
 
-        public double ProgressRate { get; private set; }
-        public PlayerType PlayerType { get; private set; }
-        public GameEvaluation GameEvaluation { get; private set; }
-        public ProgressTypeOfAIThinking ProgressType { get; private set; }
+        public int Current { get; private set; }
+        public int Total { get; private set; }
+        public double DoubleRate { get => (double)Current / Total; }
     }
+
     public class MoveEvaluation
     {
         public MoveEvaluation(MoveCommand moveCommand, GameEvaluation gameEvaluation)
@@ -45,19 +43,8 @@ namespace Shogi.Business.Domain.Model.AI
         }
     }
 
-    [DataContract]
-    public abstract class AI
+    public interface AI
     {
-        public abstract MoveEvaluation SelectMove(Game game, CancellationToken cancellation, IProgress<ProgressInfoOfAIThinking> progress);
-
-        public MoveCommand Play(Game game, CancellationToken cancellation, IProgress<ProgressInfoOfAIThinking> progress)
-        {
-            progress?.Report(new ProgressInfoOfAIThinking(ProgressTypeOfAIThinking.Started, 0.0, game.State.TurnPlayer, null));
-            var computer = game.State.TurnPlayer;
-            var moveEval = SelectMove(game, cancellation, progress);
-            progress?.Report(new ProgressInfoOfAIThinking(ProgressTypeOfAIThinking.Completed, 1.0, game.State.TurnPlayer, moveEval.GameEvaluation));
-            game.Play(moveEval.MoveCommand);
-            return moveEval.MoveCommand;
-        }
+        MoveEvaluation SelectMove(Game game, CancellationToken cancellation, Action<ProgressRate> progress);
     }
 }

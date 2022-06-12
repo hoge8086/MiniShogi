@@ -8,6 +8,9 @@ using System.Threading;
 using Shogi.Business.Domain.Model.GameTemplates;
 using Shogi.Business.Domain.Model.PlayingGames;
 using System.Collections.Generic;
+using Shogi.Business.Domain.Service;
+using Shogi.Business.Domain.Event;
+using Shogi.Business.Domain.Model.PlayingGames.Event;
 
 namespace Shogi.Business.Application
 {
@@ -15,19 +18,13 @@ namespace Shogi.Business.Application
     // [TODO:ゲームの進行をDomainServiceに移す]
     // [MEMO:ApplicationServiceからGetGmae()やGetPlayingGmae()で直接取れないようにすることで、マルチスレッドアクセスを可能にする]
     // [     Clone()したPlayingGameが返る]
-    public interface GameListener : IProgress<ProgressInfoOfAIThinking>
-    {
-        void OnStarted(PlayingGame playingGame);
-        void OnPlayed(PlayingGame playingGame, MoveCommand moveCommand);
-        void OnEnded(PlayerType winner);
-    }
     public class GameService
     {
         private Object thisLock = new Object();
-        private GameListener GameListener = null;
         public IGameTemplateRepository GameTemplateRepository;
         public ICurrentPlayingGameRepository CurrentPlayingGameRepository;
         public IPlayingGameRepository PlayingGameRepository;
+        private PlayGameService playGameService = new PlayGameService();
 
         public GameService(IGameTemplateRepository gameTemplateRepository, ICurrentPlayingGameRepository currentPlayingGameRepository, IPlayingGameRepository playingGameRepository)
         {
@@ -36,13 +33,6 @@ namespace Shogi.Business.Application
             PlayingGameRepository = playingGameRepository;
         }
 
-        public void Subscribe(GameListener listener)
-        {
-            lock(thisLock)
-            {
-                GameListener = listener;
-            }
-        }
         public void SaveCurrent(string playingName)
         {
             lock (thisLock)
@@ -66,10 +56,16 @@ namespace Shogi.Business.Application
                     CurrentPlayingGameRepository.Save(continueGame);
                 }
 
-                var current = CurrentPlayingGameRepository.Current();
-                GameListener?.OnStarted(current.Clone());
-                Next(current, cancellation);
-                CurrentPlayingGameRepository.Save(current);
+                var playingGame = CurrentPlayingGameRepository.Current();
+                try
+                {
+                    DomainEvents.Raise(new GameStarted(playingGame.Clone()));
+                    playGameService.Next(playingGame, cancellation);
+                }
+                finally
+                {
+                    CurrentPlayingGameRepository.Save(playingGame);
+                }
             }
         }
 
@@ -80,25 +76,35 @@ namespace Shogi.Business.Application
                 var template = GameTemplateRepository.FindByName(gameName);
                 var game = new GameFactory().Create(template, firstTurnPlayer);
                 var playingGame = new PlayingGame(players, game, template);
-                GameListener?.OnStarted(playingGame.Clone());
-                Next(playingGame, cancellation);
-
-                CurrentPlayingGameRepository.Save(playingGame);
+                try
+                {
+                    DomainEvents.Raise(new GameStarted(playingGame.Clone()));
+                    playGameService.Next(playingGame, cancellation);
+                }
+                finally
+                {
+                    CurrentPlayingGameRepository.Save(playingGame);
+                }
             }
         }
-        public void Restart(CancellationToken cancellation)
-        {
-            lock (thisLock)
-            {
-                var playingGame = CurrentPlayingGameRepository.Current();
-                playingGame.Reset();
+        //public void Restart(CancellationToken cancellation)
+        //{
+        //    lock (thisLock)
+        //    {
+        //        var playingGame = CurrentPlayingGameRepository.Current();
+        //        playingGame.Reset();
 
-                GameListener?.OnStarted(playingGame.Clone());
-                Next(playingGame, cancellation);
-
-                CurrentPlayingGameRepository.Save(playingGame);
-            }
-        }
+        //        try
+        //        {
+        //            DomainEvents.Raise(new GameStarted(playingGame.Clone()));
+        //            playGameService.Next(playingGame, cancellation);
+        //        }
+        //        finally
+        //        {
+        //            CurrentPlayingGameRepository.Save(playingGame);
+        //        }
+        //    }
+        //}
 
         public void Undo(Game.UndoType undoType)
         {
@@ -124,39 +130,14 @@ namespace Shogi.Business.Application
             lock (thisLock)
             {
                 var playingGame = CurrentPlayingGameRepository.Current();
-                playingGame.Game.Play(moveCommand);
-                GameListener?.OnPlayed(playingGame.Clone(), moveCommand);
-                CurrentPlayingGameRepository.Save(playingGame);
-                Next(playingGame, cancellation);
+                try
+                {
+                    playGameService.Play(playingGame, moveCommand, cancellation);
+                }finally
+                {
+                    CurrentPlayingGameRepository.Save(playingGame);
+                }
             }
-        }
-        /// <summary>
-        /// ゲーム進行はDomainService化する
-        /// </summary>
-        /// <param name="playingGame"></param>
-        /// <param name="cancellation"></param>
-        private void Next(PlayingGame playingGame, CancellationToken cancellation)
-        {
-            System.Diagnostics.Debug.WriteLine("----------------------");
-            System.Diagnostics.Debug.WriteLine(playingGame.Game.ToString());
-            if(playingGame.Game.State.IsEnd)
-            {
-                GameListener?.OnEnded(playingGame.Game.State.GameResult.Winner);
-                return;
-            }
-
-            if(playingGame.TurnPlayer.IsHuman)
-            {
-                return;
-            }
-
-            var moveCommand = playingGame.TurnPlayer.Computer.Play(playingGame.Game, cancellation, GameListener);
-            GameListener?.OnPlayed(playingGame.Clone(), moveCommand);
-            CurrentPlayingGameRepository.Save(playingGame);
-
-            cancellation.ThrowIfCancellationRequested();
-
-            Next(playingGame, cancellation);
         }
 
         public void Resume(CancellationToken cancellation)
@@ -164,9 +145,13 @@ namespace Shogi.Business.Application
             lock(thisLock)
             {
                 var playingGame = CurrentPlayingGameRepository.Current();
-                Next(playingGame, cancellation);
-
-                CurrentPlayingGameRepository.Save(playingGame);
+                try
+                {
+                    playGameService.Next(playingGame, cancellation);
+                }finally
+                {
+                    CurrentPlayingGameRepository.Save(playingGame);
+                }
             }
         }
     }

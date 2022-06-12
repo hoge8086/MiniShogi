@@ -6,13 +6,16 @@ using Prism.Services;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using Shogi.Business.Application;
+using Shogi.Business.Domain.Event;
 using Shogi.Business.Domain.Model.AI;
+using Shogi.Business.Domain.Model.AI.Event;
 using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Games;
 using Shogi.Business.Domain.Model.Komas;
 using Shogi.Business.Domain.Model.Players;
 using Shogi.Business.Domain.Model.PlayerTypes;
 using Shogi.Business.Domain.Model.PlayingGames;
+using Shogi.Business.Domain.Model.PlayingGames.Event;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,7 +38,7 @@ namespace MiniShogiMobile.ViewModels
     {
         Task HandleAsync(PlayGamePageViewModel vm, ISelectable cell);
     }
-    public class PlayGamePageViewModel : NavigationViewModel<PlayGameCondition>, GameListener
+    public class PlayGamePageViewModel : NavigationViewModel<PlayGameCondition>
     {
         public PlayingGame PlayingGame { get; private set; }
         private ReactiveProperty<IViewState> ViewState;
@@ -171,18 +174,18 @@ namespace MiniShogiMobile.ViewModels
             Game.HandsOfPlayer2.IsCurrentTurn.Value = game.State.TurnPlayer == PlayerType.Player2;
         }
 
-        public void OnStarted(PlayingGame playingGame)
+        public void OnGameStarted(GameStarted e)
         {
             Device.InvokeOnMainThreadAsync(async () =>
             {
-                Title = playingGame.GameTemplate.Name;
-                PlayingGame = playingGame;
+                Title = e.PlayingGame.GameTemplate.Name;
+                PlayingGame = e.PlayingGame;
                 // [TODO:かっこ悪いので直す]
                 // [プレイヤー]
-                Game.HandsOfPlayer1.Player.Value = playingGame.GerPlayer(PlayerType.Player1);
-                Game.HandsOfPlayer1.TurnType.Value = playingGame.Game.State.TurnPlayer == PlayerType.Player1 ? TurnType.FirstTurn : TurnType.SecondTurn;
-                Game.HandsOfPlayer2.Player.Value = playingGame.GerPlayer(PlayerType.Player2);
-                Game.HandsOfPlayer2.TurnType.Value = playingGame.Game.State.TurnPlayer == PlayerType.Player2 ? TurnType.FirstTurn : TurnType.SecondTurn;
+                Game.HandsOfPlayer1.Player.Value = e.PlayingGame.GerPlayer(PlayerType.Player1);
+                Game.HandsOfPlayer1.TurnType.Value = e.PlayingGame.Game.State.TurnPlayer == PlayerType.Player1 ? TurnType.FirstTurn : TurnType.SecondTurn;
+                Game.HandsOfPlayer2.Player.Value = e.PlayingGame.GerPlayer(PlayerType.Player2);
+                Game.HandsOfPlayer2.TurnType.Value = e.PlayingGame.Game.State.TurnPlayer == PlayerType.Player2 ? TurnType.FirstTurn : TurnType.SecondTurn;
                 UpdateView();
                 // MEMO:初手がCPUだと描画が完了する前に手を指してしまい?、
                 // 移動用駒が最大化して表示されてしまうため少し待ちを入れる.(CPU側もWait()してるので処理も止まる)
@@ -191,50 +194,68 @@ namespace MiniShogiMobile.ViewModels
             }).Wait();
         }
 
-        public void OnPlayed(PlayingGame playingGame, MoveCommand moveCommand)
+        public void OnGamePlayed(GamePlayed e)
         {
             // Note:MoveCommandを取得して、それによって描画更新を行えば、アニメーションに対応できる
             //      また、最後の着手手が分かるので、最後の着手手をハイライトできる
             Device.InvokeOnMainThreadAsync(async () =>
             {
-                PlayingGame = playingGame;
-                await StartAnimationOfKomaMoving?.Invoke(moveCommand);
+                PlayingGame = e.PlayingGame;
+                await StartAnimationOfKomaMoving?.Invoke(e.MoveCommand);
                 UpdateView();
                 await EndAnimationOfKomaMoving?.Invoke();
             }).Wait();
         }
 
-        public void OnEnded(PlayerType winner)
+        public void OnGameEnded(GameEnded e)
         {
             Device.InvokeOnMainThreadAsync(() =>
             {
-                var player = PlayingGame.GerPlayer(winner);
+                var player = PlayingGame.GerPlayer(e.Winner);
                 PageDialogService.DisplayAlertAsync(
                      "ゲーム終了",
-                     $"勝者: {player.Name}({winner.ToString()})",
+                     $"勝者: {player.Name}({e.Winner.ToString()})",
                      "OK");
             });
         }
-        public void Report(ProgressInfoOfAIThinking value)
+        public void OnComputerThinkingProgressed(ComputerThinkingProgressed e)
         {
             Device.InvokeOnMainThreadAsync(() =>
             {
-                var player = Game.GetHands(value.PlayerType);
-                player.ProgressOfComputerThinking.Value = value.ProgressRate;
-                if(value.ProgressType == ProgressTypeOfAIThinking.Completed)
-                    player.Evaluation.Value = $"{(int)(value.GameEvaluation.Value / (double)value.GameEvaluation.MaxValue * 100)} ({value.GameEvaluation.Value}/{value.GameEvaluation.MaxValue})";
-                //ProgressOfComputerThinking.Value = value.ProgressRate;
-
-                //if(value.ProgressType == ProgressTypeOfAIThinking.Completed)
-                //    Evaluation.Value = value.GameEvaluation.Value;
+                var player = Game.GetHands(e.PlayerType);
+                player.ProgressOfComputerThinking.Value = e.ProgressRate.DoubleRate;
             });
         }
+        public void OnComputerThinkingStarted(ComputerThinkingStarted e)
+        {
+            Device.InvokeOnMainThreadAsync(() =>
+            {
+                var player = Game.GetHands(e.PlayerType);
+                player.ProgressOfComputerThinking.Value = 0.0;
+            });
+        }
+        public void OnComputerThinkingEnded(ComputerThinkingEnded endedEvent)
+        {
+            Device.InvokeOnMainThreadAsync(() =>
+            {
+                var player = Game.GetHands(endedEvent.PlayerType);
+
+                if(endedEvent.GameEvaluation != null)   //キャンセルの場合はnull
+                    player.Evaluation.Value = $"{(int)(endedEvent.GameEvaluation.Value / (double)endedEvent.GameEvaluation.MaxValue * 100)} ({endedEvent.GameEvaluation.Value}/{endedEvent.GameEvaluation.MaxValue})";
+            });
+        }
+
         public override async Task PrepareAsync(PlayGameCondition parameter)
         {
             await this.CatchErrorWithMessageAsync(async () =>
             {
-
-                App.GameService.Subscribe(this);
+                // イベントを購読
+                DomainEvents.AddHandler<ComputerThinkingEnded>(OnComputerThinkingEnded);
+                DomainEvents.AddHandler<ComputerThinkingProgressed>(OnComputerThinkingProgressed);
+                DomainEvents.AddHandler<ComputerThinkingStarted>(OnComputerThinkingStarted);
+                DomainEvents.AddHandler<GameEnded>(OnGameEnded);
+                DomainEvents.AddHandler<GameStarted>(OnGameStarted);
+                DomainEvents.AddHandler<GamePlayed>(OnGamePlayed);
 
                 if (parameter.PlayMode == PlayMode.NewGame)
                 {
@@ -255,6 +276,23 @@ namespace MiniShogiMobile.ViewModels
                     throw new ArgumentException(nameof(PlayGameCondition));
                 }
             });
+        }
+        public override void Destroy()
+        {
+            cancelWaiting?.Cancel();
+            //while (ViewState.Value is ViewStateWaiting)
+            //    Task.Delay(100); //(アニメーションのawaitとたぶんデッドロックしてる)
+            // FIX:終了を完全に待つ必要がある
+            // AI思考スレッドはUIのアニメーションを待機しているので、アニメーションにページを戻るとコレクション操作中に上記の消す処理を行ってしまって例外が出る
+            // なぜかViewState.Valueの値が更新されず、ずっとViewStateWaitingのままなので、それを待つのはうまくいかない
+            DomainEvents.RemoveHandler<ComputerThinkingEnded>(OnComputerThinkingEnded);
+            DomainEvents.RemoveHandler<ComputerThinkingProgressed>(OnComputerThinkingProgressed);
+            DomainEvents.RemoveHandler<ComputerThinkingStarted>(OnComputerThinkingStarted);
+            DomainEvents.RemoveHandler<GameEnded>(OnGameEnded);
+            DomainEvents.RemoveHandler<GameStarted>(OnGameStarted);
+            DomainEvents.RemoveHandler<GamePlayed>(OnGamePlayed);
+
+            base.Destroy();
         }
     }
 

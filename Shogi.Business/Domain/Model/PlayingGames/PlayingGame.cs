@@ -15,7 +15,6 @@ namespace Shogi.Business.Domain.Model.PlayingGames
         [DataMember]
         public string Name { get; private set; }
         [DataMember]
-        //private Dictionary<string, Player> Players;
         private List<Player> Players;
         [DataMember]
         public Game Game { get; private set; }
