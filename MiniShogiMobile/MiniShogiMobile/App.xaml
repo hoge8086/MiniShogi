@@ -89,6 +89,7 @@
     <!--ページ-->
         <Style x:Key="PageStyle" TargetType="Page">
             <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
+            <Setter Property="NavigationPage.HasNavigationBar" Value="False"/>
         </Style>
         <Style x:Key="TabbedPageStyle" TargetType="TabbedPage">
             <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}"/>

@@ -93,5 +93,17 @@ namespace MiniShogiMobile.Views
             // 移動アニメーション開始
             await movingKoma.LayoutTo(new Rectangle(destScreenCoords.X, destScreenCoords.Y, destCell.Height, destCell.Width), 320, Easing.SinOut);
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            if(BindingContext is PlayGamePageViewModel vm)
+            {
+                Device.BeginInvokeOnMainThread(async() =>
+                {
+                    vm.BackAsync();
+                });
+            }
+            return true;
+        }
     }
 }

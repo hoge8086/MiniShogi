@@ -26,7 +26,16 @@ namespace MiniShogiMobile.Droid
         }
         public override void OnBackPressed()
         {
-            PopupPlugin.OnBackPressed();
+            //PopupPlugin.OnBackPressed();
+            // MEMO:↓を呼ばないとAndroidでPageクラスのOnBackPressed()が呼ばれない
+            if (Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed))
+            {
+                // Do something if there are some pages in the `PopupStack`
+            }
+            else
+            {
+                // Do something if there are not any pages in the `PopupStack`
+            }
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults)
         {

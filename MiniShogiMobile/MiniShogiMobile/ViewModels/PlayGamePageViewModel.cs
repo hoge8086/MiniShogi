@@ -277,14 +277,15 @@ namespace MiniShogiMobile.ViewModels
                 }
             });
         }
-        public override void Destroy()
+
+                    
+        public async void BackAsync()
         {
             cancelWaiting?.Cancel();
-            //while (ViewState.Value is ViewStateWaiting)
-            //    Task.Delay(100); //(アニメーションのawaitとたぶんデッドロックしてる)
-            // FIX:終了を完全に待つ必要がある
-            // AI思考スレッドはUIのアニメーションを待機しているので、アニメーションにページを戻るとコレクション操作中に上記の消す処理を行ってしまって例外が出る
-            // なぜかViewState.Valueの値が更新されず、ずっとViewStateWaitingのままなので、それを待つのはうまくいかない
+            // バックグランドの処理が終わるのを待つ
+            while (ViewState.Value is ViewStateWaiting)
+                await Task.Delay(100);
+
             DomainEvents.RemoveHandler<ComputerThinkingEnded>(OnComputerThinkingEnded);
             DomainEvents.RemoveHandler<ComputerThinkingProgressed>(OnComputerThinkingProgressed);
             DomainEvents.RemoveHandler<ComputerThinkingStarted>(OnComputerThinkingStarted);
@@ -292,7 +293,7 @@ namespace MiniShogiMobile.ViewModels
             DomainEvents.RemoveHandler<GameStarted>(OnGameStarted);
             DomainEvents.RemoveHandler<GamePlayed>(OnGamePlayed);
 
-            base.Destroy();
+            await GoBackAsync();
         }
     }
 
