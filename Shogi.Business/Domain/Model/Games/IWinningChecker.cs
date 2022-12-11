@@ -54,6 +54,10 @@ namespace Shogi.Business.Domain.Model.Games
     {
         public bool IsWinning(Game game, PlayerType player)
         {
+            if (game.State.TurnPlayer == player)
+                if (game.DoOte(player))
+                    return true;
+
             return game.DoCheckmate(player);
         }
     }
