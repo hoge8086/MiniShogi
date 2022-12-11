@@ -263,6 +263,7 @@ namespace Shogi.Business.Domain.Model.Games
             if (moveCommands.Count == 0)
                 return true;
 
+            // そもそも王手じゃないなら、チェックメイトではない
             if (!DoOte(player))
                 return false;
 
