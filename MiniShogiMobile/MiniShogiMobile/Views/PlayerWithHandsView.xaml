@@ -38,10 +38,14 @@
                     </ProgressBar.Triggers>
                 </ProgressBar>
                 <!--プレイヤーアイコン-->
-                <Image Grid.Row="1" Grid.Column="0"
-                       Source="{utils:ImageResource MiniShogiMobile.Images.Character1.png}"
-                       VerticalOptions="FillAndExpand"
-                       HorizontalOptions="FillAndExpand"/>
+                <!--PCLの埋込リースからIsAnimationPlayingを使うと死ぬ-->
+                <!--https://github.com/xamarin/Xamarin.Forms/issues/10895-->
+                <ctrl:ImageSelector Grid.Row="1" Grid.Column="0"
+                                    ImageSources="{Binding CharacterImages}"
+                                    SelectedImage="{Binding SelectedCharacterImage.Value, Mode=OneWay}"
+                                    IsAnimationPlaying="{Binding IsCharacterAnimating.Value, Mode=OneWay}"
+                                    VerticalOptions="FillAndExpand"
+                                    HorizontalOptions="FillAndExpand"/>
                 <!--名前-->
                 <StackLayout Grid.Row="1" Grid.Column="1"
                              HorizontalOptions="FillAndExpand"

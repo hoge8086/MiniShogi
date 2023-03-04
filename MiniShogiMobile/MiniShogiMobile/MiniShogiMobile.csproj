@@ -1,16 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Images\Character1.png" />
-  </ItemGroup>
-
-
 
   <ItemGroup>
+    <EmbeddedResource Include="Images\Character1_Thinking.gif" />
     <EmbeddedResource Include="Images\Copy.png" />
     <EmbeddedResource Include="Images\CopyKoma.png" />
     <EmbeddedResource Include="Images\Delete.png" />
@@ -18,7 +14,7 @@
     <EmbeddedResource Include="Images\Edit.png" />
     <EmbeddedResource Include="Images\EditBoard.png" />
     <EmbeddedResource Include="Images\EditKoma.png" />
-    <EmbeddedResource Include="Images\Character1.png" />
+    <EmbeddedResource Include="Images\Character1_Normal.png" />
     <EmbeddedResource Include="Images\Floppy.png" />
     <EmbeddedResource Include="Images\Plus.png" />
   </ItemGroup>

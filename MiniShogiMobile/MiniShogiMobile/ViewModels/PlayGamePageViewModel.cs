@@ -61,6 +61,9 @@ namespace MiniShogiMobile.ViewModels
             PlayingGame = null;
             ViewState = new ReactiveProperty<IViewState>(new ViewStateWaiting());
             Game = new GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel>();
+            Game.HandsOfPlayer1.AddTo(this.Disposable);
+            Game.HandsOfPlayer2.AddTo(this.Disposable);
+
             MoveCommand = new AsyncReactiveCommand<ISelectable>();
             MoveCommand.Subscribe(async x =>
             {
@@ -231,6 +234,7 @@ namespace MiniShogiMobile.ViewModels
             Device.InvokeOnMainThreadAsync(() =>
             {
                 var player = Game.GetHands(e.PlayerType);
+                player.FaceType.Value = CharactorFaceType.Thinking_Gif;
                 player.ProgressOfComputerThinking.Value = 0.0;
             });
         }
@@ -242,6 +246,7 @@ namespace MiniShogiMobile.ViewModels
 
                 if(endedEvent.GameEvaluation != null)   //キャンセルの場合はnull
                     player.Evaluation.Value = $"{(int)(endedEvent.GameEvaluation.Value / (double)endedEvent.GameEvaluation.MaxValue * 100)} ({endedEvent.GameEvaluation.Value}/{endedEvent.GameEvaluation.MaxValue})";
+                player.FaceType.Value = CharactorFaceType.Normal_Png;
             });
         }
 
@@ -349,6 +354,20 @@ namespace MiniShogiMobile.ViewModels
         SecondTurn,
     }
 
+
+    public enum CharactorFaceType
+    {
+        Normal_Png,
+        Thinking_Gif,
+    }
+    static class CharactorFaceTypeEx
+    {
+        public static bool IsGif(this CharactorFaceType type)
+        {
+            return type.ToString().EndsWith("_Gif");
+        }
+    }
+
     public class PlayerWithHandPlayingViewModel : HandsViewModel<HandKomaPlayingViewModel>
     {
         public ReactiveProperty<Player> Player { get; set; }
@@ -358,6 +377,21 @@ namespace MiniShogiMobile.ViewModels
         public  ReadOnlyReactiveProperty<bool> IsComputer { get; }
         public ReactiveProperty<double> ProgressOfComputerThinking { get; private set; } = new ReactiveProperty<double>();
         public ReactiveProperty<string> Evaluation { get; private set; } = new ReactiveProperty<string>("-");
+        public ReactiveProperty<CharactorFaceType> FaceType{ get; set; }
+        public ReadOnlyReactiveProperty<bool> IsCharacterAnimating{ get; set; }
+        public ReadOnlyReactiveProperty<string> SelectedCharacterImage { get; set; }
+
+        public List<string> CharacterImages { get; }
+
+        private string CharactorName;
+
+        public void AddTo(ICollection<IDisposable> disposable)
+        {
+            IsCharacterAnimating.AddTo(disposable);
+            SelectedCharacterImage.AddTo(disposable);
+        }
+
+
         public PlayerWithHandPlayingViewModel()
         {
             Player = new ReactiveProperty<Player>();
@@ -366,6 +400,21 @@ namespace MiniShogiMobile.ViewModels
             Name = Player.Select(x => x?.Name).ToReadOnlyReactiveProperty();
             IsComputer = Player.Select(x => x == null ? false : x.IsComputer).ToReadOnlyReactiveProperty();
             ProgressOfComputerThinking = new ReactiveProperty<double>();
+
+            CharactorName = "Character1";
+            CharacterImages = Enum.GetValues(typeof(CharactorFaceType))
+                                .OfType<CharactorFaceType>()
+                                .Select(x => GetImagePath(x))
+                                .ToList();
+
+            FaceType = new ReactiveProperty<CharactorFaceType>(CharactorFaceType.Normal_Png);
+            IsCharacterAnimating = FaceType.Select(x => x.IsGif()).ToReadOnlyReactiveProperty();
+            SelectedCharacterImage = FaceType.Select(x => GetImagePath(x)).ToReadOnlyReactiveProperty();
+
+            string GetImagePath(CharactorFaceType type)
+            {
+                return $"{CharactorName}_{type.ToString().Replace("_", ".")}";
+            }
         }
     }
 }

@@ -131,5 +131,15 @@
       <Link>Assets\BackgroundFlowImage.html</Link>
     </AndroidAsset>
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="..\MiniShogiMobile\Images\Character1_Normal.png">
+      <Link>Resources\drawable\Character1_Normal.png</Link>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="..\MiniShogiMobile\Images\Character1_Thinking.gif">
+      <Link>Resources\drawable\Character1_Thinking.gif</Link>
+    </AndroidResource>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

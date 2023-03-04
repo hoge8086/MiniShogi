@@ -107,6 +107,12 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\MiniShogiMobile\Images\Character1_Normal.png">
+      <Link>Character1_Normal.png</Link>
+    </Content>
+    <Content Include="..\MiniShogiMobile\Images\Character1_Thinking.gif">
+      <Link>Character1_Thinking.gif</Link>
+    </Content>
     <Content Include="..\MiniShogiMobile\WebResources\HTML\BackgroundFlowImage.html">
       <Link>Assets\BackgroundFlowImage.html</Link>
     </Content>
