@@ -104,6 +104,9 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="Renderers\BackgroundWebViewRenderer.cs" />
+    <Compile Include="Renderers\BorderlessEntryRenderer.cs" />
+    <Compile Include="Service\BaseUrl.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <LinkDescription Include="LinkerSettings.xml" />
@@ -214,6 +217,16 @@
       <Project>{A682884C-CB44-4A89-B752-27BB634E0ABE}</Project>
       <Name>MiniShogiMobile</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="..\MiniShogiMobile\WebResources\HTML\BackgroundFlowImage.html">
+      <Link>Resources\BackgroundFlowImage.html</Link>
+    </BundleResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="..\MiniShogiMobile\WebResources\Images\BackgroundCloud.png">
+      <Link>Resources\BackgroundCloud.png</Link>
+    </BundleResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
