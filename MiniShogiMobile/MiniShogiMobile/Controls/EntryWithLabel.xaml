@@ -10,6 +10,7 @@
            Padding="0"
            CornerRadius="10"
            HasShadow="False"
+           IsClippedToBounds="True"
            HeightRequest="35"
            HorizontalOptions="FillAndExpand">
         <Grid ColumnDefinitions="Auto,*">

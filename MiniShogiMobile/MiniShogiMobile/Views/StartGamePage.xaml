@@ -7,18 +7,29 @@
              xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.StartGamePage"
-             Title="はじめる">
-    <StackLayout VerticalOptions="FillAndExpand" Margin="20" Spacing="40">
-        <Picker Title="ゲームを選択してください"
-                HorizontalTextAlignment="Center"
-                VerticalOptions="Start"
-                ItemsSource="{Binding GameNameList}"
-                SelectedItem="{Binding GameName.Value}"/>
+             Title="対局設定">
+    <StackLayout VerticalOptions="FillAndExpand" Margin="20" Spacing="20">
+
+        <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+            <Label Text="将棋盤の選択"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"/>
+            <Picker HorizontalOptions="EndAndExpand"
+                    BackgroundColor="{StaticResource AppControlLightColor}"
+                    TextColor="{StaticResource AppFontDarkColor}"
+                    HorizontalTextAlignment="Center"
+                    VerticalOptions="Start"
+                    ItemsSource="{Binding GameNameList}"
+                    SelectedItem="{Binding GameName.Value}"/>
+        </StackLayout>
+        <BoxView Style="{StaticResource HorizontalLine}"/>
         <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="*,*" HorizontalOptions="Center">
             <ctrl:PlayerView Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
                     WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
-                    Text="P1"
+                    Text="P1"/>
+                    <!--
                     BackgroundColor="{StaticResource Player2Color}"/>
+                    -->
             <ctrl:SwitchablePicker Grid.Column="1" Grid.Row="0" HorizontalOptions="Center"
                     DisplayConverter="{StaticResource EnumToDescriptionConverter}"
                     ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
@@ -31,11 +42,14 @@
                                        MaximumValue="10"/>
             </StackLayout>
         </Grid>
+        <BoxView Style="{StaticResource HorizontalLine}"/>
         <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="*,*" HorizontalOptions="Center">
             <ctrl:PlayerView Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
                     WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
-                    Text="P1"
+                    Text="P2"/>
+                    <!--
                     BackgroundColor="{StaticResource Player1Color}"/>
+                    -->
             <ctrl:SwitchablePicker Grid.Column="1" Grid.Row="0" HorizontalOptions="Center"
                     DisplayConverter="{StaticResource EnumToDescriptionConverter}"
                     ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
@@ -48,10 +62,15 @@
                                        MaximumValue="10"/>
             </StackLayout>
         </Grid>
-        <ctrl:SwitchablePicker  HorizontalOptions="Center"
-                DisplayConverter="{StaticResource EnumToDescriptionConverter}"
-                ItemsSource="{Binding Source={local:EnumSelectFirstTurnPlayerProvider}}"
-                SelectedItem="{Binding FirstTurnPlayer.Value}"/>
+        <BoxView Style="{StaticResource HorizontalLine}"/>
+        <StackLayout Spacing="5">
+            <Label Text="読みの深さ" HorizontalOptions="Center"/>
+            <ctrl:SwitchablePicker  HorizontalOptions="Center"
+                    DisplayConverter="{StaticResource EnumToDescriptionConverter}"
+                    ItemsSource="{Binding Source={local:EnumSelectFirstTurnPlayerProvider}}"
+                    SelectedItem="{Binding FirstTurnPlayer.Value}"/>
+        </StackLayout>
+        <BoxView Style="{StaticResource HorizontalLine}"/>
         <Button Text="対局開始" Command="{Binding PlayGameCommand}"/>
     </StackLayout>
 </ctrl:BasePage>

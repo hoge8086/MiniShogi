@@ -16,13 +16,15 @@
     <!--ContentPage.ControlTemplateを使用するとToolbarItemのBindingが機能しない-->
     <!--https://github.com/PrismLibrary/Prism/issues/1399-->
     <ctrl:BasePage.ToolbarItems>
+        <!--
         <ToolbarItem Text="設定"
                      Order="Secondary"
                      Priority="0" />
+        -->
         <ToolbarItem Text="完了"
                      Command="{Binding BindingContext.SaveCommand, Source={x:Reference page}}"
                      Order="Primary"
-                     Priority="1" />
+                     Priority="0" />
     </ctrl:BasePage.ToolbarItems>
     <Grid RowDefinitions="Auto,*" ColumnDefinitions="10,*,10">
         <!--メニュー-->
@@ -84,8 +86,10 @@
                 <ctrl:PlayerView
                     Grid.Column="1"
                     Text="P2"
-                    WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
+                    WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
+                    <!--
                     BackgroundColor="{StaticResource Player2Color}">
+                     -->
                 </ctrl:PlayerView>
                 <!--駒台-->
                 <!--TODO:一部HandsOfCreateGameViewの中からCreateGamePageを直接参照しているのが気に入らない-->
@@ -146,8 +150,10 @@
                 <!--プレイヤーアイコン-->
                 <ctrl:PlayerView Grid.Column="0"
                                  Text="P1"
-                                 WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
+                                 WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
+                                <!--
                                  BackgroundColor="{StaticResource Player1Color}">
+                                 -->
                 </ctrl:PlayerView>
                 <!--駒台-->
                 <views:HandsOfCreateGameView Grid.Column="1"

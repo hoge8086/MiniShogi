@@ -9,6 +9,7 @@
            BorderColor="{StaticResource AppControlDarkColor}"
            Padding="0"
            HorizontalOptions="FillAndExpand"
+           IsClippedToBounds="True"
            CornerRadius="10"
            HasShadow="False">
       <Grid ColumnDefinitions="*,*" ColumnSpacing="0" RowSpacing="0">

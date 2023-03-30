@@ -11,7 +11,7 @@
         <Style TargetType="Button">
             <Setter Property="BackgroundColor" Value="{StaticResource AppControlDarkColor2}"/>
             <Setter Property="TextColor" Value="{StaticResource AppFontLightColor}"/>
-            <Setter Property="CornerRadius" Value="25"/>
+            <Setter Property="CornerRadius" Value="4"/>
             <Setter Property="HeightRequest" Value="40"/>
             <Setter Property="BorderWidth" Value="0"/>
             <!--

@@ -2,12 +2,15 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              x:Class="MiniShogiMobile.Controls.PlayerView"
              x:Name="self">
     <ContentView.Resources>
         <utils:IsNotNullConverter x:Key="isNotNullConverter"/>
     </ContentView.Resources>
   <ContentView.Content>
+        <ctrl:KomaView DisplayName="{Binding Path=Text, Source={x:Reference self}}"/>
+        <!--
         <Frame Padding="2" CornerRadius="0" BackgroundColor="{Binding Path=BackgroundColor, Source={x:Reference self}}">
             <Frame Padding="1" CornerRadius="0" BackgroundColor="White">
                 <Frame Padding="0" CornerRadius="0" BackgroundColor="{Binding Path=BackgroundColor, Source={x:Reference self}}">
@@ -29,5 +32,6 @@
                 </Frame>
             </Frame>
         </Frame>
+        -->
   </ContentView.Content>
 </ContentView>

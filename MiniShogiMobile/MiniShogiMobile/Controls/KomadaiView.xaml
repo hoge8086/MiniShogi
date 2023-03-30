@@ -8,12 +8,14 @@
             <Frame BackgroundColor="{StaticResource BoardBorderColor}"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand"
+                HasShadow="False"
                 Padding="0"
                 CornerRadius="0">
                 <Frame BackgroundColor="{StaticResource BoardBackgroundColor}"
                     Margin="1"
                     Padding="0"
                     CornerRadius="0"
+                    HasShadow="False"
                     HorizontalOptions="FillAndExpand"
                     VerticalOptions="FillAndExpand">
                     <ContentPresenter/>

@@ -10,7 +10,8 @@
              Title="つづきから"
              x:Name="root">
         <StackLayout VerticalOptions="FillAndExpand">
-            <ListView ItemsSource="{Binding PlayingGameList}" SelectedItem="{Binding SelectedPlayingGame.Value}">
+            <ListView ItemsSource="{Binding PlayingGameList}" SelectedItem="{Binding SelectedPlayingGame.Value}"
+                      BackgroundColor="Transparent">
                 <ListView.Behaviors>
                     <xct:EventToCommandBehavior
                         EventName="ItemTapped"

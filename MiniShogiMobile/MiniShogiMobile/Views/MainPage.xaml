@@ -5,10 +5,11 @@
              xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              x:Class="MiniShogiMobile.Views.MainPage"
              Style="{StaticResource PageStyle}"
-             Title="ミニ将棋">
+             Title="ホーム">
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Button Text="はじめる" Command="{Binding StartGameCommand}"/>
-        <Button Text="つづきから" Command="{Binding ContinueGameCommand}"/>
-        <Button Text="作る" Command="{Binding CreateGameCommand}"/>
+        <Label Text="作って将棋(仮)" Margin="0,0,0,30" FontSize="Large"/>
+        <Button Text="はじめる" Command="{Binding StartGameCommand}" WidthRequest="100"/>
+        <Button Text="つづきから" Command="{Binding ContinueGameCommand}"  WidthRequest="100"/>
+        <Button Text="作る" Command="{Binding CreateGameCommand}" WidthRequest="100"/>
     </StackLayout>
 </ctrl:BasePage>

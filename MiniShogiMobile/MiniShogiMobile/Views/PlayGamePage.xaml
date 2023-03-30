@@ -13,11 +13,11 @@
     <StackLayout>
         <StackLayout Orientation="Horizontal"
                      Margin="10">
-            <Button Text="保存" Command="{Binding SaveCommand}"/>
-            <Button Text="停止" Command="{Binding StopCommand}"/>
-            <Button Text="再開" Command="{Binding ResumeCommand}"/>
-            <Button Text="戻る" Command="{Binding UndoCommand}"/>
-            <Button Text="進む" Command="{Binding RedoCommand}"/>
+            <Button Text="保存" Command="{Binding SaveCommand}" Padding="10,0,10,0"/>
+            <Button Text="停止" Command="{Binding StopCommand}" Padding="10,0,10,0"/>
+            <Button Text="再開" Command="{Binding ResumeCommand}" Padding="10,0,10,0"/>
+            <Button Text="戻る" Command="{Binding UndoCommand}" Padding="10,0,10,0"/>
+            <Button Text="進む" Command="{Binding RedoCommand}" Padding="10,0,10,0"/>
         </StackLayout>
         <Grid x:Name="field" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <StackLayout x:Name="gameField"

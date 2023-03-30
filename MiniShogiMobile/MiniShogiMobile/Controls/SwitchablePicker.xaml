@@ -8,6 +8,7 @@
                BorderColor="{StaticResource AppControlDarkColor}"
                Padding="0"
                HorizontalOptions="FillAndExpand"
+               IsClippedToBounds="True"
                CornerRadius="10"
                HasShadow="False">
             <StackLayout Spacing="0"

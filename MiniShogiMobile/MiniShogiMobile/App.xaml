@@ -55,6 +55,10 @@
         <Color x:Key="KomaColor">#076670</Color>
         <Color x:Key="KomaBorderColor">#76DE92</Color>
         -->
+    <!--リストビュー-->
+        <Style TargetType="ListView">
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+        </Style>
 
       
     <!--タブ-->
@@ -89,7 +93,9 @@
     <!--ページ-->
         <Style x:Key="PageStyle" TargetType="Page">
             <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
+            <!--
             <Setter Property="NavigationPage.HasNavigationBar" Value="False"/>
+            -->
         </Style>
         <Style x:Key="TabbedPageStyle" TargetType="TabbedPage">
             <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}"/>

@@ -16,9 +16,11 @@
     <!--ContentPage.ControlTemplateを使用するとToolbarItemのBindingが機能しない-->
     <!--https://github.com/PrismLibrary/Prism/issues/1399-->
     <ctrl:BasePage.ToolbarItems>
+        <!--
         <ToolbarItem Text="設定"
                      Order="Secondary"
                      Priority="0" />
+        -->
         <ToolbarItem Text="完了"
                      Command="{Binding BindingContext.SaveCommand, Source={x:Reference page}}"
                      Order="Primary"

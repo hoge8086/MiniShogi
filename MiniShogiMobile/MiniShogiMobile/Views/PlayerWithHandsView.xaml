@@ -38,10 +38,16 @@
                     </ProgressBar.Triggers>
                 </ProgressBar>
                 <!--プレイヤーアイコン-->
+                <ctrl:PlayerView Grid.Row="1" Grid.Column="0" Text="P2"
+                       WidthRequest="{Binding Path=Height, Source={RelativeSource Mode=Self}}"
+                       VerticalOptions="FillAndExpand"
+                       HorizontalOptions="FillAndExpand"/>
+                <!--
                 <Image Grid.Row="1" Grid.Column="0"
                        Source="{utils:ImageResource MiniShogiMobile.Images.Character1.png}"
                        VerticalOptions="FillAndExpand"
                        HorizontalOptions="FillAndExpand"/>
+                -->
                 <!--名前-->
                 <StackLayout Grid.Row="1" Grid.Column="1"
                              HorizontalOptions="FillAndExpand"

@@ -227,7 +227,7 @@ namespace MiniShogiMobile.ViewModels
                         GameTemplate.KomaList = CreateKomaList();
                         GameTemplate.Name = GameTitle.Value;
                         App.CreateGameService.SaveGameTemplate(GameTemplate);
-                        await navigationService .GoBackToRootAsync();
+                        await navigationService.GoBackToRootAsync();
                     }
                 });
 
