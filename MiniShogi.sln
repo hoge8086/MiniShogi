@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31112.23
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyogiConsole", "SyogiConsole\SyogiConsole.csproj", "{8C9AE491-E2EA-47CD-BFA5-67D798A54056}"
 EndProject
@@ -396,6 +396,7 @@ Global
 		{AEE89249-5579-44CA-8BEF-AF9C76BDC4FE}.Debug|ARM.ActiveCfg = Debug|iPhoneSimulator
 		{AEE89249-5579-44CA-8BEF-AF9C76BDC4FE}.Debug|iPhone.ActiveCfg = Debug|iPhone
 		{AEE89249-5579-44CA-8BEF-AF9C76BDC4FE}.Debug|iPhone.Build.0 = Debug|iPhone
+		{AEE89249-5579-44CA-8BEF-AF9C76BDC4FE}.Debug|iPhone.Deploy.0 = Debug|iPhone
 		{AEE89249-5579-44CA-8BEF-AF9C76BDC4FE}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
 		{AEE89249-5579-44CA-8BEF-AF9C76BDC4FE}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
 		{AEE89249-5579-44CA-8BEF-AF9C76BDC4FE}.Debug|x64.ActiveCfg = Debug|iPhoneSimulator
@@ -404,6 +405,7 @@ Global
 		{AEE89249-5579-44CA-8BEF-AF9C76BDC4FE}.Release|ARM.ActiveCfg = Release|iPhoneSimulator
 		{AEE89249-5579-44CA-8BEF-AF9C76BDC4FE}.Release|iPhone.ActiveCfg = Release|iPhone
 		{AEE89249-5579-44CA-8BEF-AF9C76BDC4FE}.Release|iPhone.Build.0 = Release|iPhone
+		{AEE89249-5579-44CA-8BEF-AF9C76BDC4FE}.Release|iPhone.Deploy.0 = Release|iPhone
 		{AEE89249-5579-44CA-8BEF-AF9C76BDC4FE}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
 		{AEE89249-5579-44CA-8BEF-AF9C76BDC4FE}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 		{AEE89249-5579-44CA-8BEF-AF9C76BDC4FE}.Release|x64.ActiveCfg = Release|iPhoneSimulator
