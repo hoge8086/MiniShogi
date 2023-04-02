@@ -278,8 +278,9 @@ namespace MiniShogiMobile.ViewModels
             });
         }
 
-                    
-        public async void BackAsync()
+
+        //public async void BackAsync()
+        public override async Task<INavigationResult> GoBackAsync(bool? useModalNavigation = null, bool animated = true, Func<Task<bool>> canNavigate = null)
         {
             cancelWaiting?.Cancel();
             // バックグランドの処理が終わるのを待つ
@@ -293,7 +294,8 @@ namespace MiniShogiMobile.ViewModels
             DomainEvents.RemoveHandler<GameStarted>(OnGameStarted);
             DomainEvents.RemoveHandler<GamePlayed>(OnGamePlayed);
 
-            await GoBackAsync();
+            //await GoBackAsync();
+            return await base.GoBackAsync();
         }
     }
 

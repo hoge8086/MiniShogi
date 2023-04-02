@@ -99,7 +99,7 @@ namespace Prism.NavigationEx
             return NavigationService.NavigateTabbedPageAsync(useModalNavigation, animated, wrapInNavigationPage, noHistory, replaced, tabs);
         }
 
-        protected virtual Task<INavigationResult> GoBackAsync(bool? useModalNavigation = null, bool animated = true, Func<Task<bool>> canNavigate = null)
+        public virtual Task<INavigationResult> GoBackAsync(bool? useModalNavigation = null, bool animated = true, Func<Task<bool>> canNavigate = null)
         {
             var parameters = new NavigationParameters
             {
@@ -188,7 +188,7 @@ namespace Prism.NavigationEx
             _tcs?.TrySetCanceled();
         }
 
-        protected virtual Task<INavigationResult> GoBackAsync(TResult result, bool? useModalNavigation = null, bool animated = true, Func<Task<bool>> canNavigate = null)
+        public virtual Task<INavigationResult> GoBackAsync(TResult result, bool? useModalNavigation = null, bool animated = true, Func<Task<bool>> canNavigate = null)
         {
             var parameters = new NavigationParameters
             {

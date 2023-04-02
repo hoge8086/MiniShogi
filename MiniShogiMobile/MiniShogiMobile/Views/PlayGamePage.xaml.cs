@@ -100,7 +100,7 @@ namespace MiniShogiMobile.Views
             {
                 Device.BeginInvokeOnMainThread(async() =>
                 {
-                    vm.BackAsync();
+                    await vm.GoBackAsync();
                 });
             }
             return true;
