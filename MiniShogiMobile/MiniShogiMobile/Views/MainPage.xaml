@@ -5,6 +5,7 @@
              xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              x:Class="MiniShogiMobile.Views.MainPage"
              Style="{StaticResource PageStyle}"
+             NavigationPage.HasNavigationBar="False"
              Title="ホーム">
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
         <Label Text="作って将棋(仮)" Margin="0,0,0,30" FontSize="Large"/>
