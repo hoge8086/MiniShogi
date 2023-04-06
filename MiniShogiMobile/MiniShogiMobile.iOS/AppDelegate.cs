@@ -25,6 +25,7 @@ namespace MiniShogiMobile.iOS
             Rg.Plugins.Popup.Popup.Init();
 
             global::Xamarin.Forms.Forms.Init();
+            FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             CarouselViewRenderer.Init();
             LoadApplication(new App(new iOSInitializer()));
 
