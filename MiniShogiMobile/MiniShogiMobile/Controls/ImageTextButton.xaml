@@ -10,22 +10,17 @@
         <Grid RowDefinitions="*,Auto"
            xct:TouchEffect.Command="{Binding Path=Command, Source={x:Reference self}}">
                 <ff:CachedImage Source="{Binding Source, Source={x:Reference self}}"
+                    x:Name="img"
                     Grid.Row="0"
                     VerticalOptions="Center"
                     HorizontalOptions="Center">
-                    <ff:CachedImage.Transformations>
-                        <fft:TintTransformation HexColor="#543f32" EnableSolidColor="True"/>
-                    </ff:CachedImage.Transformations>
                 </ff:CachedImage>
                 <Label Text="{Binding Text, Source={x:Reference self}}"
                        Grid.Row="1"
-                       TextColor="{StaticResource AppFontDarkColor}"
+                       TextColor="{Binding TintColor, Source={x:Reference self}}"
                        FontSize="Micro"
                        VerticalOptions="Center"
                        HorizontalOptions="Center"/>
-            <!--
-            <BoxView Grid.Row="1" BackgroundColor="{StaticResource AppControlDarkColor}" HeightRequest="1" HorizontalOptions="FillAndExpand" />
-            -->
         </Grid>
     </ContentView.Content>
 </ContentView>

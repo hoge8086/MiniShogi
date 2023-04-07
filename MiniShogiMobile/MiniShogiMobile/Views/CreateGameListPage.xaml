@@ -41,30 +41,24 @@
                                      HeightRequest="60"
                                      HorizontalOptions="FillAndExpand"
                                      Padding="0,10,0,6">
-                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 
+                            <StackLayout.Resources>
+                                <Style TargetType="ctrl:ImageTextButton">
+                                    <Setter Property="TintColor" Value="{StaticResource AppControlDarkColor2}"/>
+                                    <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+                                </Style>
+                            </StackLayout.Resources>
+                            <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 
                                              Text="削除"
-                                             Command="{Binding DeleteGameCommand}"
-                                             HorizontalOptions="CenterAndExpand"
-                                             VerticalOptions="CenterAndExpand"
-                                             BackgroundColor="Transparent"/>
-                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
+                                             Command="{Binding DeleteGameCommand}"/>
+                            <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
                                              Text="編集"
-                                             Command="{Binding EditGameCommand}"
-                                             HorizontalOptions="CenterAndExpand"
-                                             VerticalOptions="CenterAndExpand"
-                                             BackgroundColor="Transparent"/>
-                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
+                                             Command="{Binding EditGameCommand}"/>
+                            <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
                                              Text="コピー"
-                                             Command="{Binding CopyGameCommand}"
-                                             HorizontalOptions="CenterAndExpand"
-                                             VerticalOptions="CenterAndExpand"
-                                             BackgroundColor="Transparent"/>
-                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" 
+                                             Command="{Binding CopyGameCommand}"/>
+                            <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" 
                                              Text="新規追加"
-                                             Command="{Binding CreateNewGameCommand}"
-                                             HorizontalOptions="CenterAndExpand"
-                                             VerticalOptions="CenterAndExpand"
-                                             BackgroundColor="Transparent"/>
+                                             Command="{Binding CreateNewGameCommand}"/>
                         </StackLayout>
                     </StackLayout>
                 </tabview:TabItem>
