@@ -11,7 +11,7 @@
              xmlns:tabview="clr-namespace:Xam.Plugin.TabView;assembly=Xam.Plugin.TabView"
              Title="作る"
              x:Name="root">
-    <Grid Margin="10">
+    <Grid>
         <tabview:TabViewControl
                 HeaderBackgroundColor="Transparent"
                 HeaderSelectionUnderlineColor="{StaticResource AppControlDarkColor}"
@@ -23,35 +23,7 @@
                 VerticalOptions="FillAndExpand">
             <tabview:TabViewControl.ItemSource>
                 <tabview:TabItem HeaderText="ゲーム作成">
-                    <StackLayout VerticalOptions="FillAndExpand">
-                        <StackLayout Grid.Row="0"
-                                         Orientation="Horizontal"
-                                         HeightRequest="50"
-                                         Margin="10"
-                                         HorizontalOptions="FillAndExpand"
-                                         Spacing="10">
-                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 
-                                             Text="削除"
-                                             Command="{Binding DeleteGameCommand}"
-                                             HorizontalOptions="CenterAndExpand"
-                                             BackgroundColor="Transparent"/>
-                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
-                                             Text="編集"
-                                             Command="{Binding EditGameCommand}"
-                                             HorizontalOptions="CenterAndExpand"
-                                             BackgroundColor="Transparent"/>
-                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
-                                             Text="コピー"
-                                             Command="{Binding CopyGameCommand}"
-                                             HorizontalOptions="CenterAndExpand"
-                                             BackgroundColor="Transparent"/>
-                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" 
-                                             Text="新規追加"
-                                             Command="{Binding CreateNewGameCommand}"
-                                             HorizontalOptions="CenterAndExpand"
-                                             BackgroundColor="Transparent"/>
-                        </StackLayout>
-
+                    <StackLayout VerticalOptions="FillAndExpand" Padding="0,16,0,0" Margin="0">
                         <ListView ItemsSource="{Binding GameNameList}" SelectedItem="{Binding SelectedGameName.Value}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
@@ -63,14 +35,46 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
+                        <StackLayout BackgroundColor="{StaticResource AppControlDarkColor2}"
+                                     Orientation="Horizontal"
+                                     HeightRequest="60"
+                                     HorizontalOptions="FillAndExpand"
+                                     Padding="10"
+                                     Spacing="10">
+                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 
+                                             Text="削除"
+                                             Command="{Binding DeleteGameCommand}"
+                                             HorizontalOptions="CenterAndExpand"
+                                             VerticalOptions="CenterAndExpand"
+                                             BackgroundColor="Transparent"/>
+                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
+                                             Text="編集"
+                                             Command="{Binding EditGameCommand}"
+                                             HorizontalOptions="CenterAndExpand"
+                                             VerticalOptions="CenterAndExpand"
+                                             BackgroundColor="Transparent"/>
+                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
+                                             Text="コピー"
+                                             Command="{Binding CopyGameCommand}"
+                                             HorizontalOptions="CenterAndExpand"
+                                             VerticalOptions="CenterAndExpand"
+                                             BackgroundColor="Transparent"/>
+                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" 
+                                             Text="新規追加"
+                                             Command="{Binding CreateNewGameCommand}"
+                                             HorizontalOptions="CenterAndExpand"
+                                             VerticalOptions="CenterAndExpand"
+                                             BackgroundColor="Transparent"/>
+                        </StackLayout>
                     </StackLayout>
                 </tabview:TabItem>
                 <tabview:TabItem HeaderText="駒作成">
                     <Grid RowDefinitions="Auto,*">
                         <StackLayout Grid.Row="0"
+                                         BackgroundColor="{StaticResource AppControlDarkColor2}"
                                          Orientation="Horizontal"
                                          HeightRequest="50"
-                                         Margin="10"
+                                         Padding="10"
                                          HorizontalOptions="FillAndExpand"
                                          Spacing="10">
                                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 

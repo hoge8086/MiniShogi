@@ -38,6 +38,7 @@
                                  EntryText="{Binding GameTitle.Value}"/>
             <StackLayout Orientation="Horizontal"
                          HorizontalOptions="FillAndExpand"
+                         BackgroundColor="{StaticResource AppControlDarkColor2}"
                          Spacing="12"
                          Margin="10"
                          HeightRequest="35">
