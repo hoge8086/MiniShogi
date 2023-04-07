@@ -7,24 +7,22 @@
              x:Name="self"
              x:Class="MiniShogiMobile.Controls.ImageTextButton">
   <ContentView.Content>
-        <Grid>
-            <StackLayout Orientation="Horizontal"
-                       xct:TouchEffect.Command="{Binding Path=Command, Source={x:Reference self}}"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="FillAndExpand">
+        <Grid RowDefinitions="*,Auto"
+           xct:TouchEffect.Command="{Binding Path=Command, Source={x:Reference self}}">
                 <ff:CachedImage Source="{Binding Source, Source={x:Reference self}}"
+                    Grid.Row="0"
                     VerticalOptions="Center"
-                    HorizontalOptions="Start">
+                    HorizontalOptions="Center">
                     <ff:CachedImage.Transformations>
                         <fft:TintTransformation HexColor="#ffffff" EnableSolidColor="True"/>
                     </ff:CachedImage.Transformations>
                 </ff:CachedImage>
                 <Label Text="{Binding Text, Source={x:Reference self}}"
+                       Grid.Row="1"
                        TextColor="White"
-                       FontSize="Small"
+                       FontSize="Micro"
                        VerticalOptions="Center"
-                       HorizontalOptions="FillAndExpand"/>
-            </StackLayout>
+                       HorizontalOptions="Center"/>
             <!--
             <BoxView Grid.Row="1" BackgroundColor="{StaticResource AppControlDarkColor}" HeightRequest="1" HorizontalOptions="FillAndExpand" />
             -->
