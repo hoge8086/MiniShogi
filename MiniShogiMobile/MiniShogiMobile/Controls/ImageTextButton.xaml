@@ -14,12 +14,12 @@
                     VerticalOptions="Center"
                     HorizontalOptions="Center">
                     <ff:CachedImage.Transformations>
-                        <fft:TintTransformation HexColor="#ffffff" EnableSolidColor="True"/>
+                        <fft:TintTransformation HexColor="#543f32" EnableSolidColor="True"/>
                     </ff:CachedImage.Transformations>
                 </ff:CachedImage>
                 <Label Text="{Binding Text, Source={x:Reference self}}"
                        Grid.Row="1"
-                       TextColor="White"
+                       TextColor="{StaticResource AppFontDarkColor}"
                        FontSize="Micro"
                        VerticalOptions="Center"
                        HorizontalOptions="Center"/>

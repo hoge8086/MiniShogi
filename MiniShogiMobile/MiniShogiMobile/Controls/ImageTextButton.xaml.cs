@@ -51,7 +51,7 @@ namespace MiniShogiMobile.Controls
         private void OnChangeCanExecute(object sender, EventArgs e)
         {
             if(this.Command == null || !this.Command.CanExecute(null))
-                this.Opacity = 0.3;
+                this.Opacity = 0.4;
             else
                 this.Opacity = 1;
         }
