@@ -23,8 +23,13 @@
                 VerticalOptions="FillAndExpand">
             <tabview:TabViewControl.ItemSource>
                 <tabview:TabItem HeaderText="ゲーム作成">
+                    <!--
                     <StackLayout VerticalOptions="FillAndExpand" Padding="0,16,0,0" Margin="0" Spacing="0">
-                        <ListView ItemsSource="{Binding GameNameList}" SelectedItem="{Binding SelectedGameName.Value}">
+                    -->
+                    <Grid RowDefinitions="*,Auto">
+                        <ListView Grid.Row="0" Margin="0,6,0,0"
+                                  ItemsSource="{Binding GameNameList}"
+                                  SelectedItem="{Binding SelectedGameName.Value}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <ViewCell>
@@ -35,64 +40,40 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                        <BoxView Style="{StaticResource HorizontalLine}" Background="{StaticResource AppControlDarkColor2}"/>
-                        <StackLayout BackgroundColor="{StaticResource AppBackgroundColor}"
-                                     Orientation="Horizontal"
-                                     HeightRequest="60"
-                                     HorizontalOptions="FillAndExpand"
-                                     Padding="0,10,0,6">
-                            <StackLayout.Resources>
-                                <Style TargetType="ctrl:ImageTextButton">
-                                    <Setter Property="TintColor" Value="{StaticResource AppControlDarkColor2}"/>
-                                    <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
-                                </Style>
-                            </StackLayout.Resources>
-                            <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 
-                                             Text="削除"
-                                             Command="{Binding DeleteGameCommand}"/>
-                            <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
-                                             Text="編集"
-                                             Command="{Binding EditGameCommand}"/>
-                            <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
-                                             Text="コピー"
-                                             Command="{Binding CopyGameCommand}"/>
-                            <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" 
-                                             Text="新規追加"
-                                             Command="{Binding CreateNewGameCommand}"/>
-                        </StackLayout>
-                    </StackLayout>
+                        <Grid Grid.Row="1">
+                            <StackLayout Spacing="0">
+                                <BoxView Style="{StaticResource HorizontalLine}" Background="{StaticResource AppControlDarkColor2}"/>
+                                <StackLayout BackgroundColor="{StaticResource AppBackgroundColor}"
+                                             Orientation="Horizontal"
+                                             HeightRequest="50"
+                                             HorizontalOptions="FillAndExpand"
+                                             Padding="0,10,0,6">
+                                    <StackLayout.Resources>
+                                        <Style TargetType="ctrl:ImageTextButton">
+                                            <Setter Property="TintColor" Value="{StaticResource AppControlDarkColor2}"/>
+                                            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+                                        </Style>
+                                    </StackLayout.Resources>
+                                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 
+                                                     Text="削除"
+                                                     Command="{Binding DeleteGameCommand}"/>
+                                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
+                                                     Text="編集"
+                                                     Command="{Binding EditGameCommand}"/>
+                                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
+                                                     Text="コピー"
+                                                     Command="{Binding CopyGameCommand}"/>
+                                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" 
+                                                     Text="新規追加"
+                                                     Command="{Binding CreateNewGameCommand}"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </Grid>
+                    </Grid>
                 </tabview:TabItem>
                 <tabview:TabItem HeaderText="駒作成">
-                    <Grid RowDefinitions="Auto,*">
-                        <StackLayout Grid.Row="0"
-                                         BackgroundColor="{StaticResource AppControlDarkColor2}"
-                                         Orientation="Horizontal"
-                                         HeightRequest="50"
-                                         Padding="10"
-                                         HorizontalOptions="FillAndExpand"
-                                         Spacing="10">
-                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 
-                                             Text="削除"
-                                             Command="{Binding DeleteKomaCommand}"
-                                             HorizontalOptions="CenterAndExpand"
-                                             BackgroundColor="Transparent"/>
-                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
-                                             Text="編集"
-                                             Command="{Binding EditKomaCommand}"
-                                             HorizontalOptions="CenterAndExpand"
-                                             BackgroundColor="Transparent"/>
-                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
-                                             Text="コピー"
-                                             Command="{Binding CopyKomaCommand}"
-                                             HorizontalOptions="CenterAndExpand"
-                                             BackgroundColor="Transparent"/>
-                                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" 
-                                             Text="新規追加"
-                                             Command="{Binding CreateKomaCommand}"
-                                             HorizontalOptions="CenterAndExpand"
-                                             BackgroundColor="Transparent"/>
-                        </StackLayout>
-                        <CollectionView Grid.Row="1"
+                    <Grid RowDefinitions="*,Auto">
+                        <CollectionView Grid.Row="0"
                                         VerticalOptions="FillAndExpand"
                                         Margin="15"
                                         ItemsLayout="VerticalGrid, 5"
@@ -107,6 +88,35 @@
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
+                        <Grid Grid.Row="1">
+                            <StackLayout Spacing="0">
+                                <BoxView Style="{StaticResource HorizontalLine}" Background="{StaticResource AppControlDarkColor2}"/>
+                                <StackLayout BackgroundColor="{StaticResource AppBackgroundColor}"
+                                             Orientation="Horizontal"
+                                             HeightRequest="50"
+                                             HorizontalOptions="FillAndExpand"
+                                             Padding="0,10,0,6">
+                                    <StackLayout.Resources>
+                                        <Style TargetType="ctrl:ImageTextButton">
+                                            <Setter Property="TintColor" Value="{StaticResource AppControlDarkColor2}"/>
+                                            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+                                        </Style>
+                                    </StackLayout.Resources>
+                                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 
+                                                 Text="削除"
+                                                 Command="{Binding DeleteKomaCommand}"/>
+                                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
+                                                 Text="編集"
+                                                 Command="{Binding EditKomaCommand}"/>
+                                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
+                                                 Text="コピー"
+                                                 Command="{Binding CopyKomaCommand}"/>
+                                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" 
+                                                 Text="新規追加"
+                                                 Command="{Binding CreateKomaCommand}"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </Grid>
                     </Grid>
                 </tabview:TabItem>
             </tabview:TabViewControl.ItemSource>

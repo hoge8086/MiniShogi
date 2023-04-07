@@ -26,7 +26,7 @@
                      Order="Primary"
                      Priority="0" />
     </ctrl:BasePage.ToolbarItems>
-    <Grid RowDefinitions="Auto,*" ColumnDefinitions="10,*,10">
+    <Grid RowDefinitions="Auto,*,Auto" ColumnDefinitions="10,*,10">
         <!--メニュー-->
         <StackLayout Grid.Column="1"
                      Margin="0,5,0,0"
@@ -36,40 +36,6 @@
                                  LabelText="タイトル"
                                  Placeholder="必須項目"
                                  EntryText="{Binding GameTitle.Value}"/>
-            <StackLayout Orientation="Horizontal"
-                         HorizontalOptions="FillAndExpand"
-                         BackgroundColor="{StaticResource AppControlDarkColor2}"
-                         Spacing="12"
-                         Margin="10"
-                         HeightRequest="35">
-                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.EditBoard.png}" 
-                             Text="盤編集"
-                             Command="{Binding EditSettingCommand}"
-                             HorizontalOptions="CenterAndExpand"
-                             BackgroundColor="Transparent"/>
-                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.EditKoma.png}" 
-                             Text="駒編集"
-                             Command="{Binding EditCellCommand}"
-                             HorizontalOptions="CenterAndExpand"
-                             BackgroundColor="Transparent"/>
-                <!--TODO:コピー中はコピー解除という名称にして、コピー解除できるようにする-->
-                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
-                             Command="{Binding CopyKomaCommand}"
-                             Text="コピー"
-                             HorizontalOptions="CenterAndExpand"
-                             BackgroundColor="Transparent">
-                    <ctrl:ImageTextButton.Triggers>
-                        <DataTrigger TargetType="ctrl:ImageTextButton" Binding="{Binding IsCopying.Value}" Value="True">
-                            <Setter Property="Text" Value="コピー解除"/>
-                        </DataTrigger>
-                    </ctrl:ImageTextButton.Triggers>
-                </ctrl:ImageTextButton>
-                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.DeleteKoma.png}" 
-                             Text="削除"
-                             Command="{Binding DeleteKomaCommand}"
-                             HorizontalOptions="CenterAndExpand"
-                             BackgroundColor="Transparent"/>
-            </StackLayout>
         </StackLayout>
         <!--ゲーム-->
         <StackLayout
@@ -165,5 +131,42 @@
                                              PlayerType="{Binding Source={x:Static player:PlayerType.Player1}}"/>
             </Grid>
         </StackLayout>
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
+            <StackLayout Spacing="0">
+                <BoxView Style="{StaticResource HorizontalLine}" Background="{StaticResource AppControlDarkColor2}"/>
+                <StackLayout BackgroundColor="{StaticResource AppBackgroundColor}"
+                             Orientation="Horizontal"
+                             HeightRequest="50"
+                             HorizontalOptions="FillAndExpand"
+                             Padding="0,10,0,6">
+                    <StackLayout.Resources>
+                        <Style TargetType="ctrl:ImageTextButton">
+                            <Setter Property="TintColor" Value="{StaticResource AppControlDarkColor2}"/>
+                            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+                        </Style>
+                    </StackLayout.Resources>
+
+                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.EditBoard.png}" 
+                                 Text="盤編集"
+                                 Command="{Binding EditSettingCommand}"/>
+                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.EditKoma.png}" 
+                                 Text="駒編集"
+                                 Command="{Binding EditCellCommand}"/>
+                    <!--TODO:コピー中はコピー解除という名称にして、コピー解除できるようにする-->
+                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
+                                 Command="{Binding CopyKomaCommand}"
+                                 Text="コピー">
+                        <ctrl:ImageTextButton.Triggers>
+                            <DataTrigger TargetType="ctrl:ImageTextButton" Binding="{Binding IsCopying.Value}" Value="True">
+                                <Setter Property="Text" Value="コピー解除"/>
+                            </DataTrigger>
+                        </ctrl:ImageTextButton.Triggers>
+                    </ctrl:ImageTextButton>
+                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.DeleteKoma.png}" 
+                                 Text="削除"
+                                 Command="{Binding DeleteKomaCommand}"/>
+                </StackLayout>
+            </StackLayout>
+        </Grid>
     </Grid>
 </ctrl:BasePage>
