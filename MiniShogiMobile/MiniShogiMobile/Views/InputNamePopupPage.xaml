@@ -1,19 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<popups:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ctrl:BasePopupPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              prism:ViewModelLocator.AutowireViewModel="True"
              xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
-             Style="{StaticResource PopupPageStyle}"
              x:Class="MiniShogiMobile.Views.InputNamePopupPage">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <styles:PopupPageResourceDictionary/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </ContentPage.Resources>
     <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center">
         <StackLayout BackgroundColor="white" >
             <StackLayout Margin="10">
@@ -40,4 +33,4 @@
             </Grid>
         </StackLayout>
     </Frame>
-</popups:PopupPage>
+</ctrl:BasePopupPage>

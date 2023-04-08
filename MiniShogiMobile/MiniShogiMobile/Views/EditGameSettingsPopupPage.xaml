@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<popups:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ctrl:BasePopupPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
@@ -8,16 +8,8 @@
              xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.EditGameSettingsPopupPage"
-             Style="{StaticResource PopupPageStyle}"
              Title="ゲーム設定">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <styles:PopupPageResourceDictionary/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </ContentPage.Resources>
-    <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center" Margin="0" BackgroundColor="White" WidthRequest="400">
+    <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="White" WidthRequest="400">
         <StackLayout Spacing="10" VerticalOptions="FillAndExpand">
             <StackLayout Spacing="10" VerticalOptions="FillAndExpand" Margin="10">
                 <Label Text="盤設定" FontSize="Medium" VerticalTextAlignment="Center" HorizontalOptions="Center"/>
@@ -88,4 +80,4 @@
             </Grid>
         </StackLayout>
     </Frame>
-</popups:PopupPage>
+</ctrl:BasePopupPage>

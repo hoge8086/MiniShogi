@@ -1,20 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<popups:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ctrl:BasePopupPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
-             xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              prism:ViewModelLocator.AutowireViewModel="True"
              Style="{StaticResource PopupPageStyle}"
              x:Class="MiniShogiMobile.Views.SelectKomaPopupPage">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <styles:PopupPageResourceDictionary/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </ContentPage.Resources>
     <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="400">
         <StackLayout BackgroundColor="white" >
             <Label Text="{Binding Title}" FontSize="Header" Margin="15,15,15,0"/>
@@ -42,4 +34,4 @@
             </Grid>
         </StackLayout>
     </Frame>
-</popups:PopupPage>
+</ctrl:BasePopupPage>

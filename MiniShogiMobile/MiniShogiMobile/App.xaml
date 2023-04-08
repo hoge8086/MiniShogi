@@ -109,7 +109,10 @@
         <Style x:Key="PopupPageStyle" TargetType="Page">
             <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
         </Style>
-
+    <!--フレーム-->
+        <Style TargetType="Frame">
+            <Setter Property="IsClippedToBounds" Value="True"/>
+        </Style>
     <!--ライン-->
         <Style x:Key="HorizontalLine" TargetType="BoxView">
             <Setter Property="HeightRequest" Value="1"/>
