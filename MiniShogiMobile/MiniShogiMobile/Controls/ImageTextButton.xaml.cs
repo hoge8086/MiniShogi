@@ -84,27 +84,12 @@ namespace MiniShogiMobile.Controls
         public static readonly BindableProperty TintColorProperty =
             BindableProperty.Create(
                 nameof(TintColor), typeof(Color), typeof(ImageTextButton),
-                defaultValue: Color.Gray,
-                propertyChanged: (bindable, oldValue, newValue) => ((ImageTextButton)bindable).OnTintColorChanged());
+                defaultValue: Color.Gray);
 
         public Color TintColor
         {
             get { return (Color)GetValue(TintColorProperty); }
             set { SetValue(TintColorProperty, value); }
-        }
-        void OnTintColorChanged ()
-        {
-            img.Transformations = new List<FFImageLoading.Work.ITransformation>
-            {
-                new TintTransformation()
-                {
-                   R = (int)(TintColor.R * 255),
-                   G = (int)(TintColor.G * 255),
-                   B = (int)(TintColor.B * 255),
-                   A = (int)(TintColor.A * 255),
-                   EnableSolidColor = true,
-                }
-            };
         }
     }
 }

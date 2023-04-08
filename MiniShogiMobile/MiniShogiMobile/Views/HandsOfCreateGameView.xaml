@@ -50,9 +50,9 @@
                      </StackLayout>
                  </ScrollView>
                  <!--駒追加ボタン-->
-                 <ImageButton Command="{Binding Source={x:Reference self}, Path=AddKomaCommand}"
-                              xct:IconTintColorEffect.TintColor="{StaticResource AppControlDarkColor}"
-                              CommandParameter="{Binding Source={x:Reference self}, Path=PlayerType}"
+                 <ctrl:TintImage xct:TouchEffect.Command ="{Binding Source={x:Reference self}, Path=AddKomaCommand}"
+                              xct:TouchEffect.CommandParameter="{Binding Source={x:Reference self}, Path=PlayerType}"
+                              TintColor="{StaticResource AppControlDarkColor2}"
                               BackgroundColor="Transparent"
                               Margin="5,0,5,0"
                               HorizontalOptions="End"
