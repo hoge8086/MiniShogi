@@ -4,32 +4,60 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:xct="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.PlayingGameListPage"
              Title="つづきから"
              x:Name="root">
         <StackLayout VerticalOptions="FillAndExpand">
-            <ListView ItemsSource="{Binding PlayingGameList}" SelectedItem="{Binding SelectedPlayingGame.Value}"
-                      BackgroundColor="Transparent">
-                <ListView.Behaviors>
-                    <xct:EventToCommandBehavior
-                        EventName="ItemTapped"
-                        Command="{Binding PlayCommand}"/>
-                </ListView.Behaviors>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
+            <Grid RowDefinitions="*,Auto">
+                <CollectionView Grid.Row="0"
+                          Margin="0,6,0,0"
+                          SelectionMode="Single"
+                          ItemsSource="{Binding PlayingGameList}"
+                          SelectedItem="{Binding SelectedPlayingGame.Value}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
                             <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="5,0,5,0">
-                                <Label FontSize="Large" Text="{Binding Name}" HorizontalOptions="FillAndExpand"/>
-                                <Button Text="削除"
-                                        HorizontalOptions="End"
-                                        Command="{Binding Path=BindingContext.DeleteCommand, Source={x:Reference root}}"
-                                        CommandParameter="{Binding}"/>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal" />
+                                        <VisualState x:Name="Selected">
+                                            <VisualState.Setters>
+                                                <Setter Property="BackgroundColor" Value="{StaticResource CellHighlightColor}" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <Label FontSize="Large" Padding="6" Text="{Binding Name}" HorizontalOptions="FillAndExpand"/>
                             </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <Grid Grid.Row="1">
+                    <StackLayout Spacing="0">
+                        <BoxView Style="{StaticResource HorizontalLine}" Background="{StaticResource AppControlDarkColor2}"/>
+                        <StackLayout BackgroundColor="{StaticResource AppBackgroundColor}"
+                                     Orientation="Horizontal"
+                                     HeightRequest="50"
+                                     HorizontalOptions="FillAndExpand"
+                                     Padding="0,10,0,6">
+                            <StackLayout.Resources>
+                                <Style TargetType="ctrl:ImageTextButton">
+                                    <Setter Property="TintColor" Value="{StaticResource AppControlDarkColor2}"/>
+                                    <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+                                </Style>
+                            </StackLayout.Resources>
+                            <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
+                                             Text="再開"
+                                             Command="{Binding PlayCommand}"/>
+                            <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 
+                                             Text="削除"
+                                             Command="{Binding DeleteCommand}"/>
+                        </StackLayout>
+                    </StackLayout>
+                </Grid>
+            </Grid>
         </StackLayout>
 </ctrl:BasePage>

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 
 namespace MiniShogiMobile.ViewModels
 {
@@ -20,26 +21,26 @@ namespace MiniShogiMobile.ViewModels
         public ReactiveProperty<PlayingGame> SelectedPlayingGame { get; }
         public ObservableCollection<PlayingGame> PlayingGameList { get; }
         public AsyncReactiveCommand PlayCommand { get; set; }
-        public AsyncReactiveCommand<PlayingGame> DeleteCommand {get;}
+        public AsyncReactiveCommand DeleteCommand {get;}
 
         public PlayingGameListPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             SelectedPlayingGame = new ReactiveProperty<PlayingGame>();
             PlayingGameList = new ObservableCollection<PlayingGame>(App.GameService.PlayingGameRepository.FindAll());
-            PlayCommand = new AsyncReactiveCommand();
+            PlayCommand = SelectedPlayingGame.Select(x => x != null).ToAsyncReactiveCommand().AddTo(this.Disposable);
             PlayCommand.Subscribe(async () =>
             {
                 await NavigateAsync<PlayGamePageViewModel, PlayGameCondition>(new PlayGameCondition(PlayMode.ContinueGame, SelectedPlayingGame.Value.Name));
             }).AddTo(Disposable);
 
-            DeleteCommand = new AsyncReactiveCommand<PlayingGame>();
-            DeleteCommand.Subscribe(async (x) =>
+            DeleteCommand = SelectedPlayingGame.Select(x => x != null).ToAsyncReactiveCommand().AddTo(this.Disposable);
+            DeleteCommand.Subscribe(async () =>
             {
                 bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "削除しますか?", "はい", "いいえ");
-                if (doDelete && x != null)
+                if (doDelete && SelectedPlayingGame.Value != null)
                 {
-                    App.GameService.PlayingGameRepository.RemoveByName(x.Name);
-                    PlayingGameList.Remove(x);
+                    App.GameService.PlayingGameRepository.RemoveByName(SelectedPlayingGame.Value.Name);
+                    PlayingGameList.Remove(SelectedPlayingGame.Value);
                 }
             }).AddTo(Disposable);
         }
