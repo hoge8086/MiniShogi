@@ -113,6 +113,12 @@
         <Style TargetType="Frame">
             <Setter Property="IsClippedToBounds" Value="True"/>
         </Style>
+
+    <!--エントリー-->
+        <Style TargetType="Entry">
+            <Setter Property="BackgroundColor" Value="White"/>
+        </Style>
+
     <!--ライン-->
         <Style x:Key="HorizontalLine" TargetType="BoxView">
             <Setter Property="HeightRequest" Value="1"/>
