@@ -7,13 +7,6 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Controls.BasePopupPage"
              Style="{StaticResource PopupPageStyle}">
-    <popups:PopupPage.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <styles:PopupPageResourceDictionary/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </popups:PopupPage.Resources>
     <popups:PopupPage.ControlTemplate>
         <ControlTemplate>
             <Grid Margin="10">

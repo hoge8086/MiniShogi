@@ -14,13 +14,6 @@
              Style="{StaticResource PopupPageStyle}"
              Title="駒の編集"
              x:Name="root">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <styles:PopupPageResourceDictionary/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </ContentPage.Resources>
     <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="250">
         <StackLayout BackgroundColor="white" >
             <StackLayout Spacing="15" Margin="10">
