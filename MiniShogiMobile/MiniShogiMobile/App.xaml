@@ -125,5 +125,10 @@
             <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
             <Setter Property="BackgroundColor" Value="{StaticResource AppControlDarkColor}"/>
         </Style>
+        <Style x:Key="VerticalLine" TargetType="BoxView">
+            <Setter Property="WidthRequest" Value="1"/>
+            <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+            <Setter Property="BackgroundColor" Value="{StaticResource AppControlDarkColor}"/>
+        </Style>
     </Application.Resources>
 </prism:PrismApplication>

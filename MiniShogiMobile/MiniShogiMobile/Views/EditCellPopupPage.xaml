@@ -4,6 +4,7 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              xmlns:ctrls="clr-namespace:MiniShogiMobile.Controls"
@@ -45,13 +46,9 @@
                     <ctrls:TextbaseSwitch WidthRequest="100" HorizontalOptions="End" IsToggled="{Binding EditingCell.Koma.Value.IsTransformed.Value}"/>
                 </StackLayout>
             </StackLayout>
-            <Grid
-                ColumnDefinitions="*,*"
-                ColumnSpacing="1"
-                BackgroundColor="Gray">
-                <Button Grid.Column="0" Command="{Binding CancelCommand}" Text="キャンセル" />
-                <Button Grid.Column="1" Command="{Binding OkCommand}" Text="OK" />
-            </Grid>
+            <ctrl:OkCancelView
+                    CancelCommand="{Binding CancelCommand}"
+                    OkCommand="{Binding OkCommand}"/>
         </StackLayout>
     </Frame>
 </popups:PopupPage>

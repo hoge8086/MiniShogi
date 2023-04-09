@@ -71,13 +71,9 @@
                     <ctrl:TextbaseSwitch Grid.Column="1" HorizontalOptions="Center" IsToggled="{Binding EnableLeaveOte.Value}" WidthRequest="100"/>
                 </Grid>
             </StackLayout>
-            <Grid
-                ColumnDefinitions="*,*"
-                ColumnSpacing="1"
-                BackgroundColor="Gray">
-                <Button Grid.Column="0" Command="{Binding CancelCommand}" Text="キャンセル"/>
-                <Button Grid.Column="1" Command="{Binding OkCommand}" Text="OK" />
-            </Grid>
+            <ctrl:OkCancelView
+                    CancelCommand="{Binding CancelCommand}"
+                    OkCommand="{Binding OkCommand}"/>
         </StackLayout>
     </Frame>
 </ctrl:BasePopupPage>
