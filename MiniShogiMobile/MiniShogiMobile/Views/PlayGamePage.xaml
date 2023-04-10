@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
@@ -11,14 +12,6 @@
              Title="{Binding Title}"
              x:Name="self">
     <StackLayout>
-        <StackLayout Orientation="Horizontal"
-                     Margin="10">
-            <Button Text="保存" Command="{Binding SaveCommand}" Padding="10,0,10,0"/>
-            <Button Text="停止" Command="{Binding StopCommand}" Padding="10,0,10,0"/>
-            <Button Text="再開" Command="{Binding ResumeCommand}" Padding="10,0,10,0"/>
-            <Button Text="戻る" Command="{Binding UndoCommand}" Padding="10,0,10,0"/>
-            <Button Text="進む" Command="{Binding RedoCommand}" Padding="10,0,10,0"/>
-        </StackLayout>
         <Grid x:Name="field" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <StackLayout x:Name="gameField"
                          VerticalOptions="FillAndExpand"
@@ -58,5 +51,38 @@
             </StackLayout>
             <AbsoluteLayout x:Name="movingLayer" InputTransparent="True"/>
         </Grid>
+        <StackLayout Spacing="0">
+            <BoxView Style="{StaticResource HorizontalLine}" Background="{StaticResource AppControlDarkColor2}"/>
+            <StackLayout BackgroundColor="{StaticResource AppBackgroundColor}"
+                         Orientation="Horizontal"
+                         HeightRequest="40"
+                         HorizontalOptions="FillAndExpand"
+                         Padding="0,10,0,6">
+                <StackLayout.Resources>
+                    <Style TargetType="ctrl:ImageTextButton">
+                        <Setter Property="TintColor" Value="{StaticResource AppControlDarkColor2}"/>
+                        <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+                    </Style>
+                </StackLayout.Resources>
+                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Play.png}" 
+                             Text="再開"
+                             Command="{Binding ResumeCommand}"/>
+                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Stop.png}" 
+                             Text="停止"
+                             Command="{Binding StopCommand}"/>
+                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.LeftArrow.png}" 
+                             Text="戻る"
+                             Command="{Binding UndoCommand}"/>
+                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.RightArrow.png}" 
+                             Text="進む"
+                             Command="{Binding RedoCommand}"/>
+                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.ChangePlayer.png}" 
+                             Text="Player変更"
+                             Command="{Binding SaveCommand}"/>
+                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Floppy.png}" 
+                             Text="保存"
+                             Command="{Binding SaveCommand}"/>
+            </StackLayout>
+        </StackLayout>
     </StackLayout>
 </ctrl:BasePage>
