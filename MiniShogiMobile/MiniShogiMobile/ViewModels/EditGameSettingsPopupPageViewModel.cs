@@ -32,7 +32,6 @@ namespace MiniShogiMobile.ViewModels
 
         public EditGameSettingsPopupPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
-
             Height = new ReactiveProperty<int>();
             Width = new ReactiveProperty<int>();
             TerritoryBoundary = new ReactiveProperty<int>();

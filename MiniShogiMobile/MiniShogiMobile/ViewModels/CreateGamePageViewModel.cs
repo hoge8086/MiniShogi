@@ -116,6 +116,7 @@ namespace MiniShogiMobile.ViewModels
                                 // 盤上の駒→盤上の駒へ移動 (コピー中の場合は元の駒を削除しない)
                                 tappedCell.Koma.Value = new KomaViewModel(selectedCell.Koma.Value);
                                 if(!IsCopying.Value)
+                                    // 移動時は移動元の駒を削除
                                     selectedCell.Koma.Value = null;
                             }
                             else if(Selected.Value is HandKomaViewModel selectedHandKoma)
@@ -124,11 +125,13 @@ namespace MiniShogiMobile.ViewModels
                                 tappedCell.Koma.Value = new KomaViewModel(selectedHandKoma.KomaTypeId, selectedHandKoma.Player, false);
 
                                 if(!IsCopying.Value)
+                                    // 移動時は移動元の手駒を削除
                                     Game.GetHands(selectedHandKoma.Player).RemoveOne(selectedHandKoma.KomaTypeId);
                             }
-
-                            if(!IsCopying.Value)
-                                // 選択を解除 (コピー中は選択解除しない)
+                            if (IsCopying.Value)
+                                // コピー中はコピー先を選択中にする
+                                Selected.Value = tappedCell;
+                            else
                                 Selected.Value = null;
 
                         }else
@@ -183,8 +186,8 @@ namespace MiniShogiMobile.ViewModels
 
                     if(Selected.Value != null)
                         // 持ち駒を選択していたら選択解除
-                            Selected.Value = null;
-                        else
+                        Selected.Value = null;
+                    else
                         // 何も選択してないなら持ち駒を選択
                         Selected.Value = x;
                 });
@@ -198,15 +201,18 @@ namespace MiniShogiMobile.ViewModels
                     {
                         // 盤上の駒→持ち駒へ移動
                         Game.GetHands(x).AddOne(selectedCell.Koma.Value.KomaTypeId.Value, x);
-                        selectedCell.Koma.Value = null;
+                        if (!IsCopying.Value)
+                            selectedCell.Koma.Value = null;
                     }
                     else if (Selected.Value is HandKomaViewModel handKoma)
                     {
                         // 相手の持ち駒→自分の持ち駒へ移動
-                        Game.GetHands(handKoma.Player).RemoveOne(handKoma.KomaTypeId);
                         Game.GetHands(x).AddOne(handKoma.KomaTypeId, x);
+                        if (!IsCopying.Value)
+                            Game.GetHands(handKoma.Player).RemoveOne(handKoma.KomaTypeId);
                     }
-                    Selected.Value = null;
+                    if (!IsCopying.Value)
+                        Selected.Value = null;
 
                 });
             }).AddTo(this.Disposable);
