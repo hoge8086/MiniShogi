@@ -28,9 +28,11 @@ namespace MiniShogiMobile.ViewModels
         public ReactiveProperty<bool> EnableCheckmateByHandHu { get; }
         public ReactiveProperty<bool> EnableKomaCannotMove { get; }
         public ReactiveProperty<bool> EnableLeaveOte { get; }
+        GameTemplate GameTemplate;
 
         public EditGameSettingsPopupPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
+
             Height = new ReactiveProperty<int>();
             Width = new ReactiveProperty<int>();
             TerritoryBoundary = new ReactiveProperty<int>();
@@ -43,19 +45,17 @@ namespace MiniShogiMobile.ViewModels
             OkCommand = new AsyncReactiveCommand();
             OkCommand.Subscribe(async () =>
             {
-
-                var gameTemplate = new GameTemplate();
-                gameTemplate.Height = Height.Value;
-                gameTemplate.Width = Width.Value;
-                gameTemplate.TerritoryBoundary = TerritoryBoundary.Value;
-                gameTemplate.WinCondition = WinCondition.Value;
-                gameTemplate.ProhibitedMoves = new ProhibitedMoves(
+                GameTemplate.Height = Height.Value;
+                GameTemplate.Width = Width.Value;
+                GameTemplate.TerritoryBoundary = TerritoryBoundary.Value;
+                GameTemplate.WinCondition = WinCondition.Value;
+                GameTemplate.ProhibitedMoves = new ProhibitedMoves(
                     EnableNiHu.Value,
                     EnableCheckmateByHandHu.Value,
                     EnableKomaCannotMove.Value,
                     EnableLeaveOte.Value
                     );
-                await GoBackAsync(gameTemplate);
+                await GoBackAsync(GameTemplate);
             }).AddTo(this.Disposable);
 
             CancelCommand = new AsyncReactiveCommand();
@@ -67,6 +67,7 @@ namespace MiniShogiMobile.ViewModels
 
         public override void Prepare(GameTemplate parameter)
         {
+            GameTemplate = parameter.Clone();
             Height.Value = parameter.Height;
             Width.Value = parameter.Width;
             TerritoryBoundary.Value = parameter.TerritoryBoundary;
