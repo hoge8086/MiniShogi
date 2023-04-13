@@ -46,7 +46,7 @@ namespace Shogi.Business.Domain.Model.Komas
 
         public override string ToString()
         {
-            return Name;
+            return $"{Name}-{PromotedName}";
         }
         public KomaTypeId(string name, KomaTypeKind kind)
         {

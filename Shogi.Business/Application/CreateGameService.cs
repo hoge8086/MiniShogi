@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Shogi.Business.Domain.Model.GameTemplates;
 using Shogi.Business.Domain.Model.Komas;
@@ -47,7 +48,13 @@ namespace Shogi.Business.Application
             if (GameTemplateRepository.FindAll().Any(x => x.Id != gameTemplate.Id && x.Name == gameTemplate.Name))
                 throw new Exception("既に存在する名前は作成できません");
 
-            ResolveKomaTypes(gameTemplate);
+            //ResolveKomaTypes(gameTemplate);
+            // 不具合チェック(発生してはいけない)
+            if(!gameTemplate.KomaList.All(x => gameTemplate.KomaTypes.Any(y => y.Id == x.TypeId)))
+                throw new InvalidProgramException("存在しない駒種別の駒が存在します");
+            if(!gameTemplate.KomaTypes.All(x => gameTemplate.KomaList.Any(y => x.Id == y.TypeId)))
+                throw new InvalidProgramException("余分な駒種別が登録されています");
+
 
             // 既に勝敗がついていないかチェック(ついている場合は例外)
             // FIX：正常系で例外は使ってはいけない

@@ -25,17 +25,20 @@ namespace MiniShogiMobile.ViewModels
     public class CreateGamePageViewModel : NavigationViewModel<CreateGameCondition>
     {
         public GameViewModel<CellViewModel<KomaViewModel>, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
-        public AsyncReactiveCommand EditCellCommand { get; set; }
+        //public AsyncReactiveCommand EditCellCommand { get; set; }
         public AsyncReactiveCommand DeleteKomaCommand { get; set; }
         public AsyncReactiveCommand<CellViewModel<KomaViewModel>> TapCellCommand { get; set; }
         public AsyncReactiveCommand EditSettingCommand {get;}
         public AsyncReactiveCommand SaveCommand { get; set; }
         public AsyncReactiveCommand CopyKomaCommand { get; set; }
-
+        public AsyncReactiveCommand ChangeKomaCommand { get; set; }
+        public AsyncReactiveCommand ReverseKomaCommand { get; set; }
+        public AsyncReactiveCommand RotateKomaCommand { get; set; }
         /// <summary>
         /// 選択中のCellViewModelかHandKomaViewModelのいずれかが入る
         /// </summary>
         public ReactiveProperty<BindableBase> Selected { get; set; }
+        public ReadOnlyReactivePropertySlim<KomaViewModel> SelectedBoardKoma { get; set; }
 
         // TOOD:持ち駒関連のコマンドはHandKomaViewModelの派生クラスに移してプレイヤーごとに別コマンドにした方がすっきりするかも
         //      ただ、SelectedCellを購読する必要がある
@@ -55,10 +58,12 @@ namespace MiniShogiMobile.ViewModels
         public ReactiveProperty<string> GameTitle { get; set; }
 
         private GameTemplate GameTemplate;
-
+        // 既存の盤上の駒種別と、現在のレポジトリの駒一覧を保持する(既存の盤上の駒種別はレポジトリから消してしまっている可能性があるため）
+        private Dictionary<KomaTypeId, KomaType> KomaTypes;
         public CreateGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             GameTemplate = new GameTemplate();
+            KomaTypes =  App.CreateGameService.KomaTypeRepository.FindAll().ToDictionary(x => x.Id);
             Game = new GameViewModel<CellViewModel<KomaViewModel>, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
             Selected = new ReactiveProperty<BindableBase>();
             IsCopying = new ReactiveProperty<bool>(false);
@@ -66,6 +71,16 @@ namespace MiniShogiMobile.ViewModels
             CanMoveToPlayer2Komadai = CreateCanMoveToKomadaiReactiveProperty(PlayerType.Player2);
             GameTitle = new ReactiveProperty<string>();
 
+            SelectedBoardKoma = Selected.Select(x =>
+            {
+                if (x == null)
+                    return null;
+
+                if (x is CellViewModel<KomaViewModel> cell)
+                    return cell.Koma.Value;
+
+                return null;
+            }).ToReadOnlyReactivePropertySlim().AddTo(Disposable);
             IsSelectingKoma = Selected.Select(x =>
             {
                 if (x == null)
@@ -99,7 +114,7 @@ namespace MiniShogiMobile.ViewModels
                             if(Selected.Value is CellViewModel<KomaViewModel> selectedCell)
                             {
                                 // 盤上の駒→盤上の駒へ移動 (コピー中の場合は元の駒を削除しない)
-                                tappedCell.Koma.Value = selectedCell.Koma.Value;
+                                tappedCell.Koma.Value = new KomaViewModel(selectedCell.Koma.Value);
                                 if(!IsCopying.Value)
                                     selectedCell.Koma.Value = null;
                             }
@@ -132,7 +147,7 @@ namespace MiniShogiMobile.ViewModels
                         // 選択したセルに駒があるか?
                         if (tappedCell.Koma.Value == null)
                         {
-                            // 駒がないい場合は駒を配置
+                            // 駒がない場合は駒を配置
 
                             Selected.Value = tappedCell;
                             var selectedKomaType = await NavigateAsync<SelectKomaPopupPageViewModel, SelectKomaConditions, KomaTypeId>(new SelectKomaConditions(null, "配置する駒を選択してください"));
@@ -142,10 +157,11 @@ namespace MiniShogiMobile.ViewModels
                             {
                                 var owner = ((GameTemplate.Height/ 2) > tappedCell.Position.Y) ? PlayerType.Player2 : PlayerType.Player1;
                                 var newKoma = new KomaViewModel(selectedKomaType.Data, owner, false);
-                                var result = await NavigateAsync<EditCellPopupPageViewModel, KomaViewModel, KomaViewModel>(newKoma);
-                                if(result.Success)
-                                    //駒を配置
-                                    tappedCell.Koma.Value = result.Data;
+                                //var result = await NavigateAsync<EditCellPopupPageViewModel, KomaViewModel, KomaViewModel>(newKoma);
+                                //if(result.Success)
+                                //    //駒を配置
+                                //    tappedCell.Koma.Value = result.Data;
+                                tappedCell.Koma.Value = newKoma;
                             }
 
                             // キャンセル時は選択解除
@@ -191,31 +207,31 @@ namespace MiniShogiMobile.ViewModels
 
                 });
             }).AddTo(this.Disposable);
-            EditCellCommand = Selected.Select(x =>
-            {
-                if (x == null)
-                    return false;
+            //EditCellCommand = Selected.Select(x =>
+            //{
+            //    if (x == null)
+            //        return false;
 
-                if(x is CellViewModel<KomaViewModel> cell)
-                    return cell.Koma.Value != null;
+            //    if(x is CellViewModel<KomaViewModel> cell)
+            //        return cell.Koma.Value != null;
 
-                return false;
-            }).ToAsyncReactiveCommand().AddTo(Disposable);
-            EditCellCommand.Subscribe(async x =>
-            {
-                await this.CatchErrorWithMessageAsync(async () =>
-                {
-                    var cell = Selected.Value as CellViewModel<KomaViewModel>;
-                    var result = await NavigateAsync<EditCellPopupPageViewModel, KomaViewModel, KomaViewModel>(cell.Koma.Value);
-                    if(result.Success)
-                    {
-                        //駒を配置
-                        cell.Koma.Value = result.Data;
-                    }
-                    //選択を解除
-                    Selected.Value = null;
-                });
-            }).AddTo(this.Disposable);
+            //    return false;
+            //}).ToAsyncReactiveCommand().AddTo(Disposable);
+            //EditCellCommand.Subscribe(async x =>
+            //{
+            //    await this.CatchErrorWithMessageAsync(async () =>
+            //    {
+            //        var cell = Selected.Value as CellViewModel<KomaViewModel>;
+            //        var result = await NavigateAsync<EditCellPopupPageViewModel, KomaViewModel, KomaViewModel>(cell.Koma.Value);
+            //        if(result.Success)
+            //        {
+            //            //駒を配置
+            //            cell.Koma.Value = result.Data;
+            //        }
+            //        //選択を解除
+            //        Selected.Value = null;
+            //    });
+            //}).AddTo(this.Disposable);
             SaveCommand = new AsyncReactiveCommand();
             SaveCommand.Subscribe(async (x) =>
             {
@@ -226,6 +242,8 @@ namespace MiniShogiMobile.ViewModels
                     {
                         GameTemplate.KomaList = CreateKomaList();
                         GameTemplate.Name = GameTitle.Value;
+                        var usingKomaTypeIds = Game.GetAllKomaTypeIds();
+                        GameTemplate.KomaTypes = KomaTypes.Where(y => usingKomaTypeIds.Contains(y.Value.Id)).Select(y => y.Value).ToList();
                         App.CreateGameService.SaveGameTemplate(GameTemplate);
                         await navigationService.GoBackToRootAsync();
                     }
@@ -290,6 +308,65 @@ namespace MiniShogiMobile.ViewModels
                 });
             }).AddTo(this.Disposable);
 
+            ChangeKomaCommand = SelectedBoardKoma.Select(x => x != null).ToAsyncReactiveCommand().AddTo(this.Disposable);
+            ChangeKomaCommand.Subscribe(async () =>
+            {
+                await this.CatchErrorWithMessageAsync(async () =>
+                {
+
+                    if (Selected.Value is CellViewModel<KomaViewModel> selectedCell)
+                    {
+                        if (selectedCell.Koma != null)
+                        {
+                            KomaTypeId oldkomaTypeId = selectedCell.Koma.Value.KomaTypeId.Value;
+                            var selectedKomaType = await NavigateAsync<SelectKomaPopupPageViewModel, SelectKomaConditions, KomaTypeId>(new SelectKomaConditions(selectedCell.Koma.Value.KomaTypeId.Value, "変更する駒を選択してください"));
+
+                            // 駒を選んだか?
+                            if(selectedKomaType.Success && selectedKomaType.Data != oldkomaTypeId)
+                            {
+                                selectedCell.Koma.Value.KomaTypeId.Value = selectedKomaType.Data;
+
+                                // TODO:あまりよくないので修正
+                                // 駒種別(反転可否)が変わったため、選択駒を強制的に外すことで、コマンドのCanExecuteを再計算させる
+                                var selected = Selected.Value;
+                                Selected.Value = null;
+                                Selected.Value = selected;
+
+                                // 成り不可名駒で、既に成ってる場合は不成に戻す
+                                if (!KomaTypes[selectedKomaType.Data].CanBeTransformed && selectedCell.Koma.Value.IsTransformed.Value)
+                                    selectedCell.Koma.Value.IsTransformed.Value = false;
+                            }
+
+                        }
+                    };
+                });
+            }).AddTo(this.Disposable);
+
+            ReverseKomaCommand = SelectedBoardKoma.Select(x => x != null && KomaTypes[x.KomaTypeId.Value].CanBeTransformed).ToAsyncReactiveCommand().AddTo(this.Disposable);
+            ReverseKomaCommand.Subscribe(async () =>
+            {
+                await this.CatchErrorWithMessageAsync(async () =>
+                {
+                    if (Selected.Value is CellViewModel<KomaViewModel> selectedCell)
+                    {
+                        if (selectedCell.Koma != null)
+                            selectedCell.Koma.Value.IsTransformed.Value = !selectedCell.Koma.Value.IsTransformed.Value; 
+                    };
+                });
+            }).AddTo(this.Disposable);
+
+            RotateKomaCommand = SelectedBoardKoma.Select(x => x != null).ToAsyncReactiveCommand().AddTo(this.Disposable);
+            RotateKomaCommand.Subscribe(async () =>
+            {
+                await this.CatchErrorWithMessageAsync(async () =>
+                {
+                    if (Selected.Value is CellViewModel<KomaViewModel> selectedCell)
+                    {
+                        if (selectedCell.Koma != null)
+                            selectedCell.Koma.Value.PlayerType.Value = selectedCell.Koma.Value.PlayerType.Value.Opponent;
+                    };
+                });
+            }).AddTo(this.Disposable);
         }
 
         private List<Koma> CreateKomaList()
@@ -328,6 +405,12 @@ namespace MiniShogiMobile.ViewModels
 
             Game.Update(GameTemplate.Height, GameTemplate.Width, GameTemplate.KomaList);
             GameTitle.Value = GameTemplate.Name;
+            // 駒種別の一覧に既存の盤上の駒種別を追加(レポジトリから削除した駒種別がある可能性があるため)
+            GameTemplate.KomaTypes.ForEach(x =>
+            {
+                if (!KomaTypes.ContainsKey(x.Id))
+                    KomaTypes.Add(x.Id, x);
+            });
 
         }
         /// <summary>

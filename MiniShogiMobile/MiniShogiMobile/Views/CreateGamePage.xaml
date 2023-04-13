@@ -149,9 +149,15 @@
                     <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.EditBoard.png}" 
                                  Text="盤編集"
                                  Command="{Binding EditSettingCommand}"/>
-                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.EditKoma.png}" 
-                                 Text="駒編集"
-                                 Command="{Binding EditCellCommand}"/>
+                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.ChangeKoma.png}" 
+                                 Text="駒変更"
+                                 Command="{Binding ChangeKomaCommand}"/>
+                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.ReverseKoma.png}" 
+                                 Text="表裏反転"
+                                 Command="{Binding ReverseKomaCommand}"/>
+                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.RotateKoma.png}" 
+                                 Text="上下反転"
+                                 Command="{Binding RotateKomaCommand}"/>
                     <!--TODO:コピー中はコピー解除という名称にして、コピー解除できるようにする-->
                     <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
                                  Command="{Binding CopyKomaCommand}"

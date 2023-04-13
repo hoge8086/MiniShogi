@@ -104,7 +104,7 @@ namespace MiniShogiMobile.ViewModels
             return new KomaType(
                 new KomaTypeId(Koma.Value.Name.Value, PromotedKoma.Value.Name.Value, KomaTypeKind.Value),
                 new KomaMoves(CreateMovesFrom(Board)),
-                new KomaMoves(CreateMovesFrom(PromotedBoard))
+                CanBePromoted.Value ? new KomaMoves(CreateMovesFrom(PromotedBoard)) : null
                 );
         }
 

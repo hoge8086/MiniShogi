@@ -32,6 +32,14 @@ namespace MiniShogiMobile.ViewModels
             HandsOfPlayer2.Update(komaList.Where(x => x.IsInHand && x.Player == PlayerType.Player2).ToList());
         }
 
+        public List<KomaTypeId> GetAllKomaTypeIds()
+        {
+            var all = new List<KomaTypeId>();
+            all.AddRange(Board.Cells.SelectMany(x => x.Where(y => y.Koma.Value != null).Select(y => y.Koma.Value.KomaTypeId.Value)));
+            all.AddRange(HandsOfPlayer1.Hands.Select(x => x.KomaTypeId));
+            all.AddRange(HandsOfPlayer2.Hands.Select(x => x.KomaTypeId));
+            return all.Distinct().ToList();
+        }
     }
 
 }

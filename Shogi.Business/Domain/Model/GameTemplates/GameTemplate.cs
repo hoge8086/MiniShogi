@@ -63,7 +63,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         private GameTemplate(string name, int width, int height, int territoryBoundary, WinConditionType winCondition, List<Koma> komaList, ProhibitedMoves prohibitedMoves, List<KomaType> komaTypes)
         : this(name, width, height, territoryBoundary, winCondition, komaList, prohibitedMoves)
         {
-            KomaTypes = komaTypes?.ToList();
+            KomaTypes = komaTypes ?? new List<KomaType>();
         }
 
         public GameTemplate(GameTemplate gameTemplate)

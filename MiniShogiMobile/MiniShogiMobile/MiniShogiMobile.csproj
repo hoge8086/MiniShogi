@@ -8,6 +8,7 @@
 
 
   <ItemGroup>
+    <EmbeddedResource Include="Images\ChangeKoma.png" />
     <EmbeddedResource Include="Images\LeftArrow.png" />
     <EmbeddedResource Include="Images\ChangePlayer.png" />
     <EmbeddedResource Include="Images\Copy.png" />
@@ -19,9 +20,11 @@
     <EmbeddedResource Include="Images\EditKoma.png" />
     <EmbeddedResource Include="Images\Character1.png" />
     <EmbeddedResource Include="Images\Floppy.png" />
+    <EmbeddedResource Include="Images\ReverseKoma.png" />
     <EmbeddedResource Include="Images\RightArrow.png" />
     <EmbeddedResource Include="Images\Play.png" />
     <EmbeddedResource Include="Images\Plus.png" />
+    <EmbeddedResource Include="Images\RotateKoma.png" />
     <EmbeddedResource Include="Images\Stop.png" />
   </ItemGroup>
 
