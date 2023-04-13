@@ -133,8 +133,11 @@ namespace MiniShogiMobile.ViewModels
 
                         }else
                         {
-                            // 駒→駒を選択する捜査は、選択解除
-                            Selected.Value = null;
+                            // 駒→別駒を選択する操作は選択、同じ駒は選択解除
+                            if(Selected.Value == tappedCell)
+                                Selected.Value = null;
+                            else
+                                Selected.Value = tappedCell;
                         }
 
                     }else
@@ -180,8 +183,8 @@ namespace MiniShogiMobile.ViewModels
 
                     if(Selected.Value != null)
                         // 持ち駒を選択していたら選択解除
-                        Selected.Value = null;
-                    else
+                            Selected.Value = null;
+                        else
                         // 何も選択してないなら持ち駒を選択
                         Selected.Value = x;
                 });
