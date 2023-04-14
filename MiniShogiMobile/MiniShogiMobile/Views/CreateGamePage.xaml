@@ -134,33 +134,38 @@
         <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
             <StackLayout Spacing="0">
                 <BoxView Style="{StaticResource HorizontalLine}" Background="{StaticResource AppControlDarkColor2}"/>
-                <StackLayout BackgroundColor="{StaticResource AppBackgroundColor}"
-                             Orientation="Horizontal"
+                <Grid BackgroundColor="{StaticResource AppBackgroundColor}"
+                      ColumnDefinitions="*,*,*,*,*,*"
                              HeightRequest="50"
                              HorizontalOptions="FillAndExpand"
                              Padding="0,10,0,6">
-                    <StackLayout.Resources>
+                    <Grid.Resources>
                         <Style TargetType="ctrl:ImageTextButton">
                             <Setter Property="TintColor" Value="{StaticResource AppControlDarkColor2}"/>
                             <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
                         </Style>
-                    </StackLayout.Resources>
+                    </Grid.Resources>
 
                     <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.EditBoard.png}" 
                                  Text="盤編集"
+                                 Grid.Column="0"
                                  Command="{Binding EditSettingCommand}"/>
                     <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.ChangeKoma.png}" 
                                  Text="駒変更"
+                                 Grid.Column="1"
                                  Command="{Binding ChangeKomaCommand}"/>
                     <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.ReverseKoma.png}" 
                                  Text="表裏反転"
+                                 Grid.Column="2"
                                  Command="{Binding ReverseKomaCommand}"/>
                     <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.RotateKoma.png}" 
                                  Text="上下反転"
+                                 Grid.Column="3"
                                  Command="{Binding RotateKomaCommand}"/>
                     <!--TODO:コピー中はコピー解除という名称にして、コピー解除できるようにする-->
                     <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
                                  Command="{Binding CopyKomaCommand}"
+                                 Grid.Column="4"
                                  Text="コピー">
                         <ctrl:ImageTextButton.Triggers>
                             <DataTrigger TargetType="ctrl:ImageTextButton" Binding="{Binding IsCopying.Value}" Value="True">
@@ -170,8 +175,9 @@
                     </ctrl:ImageTextButton>
                     <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.DeleteKoma.png}" 
                                  Text="削除"
+                                 Grid.Column="5"
                                  Command="{Binding DeleteKomaCommand}"/>
-                </StackLayout>
+                </Grid>
             </StackLayout>
         </Grid>
     </Grid>
