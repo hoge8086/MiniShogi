@@ -7,78 +7,79 @@
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              x:Class="MiniShogiMobile.Views.PlayerWithHandsView"
              x:Name="self">
-  <ContentView.Content>
+    <ContentView.Resources>
+        <xct:MultiConverter x:Key="EnumToFirstCharDescriptionConverter">
+            <utils:EnumToDescriptionConverter/>
+            <utils:TrimStringPrefixConverter/>
+        </xct:MultiConverter>
+        <x:Array x:Key="EnumToFirstCharDescriptionConverterParams" Type="{x:Type xct:MultiConverterParameter}">
+           <xct:MultiConverterParameter ConverterType="{x:Type utils:TrimStringPrefixConverter}" Value="1"/>
+        </x:Array>
+    </ContentView.Resources>
+    <ContentView.Content>
         <Grid ColumnDefinitions="Auto,*,Auto">
-            <!--プレイヤー-->
-            <Grid Grid.Column="0" ColumnDefinitions="*,Auto" RowDefinitions="4,*" RowSpacing="0" ColumnSpacing="0"
-                  BackgroundColor="{Binding Path=PlayerColor, Source={x:Reference self}}">
+            <Grid Grid.Column="0">
                 <Grid.Triggers>
                     <DataTrigger TargetType="Grid" Binding="{Binding Path=IsRotated, Source={x:Reference self}}" Value="True">
                         <Setter Property="Grid.Column" Value="2"/>
                     </DataTrigger>
-                    <DataTrigger TargetType="Grid" Binding="{Binding IsCurrentTurn.Value}" Value="False">
-                        <Setter Property="BackgroundColor" Value="DimGray"/>
-                    </DataTrigger>
                 </Grid.Triggers>
-                <!--プログレスバー-->
-                <ProgressBar Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
-                             Progress="{Binding ProgressOfComputerThinking.Value}"
-                             IsVisible="False"
-                             HorizontalOptions="FillAndExpand"
-                             ProgressColor="#ffd900">
-                    <ProgressBar.Triggers>
-                        <!-- コンピュータの思考中のみ表示-->
-                        <MultiTrigger TargetType="ProgressBar">
-                            <MultiTrigger.Conditions>
-                                <BindingCondition Binding="{Binding IsCurrentTurn.Value}" Value="True"/>
-                                <BindingCondition Binding="{Binding IsComputer.Value}" Value="True"/>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="IsVisible" Value="True"/>
-                        </MultiTrigger>
-                    </ProgressBar.Triggers>
-                </ProgressBar>
-                <!--プレイヤーアイコン-->
-                <ctrl:PlayerView Grid.Row="1" Grid.Column="0" Text="P2"
-                       WidthRequest="{Binding Path=Height, Source={RelativeSource Mode=Self}}"
-                       VerticalOptions="FillAndExpand"
-                       HorizontalOptions="FillAndExpand"/>
-                <!--
-                <Image Grid.Row="1" Grid.Column="0"
-                       Source="{utils:ImageResource MiniShogiMobile.Images.Character1.png}"
-                       VerticalOptions="FillAndExpand"
-                       HorizontalOptions="FillAndExpand"/>
-                -->
-                <!--名前-->
-                <StackLayout Grid.Row="1" Grid.Column="1"
-                             HorizontalOptions="FillAndExpand"
-                             VerticalOptions="FillAndExpand"
-                             Margin="8,0,8,0">
-                    <Label Grid.Row="0"
-                           FontSize="Micro"
-                           TextColor="White"
-                           VerticalTextAlignment="Center"
-                           HorizontalOptions="CenterAndExpand"
-                           VerticalOptions="CenterAndExpand"
-                           Text="{Binding Name.Value}"/>
-                    <!--先手/後手-->
-                    <Label Grid.Row="1"
-                           HorizontalOptions="CenterAndExpand"
-                           VerticalTextAlignment="Center"
-                           VerticalOptions="CenterAndExpand"
-                           FontSize="Micro"
-                           TextColor="White"
-                           Text="{Binding TurnType.Value, Converter={StaticResource EnumToDescriptionConverter}}">
-                    </Label>
-                    <!--評価値-->
-                    <Label Grid.Row="1"
-                           HorizontalOptions="CenterAndExpand"
-                           VerticalTextAlignment="Center"
-                           VerticalOptions="CenterAndExpand"
-                           FontSize="Micro"
-                           TextColor="White"
-                           Text="{Binding Evaluation.Value}">
-                    </Label>
-                </StackLayout>
+                <!--プレイヤー-->
+                <Grid ColumnDefinitions="24,44" RowDefinitions="44,24,4" RowSpacing="0" ColumnSpacing="0">
+                    <!--プレイヤーアイコン-->
+                    <Frame Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" BackgroundColor="Gray" CornerRadius="34" Padding="0">
+                        <Frame.Triggers>
+                            <DataTrigger TargetType="Frame" Binding="{Binding IsCurrentTurn.Value}" Value="True">
+                                <Setter Property="BackgroundColor" Value="{Binding Path=PlayerColor, Source={x:Reference self}}"/>
+                            </DataTrigger>
+                        </Frame.Triggers>
+                        <Image Source="{utils:ImageResource MiniShogiMobile.Images.Character1.png}"
+                               VerticalOptions="FillAndExpand"
+                               HorizontalOptions="FillAndExpand">
+                        </Image>
+                    </Frame>
+                    <!--名前-->
+                    <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="{StaticResource AppControlDarkColor}" CornerRadius="4" Padding="0" Margin="15,0,0,0" VerticalOptions="End">
+                        <Label FontSize="Micro"
+                                   TextColor="White"
+                                   Padding="10,0,0,0"
+                                   VerticalTextAlignment="Center"
+                                   HorizontalOptions="CenterAndExpand"
+                                   VerticalOptions="CenterAndExpand"
+                                   Text="{Binding Name.Value}"/>
+                    </Frame>
+                    <ctrl:KomaView Grid.Row="1" Grid.Column="0"
+                                   DisplayName="{Binding TurnType.Value, Converter={StaticResource EnumToFirstCharDescriptionConverter}, ConverterParameter={StaticResource EnumToFirstCharDescriptionConverterParams}}"
+                                   VerticalOptions="EndAndExpand"/>
+                    <!--プログレスバー-->
+                    <ProgressBar Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"
+                                 Progress="{Binding ProgressOfComputerThinking.Value}"
+                                 IsVisible="False"
+                                 HorizontalOptions="FillAndExpand"
+                                 ProgressColor="{StaticResource AppControlDarkColor2}">
+                        <ProgressBar.Triggers>
+                            <!-- コンピュータの思考中のみ表示-->
+                            <MultiTrigger TargetType="ProgressBar">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding IsCurrentTurn.Value}" Value="True"/>
+                                    <BindingCondition Binding="{Binding IsComputer.Value}" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="IsVisible" Value="True"/>
+                            </MultiTrigger>
+                        </ProgressBar.Triggers>
+                    </ProgressBar>
+                    <!--
+                        <評価値>
+                        <Label Grid.Row="1"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalTextAlignment="Center"
+                               VerticalOptions="CenterAndExpand"
+                               FontSize="Micro"
+                               TextColor="White"
+                               Text="{Binding Evaluation.Value}">
+                        </Label>
+                    -->
+                </Grid>
             </Grid>
             <!--持ち駒の台-->
             <ctrl:KomadaiView Grid.Column="1"

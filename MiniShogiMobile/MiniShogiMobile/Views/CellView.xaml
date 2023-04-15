@@ -19,6 +19,7 @@
     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <!--駒-->
             <ctrl:KomaView x:Name="koma" DisplayName="{Binding Koma.Value.Name.Value}"
+               Scale="0.8"
                HorizontalOptions="FillAndExpand"
                VerticalOptions="FillAndExpand"
                IsPromoted="{Binding Koma.Value.IsTransformed.Value}">

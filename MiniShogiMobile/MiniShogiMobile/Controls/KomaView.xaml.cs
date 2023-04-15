@@ -30,14 +30,14 @@ namespace MiniShogiMobile.Controls
         private void koma_SizeChanged(object sender, EventArgs e)
         {
             // [将棋の駒の形]
-            var size = (this.Height < this.Width ? this.Height : this.Width) * 0.8;
+            var size = (this.Height < this.Width ? this.Height : this.Width);// * 0.8;
             polygon.Points = new Xamarin.Forms.Shapes.PointCollection()
             {
                 new Point(0, size),
-                new Point(size, size),
-                new Point(size * 0.85, size * 0.2),
-                new Point(size * 0.5, 0),
-                new Point(size * 0.15, size * 0.2),
+                new Point(size-1, size),
+                new Point(size * 0.85-1, size * 0.2),
+                new Point(size * 0.5-1, 0),
+                new Point(size * 0.15-1, size * 0.2),
             };
             polygon.HeightRequest = size;//this.Height * 0.8;
             polygon.WidthRequest = size;// this.Width * 0.8;

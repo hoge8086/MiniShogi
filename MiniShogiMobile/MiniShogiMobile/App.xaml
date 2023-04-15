@@ -18,6 +18,7 @@
         <utils:IsTypeOfConverter x:Key="IsTypeOfConverter"/>
         <utils:EqualsMultiConverter x:Key="EqualsMultiConverter"/>
         <utils:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
+        <utils:TrimStringPrefixConverter x:Key="TrimStringPrefixConverter"/>
         <xct:MathExpressionConverter x:Key="MathExpressionConverter" />
         <xct:MultiMathExpressionConverter x:Key="MultiMathExpressionConverter" />
         <xct:EnumToBoolConverter x:Key="EnumToBoolConverter" />
@@ -31,8 +32,8 @@
         <Color x:Key="AppControlDarkColor2">#543f32</Color>
         <Color x:Key="AppControlLightColor">#fAfAf6</Color>
     <!--プレイヤー色-->
-        <Color x:Key="Player1Color">#1e50a2</Color>
-        <Color x:Key="Player2Color">#ba2636</Color>
+        <Color x:Key="Player1Color">#396FAC</Color>
+        <Color x:Key="Player2Color">#C3455A</Color>
       
     <!--盤色-->
         <Color x:Key="BoardBorderColor">#bb5535</Color>
@@ -113,6 +114,7 @@
     <!--フレーム-->
         <Style TargetType="Frame">
             <Setter Property="IsClippedToBounds" Value="True"/>
+            <Setter Property="HasShadow" Value="False"/>
         </Style>
 
     <!--エントリー-->

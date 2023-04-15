@@ -30,7 +30,7 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <ctrl:KomaView HeightRequest="80" WidthRequest="80" DisplayName="{Binding Name}"/>
+                            <ctrl:KomaView HeightRequest="80" WidthRequest="80" DisplayName="{Binding Name}" Scale="0.9"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

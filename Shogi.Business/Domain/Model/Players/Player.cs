@@ -13,7 +13,7 @@ namespace Shogi.Business.Domain.Model.Players
     [KnownType(typeof(AI.NegaAlphaAI))]
     public class Player
     {
-        public string Name { get => IsComputer ? Computer.ToString() : "あなた"; }
+        public string Name { get => IsComputer ? "AI" : "あなた"; }
 
         [DataMember]
         public AI.AI Computer { get; private set; }
