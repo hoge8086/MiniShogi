@@ -14,9 +14,9 @@
             <CollectionView Margin="15"
                             ItemsLayout="VerticalGrid, 4"
                             HeightRequest="400"
-                            SelectedItem="{Binding SelectedKomaTypeId.Value}"
+                            SelectionMode="Single"
                             ItemsSource="{Binding KomaTypeIdList}"
-                            SelectionMode="Single" >
+                            SelectedItem="{Binding SelectedKomaTypeId.Value}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid>

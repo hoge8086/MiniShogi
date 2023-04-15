@@ -44,6 +44,8 @@ namespace MiniShogiMobile.ViewModels
 
         public override void Prepare(SelectKomaConditions parameter)
         {
+            // FIX:Xamarinの不具合(CollectionViewの初期選択が反映されない)
+            // <https://stackoverflow-com.translate.goog/questions/75593079/programmatically-setting-the-selecteditem-of-a-collectionview-is-not-working-on?_x_tr_sl=en&_x_tr_tl=ja&_x_tr_hl=ja&_x_tr_pto=sc>
             if (parameter.SelectedKoma == null)
                 SelectedKomaTypeId.Value = KomaTypeIdList.FirstOrDefault();
             else
