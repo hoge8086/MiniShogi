@@ -33,8 +33,29 @@ namespace MiniShogiMobile.Controls
               returnType: typeof(int),
               declaringType: typeof(StepperWithLabel),
               defaultValue: 0,
-              defaultBindingMode: BindingMode.TwoWay);
+              defaultBindingMode: BindingMode.TwoWay,
+              propertyChanged: OnValueChanged);
 
+        static void OnValueChanged (BindableObject bindable, object oldValue, object newValue)
+        {
+            var view = bindable as StepperWithLabel;
+            if (view == null || newValue == oldValue)
+                return;
+            view.UpdateIsEnable();
+        }
+
+        private void UpdateIsEnable()
+        {
+            if (Value >= MaximumValue || !IsEnabled)
+                plusButton.IsEnabled = false;
+            else
+                plusButton.IsEnabled = true;
+
+            if (Value <= MinimumValue || !IsEnabled)
+                minusButton.IsEnabled = false;
+            else
+                minusButton.IsEnabled = true;
+        }
         public static readonly BindableProperty UnitLabelProperty =
             BindableProperty.Create(nameof(UnitLabel), typeof(string), typeof(StepperWithLabel), defaultValue: string.Empty);
 
@@ -65,6 +86,25 @@ namespace MiniShogiMobile.Controls
         {
             get { return (int)GetValue(MaximumValueProperty); }
             set { SetValue(MaximumValueProperty, value); }
+        }
+        public static new readonly BindableProperty IsEnabledProperty = BindableProperty.Create(
+                                                                            nameof(IsEnabled),
+                                                                            typeof(bool),
+                                                                            typeof(StepperWithLabel),
+                                                                            true,
+                                                                            propertyChanged: OnIsEnabledChanged);
+ 
+        static void OnIsEnabledChanged (BindableObject bindable, object oldValue, object newValue)
+        {
+            var view = bindable as StepperWithLabel;
+            if (view == null || newValue == oldValue)
+                return;
+            view.UpdateIsEnable();
+        }
+        public new bool IsEnabled
+        {
+            get { return (bool)GetValue(IsEnabledProperty); }
+            set { SetValue(IsEnabledProperty, value); }
         }
     }
 }

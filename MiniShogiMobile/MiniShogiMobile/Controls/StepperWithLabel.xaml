@@ -27,19 +27,35 @@
                     FontAttributes="Bold"/>
             <BoxView WidthRequest="1" BackgroundColor="{StaticResource AppControlDarkColor}" VerticalOptions="FillAndExpand"/>
             <StackLayout Orientation="Horizontal"
+                         WidthRequest="40"
                          Margin="10,0,10,0"
                          HorizontalOptions="CenterAndExpand">
+                <Label HorizontalOptions="CenterAndExpand"
+                   VerticalTextAlignment="Center"
+                   FontSize="Default"
+                   TextColor="{StaticResource AppFontDarkColor}"
+                   Text="－">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference self}, Path=IsEnabled}" Value="True">
+                            <Setter Property="Text" Value="{Binding Path=Value, Source={x:Reference self}}"/>
+                        </DataTrigger>
+                        <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference self}, Path=IsEnabled}" Value="False">
+                            <Setter Property="TextColor" Value="LightGray"/>
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
                 <Label HorizontalOptions="Center"
-                       VerticalTextAlignment="Center"
-                       FontSize="Default"
-                       TextColor="{StaticResource AppFontDarkColor}"
-                       Text="{Binding Path=Value, Source={x:Reference self}}"/>
-                <Label HorizontalOptions="Center"
-                       VerticalTextAlignment="Center"
-                       TextColor="{StaticResource AppFontDarkColor}"
-                       FontSize="10"
-                       Text="{Binding Path=UnitLabel, Source={x:Reference self}}"/>
-            </StackLayout>
+                   VerticalTextAlignment="Center"
+                   TextColor="{StaticResource AppFontDarkColor}"
+                   FontSize="10"
+                   Text="{Binding Path=UnitLabel, Source={x:Reference self}}">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference self}, Path=IsEnabled}" Value="False">
+                            <Setter Property="TextColor" Value="LightGray"/>
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+                </StackLayout>
             <BoxView WidthRequest="1" BackgroundColor="{StaticResource AppControlDarkColor}" VerticalOptions="FillAndExpand"/>
             <Button x:Name="plusButton"
                     Text="＋"

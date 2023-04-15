@@ -4,6 +4,7 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:local="clr-namespace:MiniShogiMobile.ViewModels"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
              xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.StartGamePage"
@@ -14,7 +15,9 @@
             <Label Text="将棋盤の選択"
                    VerticalOptions="Center"
                    HorizontalOptions="Start"/>
-            <Picker HorizontalOptions="EndAndExpand"
+            <Picker HorizontalOptions="Center"
+                    WidthRequest="200"
+                    Margin="10,0,0,0"
                     BackgroundColor="{StaticResource AppControlLightColor}"
                     TextColor="{StaticResource AppFontDarkColor}"
                     HorizontalTextAlignment="Center"
@@ -35,11 +38,23 @@
                     ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
                     SelectedItem="{Binding Player1.PlayerType.Value}"/>
             <StackLayout Grid.Column="1" Grid.Row="1" Orientation="Horizontal" HorizontalOptions="Center">
-                <Label Text="読みの深さ" VerticalTextAlignment="Center"/>
+                <Label Text="読みの深さ" VerticalTextAlignment="Center">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding Player1.PlayerType.Value, Mode=OneWay}" Value="{x:Static vm:PlayerThinkingType.Human}">
+                            <Setter Property="TextColor" Value="{StaticResource AppFontLightColor2}"/>
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
                 <ctrl:StepperWithLabel Value="{Binding Player1.AIThinkDepth.Value}"
                                        UnitLabel="手"
                                        MinimumValue="1"
-                                       MaximumValue="10"/>
+                                       MaximumValue="10">
+                    <ctrl:StepperWithLabel.Triggers>
+                        <DataTrigger TargetType="ctrl:StepperWithLabel" Binding="{Binding Player1.PlayerType.Value, Mode=OneWay}" Value="{x:Static vm:PlayerThinkingType.Human}">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </ctrl:StepperWithLabel.Triggers>
+                </ctrl:StepperWithLabel>
             </StackLayout>
         </Grid>
         <BoxView Style="{StaticResource HorizontalLine}"/>
@@ -55,16 +70,28 @@
                     ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
                     SelectedItem="{Binding Player2.PlayerType.Value}"/>
             <StackLayout Grid.Column="1" Grid.Row="1" Orientation="Horizontal" HorizontalOptions="Center">
-                <Label Text="読みの深さ" VerticalTextAlignment="Center"/>
+                <Label Text="読みの深さ" VerticalTextAlignment="Center">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding Player2.PlayerType.Value, Mode=OneWay}" Value="{x:Static vm:PlayerThinkingType.Human}">
+                            <Setter Property="TextColor" Value="{StaticResource AppFontLightColor2}"/>
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
                 <ctrl:StepperWithLabel Value="{Binding Player2.AIThinkDepth.Value}"
                                        UnitLabel="手"
                                        MinimumValue="1"
-                                       MaximumValue="10"/>
+                                       MaximumValue="10">
+                    <ctrl:StepperWithLabel.Triggers>
+                        <DataTrigger TargetType="ctrl:StepperWithLabel" Binding="{Binding Player2.PlayerType.Value, Mode=OneWay}" Value="{x:Static vm:PlayerThinkingType.Human}">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </ctrl:StepperWithLabel.Triggers>
+                </ctrl:StepperWithLabel>
             </StackLayout>
         </Grid>
         <BoxView Style="{StaticResource HorizontalLine}"/>
         <StackLayout Spacing="5">
-            <Label Text="読みの深さ" HorizontalOptions="Center"/>
+            <Label Text="先手" HorizontalOptions="Center"/>
             <ctrl:SwitchablePicker  HorizontalOptions="Center"
                     DisplayConverter="{StaticResource EnumToDescriptionConverter}"
                     ItemsSource="{Binding Source={local:EnumSelectFirstTurnPlayerProvider}}"
