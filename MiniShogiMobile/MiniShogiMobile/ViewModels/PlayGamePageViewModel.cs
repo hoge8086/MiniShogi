@@ -42,6 +42,7 @@ namespace MiniShogiMobile.ViewModels
     {
         public PlayingGame PlayingGame { get; private set; }
         private ReactiveProperty<IViewState> ViewState;
+        private ReactiveProperty<int> CurrentMoveCount;
         public void ChangeState(IViewState state) => ViewState.Value = state;
         public GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel> Game { get; set; }
         public AsyncReactiveCommand<ISelectable> MoveCommand { get; private set; }
@@ -60,6 +61,7 @@ namespace MiniShogiMobile.ViewModels
         {
             PlayingGame = null;
             ViewState = new ReactiveProperty<IViewState>(new ViewStateWaiting());
+            CurrentMoveCount = new ReactiveProperty<int>();
             Game = new GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel>();
             MoveCommand = new AsyncReactiveCommand<ISelectable>();
             MoveCommand.Subscribe(async x =>
@@ -117,9 +119,12 @@ namespace MiniShogiMobile.ViewModels
                 });
             }).AddTo(Disposable);
 
-            UndoCommand = ViewState.Select(state => state is ViewStateGameStudying)
-                            .ToAsyncReactiveCommand()
-                            .AddTo(this.Disposable);
+            UndoCommand = new[]{
+                    ViewState.Select(state => state is ViewStateGameStudying),
+                    CurrentMoveCount.Select(cnt => (PlayingGame != null) && PlayingGame.Game.CanUndo(Shogi.Business.Domain.Model.Games.Game.UndoType.Undo))
+                }.CombineLatestValuesAreAllTrue()
+                .ToAsyncReactiveCommand()
+                .AddTo(this.Disposable);
             UndoCommand.Subscribe(async x =>
             {
                 await this.CatchErrorWithMessageAsync(async () =>
@@ -129,9 +134,13 @@ namespace MiniShogiMobile.ViewModels
                     UpdateView();
                 });
             }).AddTo(Disposable);
-            RedoCommand = ViewState.Select(state => state is ViewStateGameStudying)
-                            .ToAsyncReactiveCommand()
-                            .AddTo(this.Disposable);
+
+            RedoCommand = new[]{
+                    ViewState.Select(state => state is ViewStateGameStudying),
+                    CurrentMoveCount.Select(cnt => (PlayingGame != null) && PlayingGame.Game.CanUndo(Shogi.Business.Domain.Model.Games.Game.UndoType.Redo))
+                }.CombineLatestValuesAreAllTrue()
+                .ToAsyncReactiveCommand()
+                .AddTo(this.Disposable);
             RedoCommand.Subscribe(async x =>
             {
                 await this.CatchErrorWithMessageAsync(async () =>
@@ -172,6 +181,7 @@ namespace MiniShogiMobile.ViewModels
             Game.Update(game.Board.Height, game.Board.Width, game.State.KomaList);
             Game.HandsOfPlayer1.IsCurrentTurn.Value = game.State.TurnPlayer == PlayerType.Player1;
             Game.HandsOfPlayer2.IsCurrentTurn.Value = game.State.TurnPlayer == PlayerType.Player2;
+            CurrentMoveCount.Value = game.Record.CurrentMovesCount;
         }
 
         public void OnGameStarted(GameStarted e)
