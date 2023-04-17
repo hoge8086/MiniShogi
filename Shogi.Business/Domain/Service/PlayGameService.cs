@@ -51,9 +51,9 @@ namespace Shogi.Business.Domain.Service
                                             (progress) => {
                                                 DomainEvents.Raise(new ComputerThinkingProgressed(playingGame.TurnPlayer.PlayerType, progress));
                                             });
-                DomainEvents.Raise(new ComputerThinkingEnded(playingGame.TurnPlayer.PlayerType, move.GameEvaluation));
                 playingGame.Game.Play(move.MoveCommand);
                 DomainEvents.Raise(new GamePlayed(playingGame.Clone(), move.MoveCommand));
+                DomainEvents.Raise(new ComputerThinkingEnded(playingGame.TurnPlayer.PlayerType, move.GameEvaluation));
             }
             catch(OperationCanceledException ex)
             {

@@ -41,7 +41,7 @@ namespace MiniShogiMobile.ViewModels
     public class PlayGamePageViewModel : NavigationViewModel<PlayGameCondition>
     {
         public PlayingGame PlayingGame { get; private set; }
-        private ReactiveProperty<IViewState> ViewState;
+        public ReactiveProperty<IViewState> ViewState { get; private set; }
         private ReactiveProperty<int> CurrentMoveCount;
         public void ChangeState(IViewState state) => ViewState.Value = state;
         public GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel> Game { get; set; }
@@ -249,6 +249,8 @@ namespace MiniShogiMobile.ViewModels
             Device.InvokeOnMainThreadAsync(() =>
             {
                 var player = Game.GetHands(endedEvent.PlayerType);
+                // 次のCPUの進捗表示で一瞬100%が見えるので0%に戻す
+                player.ProgressOfComputerThinking.Value = 0.0;
 
                 if(endedEvent.GameEvaluation != null)   //キャンセルの場合はnull
                     player.Evaluation.Value = $"{(int)(endedEvent.GameEvaluation.Value / (double)endedEvent.GameEvaluation.MaxValue * 100)} ({endedEvent.GameEvaluation.Value}/{endedEvent.GameEvaluation.MaxValue})";

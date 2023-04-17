@@ -5,6 +5,7 @@
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
+             xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
              x:Class="MiniShogiMobile.Views.PlayerWithHandsView"
              x:Name="self">
     <ContentView.Resources>
@@ -63,6 +64,7 @@
                                 <MultiTrigger.Conditions>
                                     <BindingCondition Binding="{Binding IsCurrentTurn.Value}" Value="True"/>
                                     <BindingCondition Binding="{Binding IsComputer.Value}" Value="True"/>
+                                    <BindingCondition Binding="{Binding Source={RelativeSource AncestorType={x:Type views:PlayGamePage}}, Path=BindingContext.ViewState.Value, Converter={StaticResource IsTypeOfConverter}, ConverterParameter={x:Type vm:ViewStateWaiting}}" Value="True"/>
                                 </MultiTrigger.Conditions>
                                 <Setter Property="IsVisible" Value="True"/>
                             </MultiTrigger>
