@@ -41,6 +41,7 @@ namespace MiniShogiMobile.ViewModels
                 {
                     App.GameService.PlayingGameRepository.RemoveByName(SelectedPlayingGame.Value.Name);
                     PlayingGameList.Remove(SelectedPlayingGame.Value);
+                    SelectedPlayingGame.Value = null;
                 }
             }).AddTo(Disposable);
         }

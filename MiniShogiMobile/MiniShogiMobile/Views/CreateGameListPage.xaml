@@ -70,7 +70,7 @@
                                     <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
                                                      Text="編集"
                                                      Command="{Binding EditGameCommand}"/>
-                                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
+                                    <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Copy.png}" 
                                                      Text="コピー"
                                                      Command="{Binding CopyGameCommand}"/>
                                     <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" 

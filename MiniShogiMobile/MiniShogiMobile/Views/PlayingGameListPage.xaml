@@ -61,7 +61,7 @@
                                     <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
                                 </Style>
                             </StackLayout.Resources>
-                            <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Edit.png}" 
+                            <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Play.png}" 
                                              Text="再開"
                                              Command="{Binding PlayCommand}"/>
                             <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Delete.png}" 
