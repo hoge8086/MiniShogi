@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:admob="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
              xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              x:Class="MiniShogiMobile.Controls.BasePage"
              Style="{StaticResource PageStyle}">
@@ -14,19 +15,19 @@
     </ContentPage.Resources>
     <ContentPage.ControlTemplate>
         <ControlTemplate>
-            <StackLayout Spacing="0">
-                <Grid VerticalOptions="FillAndExpand">
+            <Grid RowDefinitions="*,60">
+                <Grid Grid.Row="0" VerticalOptions="FillAndExpand">
                     <ctrl:BackgroundWebView AssetFileName="BackgroundFlowImage.html"/>
                     <ContentPresenter/>
                 </Grid>
-                <Label Grid.Row="1"
-                       HeightRequest="50"
-                       WidthRequest="320"
-                       Text="広告"
-                       HorizontalTextAlignment="Center"
-                       VerticalTextAlignment="Center"
-                       Background="Pink"/>
-            </StackLayout>
+                <admob:MTAdView Grid.Row="1"
+                    IsVisible="true"
+                    BackgroundColor="White"
+                    AdsId="ca-app-pub-3940256099942544/2934735716"
+                    HeightRequest="60"
+                    VerticalOptions="EndAndExpand"
+                    HorizontalOptions="FillAndExpand"/>
+            </Grid>
         </ControlTemplate>
     </ContentPage.ControlTemplate>
 </ContentPage>
