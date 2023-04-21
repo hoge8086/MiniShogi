@@ -1,5 +1,6 @@
 ﻿using CarouselView.FormsPlugin.iOS;
 using Foundation;
+using Google.MobileAds;
 using Prism;
 using Prism.Ioc;
 using UIKit;
@@ -23,14 +24,16 @@ namespace MiniShogiMobile.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             Rg.Plugins.Popup.Popup.Init();
-
+            
             global::Xamarin.Forms.Forms.Init();
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             CarouselViewRenderer.Init();
+            MobileAds.SharedInstance.Start(CompletionHandler);
             LoadApplication(new App(new iOSInitializer()));
 
             return base.FinishedLaunching(app, options);
         }
+        private void CompletionHandler(InitializationStatus status) { }
     }
 
     public class iOSInitializer : IPlatformInitializer
