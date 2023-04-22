@@ -1,4 +1,5 @@
-﻿using MiniShogiMobile.Conditions;
+﻿using MarcTron.Plugin;
+using MiniShogiMobile.Conditions;
 using MiniShogiMobile.Views;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -253,6 +254,10 @@ namespace MiniShogiMobile.ViewModels
                         GameTemplate.Name = GameTitle.Value;
                         var usingKomaTypeIds = Game.GetAllKomaTypeIds();
                         GameTemplate.KomaTypes = KomaTypes.Where(y => usingKomaTypeIds.Contains(y.Value.Id)).Select(y => y.Value).ToList();
+
+                        if (CrossMTAdmob.Current.IsInterstitialLoaded())
+                            CrossMTAdmob.Current.ShowInterstitial();
+
                         App.CreateGameService.SaveGameTemplate(GameTemplate);
                         await navigationService.GoBackToRootAsync();
                     }
@@ -429,6 +434,8 @@ namespace MiniShogiMobile.ViewModels
 
         public override void Prepare(CreateGameCondition parameter)
         {
+
+            CrossMTAdmob.Current.LoadInterstitial("ca-app-pub-3940256099942544/5135589807");
             if (parameter.GameName != null)
                 GameTemplate = App.CreateGameService.GameTemplateRepository.FindByName(parameter.GameName);
             else
