@@ -25,9 +25,16 @@
                         <Setter Property="Grid.Column" Value="2"/>
                     </DataTrigger>
                 </Grid.Triggers>
-                <!--プレイヤー-->
                 <Grid ColumnDefinitions="24,44" RowDefinitions="44,24,4" RowSpacing="0" ColumnSpacing="0">
                     <!--プレイヤーアイコン-->
+                    <ctrl:PlayerView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Color="Gray">
+                        <ctrl:PlayerView.Triggers>
+                            <DataTrigger TargetType="ctrl:PlayerView" Binding="{Binding IsCurrentTurn.Value}" Value="True">
+                                <Setter Property="Color" Value="{Binding Path=PlayerColor, Source={x:Reference self}}"/>
+                            </DataTrigger>
+                        </ctrl:PlayerView.Triggers>
+                    </ctrl:PlayerView>
+                    <!--
                     <Frame Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" BackgroundColor="Gray" CornerRadius="34" Padding="0">
                         <Frame.Triggers>
                             <DataTrigger TargetType="Frame" Binding="{Binding IsCurrentTurn.Value}" Value="True">
@@ -39,6 +46,7 @@
                                HorizontalOptions="FillAndExpand">
                         </Image>
                     </Frame>
+                    -->
                     <!--名前-->
                     <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="{StaticResource AppControlDarkColor}" CornerRadius="4" Padding="0" Margin="15,0,0,0" VerticalOptions="End">
                         <Label FontSize="Micro"

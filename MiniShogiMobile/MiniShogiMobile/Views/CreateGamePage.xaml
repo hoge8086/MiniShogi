@@ -52,11 +52,8 @@
                 <!--プレイヤーアイコン-->
                 <ctrl:PlayerView
                     Grid.Column="1"
-                    Text="P2"
+                    Color="{StaticResource Player2Color}"
                     WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
-                    <!--
-                    BackgroundColor="{StaticResource Player2Color}">
-                     -->
                 </ctrl:PlayerView>
                 <!--駒台-->
                 <!--TODO:一部HandsOfCreateGameViewの中からCreateGamePageを直接参照しているのが気に入らない-->
@@ -116,11 +113,8 @@
                   VerticalOptions="StartAndExpand">
                 <!--プレイヤーアイコン-->
                 <ctrl:PlayerView Grid.Column="0"
-                                 Text="P1"
+                                 Color="{StaticResource Player1Color}"
                                  WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
-                                <!--
-                                 BackgroundColor="{StaticResource Player1Color}">
-                                 -->
                 </ctrl:PlayerView>
                 <!--駒台-->
                 <views:HandsOfCreateGameView Grid.Column="1"

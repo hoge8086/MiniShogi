@@ -28,8 +28,8 @@
         <BoxView Style="{StaticResource HorizontalLine}"/>
         <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="*,*" HorizontalOptions="Center">
             <ctrl:PlayerView Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
-                    WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
-                    Text="P1"/>
+                    Color="{StaticResource Player1Color}"
+                    WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"/>
                     <!--
                     BackgroundColor="{StaticResource Player2Color}"/>
                     -->
@@ -60,11 +60,8 @@
         <BoxView Style="{StaticResource HorizontalLine}"/>
         <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="*,*" HorizontalOptions="Center">
             <ctrl:PlayerView Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
-                    WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
-                    Text="P2"/>
-                    <!--
-                    BackgroundColor="{StaticResource Player1Color}"/>
-                    -->
+                    Color="{StaticResource Player2Color}"
+                    WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"/>
             <ctrl:SwitchablePicker Grid.Column="1" Grid.Row="0" HorizontalOptions="Center"
                     DisplayConverter="{StaticResource EnumToDescriptionConverter}"
                     ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"

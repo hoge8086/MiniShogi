@@ -9,8 +9,17 @@
         <utils:IsNotNullConverter x:Key="isNotNullConverter"/>
     </ContentView.Resources>
   <ContentView.Content>
-        <ctrl:KomaView DisplayName="{Binding Path=Text, Source={x:Reference self}}"/>
+        <!--プレイヤーアイコン-->
+        <Frame BackgroundColor="{Binding Path=Color, Source={x:Reference self}}"
+               CornerRadius="{Binding Path=Height, Source={x:Reference self}, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.5)'}"
+               Padding="0">
+            <Image Source="{utils:ImageResource MiniShogiMobile.Images.Character1.png}"
+                   VerticalOptions="FillAndExpand"
+                   HorizontalOptions="FillAndExpand">
+            </Image>
+        </Frame>
         <!--
+        <ctrl:KomaView DisplayName="{Binding Path=Text, Source={x:Reference self}}"/>
         <Frame Padding="2" CornerRadius="0" BackgroundColor="{Binding Path=BackgroundColor, Source={x:Reference self}}">
             <Frame Padding="1" CornerRadius="0" BackgroundColor="White">
                 <Frame Padding="0" CornerRadius="0" BackgroundColor="{Binding Path=BackgroundColor, Source={x:Reference self}}">

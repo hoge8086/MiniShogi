@@ -18,36 +18,16 @@ namespace MiniShogiMobile.Controls
         }
 
         #region Text
-        public static readonly BindableProperty TextProperty = BindableProperty.Create(
-                                                                            nameof(Text),
-                                                                            typeof(string ),
+        public static readonly BindableProperty ColorProperty = BindableProperty.Create(
+                                                                            nameof(Color),
+                                                                            typeof(Color),
                                                                             typeof(PlayerView),
                                                                             null);
  
-        /// <summary>
-        /// 表示名
-        /// </summary>
-        public string Text
+        public Color Color
         {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
-        }
-        #endregion
-
-        #region SubText
-        public static readonly BindableProperty SubTextProperty = BindableProperty.Create(
-                                                                            nameof(SubText),
-                                                                            typeof(string ),
-                                                                            typeof(PlayerView),
-                                                                            null);
- 
-        /// <summary>
-        /// 表示名
-        /// </summary>
-        public string SubText
-        {
-            get { return (string)GetValue(SubTextProperty); }
-            set { SetValue(SubTextProperty, value); }
+            get { return (Color)GetValue(ColorProperty); }
+            set { SetValue(ColorProperty, value); }
         }
         #endregion
     }
