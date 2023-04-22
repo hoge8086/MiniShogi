@@ -25,71 +25,65 @@
                         <Setter Property="Grid.Column" Value="2"/>
                     </DataTrigger>
                 </Grid.Triggers>
-                <Grid ColumnDefinitions="24,44" RowDefinitions="44,24,4" RowSpacing="0" ColumnSpacing="0">
-                    <!--プレイヤーアイコン-->
-                    <ctrl:PlayerView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Color="Gray">
-                        <ctrl:PlayerView.Triggers>
-                            <DataTrigger TargetType="ctrl:PlayerView" Binding="{Binding IsCurrentTurn.Value}" Value="True">
-                                <Setter Property="Color" Value="{Binding Path=PlayerColor, Source={x:Reference self}}"/>
-                            </DataTrigger>
-                        </ctrl:PlayerView.Triggers>
-                    </ctrl:PlayerView>
-                    <!--
-                    <Frame Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" BackgroundColor="Gray" CornerRadius="34" Padding="0">
-                        <Frame.Triggers>
-                            <DataTrigger TargetType="Frame" Binding="{Binding IsCurrentTurn.Value}" Value="True">
-                                <Setter Property="BackgroundColor" Value="{Binding Path=PlayerColor, Source={x:Reference self}}"/>
-                            </DataTrigger>
-                        </Frame.Triggers>
-                        <Image Source="{utils:ImageResource MiniShogiMobile.Images.Character1.png}"
-                               VerticalOptions="FillAndExpand"
-                               HorizontalOptions="FillAndExpand">
-                        </Image>
-                    </Frame>
-                    -->
-                    <!--名前-->
-                    <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="{StaticResource AppControlDarkColor}" CornerRadius="4" Padding="0" Margin="15,0,0,0" VerticalOptions="End">
-                        <Label FontSize="Micro"
-                                   TextColor="White"
-                                   Padding="10,0,0,0"
-                                   VerticalTextAlignment="Center"
+                <StackLayout VerticalOptions="FillAndExpand">
+                    <Grid VerticalOptions="FillAndExpand"
+                          Grid.Row="0" ColumnDefinitions="*,1.5*" RowDefinitions="1.5*,*" RowSpacing="0" ColumnSpacing="0"
+                          WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
+                        <!--プレイヤーアイコン-->
+                        <ctrl:PlayerView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Color="Gray">
+                            <ctrl:PlayerView.Triggers>
+                                <DataTrigger TargetType="ctrl:PlayerView" Binding="{Binding IsCurrentTurn.Value}" Value="True">
+                                    <Setter Property="Color" Value="{Binding Path=PlayerColor, Source={x:Reference self}}"/>
+                                </DataTrigger>
+                            </ctrl:PlayerView.Triggers>
+                        </ctrl:PlayerView>
+                        <!--名前-->
+                        <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="{StaticResource AppControlDarkColor}" CornerRadius="4" Padding="0" Margin="15,0,0,0" VerticalOptions="End">
+                            <Label FontSize="Micro"
+                                       TextColor="White"
+                                       Padding="10,0,0,0"
+                                       VerticalTextAlignment="Center"
+                                       HorizontalOptions="CenterAndExpand"
+                                       VerticalOptions="CenterAndExpand"
+                                       Text="{Binding Name.Value}"/>
+                        </Frame>
+                        <ctrl:KomaView Grid.Row="1" Grid.Column="0"
+                                       DisplayName="{Binding TurnType.Value, Converter={StaticResource EnumToFirstCharDescriptionConverter}, ConverterParameter={StaticResource EnumToFirstCharDescriptionConverterParams}}"
+                                       VerticalOptions="EndAndExpand"/>
+                        <!--
+                            <評価値>
+                            <Label Grid.Row="1"
                                    HorizontalOptions="CenterAndExpand"
+                                   VerticalTextAlignment="Center"
                                    VerticalOptions="CenterAndExpand"
-                                   Text="{Binding Name.Value}"/>
-                    </Frame>
-                    <ctrl:KomaView Grid.Row="1" Grid.Column="0"
-                                   DisplayName="{Binding TurnType.Value, Converter={StaticResource EnumToFirstCharDescriptionConverter}, ConverterParameter={StaticResource EnumToFirstCharDescriptionConverterParams}}"
-                                   VerticalOptions="EndAndExpand"/>
+                                   FontSize="Micro"
+                                   TextColor="White"
+                                   Text="{Binding Evaluation.Value}">
+                            </Label>
+                        -->
+                    </Grid>
                     <!--プログレスバー-->
-                    <ProgressBar Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"
-                                 Progress="{Binding ProgressOfComputerThinking.Value}"
-                                 IsVisible="False"
-                                 HorizontalOptions="FillAndExpand"
-                                 ProgressColor="{StaticResource AppControlDarkColor2}">
-                        <ProgressBar.Triggers>
-                            <!-- コンピュータの思考中のみ表示-->
-                            <MultiTrigger TargetType="ProgressBar">
-                                <MultiTrigger.Conditions>
-                                    <BindingCondition Binding="{Binding IsCurrentTurn.Value}" Value="True"/>
-                                    <BindingCondition Binding="{Binding IsComputer.Value}" Value="True"/>
-                                    <BindingCondition Binding="{Binding Source={RelativeSource AncestorType={x:Type views:PlayGamePage}}, Path=BindingContext.ViewState.Value, Converter={StaticResource IsTypeOfConverter}, ConverterParameter={x:Type vm:ViewStateWaiting}}" Value="True"/>
-                                </MultiTrigger.Conditions>
-                                <Setter Property="IsVisible" Value="True"/>
-                            </MultiTrigger>
-                        </ProgressBar.Triggers>
-                    </ProgressBar>
-                    <!--
-                        <評価値>
-                        <Label Grid.Row="1"
-                               HorizontalOptions="CenterAndExpand"
-                               VerticalTextAlignment="Center"
-                               VerticalOptions="CenterAndExpand"
-                               FontSize="Micro"
-                               TextColor="White"
-                               Text="{Binding Evaluation.Value}">
-                        </Label>
-                    -->
-                </Grid>
+                    <Grid Grid.Row="1" HeightRequest="4">
+                        <ProgressBar 
+                                     Progress="{Binding ProgressOfComputerThinking.Value}"
+                                     IsVisible="False"
+                                     VerticalOptions="Center"
+                                     HorizontalOptions="FillAndExpand"
+                                     ProgressColor="{StaticResource AppControlDarkColor2}">
+                            <ProgressBar.Triggers>
+                                <!-- コンピュータの思考中のみ表示-->
+                                <MultiTrigger TargetType="ProgressBar">
+                                    <MultiTrigger.Conditions>
+                                        <BindingCondition Binding="{Binding IsCurrentTurn.Value}" Value="True"/>
+                                        <BindingCondition Binding="{Binding IsComputer.Value}" Value="True"/>
+                                        <BindingCondition Binding="{Binding Source={RelativeSource AncestorType={x:Type views:PlayGamePage}}, Path=BindingContext.ViewState.Value, Converter={StaticResource IsTypeOfConverter}, ConverterParameter={x:Type vm:ViewStateWaiting}}" Value="True"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="IsVisible" Value="True"/>
+                                </MultiTrigger>
+                            </ProgressBar.Triggers>
+                        </ProgressBar>
+                    </Grid>
+                </StackLayout>
             </Grid>
             <!--持ち駒の台-->
             <ctrl:KomadaiView Grid.Column="1"
