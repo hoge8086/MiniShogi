@@ -42,6 +42,7 @@
                 </Grid.Triggers>
                 <!--駒-->
                 <ctrl:KomaView  DisplayName="{Binding Koma.Value.Name.Value}"
+                       Scale="0.8"
                        HorizontalOptions="FillAndExpand"
                        VerticalOptions="FillAndExpand"
                        IsPromoted="{Binding Koma.Value.IsTransformed.Value}">
