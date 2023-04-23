@@ -12,5 +12,6 @@
         <Button Text="はじめる" Command="{Binding StartGameCommand}" WidthRequest="100"/>
         <Button Text="つづきから" Command="{Binding ContinueGameCommand}"  WidthRequest="100"/>
         <Button Text="作る" Command="{Binding CreateGameCommand}" WidthRequest="100"/>
+        <Button Text="ライセンス表記" Command="{Binding ShowLicenseCommand}" WidthRequest="100"/>
     </StackLayout>
 </ctrl:BasePage>

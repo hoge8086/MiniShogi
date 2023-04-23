@@ -21,6 +21,7 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand StartGameCommand { get; set; }
         public AsyncReactiveCommand CreateGameCommand { get; set; }
         public AsyncReactiveCommand ContinueGameCommand { get; set; }
+        public AsyncReactiveCommand ShowLicenseCommand { get; set; }
         public MainPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             StartGameCommand = new AsyncReactiveCommand();
@@ -38,6 +39,11 @@ namespace MiniShogiMobile.ViewModels
             CreateGameCommand.Subscribe(async () =>
             {
                 await NavigateAsync<CreateGameListPageViewModel>();
+            }).AddTo(Disposable);
+            ShowLicenseCommand = new AsyncReactiveCommand();
+            ShowLicenseCommand.Subscribe(async () =>
+            {
+                await NavigateAsync<LicensePageViewModel>();
             }).AddTo(Disposable);
         }
     }
