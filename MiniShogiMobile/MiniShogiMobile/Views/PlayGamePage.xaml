@@ -53,36 +53,33 @@
         </Grid>
         <StackLayout Grid.Row="1" Spacing="0">
             <BoxView Style="{StaticResource HorizontalLine}" Background="{StaticResource AppControlDarkColor2}"/>
-            <StackLayout BackgroundColor="{StaticResource AppBackgroundColor}"
-                         Orientation="Horizontal"
-                         HeightRequest="40"
-                         HorizontalOptions="FillAndExpand"
-                         Padding="0,10,0,6">
-                <StackLayout.Resources>
-                    <Style TargetType="ctrl:ImageTextButton">
-                        <Setter Property="TintColor" Value="{StaticResource AppControlDarkColor2}"/>
-                        <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
-                    </Style>
-                </StackLayout.Resources>
+            <Grid Style="{StaticResource CommandListGrid}"
+                  ColumnDefinitions="*,*,*,*,*,*">
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Play.png}" 
+                             Grid.Column="0"
                              Text="再開"
                              Command="{Binding ResumeCommand}"/>
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Stop.png}" 
+                             Grid.Column="1"
                              Text="停止"
                              Command="{Binding StopCommand}"/>
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.LeftArrow.png}" 
+                             Grid.Column="2"
                              Text="戻る"
                              Command="{Binding UndoCommand}"/>
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.RightArrow.png}" 
+                             Grid.Column="3"
                              Text="進む"
                              Command="{Binding RedoCommand}"/>
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.ChangePlayer.png}" 
+                             Grid.Column="4"
                              Text="Player変更"
                              Command="{Binding SaveCommand}"/>
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Floppy.png}" 
+                             Grid.Column="5"
                              Text="保存"
                              Command="{Binding SaveCommand}"/>
-            </StackLayout>
+            </Grid>
         </StackLayout>
     </Grid>
 </ctrl:BasePage>

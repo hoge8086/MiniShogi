@@ -128,17 +128,8 @@
         <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
             <StackLayout Spacing="0">
                 <BoxView Style="{StaticResource HorizontalLine}" Background="{StaticResource AppControlDarkColor2}"/>
-                <Grid BackgroundColor="{StaticResource AppBackgroundColor}"
-                      ColumnDefinitions="*,*,*,*,*,*"
-                             HeightRequest="50"
-                             HorizontalOptions="FillAndExpand"
-                             Padding="0,10,0,6">
-                    <Grid.Resources>
-                        <Style TargetType="ctrl:ImageTextButton">
-                            <Setter Property="TintColor" Value="{StaticResource AppControlDarkColor2}"/>
-                            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
-                        </Style>
-                    </Grid.Resources>
+                <Grid Style="{StaticResource CommandListGrid}"
+                      ColumnDefinitions="*,*,*,*,*,*">
 
                     <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.EditBoard.png}" 
                                  Text="盤編集"

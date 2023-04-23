@@ -122,6 +122,24 @@
             <Setter Property="BackgroundColor" Value="White"/>
         </Style>
 
+    <!--コマンドレイアウト-->
+        <Style x:Key="CommandListGrid" TargetType="Grid">
+            <Setter Property="HeightRequest">
+                <Setter.Value>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="45" Tablet="60"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
+            <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+            <Setter Property="Padding" Value="0,10,0,6"/>
+        </Style>
+
+    <!--コマンド-->
+        <Style TargetType="ctrl:ImageTextButton">
+            <Setter Property="TintColor" Value="{StaticResource AppControlDarkColor2}"/>
+            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+        </Style>
+
     <!--ライン-->
         <Style x:Key="HorizontalLine" TargetType="BoxView">
             <Setter Property="HeightRequest" Value="1"/>
