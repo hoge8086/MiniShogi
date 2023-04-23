@@ -17,8 +17,6 @@ namespace MiniShogiMobile.ViewModels
         public ObservableCollection<SoftwareLicense> Licenses { get; set; }
         public LicensePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
-            Title = "ライセンス表記";
-
             var licenses = Load(); 
             Licenses = new ObservableCollection<SoftwareLicense>(licenses);
         }
