@@ -11,8 +11,8 @@
              x:Class="MiniShogiMobile.Views.PlayGamePage"
              Title="{Binding Title}"
              x:Name="self">
-    <StackLayout>
-        <Grid x:Name="field" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+    <Grid RowDefinitions="*,Auto">
+        <Grid x:Name="field" Grid.Row="0" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <StackLayout x:Name="gameField"
                          VerticalOptions="FillAndExpand"
                          Spacing="0"
@@ -51,7 +51,7 @@
             </StackLayout>
             <AbsoluteLayout x:Name="movingLayer" InputTransparent="True"/>
         </Grid>
-        <StackLayout Spacing="0">
+        <StackLayout Grid.Row="1" Spacing="0">
             <BoxView Style="{StaticResource HorizontalLine}" Background="{StaticResource AppControlDarkColor2}"/>
             <StackLayout BackgroundColor="{StaticResource AppBackgroundColor}"
                          Orientation="Horizontal"
@@ -84,5 +84,5 @@
                              Command="{Binding SaveCommand}"/>
             </StackLayout>
         </StackLayout>
-    </StackLayout>
+    </Grid>
 </ctrl:BasePage>
