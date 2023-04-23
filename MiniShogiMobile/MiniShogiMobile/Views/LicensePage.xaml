@@ -4,5 +4,31 @@
              xmlns:prism="http://prismlibrary.com"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.LicensePage">
-  
+    <Grid>  
+        <ScrollView>  
+            <ListView BackgroundColor="White" ItemsSource="{Binding Licenses}" HasUnevenRows="True" SeparatorVisibility="None">  
+                <ListView.ItemTemplate>  
+                    <DataTemplate>  
+                        <ViewCell>  
+                            <StackLayout VerticalOptions="Center" Spacing="0">  
+                                <Label VerticalOptions="Center" VerticalTextAlignment="Center"
+                                       Padding="4"
+                                       BackgroundColor="{StaticResource AppControlLightColor}"
+                                       FontAttributes="Bold"
+                                       FontSize="Large"
+                                       Text="{Binding SoftwareName}"/>
+                                <!--
+                                <BoxView Style="{StaticResource HorizontalLine}"/>
+                                -->
+                                <Label VerticalOptions="Center" VerticalTextAlignment="Center"
+                                       Padding="4"
+                                       FontSize="Micro"
+                                       Text="{Binding LicenseContext}"/>
+                            </StackLayout>  
+                        </ViewCell>  
+                    </DataTemplate>  
+                </ListView.ItemTemplate>  
+            </ListView>  
+        </ScrollView>  
+    </Grid> 
 </ContentPage>

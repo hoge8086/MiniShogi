@@ -26,6 +26,7 @@
     <EmbeddedResource Include="Images\Plus.png" />
     <EmbeddedResource Include="Images\RotateKoma.png" />
     <EmbeddedResource Include="Images\Stop.png" />
+    <EmbeddedResource Include="Resources\Licenses.xml" />
   </ItemGroup>
 
   <ItemGroup>

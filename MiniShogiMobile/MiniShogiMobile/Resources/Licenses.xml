@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfSoftwareLicense xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SoftwareLicense>
+    <SoftwareName>作って将棋</SoftwareName>
+    <LicenseContext>このソフトウェアは大量のデータ セットは、
+ああああああ
+連続スクロール リストに表示されると扱いにくくなる可能性があります。 グループ化を有効にすると、
+コンテンツをより適切に整理し、データの移動を容易にするプラットフォーム固有のコントロールをアクティブ化することで、このような場合のユーザー エクスペリエンスを向上させることができます。</LicenseContext>
+  </SoftwareLicense>
+  <SoftwareLicense>
+    <SoftwareName>作って将棋</SoftwareName>
+   <LicenseContext>このソフトウェアは大量のデータ セットは、
+ああああああ
+連続スクロール リストに表示されると扱いにくくなる可能性があります。 グループ化を有効にすると、
+コンテンツをより適切に整理し、データの移動を容易にするプラットフォーム固有のコントロールをアクティブ化することで、このような場合のユーザー エクスペリエンスを向上させることができます。</LicenseContext>
+  </SoftwareLicense>
+</ArrayOfSoftwareLicense>
