@@ -2,34 +2,51 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              prism:ViewModelLocator.AutowireViewModel="True"
              Title="ライセンス表記"
              x:Class="MiniShogiMobile.Views.LicensePage">
     <Grid>  
         <ScrollView>  
-            <ListView BackgroundColor="White" ItemsSource="{Binding Licenses}" HasUnevenRows="True" SeparatorVisibility="None">  
-                <ListView.ItemTemplate>  
-                    <DataTemplate>  
-                        <ViewCell>  
-                            <StackLayout VerticalOptions="Center" Spacing="0">  
+            <CollectionView BackgroundColor="White" ItemsSource="{Binding Licenses}">  
+                <CollectionView.ItemTemplate>  
+                    <DataTemplate>
+                        <Grid>
+                            <xct:Expander AnimationLength="0">
+                                <xct:Expander.Header>
+                                    <Grid Padding="4,12,6,12"
+                                          BackgroundColor="{StaticResource AppControlLightColor}">
+                                        <Label VerticalOptions="Center" VerticalTextAlignment="Center"
+                                               FontAttributes="Bold"
+                                               FontSize="Medium"
+                                               Text="{Binding SoftwareName}"/>
+                                        <ctrl:TintImage Source="{utils:ImageResource MiniShogiMobile.Images.Expand.png}"
+                                                HeightRequest="20"
+                                                TintColor="{StaticResource AppControlDarkColor2}"
+                                                HorizontalOptions="End"
+                                                VerticalOptions="Center">
+                                            <ctrl:TintImage.Triggers>
+                                                <DataTrigger TargetType="ctrl:TintImage"
+                                                             Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}"
+                                                             Value="True">
+                                                    <Setter Property="Source"
+                                                            Value="{utils:ImageResource MiniShogiMobile.Images.Collapse.png}" />
+                                                </DataTrigger>
+                                            </ctrl:TintImage.Triggers>
+                                        </ctrl:TintImage>
+                                    </Grid>
+                                </xct:Expander.Header>
                                 <Label VerticalOptions="Center" VerticalTextAlignment="Center"
-                                       Padding="4"
-                                       BackgroundColor="{StaticResource AppControlLightColor}"
-                                       FontAttributes="Bold"
-                                       FontSize="Large"
-                                       Text="{Binding SoftwareName}"/>
-                                <!--
-                                <BoxView Style="{StaticResource HorizontalLine}"/>
-                                -->
-                                <Label VerticalOptions="Center" VerticalTextAlignment="Center"
-                                       Padding="4"
+                                       Padding="6"
                                        FontSize="Micro"
                                        Text="{Binding LicenseContext}"/>
-                            </StackLayout>  
-                        </ViewCell>  
+                            </xct:Expander>
+                        </Grid>
                     </DataTemplate>  
-                </ListView.ItemTemplate>  
-            </ListView>  
+                </CollectionView.ItemTemplate>  
+            </CollectionView>  
         </ScrollView>  
     </Grid> 
 </ContentPage>
