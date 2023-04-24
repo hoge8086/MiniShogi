@@ -255,10 +255,11 @@ namespace MiniShogiMobile.ViewModels
                         var usingKomaTypeIds = Game.GetAllKomaTypeIds();
                         GameTemplate.KomaTypes = KomaTypes.Where(y => usingKomaTypeIds.Contains(y.Value.Id)).Select(y => y.Value).ToList();
 
+                        App.CreateGameService.SaveGameTemplate(GameTemplate);
+
                         if (CrossMTAdmob.Current.IsInterstitialLoaded())
                             CrossMTAdmob.Current.ShowInterstitial();
 
-                        App.CreateGameService.SaveGameTemplate(GameTemplate);
                         await navigationService.GoBackToRootAsync();
                     }
                 });
