@@ -11,11 +11,11 @@
            CornerRadius="10"
            HasShadow="False"
            IsClippedToBounds="True"
-           HeightRequest="35"
            HorizontalOptions="FillAndExpand">
         <Grid ColumnDefinitions="Auto,*">
             <Label Grid.Column="0"
                    Text="{Binding Path=LabelText, Source={x:Reference self}}"
+                   FontSize="{Binding Path=FontSize, Source={x:Reference self}}"
                    TextColor="{StaticResource AppFontLightColor}"
                    BackgroundColor="{StaticResource AppControlDarkColor}"
                    VerticalTextAlignment="Center"
@@ -23,6 +23,7 @@
                    VerticalOptions="FillAndExpand"/>
             <ctrl:BorderlessEntry Grid.Column="1"
                                   BackgroundColor="Transparent"
+                                  FontSize="{Binding Path=FontSize, Source={x:Reference self}}"
                                   TextColor="{StaticResource AppFontDarkColor}"
                                   Text="{Binding Path=EntryText, Source={x:Reference self}}"
                                   Placeholder="{Binding Path=Placeholder, Source={x:Reference self}}"

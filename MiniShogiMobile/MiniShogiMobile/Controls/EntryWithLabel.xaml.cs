@@ -49,5 +49,19 @@ namespace MiniShogiMobile.Controls
             get { return (string)GetValue(PlaceholderProperty); }
             set { SetValue(PlaceholderProperty, value); }
         }
+
+        [Xamarin.Forms.TypeConverter(typeof(FontSizeConverter))]
+        public double FontSize
+        {
+            get { return (double)GetValue(FontSizeProperty); }
+            set { SetValue(FontSizeProperty, value); }
+        }
+        public static readonly BindableProperty FontSizeProperty = BindableProperty.Create(
+                propertyName: nameof(FontSize),
+                returnType: typeof(double),
+                declaringType: typeof(EntryWithLabel),
+                defaultValue: Device.GetNamedSize(NamedSize.Default,typeof(Label)),
+                defaultBindingMode: BindingMode.TwoWay
+            );
     }
 }
