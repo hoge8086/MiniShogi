@@ -38,14 +38,18 @@
                             </ctrl:PlayerView.Triggers>
                         </ctrl:PlayerView>
                         <!--名前-->
-                        <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="{StaticResource AppControlDarkColor}" CornerRadius="4" Padding="0" Margin="15,0,0,0" VerticalOptions="End">
-                            <Label FontSize="Micro"
-                                       TextColor="White"
-                                       Padding="10,0,0,0"
+                        <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="{StaticResource AppControlDarkColor}" CornerRadius="4" Padding="0" Margin="-10,0,0,0" VerticalOptions="End" HorizontalOptions="FillAndExpand">
+                            <Label TextColor="White"
+                                       Padding="8,0,0,0"
                                        VerticalTextAlignment="Center"
+                                       HorizontalTextAlignment="Start"
                                        HorizontalOptions="CenterAndExpand"
                                        VerticalOptions="CenterAndExpand"
-                                       Text="{Binding Name.Value}"/>
+                                       Text="{Binding Name.Value}">
+                                <Label.FontSize>
+                                    <OnIdiom x:TypeArguments="x:Double" Phone="11" Tablet="22"/>
+                                </Label.FontSize>
+                            </Label>
                         </Frame>
                         <ctrl:KomaView Grid.Row="1" Grid.Column="0"
                                        DisplayName="{Binding TurnType.Value, Converter={StaticResource EnumToFirstCharDescriptionConverter}, ConverterParameter={StaticResource EnumToFirstCharDescriptionConverterParams}}"
