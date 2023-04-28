@@ -6,6 +6,7 @@
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
              xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
+             xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.StartGamePage"
              Title="対局設定">
@@ -28,15 +29,30 @@
             <Label Text="将棋盤の選択"
                    VerticalOptions="Center"
                    HorizontalOptions="Start"/>
-            <Picker HorizontalOptions="Center"
-                    WidthRequest="200"
-                    Margin="10,0,0,0"
-                    BackgroundColor="{StaticResource AppControlLightColor}"
-                    TextColor="{StaticResource AppFontDarkColor}"
-                    HorizontalTextAlignment="Center"
+            <Frame BorderColor="{StaticResource AppControlDarkColor}" Padding="1"
+                    CornerRadius="10"
                     VerticalOptions="Start"
-                    ItemsSource="{Binding GameNameList}"
-                    SelectedItem="{Binding GameName.Value}"/>
+                    HorizontalOptions="FillAndExpand"
+                    WidthRequest="200"
+                    Margin="10,0,0,0">
+                <Grid ColumnDefinitions="*,Auto"
+                      BackgroundColor="{StaticResource AppControlLightColor}">
+                    <Picker Grid.Column="0"
+                            BackgroundColor="Transparent"
+                            HorizontalOptions="FillAndExpand"
+                            HorizontalTextAlignment="Center"
+                            TextColor="{StaticResource AppFontDarkColor}"
+                            ItemsSource="{Binding GameNameList}"
+                            SelectedItem="{Binding GameName.Value}"/>
+                    <ctrl:TintImage Grid.Column="0"
+                            Margin="4,0,4,0"
+                            Source="{utils:ImageResource MiniShogiMobile.Images.Expand.png}"
+                            HeightRequest="20"
+                            TintColor="{StaticResource AppControlDarkColor2}"
+                            HorizontalOptions="End"
+                            VerticalOptions="Center"/>
+                </Grid>
+            </Frame>
         </StackLayout>
         <BoxView Style="{StaticResource HorizontalLine}"/>
         <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,*,*" HorizontalOptions="Center" Style="{StaticResource PlayerGridStyle}">
