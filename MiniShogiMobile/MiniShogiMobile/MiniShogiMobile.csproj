@@ -6,6 +6,7 @@
 
 
   <ItemGroup>
+    <EmbeddedResource Include="Images\AppTitle.png" />
     <EmbeddedResource Include="Images\ChangeKoma.png" />
     <EmbeddedResource Include="Images\Collapse.png" />
     <EmbeddedResource Include="Images\Expand.png" />
