@@ -16,9 +16,41 @@
                 <OnIdiom x:TypeArguments="x:Double" Phone="80" Tablet="100"/>
             </ctrl:TintImage.HeightRequest>
         </ctrl:TintImage>
-        <Button Text="はじめる" Command="{Binding StartGameCommand}" WidthRequest="100"/>
-        <Button Text="つづきから" Command="{Binding ContinueGameCommand}"  WidthRequest="100"/>
-        <Button Text="作る" Command="{Binding CreateGameCommand}" WidthRequest="100"/>
-        <Button Text="ライセンス表記" Command="{Binding ShowLicenseCommand}" WidthRequest="100"/>
+        <Grid ColumnDefinitions="60,*" WidthRequest="200" HeightRequest="60">
+            <Button Grid.Column="1"
+                    Margin="-35,0,0,0"
+                    FontSize="Large"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="Center"
+                    Text="はじめる" Command="{Binding StartGameCommand}"/>
+            <ctrl:KomaView Grid.Column="0" DisplayName="対"/>
+        </Grid>
+        <Grid ColumnDefinitions="60,*" WidthRequest="200" HeightRequest="60">
+            <Button Grid.Column="1"
+                    Margin="-35,0,0,0"
+                    FontSize="Large"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="Center"
+                    Text="つづきから" Command="{Binding ContinueGameCommand}"/>
+            <ctrl:KomaView Grid.Column="0" DisplayName="続"/>
+        </Grid>
+        <Grid ColumnDefinitions="60,*" WidthRequest="200" HeightRequest="60">
+            <Button Grid.Column="1"
+                    Margin="-35,0,0,0"
+                    FontSize="Large"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="Center"
+                    Text="つくる" Command="{Binding CreateGameCommand}"/>
+            <ctrl:KomaView Grid.Column="0" DisplayName="作"/>
+        </Grid>
+        <Grid ColumnDefinitions="60,*" WidthRequest="200" HeightRequest="60">
+            <Button Grid.Column="1"
+                    Margin="-35,0,0,0"
+                    FontSize="Large"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="Center"
+                    Text="ライセンス表記" Command="{Binding ShowLicenseCommand}"/>
+            <ctrl:KomaView Grid.Column="0" DisplayName="権"/>
+        </Grid>
     </StackLayout>
 </ctrl:BasePage>
