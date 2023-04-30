@@ -90,6 +90,7 @@
     <!--ラベル-->
         <Style TargetType="Label">
             <Setter Property="TextColor" Value="{StaticResource AppFontDarkColor}"/>
+            <Setter Property="FontFamily" Value="AzukiFont"/>
         </Style>
 
     <!--ページ-->
@@ -118,8 +119,8 @@
         </Style>
 
     <!--エントリー-->
-        <Style TargetType="Entry">
-            <Setter Property="BackgroundColor" Value="White"/>
+        <Style TargetType="ctrl:BorderlessEntry">
+            <Setter Property="FontFamily" Value="AzukiFont"/>
         </Style>
 
     <!--コマンドレイアウト-->

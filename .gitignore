@@ -5,6 +5,7 @@
 
 MiniShogiMobile/MiniShogiMobile/Images/
 MiniShogiMobile/MiniShogiMobile.iOS/Assets.xcassets/AppIcon.appiconset/*.png
+*.ttf
 
 # User-specific files
 *.rsuser

@@ -38,7 +38,7 @@
                             </ctrl:PlayerView.Triggers>
                         </ctrl:PlayerView>
                         <!--名前-->
-                        <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="{StaticResource AppControlDarkColor}" CornerRadius="4" Padding="0" Margin="-10,0,0,0" VerticalOptions="End" HorizontalOptions="FillAndExpand">
+                        <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="{StaticResource AppControlDarkColor}" CornerRadius="4" Padding="0,2,0,2" Margin="-10,0,0,0" VerticalOptions="End" HorizontalOptions="FillAndExpand">
                             <Label TextColor="White"
                                        Padding="8,0,0,0"
                                        VerticalTextAlignment="Center"

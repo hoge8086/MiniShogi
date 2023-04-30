@@ -23,6 +23,7 @@
                    VerticalOptions="FillAndExpand"/>
             <ctrl:BorderlessEntry Grid.Column="1"
                                   BackgroundColor="Transparent"
+                                  FontFamily="AzukiFont"
                                   FontSize="{Binding Path=FontSize, Source={x:Reference self}}"
                                   TextColor="{StaticResource AppFontDarkColor}"
                                   Text="{Binding Path=EntryText, Source={x:Reference self}}"

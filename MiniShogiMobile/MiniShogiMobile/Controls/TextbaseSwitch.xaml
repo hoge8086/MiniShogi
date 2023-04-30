@@ -14,7 +14,7 @@
            HasShadow="False">
       <Grid ColumnDefinitions="*,*" ColumnSpacing="0" RowSpacing="0">
         <Label Grid.Column="0"
-               FontAttributes="Bold"
+               FontFamily="{x:Null}"
                HorizontalOptions="FillAndExpand"
                HorizontalTextAlignment="Center"
                Text="{Binding Path=OffText, Source={x:Reference self}}"
@@ -31,7 +31,7 @@
           </Label.Triggers>
         </Label>
         <Label Grid.Column="1"
-               FontAttributes="Bold"
+               FontFamily="{x:Null}"
                HorizontalOptions="FillAndExpand"
                HorizontalTextAlignment="Center"
                Text="{Binding Path=OnText, Source={x:Reference self}}"
