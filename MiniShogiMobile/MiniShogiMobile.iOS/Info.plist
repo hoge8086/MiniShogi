@@ -25,7 +25,7 @@
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>CFBundleDisplayName</key>
-	<string>MiniShogiMobile</string>
+	<string>作って将棋</string>
 	<key>CFBundleName</key>
 	<string>MiniShogiMobile</string>
 	<key>CFBundleIdentifier</key>
@@ -34,9 +34,9 @@
 	<string>1.0</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1</string>
-  <key>GADApplicationIdentifier</key>
-  <string>ca-app-pub-3940256099942544~5662855259</string>
-  <key>GADIsAdManagerApp</key>
-  <true/>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-3940256099942544~5662855259</string>
+	<key>GADIsAdManagerApp</key>
+	<true/>
 </dict>
 </plist>
