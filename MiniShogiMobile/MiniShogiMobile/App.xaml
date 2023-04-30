@@ -92,6 +92,10 @@
             <Setter Property="TextColor" Value="{StaticResource AppFontDarkColor}"/>
             <Setter Property="FontFamily" Value="AzukiFont"/>
         </Style>
+    <!--ピッカー-->
+        <Style TargetType="Picker">
+            <Setter Property="FontFamily" Value="AzukiFont"/>
+        </Style>
 
     <!--ページ-->
         <Style x:Key="PageStyle" TargetType="Page">
