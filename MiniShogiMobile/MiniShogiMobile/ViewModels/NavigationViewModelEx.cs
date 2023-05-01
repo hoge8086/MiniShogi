@@ -21,7 +21,7 @@ namespace MiniShogiMobile.ViewModels
             }
             catch(Exception ex)
             {
-                await vm.PageDialogService.DisplayAlertAsync("エラー(不具合)", ex.Message, "OK");
+                await vm.PageDialogService.DisplayAlertAsync("エラー", ex.Message, "OK");
             }
         }
     }
