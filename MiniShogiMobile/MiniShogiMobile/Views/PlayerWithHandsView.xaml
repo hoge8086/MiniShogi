@@ -8,15 +8,6 @@
              xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
              x:Class="MiniShogiMobile.Views.PlayerWithHandsView"
              x:Name="self">
-    <ContentView.Resources>
-        <xct:MultiConverter x:Key="EnumToFirstCharDescriptionConverter">
-            <utils:EnumToDescriptionConverter/>
-            <utils:TrimStringPrefixConverter/>
-        </xct:MultiConverter>
-        <x:Array x:Key="EnumToFirstCharDescriptionConverterParams" Type="{x:Type xct:MultiConverterParameter}">
-           <xct:MultiConverterParameter ConverterType="{x:Type utils:TrimStringPrefixConverter}" Value="1"/>
-        </x:Array>
-    </ContentView.Resources>
     <ContentView.Content>
         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="0">
             <Grid Grid.Column="0">
@@ -52,7 +43,7 @@
                             </Label>
                         </Frame>
                         <ctrl:KomaView Grid.Row="1" Grid.Column="0"
-                                       DisplayName="{Binding TurnType.Value, Converter={StaticResource EnumToFirstCharDescriptionConverter}, ConverterParameter={StaticResource EnumToFirstCharDescriptionConverterParams}}"
+                                       DisplayName="{Binding TurnType.Value, Converter={StaticResource EnumToDescriptionConverter}}"
                                        VerticalOptions="EndAndExpand"/>
                         <!--
                             <評価値>

@@ -22,7 +22,7 @@
                  StrokeThickness="2"/>
             <!--駒の形的に少し駒の名前を下げるといい感じの見た目になる-->
             <RelativeLayout>
-                <Label Text="{Binding Path=DisplayName, Source={x:Reference koma}}"
+                <Label Text="{Binding Path=DisplayName, Source={x:Reference koma}, Converter={StaticResource TrimStringPrefixConverter}, ConverterParameter=1}"
                        TextColor="{StaticResource KomaFontColor}"
                        VerticalTextAlignment="Center"
                        HorizontalTextAlignment="Center"
