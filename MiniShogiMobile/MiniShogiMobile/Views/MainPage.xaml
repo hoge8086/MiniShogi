@@ -23,7 +23,7 @@
                     HorizontalOptions="FillAndExpand"
                     VerticalOptions="Center"
                     Text="はじめる" Command="{Binding StartGameCommand}"/>
-            <ctrl:KomaView Grid.Column="0" DisplayName="対"/>
+            <ctrl:KomaView Grid.Column="0" DisplayName="局"/>
         </Grid>
         <Grid ColumnDefinitions="60,*" WidthRequest="200" HeightRequest="60">
             <Button Grid.Column="1"
