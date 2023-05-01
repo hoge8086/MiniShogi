@@ -20,10 +20,8 @@ namespace Shogi.Business.Domain.Model.GameTemplates
                 new KomaMoveBase(new RelativeBoardPosition(0, 1)),
                 new KomaMoveBase(new RelativeBoardPosition(0, -1)),
                 new KomaMoveBase(new RelativeBoardPosition(1, 0)),
-                new KomaMoveBase(new RelativeBoardPosition(1, 1)),
                 new KomaMoveBase(new RelativeBoardPosition(1, -1)),
                 new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
-                new KomaMoveBase(new RelativeBoardPosition(-1, 1)),
                 new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
             }
             ));
