@@ -45,8 +45,8 @@
             Grid.Row="1">
             <!--プレイヤー2-->
             <Grid ColumnDefinitions="*,Auto"
-                HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.1)'}"
-                VerticalOptions="EndAndExpand"
+                HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.15)'}"
+                VerticalOptions="StartAndExpand"
                 BindingContext="{Binding Game.HandsOfPlayer2}">
                 <!--プレイヤーアイコン-->
                 <ctrl:PlayerView
@@ -57,6 +57,7 @@
                 <!--駒台-->
                 <!--TODO:一部HandsOfCreateGameViewの中からCreateGamePageを直接参照しているのが気に入らない-->
                 <views:HandsOfCreateGameView Grid.Column="0"
+                                             Margin="0,8,0,8"
                                              Rotation="180"
                                              TapKomaCommand="{Binding Path=BindingContext.TapHandKomaCommand, Source={x:Reference board}}"
                                              IsHighlight="{Binding Path=BindingContext.CanMoveToPlayer2Komadai.Value, Source={x:Reference board}}"
@@ -66,10 +67,10 @@
             </Grid>
             <!--盤-->
             <ctrl:SquareCell2DGridControl
-                Margin="0,12,0,12"
+                Margin="0,4,0,4"
                 x:Name="board"
                 VerticalOptions="Center"
-                MaxHeight="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.8) - 24'}"
+                MaxHeight="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.7) - 8'}"
                 MaxWidth="{Binding Source={x:Reference gameField}, Path=Width}"
                 ItemsSource="{Binding Game.Board.Cells}">
                 <ctrl:SquareCell2DGridControl.ItemTemplate>
@@ -107,9 +108,9 @@
             </ctrl:SquareCell2DGridControl>
             <!--プレイヤー1-->
             <Grid ColumnDefinitions="Auto,*,Auto,Auto"
-                  HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.1)'}"
+                  HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.15)'}"
                   BindingContext="{Binding Game.HandsOfPlayer1}"
-                  VerticalOptions="StartAndExpand">
+                  VerticalOptions="EndAndExpand">
                 <!--プレイヤーアイコン-->
                 <ctrl:PlayerView Grid.Column="0"
                                  Color="{StaticResource Player1Color}"
@@ -117,6 +118,7 @@
                 </ctrl:PlayerView>
                 <!--駒台-->
                 <views:HandsOfCreateGameView Grid.Column="1"
+                                             Margin="0,8,0,8"
                                              TapKomaCommand="{Binding Path=BindingContext.TapHandKomaCommand, Source={x:Reference board}}"
                                              IsHighlight="{Binding Path=BindingContext.CanMoveToPlayer1Komadai.Value, Source={x:Reference board}}"
                                              TapKomadaiHighlightCommand="{Binding Path=BindingContext.TapKomadaiCommand, Source={x:Reference board}}"

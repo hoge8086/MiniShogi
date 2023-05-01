@@ -54,11 +54,9 @@
                               xct:TouchEffect.CommandParameter="{Binding Source={x:Reference self}, Path=PlayerType}"
                               TintColor="{StaticResource AppControlDarkColor2}"
                               BackgroundColor="Transparent"
-                              Margin="5,0,5,0"
+                              Margin="4"
                               HorizontalOptions="End"
                               VerticalOptions="Center"
-                              HeightRequest="36"
-                              WidthRequest="36"
                               Source="{utils:ImageResource MiniShogiMobile.Images.Plus.png}" />
              </StackLayout>
          </ctrl:KomadaiView>
