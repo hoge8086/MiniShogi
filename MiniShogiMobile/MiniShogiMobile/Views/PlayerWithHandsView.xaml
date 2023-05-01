@@ -93,7 +93,7 @@
             <ctrl:KomadaiView Grid.Column="1"
                               HorizontalOptions="FillAndExpand"
                               VerticalOptions="FillAndExpand"
-                              Margin="0,10,0,10">
+                              Margin="0,8,0,8">
                 <StackLayout Spacing="0" Orientation="Horizontal">
                     <!--持ち駒-->
                     <ScrollView Orientation="Horizontal"
