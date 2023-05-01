@@ -20,6 +20,7 @@
                      VerticalOptions="FillAndExpand">
             <Button x:Name="minusButton"
                     Text="－"
+                    FontFamily="{x:Null}"
                     WidthRequest="40"
                     BackgroundColor="Transparent"
                     VerticalOptions="Center"
@@ -33,6 +34,7 @@
                 <Label HorizontalOptions="CenterAndExpand"
                    VerticalTextAlignment="Center"
                    FontSize="Default"
+                   FontFamily="{x:Null}"
                    TextColor="{StaticResource AppFontDarkColor}"
                    Text="－">
                     <Label.Triggers>
@@ -58,6 +60,7 @@
                 </StackLayout>
             <BoxView WidthRequest="1" BackgroundColor="{StaticResource AppControlDarkColor}" VerticalOptions="FillAndExpand"/>
             <Button x:Name="plusButton"
+                    FontFamily="{x:Null}"
                     Text="＋"
                     WidthRequest="42"
                     VerticalOptions="Center"

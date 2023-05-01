@@ -43,8 +43,8 @@
                 </Grid.Triggers>
                 <Ellipse Fill="{StaticResource HandKomaNumCircleColor}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
                 <Label Text="{Binding Path=Number, Source={x:Reference self}}"
+                       FontFamily="{x:Null}"
                        TextColor="{StaticResource HandKomaNumTextColor}"
-                       FontAttributes="Bold"
                        HorizontalOptions="Center"
                        VerticalOptions="Center"/>
             </Grid>
