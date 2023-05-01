@@ -247,7 +247,7 @@ namespace MiniShogiMobile.ViewModels
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-                    bool doSave = await pageDialogService.DisplayAlertAsync("確認", "作成を完了しますか?\n完了後、ホーム画面に戻ります。", "はい", "いいえ");
+                    bool doSave = await pageDialogService.DisplayAlertAsync("確認", "作成を完了しますか?", "はい", "いいえ");
                     if (doSave)
                     {
                         GameTemplate.KomaList = CreateKomaList();

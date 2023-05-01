@@ -1,4 +1,5 @@
 ﻿using MiniShogiMobile.Conditions;
+using MiniShogiMobile.Utils;
 using Prism.Commands;
 using Prism.Navigation;
 using Prism.NavigationEx;
@@ -224,7 +225,7 @@ namespace MiniShogiMobile.ViewModels
                 var player = PlayingGame.GerPlayer(e.Winner);
                 PageDialogService.DisplayAlertAsync(
                      "ゲーム終了",
-                     $"勝者: {player.Name}({e.Winner.ToString()})",
+                     $"勝者: {player.Name}（{EnumToDescriptionConverter.DisplayName(Game.GetHands(e.Winner).TurnType.Value)}）",
                      "OK");
             });
         }
@@ -299,6 +300,11 @@ namespace MiniShogiMobile.ViewModels
             while (ViewState.Value is ViewStateWaiting)
                 await Task.Delay(100);
 
+            bool doSave = await PageDialogService.DisplayAlertAsync("確認", "対局を終了しますか?", "はい", "いいえ");
+            if (!doSave)
+                // [MEMO:nullを返してしまって問題ないか要確認]
+                return await Task.FromResult((INavigationResult)null);
+
             DomainEvents.RemoveHandler<ComputerThinkingEnded>(OnComputerThinkingEnded);
             DomainEvents.RemoveHandler<ComputerThinkingProgressed>(OnComputerThinkingProgressed);
             DomainEvents.RemoveHandler<ComputerThinkingStarted>(OnComputerThinkingStarted);
@@ -306,8 +312,7 @@ namespace MiniShogiMobile.ViewModels
             DomainEvents.RemoveHandler<GameStarted>(OnGameStarted);
             DomainEvents.RemoveHandler<GamePlayed>(OnGamePlayed);
 
-            //await GoBackAsync();
-            return await base.GoBackAsync();
+            return await NavigationService.GoBackToRootAsync();
         }
     }
 

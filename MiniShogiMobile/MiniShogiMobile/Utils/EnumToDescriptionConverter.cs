@@ -8,7 +8,7 @@ namespace MiniShogiMobile.Utils
 {
     public class EnumToDescriptionConverter : IValueConverter
     {
-        private static string DisplayName(object value){
+        public static string DisplayName(object value){
             if (value == null)
                 return string.Empty;
 
