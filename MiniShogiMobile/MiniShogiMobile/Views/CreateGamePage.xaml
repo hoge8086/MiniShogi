@@ -148,10 +148,11 @@
                                  Text="上下反転"
                                  Grid.Column="3"
                                  Command="{Binding RotateKomaCommand}"/>
-                    <!--TODO:コピー中はコピー解除という名称にして、コピー解除できるようにする-->
+                    <!--[コピー解除]という名称が長くて、解像度の小さい端末だと改行されてしまうので、水平方向に負のマージンを取る-->
                     <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.CopyKoma.png}" 
                                  Command="{Binding CopyKomaCommand}"
                                  Grid.Column="4"
+                                 Margin="-4,0,-4,0"
                                  Text="コピー">
                         <ctrl:ImageTextButton.Triggers>
                             <DataTrigger TargetType="ctrl:ImageTextButton" Binding="{Binding IsCopying.Value}" Value="True">
