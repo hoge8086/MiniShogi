@@ -16,7 +16,7 @@
                         <Setter Property="Grid.Column" Value="2"/>
                     </DataTrigger>
                 </Grid.Triggers>
-                <StackLayout VerticalOptions="FillAndExpand" Spacing="0" Margin="4,0,4,0">
+                <StackLayout VerticalOptions="FillAndExpand" Spacing="2" Margin="4,0,4,0">
                     <Grid VerticalOptions="FillAndExpand"
                           ColumnDefinitions="*,1.5*" RowDefinitions="1.5*,*" RowSpacing="0" ColumnSpacing="0"
                           WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
