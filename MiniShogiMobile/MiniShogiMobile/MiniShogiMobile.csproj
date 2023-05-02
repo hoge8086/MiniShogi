@@ -29,6 +29,7 @@
     <EmbeddedResource Include="Images\RotateKoma.png" />
     <EmbeddedResource Include="Images\Stop.png" />
     <EmbeddedResource Include="Resources\Licenses.xml" />
+    <EmbeddedResource Include="Resources\private_setting.json" />
   </ItemGroup>
 
   <ItemGroup>

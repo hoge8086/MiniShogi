@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Json;
 using System.IO;
+using System.Reflection;
 
 namespace Shogi.Business.Infrastructure
 {
@@ -16,10 +17,27 @@ namespace Shogi.Business.Infrastructure
                 UseSimpleDictionaryFormat = true
             };
 
-        public T Load<T>(string path)
+        public T Load<T>(string path, bool isEmbeddedResource = false)
         {
             T obj;
-            string json = File.ReadAllText(path, Encoding.UTF8);
+            string json = null;
+
+            // TODO:ここはシリアライザだけにして、埋込リソースからの取得はPCLのサービスにした用が良い
+            if(isEmbeddedResource)
+            {
+                // 埋込リソースから取得（パスは、プロジェクト名を先頭にフォルダ名/ファイル名ををドットでつないだパス）
+                var assembly = typeof(T).GetTypeInfo().Assembly;
+                using (Stream stream = assembly.GetManifestResourceStream(path))
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    json = reader.ReadToEnd();
+                }
+            }
+            else
+            {
+                json = File.ReadAllText(path, Encoding.UTF8);
+            }
+
             using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(json)))
             {
 

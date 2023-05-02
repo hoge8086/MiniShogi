@@ -206,9 +206,24 @@ namespace Shogi.Business.Domain.Model.GameTemplates
                 new KomaMoveBase(new RelativeBoardPosition(1, -1)),
                 new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
                 new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
-            }
-            ));
+            }));
 
+        public static readonly KomaType KomaGod = new KomaType(
+            new KomaTypeId("神", KomaTypeKind.None),
+            new KomaMoves(new List<IKomaMove>()
+            {
+                new KomaMoveBase(new RelativeBoardPosition(0, 1), true),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1), true),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0), true),
+                new KomaMoveBase(new RelativeBoardPosition(1, 1), true),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1), true),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0), true),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 1), true),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1), true),
+            }
+            ),
+            null
+            );
         public static readonly List<KomaType> DefaltKomaType = new List<KomaType>()
         {
             KomaOu,
@@ -223,6 +238,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             KomaRaion,
             KomaZou,
             KomaHiyoko,
+            //KomaGod,
         };
 
         public static readonly List<GameTemplate> DefaltGameTemplate = new List<GameTemplate>()

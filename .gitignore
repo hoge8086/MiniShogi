@@ -4,6 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 MiniShogiMobile/MiniShogiMobile/Images/
+MiniShogiMobile/MiniShogiMobile/Resources/private_setting.json
 MiniShogiMobile/MiniShogiMobile.iOS/Assets.xcassets/AppIcon.appiconset/*.png
 *.ttf
 

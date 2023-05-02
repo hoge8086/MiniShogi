@@ -10,6 +10,7 @@ using Shogi.Business.Application;
 using Shogi.Business.Infrastructure;
 using System.IO;
 using Prism.Plugin.Popups;
+using MiniShogiMobile.Service;
 
 namespace MiniShogiMobile
 {
@@ -46,6 +47,7 @@ namespace MiniShogiMobile
         {
             containerRegistry.RegisterPopupNavigationService();
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
+            containerRegistry.RegisterSingleton<ISettingService, SettingService>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();

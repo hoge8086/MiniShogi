@@ -1,5 +1,7 @@
 ﻿using MarcTron.Plugin;
 using MiniShogiMobile.Conditions;
+using MiniShogiMobile.Service;
+using MiniShogiMobile.Settings;
 using MiniShogiMobile.Views;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -435,8 +437,8 @@ namespace MiniShogiMobile.ViewModels
 
         public override void Prepare(CreateGameCondition parameter)
         {
-
-            CrossMTAdmob.Current.LoadInterstitial("ca-app-pub-3940256099942544/5135589807");
+            var adId = DependencyService.Get<ISettingService>().PrivateSetting.AdUnitIdForInterstitial;
+            CrossMTAdmob.Current.LoadInterstitial(adId);
             if (parameter.GameName != null)
                 GameTemplate = App.CreateGameService.GameTemplateRepository.FindByName(parameter.GameName);
             else
