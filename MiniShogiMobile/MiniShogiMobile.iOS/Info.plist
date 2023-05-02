@@ -38,5 +38,7 @@
 	<string>ca-app-pub-3940256099942544~5662855259</string>
 	<key>GADIsAdManagerApp</key>
 	<true/>
+  <key>NSUserTrackingUsageDescription</key>
+  <string>許可するとお客様に適した広告が表示されます</string>
 </dict>
 </plist>

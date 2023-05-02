@@ -1,4 +1,5 @@
-﻿using CarouselView.FormsPlugin.iOS;
+﻿using AppTrackingTransparency;
+using CarouselView.FormsPlugin.iOS;
 using Foundation;
 using Google.MobileAds;
 using Prism;
@@ -28,10 +29,17 @@ namespace MiniShogiMobile.iOS
             global::Xamarin.Forms.Forms.Init();
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             CarouselViewRenderer.Init();
-            MobileAds.SharedInstance.Start(CompletionHandler);
             LoadApplication(new App(new iOSInitializer()));
 
             return base.FinishedLaunching(app, options);
+        }
+        public override void OnActivated(UIApplication uiApplication)
+        {
+            //参考:<https://banshoots.com/ios/iosguideline512legalprivacydatauseandsharing/>
+            base.OnActivated(uiApplication);
+            ATTrackingManager.RequestTrackingAuthorization((_) => {
+                MobileAds.SharedInstance.Start(CompletionHandler);
+            });
         }
         private void CompletionHandler(InitializationStatus status) { }
     }
