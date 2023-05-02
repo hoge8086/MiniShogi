@@ -6,24 +6,11 @@
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
              xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
+             xmlns:views="clr-namespace:MiniShogiMobile.Views"
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.StartGamePage"
              Title="対局設定">
-    <ctrl:BasePage.Resources>
-        <Style x:Key="PlayerGridStyle" TargetType="Grid">
-            <Setter Property="RowSpacing">
-                <Setter.Value>
-                    <OnIdiom x:TypeArguments="x:Double" Phone="8" Tablet="12"/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="ColumnSpacing">
-                <Setter.Value>
-                    <OnIdiom x:TypeArguments="x:Double" Phone="6" Tablet="40"/>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </ctrl:BasePage.Resources>
     <StackLayout VerticalOptions="FillAndExpand" Margin="10" Spacing="12">
         <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
             <Label Text="将棋盤の選択"
@@ -55,68 +42,9 @@
             </Frame>
         </StackLayout>
         <BoxView Style="{StaticResource HorizontalLine}"/>
-        <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,*,*" HorizontalOptions="Center" Style="{StaticResource PlayerGridStyle}">
-            <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="プレイヤー1" HorizontalOptions="Center"/>
-            <ctrl:PlayerView Grid.Column="0" Grid.Row="1" Grid.RowSpan="2"
-                    Color="{StaticResource Player1Color}"
-                    WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"/>
-                    <!--
-                    BackgroundColor="{StaticResource Player2Color}"/>
-                    -->
-            <ctrl:SwitchablePicker Grid.Column="1" Grid.Row="1" HorizontalOptions="Center"
-                    DisplayConverter="{StaticResource EnumToDescriptionConverter}"
-                    ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
-                    SelectedItem="{Binding Player1.PlayerType.Value}"/>
-            <StackLayout Grid.Column="1" Grid.Row="2" Orientation="Horizontal" HorizontalOptions="Center">
-                <Label Text="読みの深さ" VerticalTextAlignment="Center">
-                    <Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding Player1.PlayerType.Value, Mode=OneWay}" Value="{x:Static vm:PlayerThinkingType.Human}">
-                            <Setter Property="TextColor" Value="{StaticResource AppFontLightColor2}"/>
-                        </DataTrigger>
-                    </Label.Triggers>
-                </Label>
-                <ctrl:StepperWithLabel Value="{Binding Player1.AIThinkDepth.Value}"
-                                       UnitLabel="手"
-                                       MinimumValue="1"
-                                       MaximumValue="10">
-                    <ctrl:StepperWithLabel.Triggers>
-                        <DataTrigger TargetType="ctrl:StepperWithLabel" Binding="{Binding Player1.PlayerType.Value, Mode=OneWay}" Value="{x:Static vm:PlayerThinkingType.Human}">
-                            <Setter Property="IsEnabled" Value="False"/>
-                        </DataTrigger>
-                    </ctrl:StepperWithLabel.Triggers>
-                </ctrl:StepperWithLabel>
-            </StackLayout>
-        </Grid>
+        <views:SelectPlayerView BindingContext="{Binding Player1}" PlayerColor="{StaticResource Player1Color}" PlayerTitle="プレイヤー1" HorizontalOptions="Center"/>
         <BoxView Style="{StaticResource HorizontalLine}"/>
-        <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,*,*" HorizontalOptions="Center" Style="{StaticResource PlayerGridStyle}">
-            <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="プレイヤー2" HorizontalOptions="Center"/>
-            <ctrl:PlayerView Grid.Column="0" Grid.Row="1" Grid.RowSpan="2"
-                    Color="{StaticResource Player2Color}"
-                    WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"/>
-            <ctrl:SwitchablePicker Grid.Column="1" Grid.Row="1" HorizontalOptions="Center"
-                    DisplayConverter="{StaticResource EnumToDescriptionConverter}"
-                    ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
-                    SelectedItem="{Binding Player2.PlayerType.Value}"/>
-            <StackLayout Grid.Column="1" Grid.Row="2" Orientation="Horizontal" HorizontalOptions="Center">
-                <Label Text="読みの深さ" VerticalTextAlignment="Center">
-                    <Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding Player2.PlayerType.Value, Mode=OneWay}" Value="{x:Static vm:PlayerThinkingType.Human}">
-                            <Setter Property="TextColor" Value="{StaticResource AppFontLightColor2}"/>
-                        </DataTrigger>
-                    </Label.Triggers>
-                </Label>
-                <ctrl:StepperWithLabel Value="{Binding Player2.AIThinkDepth.Value}"
-                                       UnitLabel="手"
-                                       MinimumValue="1"
-                                       MaximumValue="10">
-                    <ctrl:StepperWithLabel.Triggers>
-                        <DataTrigger TargetType="ctrl:StepperWithLabel" Binding="{Binding Player2.PlayerType.Value, Mode=OneWay}" Value="{x:Static vm:PlayerThinkingType.Human}">
-                            <Setter Property="IsEnabled" Value="False"/>
-                        </DataTrigger>
-                    </ctrl:StepperWithLabel.Triggers>
-                </ctrl:StepperWithLabel>
-            </StackLayout>
-        </Grid>
+        <views:SelectPlayerView BindingContext="{Binding Player2}" PlayerColor="{StaticResource Player2Color}" PlayerTitle="プレイヤー2" HorizontalOptions="Center"/>
         <BoxView Style="{StaticResource HorizontalLine}"/>
         <StackLayout Spacing="6">
             <Label Text="先手" HorizontalOptions="Center"/>

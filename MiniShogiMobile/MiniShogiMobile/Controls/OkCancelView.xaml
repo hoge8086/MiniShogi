@@ -3,23 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MiniShogiMobile.Controls.OkCancelView"
              x:Name="self">
-  <ContentView.Resources>
-      <Style TargetType="Button">
-          <Setter Property="BackgroundColor" Value="Transparent"/>
-          <Setter Property="TextColor" Value="{StaticResource AppFontDarkColor}"/>
-          <Setter Property="CornerRadius" Value="0"/>
-          <Setter Property="HeightRequest" Value="40"/>
-          <Setter Property="BorderWidth" Value="0"/>
-          <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
-      </Style>
-  </ContentView.Resources>
   <ContentView.Content>
     <StackLayout Spacing="0">
         <BoxView Style="{StaticResource HorizontalLine}" BackgroundColor="{StaticResource AppControlDarkColor2}"/>
         <Grid ColumnDefinitions="*,Auto,*">
-            <Button Grid.Column="0" Command="{Binding CancelCommand, Source={x:Reference self}}" Text="キャンセル" />
+            <Button Grid.Column="0" Command="{Binding CancelCommand, Source={x:Reference self}}" Text="キャンセル" Style="{StaticResource PopupPageButtonStyle}" />
             <BoxView Grid.Column="1" Style="{StaticResource VerticalLine}" BackgroundColor="{StaticResource AppControlDarkColor2}"/>
-            <Button Grid.Column="2" Command="{Binding OkCommand, Source={x:Reference self}}" Text="OK" />
+            <Button Grid.Column="2" Command="{Binding OkCommand, Source={x:Reference self}}" Text="OK" Style="{StaticResource PopupPageButtonStyle}" />
         </Grid>
     </StackLayout>
   </ContentView.Content>

@@ -62,6 +62,7 @@ namespace MiniShogiMobile
             containerRegistry.RegisterForNavigation<SelectKomaPopupPage, SelectKomaPopupPageViewModel>();
             containerRegistry.RegisterForNavigation<CreateKomaPage, CreateKomaPageViewModel>();
             containerRegistry.RegisterForNavigation<LicensePage, LicensePageViewModel>();
+            containerRegistry.RegisterForNavigation<ChangePlayersPopupPage, ChangePlayersPopupPageViewModel>();
         }
     }
 }

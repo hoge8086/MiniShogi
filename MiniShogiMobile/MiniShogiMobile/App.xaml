@@ -97,6 +97,17 @@
             <Setter Property="FontFamily" Value="AzukiFont"/>
         </Style>
 
+
+    <!--PopupPageボタン-->
+          <Style x:Key="PopupPageButtonStyle" TargetType="Button">
+              <Setter Property="BackgroundColor" Value="Transparent"/>
+              <Setter Property="TextColor" Value="{StaticResource AppFontDarkColor}"/>
+              <Setter Property="CornerRadius" Value="0"/>
+              <Setter Property="HeightRequest" Value="40"/>
+              <Setter Property="BorderWidth" Value="0"/>
+              <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+          </Style>
+      
     <!--ページ-->
         <Style x:Key="PageStyle" TargetType="Page">
             <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}"/>

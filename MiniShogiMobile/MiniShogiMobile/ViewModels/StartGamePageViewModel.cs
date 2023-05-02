@@ -46,8 +46,8 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand PlayGameCommand { get; set; }
         public ObservableCollection<string> GameNameList { get; set; }
         public ReactiveProperty<string> GameName { get; set; }
-        public PlayperViewModel Player1 { get; set; }
-        public PlayperViewModel Player2 { get; set; }
+        public SelectPlayperViewModel Player1 { get; set; }
+        public SelectPlayperViewModel Player2 { get; set; }
         public ReactiveProperty<SelectFirstTurnPlayer> FirstTurnPlayer { get; set; }
 
         public StartGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
@@ -57,8 +57,8 @@ namespace MiniShogiMobile.ViewModels
                 GameNameList.Add(name);
 
             GameName = new ReactiveProperty<string>(GameNameList.First());
-            Player1 = new PlayperViewModel(PlayerThinkingType.Human);
-            Player2 = new PlayperViewModel(PlayerThinkingType.AI, 5);
+            Player1 = new SelectPlayperViewModel(PlayerThinkingType.Human);
+            Player2 = new SelectPlayperViewModel(PlayerThinkingType.AI, 5);
             FirstTurnPlayer = new ReactiveProperty<SelectFirstTurnPlayer>(SelectFirstTurnPlayer.Random);
 
             PlayGameCommand = new AsyncReactiveCommand();
@@ -90,24 +90,29 @@ namespace MiniShogiMobile.ViewModels
             }
         }
 
-        public class PlayperViewModel : BindableBase
+    }
+    public class SelectPlayperViewModel : BindableBase
+    {
+        public ReactiveProperty<PlayerThinkingType> PlayerType { get; set; }
+        public ReactiveProperty<int> AIThinkDepth { get; set; }
+
+        public SelectPlayperViewModel(PlayerThinkingType playerType, int depth = 5)
         {
-            public ReactiveProperty<PlayerThinkingType> PlayerType { get; set; }
-            public ReactiveProperty<int> AIThinkDepth { get; set; }
+            PlayerType = new ReactiveProperty<PlayerThinkingType>(playerType);
+            AIThinkDepth = new ReactiveProperty<int>(depth);
+        }
+        public void Update(Player player)
+        {
+            this.PlayerType.Value = player.IsHuman ? PlayerThinkingType.Human : PlayerThinkingType.AI;
+            AIThinkDepth.Value = player.IsHuman ? 5 : ((NegaAlphaAI)player.Computer).Depth;
+        }
 
-            public PlayperViewModel(PlayerThinkingType playerType, int depth = 1)
-            {
-                PlayerType = new ReactiveProperty<PlayerThinkingType>(playerType);
-                AIThinkDepth = new ReactiveProperty<int>(depth);
-            }
-
-            public Player CreatePlayer(PlayerType playerType)
-            {
-                if (PlayerType.Value == ViewModels.PlayerThinkingType.Human)
-                    return new Player(playerType);
-                else
-                    return new Player(playerType, new NegaAlphaAI(AIThinkDepth.Value));
-            }
+        public Player CreatePlayer(PlayerType playerType)
+        {
+            if (PlayerType.Value == ViewModels.PlayerThinkingType.Human)
+                return new Player(playerType);
+            else
+                return new Player(playerType, new NegaAlphaAI(AIThinkDepth.Value));
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Shogi.Business.Domain.Model.PlayingGames
         public Player TurnPlayer => Players.First(player => player.PlayerType == Game.State.TurnPlayer);
         public Player GerPlayer(PlayerType playerType) => Players.First(player => player.PlayerType == playerType);
 
-        public PlayingGame(List<Player> players, Game game, GameTemplate gameTemplate)
+        private void ValidatePlayers(List<Player> players)
         {
             if(players.Count != 2 ||
                !players.Any(x => x.PlayerType == PlayerType.Player1) ||
@@ -32,6 +32,10 @@ namespace Shogi.Business.Domain.Model.PlayingGames
             {
                 throw new ArgumentException("プレイヤーがP1とP2が一人ずつではありません.");
             }
+        }
+        public PlayingGame(List<Player> players, Game game, GameTemplate gameTemplate)
+        {
+            ValidatePlayers(players);
             Name = null;
             Players = players;
             GameTemplate = gameTemplate;
@@ -43,6 +47,11 @@ namespace Shogi.Business.Domain.Model.PlayingGames
             Players = other.Players;
             GameTemplate = other.GameTemplate;
             Game = other.Game.Clone();
+        }
+        public void ChangePlayers(List<Player> players)
+        {
+            ValidatePlayers(players);
+            Players = players;
         }
 
         public void Reset()

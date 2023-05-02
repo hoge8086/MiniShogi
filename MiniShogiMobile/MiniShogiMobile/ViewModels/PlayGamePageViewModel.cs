@@ -114,6 +114,22 @@ namespace MiniShogiMobile.ViewModels
                             .AddTo(this.Disposable);
             ResumeCommand.Subscribe(async x =>
             {
+                bool doSave = await pageDialogService.DisplayAlertAsync("確認", "プレイヤーを変更しますか?", "はい", "いいえ");
+                if (doSave)
+                {
+                    var players = new ChangePlayersCondition(Game.HandsOfPlayer1.Player.Value, Game.HandsOfPlayer2.Player.Value);
+                    var result = await NavigateAsync<ChangePlayersPopupPageViewModel, ChangePlayersCondition, ChangePlayersCondition>(players);
+                    if (!result.Success)
+                        return;
+
+                    Game.HandsOfPlayer1.Player.Value = result.Data.Player1;
+                    Game.HandsOfPlayer2.Player.Value = result.Data.Player2;
+                    await AppServiceCallWithWaitAsync((gameService, cancelToken) =>
+                    {
+                        gameService.ChangePlayers(new List<Player> { result.Data.Player1, result.Data.Player2 });
+                    });
+                }
+
                 await AppServiceCallWithWaitAsync((gameService, cancelToken) =>
                 {
                     gameService.Resume(cancelToken);

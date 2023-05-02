@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MiniShogiMobile.ViewModels"
+             xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             x:Class="MiniShogiMobile.Views.SelectPlayerView"
+             x:Name="self">
+    <ContentView.Resources>
+        <Style x:Key="PlayerGridStyle" TargetType="Grid">
+            <Setter Property="RowSpacing">
+                <Setter.Value>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="8" Tablet="12"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ColumnSpacing">
+                <Setter.Value>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="6" Tablet="40"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </ContentView.Resources>
+  <ContentView.Content>
+    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,*,*" Style="{StaticResource PlayerGridStyle}">
+        <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Path=PlayerTitle, Source={x:Reference self}}" HorizontalOptions="Center"/>
+        <ctrl:PlayerView Grid.Column="0" Grid.Row="1" Grid.RowSpan="2"
+                Color="{Binding Path=PlayerColor, Source={x:Reference self}}"
+                WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"/>
+        <ctrl:SwitchablePicker Grid.Column="1" Grid.Row="1" HorizontalOptions="Center"
+                DisplayConverter="{StaticResource EnumToDescriptionConverter}"
+                ItemsSource="{Binding Source={local:EnumPlayerTypeProvider}}"
+                SelectedItem="{Binding PlayerType.Value}"/>
+        <StackLayout Grid.Column="1" Grid.Row="2" Orientation="Horizontal" HorizontalOptions="Center">
+            <Label Text="読みの深さ" VerticalTextAlignment="Center">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding PlayerType.Value, Mode=OneWay}" Value="{x:Static vm:PlayerThinkingType.Human}">
+                        <Setter Property="TextColor" Value="{StaticResource AppFontLightColor2}"/>
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+            <ctrl:StepperWithLabel Value="{Binding AIThinkDepth.Value}"
+                                   UnitLabel="手"
+                                   MinimumValue="1"
+                                   MaximumValue="10">
+                <ctrl:StepperWithLabel.Triggers>
+                    <DataTrigger TargetType="ctrl:StepperWithLabel" Binding="{Binding PlayerType.Value, Mode=OneWay}" Value="{x:Static vm:PlayerThinkingType.Human}">
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </DataTrigger>
+                </ctrl:StepperWithLabel.Triggers>
+            </ctrl:StepperWithLabel>
+        </StackLayout>
+    </Grid>
+  </ContentView.Content>
+</ContentView>

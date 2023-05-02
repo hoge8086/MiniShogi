@@ -13,7 +13,7 @@ namespace Shogi.Business.Domain.Model.AI
     {
         public override string ToString() => "AI (" + Depth.ToString() + "手読み)";
         [DataMember]
-        private int Depth { get; set;}
+        public int Depth { get; set;}
         private bool debug = true;
         private Evaluator evaluator = null;
 

@@ -154,5 +154,21 @@ namespace Shogi.Business.Application
                 }
             }
         }
+
+        public void ChangePlayers(List<Player> players)
+        {
+            lock (thisLock)
+            {
+                var playingGame = CurrentPlayingGameRepository.Current();
+                try
+                {
+                    playingGame.ChangePlayers(players);
+                }finally
+                {
+                    CurrentPlayingGameRepository.Save(playingGame);
+                }
+            }
+        }
+
     }
 }
