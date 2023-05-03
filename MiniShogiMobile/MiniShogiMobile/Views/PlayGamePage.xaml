@@ -25,6 +25,7 @@
                                            HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.15)'}"
                                            IsRotated="True"
                                            PlayerColor="{StaticResource Player2Color}"
+                                           KomaLongPressCommand="{Binding Path=BindingContext.ShowKomaInfoCommand, Source={x:Reference self}}"
                                            ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"/>
                 <ctrl:SquareCell2DGridControl x:Name="board"
                                               VerticalOptions="CenterAndExpand"
@@ -37,6 +38,7 @@
                             <views:CellView BindingContext="{TemplateBinding BindingContext}"
                                             IsMarked="{Binding CanMove.Value}"
                                             IsHighlight="{Binding IsSelected.Value}"
+                                            xct:TouchEffect.LongPressCommand="{Binding Path=BindingContext.ShowKomaInfoCommand, Source={x:Reference board}}"
                                             xct:TouchEffect.Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
                                             xct:TouchEffect.CommandParameter="{Binding .}">
                             </views:CellView>
@@ -50,6 +52,7 @@
                                            HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.15)'}"
                                            IsRotated="False"
                                            PlayerColor="{StaticResource Player1Color}"
+                                           KomaLongPressCommand="{Binding Path=BindingContext.ShowKomaInfoCommand, Source={x:Reference self}}"
                                            ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"/>
             </StackLayout>
             <AbsoluteLayout x:Name="movingLayer" InputTransparent="True"/>

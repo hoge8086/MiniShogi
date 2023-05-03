@@ -108,6 +108,8 @@
                                    <!--なぜかDataTemplate内でx:Referenceが効かないのでRelativeSourceを使う-->
                                    <!--参考:https://social.msdn.microsoft.com/Forums/en-US/bbfd3371-b913-4f0e-9ee3-c811a7282193/xreference-not-working?forum=xamarinforms-->
                                    <Grid WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
+                                         xct:TouchEffect.LongPressCommand="{Binding Source={RelativeSource AncestorType={x:Type views:PlayerWithHandsView}}, Path=KomaLongPressCommand}"
+                                         xct:TouchEffect.LongPressCommandParameter="{Binding .}"
                                          xct:TouchEffect.Command="{Binding Source={RelativeSource AncestorType={x:Type views:PlayerWithHandsView}}, Path=ClickCommand}"
                                          xct:TouchEffect.CommandParameter="{Binding .}">
                                        <ctrl:HandKomaView Number="{Binding Num.Value}"

@@ -53,7 +53,7 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand UndoCommand { get; private set; }
         public AsyncReactiveCommand RedoCommand { get; private set; }
         public AsyncReactiveCommand ChangePlayerCommand { get; private set; }
-        public AsyncReactiveCommand<KomaTypeId> ShowKomaInfoCommand { get; private set; }
+        public AsyncReactiveCommand<ISelectable> ShowKomaInfoCommand { get; private set; }
 
         private CancellationTokenSource cancelWaiting;
 
@@ -73,6 +73,22 @@ namespace MiniShogiMobile.ViewModels
                 {
                     await ViewState.Value.HandleAsync(this, x);
                 });
+            }).AddTo(Disposable);
+
+            ShowKomaInfoCommand = new AsyncReactiveCommand<ISelectable>();
+            ShowKomaInfoCommand.Subscribe(async cell =>
+            {
+
+                KomaTypeId komaTypeId = null;
+                if(cell is CellPlayingViewModel boarCell)
+                    komaTypeId = boarCell.Koma.Value?.KomaTypeId.Value;
+                if (cell is HandKomaViewModel handCell)
+                    komaTypeId = handCell.KomaTypeId;
+
+                if (komaTypeId == null)
+                    return;
+
+                 await NavigateAsync<KomaInfoPopupPageViewModel, KomaType>(PlayingGame.Game.GetKomaType(komaTypeId));
             }).AddTo(Disposable);
 
             SaveCommand = ViewState.Select(state => !(state is ViewStateWaiting))
@@ -135,13 +151,6 @@ namespace MiniShogiMobile.ViewModels
                 Game.HandsOfPlayer1.Player.Value = result.Data.Player1;
                 Game.HandsOfPlayer2.Player.Value = result.Data.Player2;
                 App.GameService.ChangePlayers(new List<Player> { result.Data.Player1, result.Data.Player2 });
-            }).AddTo(Disposable);
-
-            ShowKomaInfoCommand = new AsyncReactiveCommand<KomaTypeId>();
-            ShowKomaInfoCommand.Subscribe(async x =>
-            {
-                 //await NavigateAsync<KomaInfoPopupPageViewModel, KomaType>(PlayingGame.Game.GetKomaType(x));
-                 await NavigateAsync<KomaInfoPopupPageViewModel, KomaType>(Shogi.Business.Domain.Model.GameTemplates.DefaultGame.KomaGin);
             }).AddTo(Disposable);
 
             UndoCommand = new[]{
