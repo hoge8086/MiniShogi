@@ -18,6 +18,7 @@ namespace MiniShogiMobile.ViewModels
         public SelectPlayperViewModel Player1 { get; set; }
         public SelectPlayperViewModel Player2 { get; set; }
         public AsyncReactiveCommand OkCommand { get; }
+        public AsyncReactiveCommand CancelCommand { get; }
         public ChangePlayersPopupPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             Player1 = new SelectPlayperViewModel(PlayerThinkingType.Human);
@@ -26,6 +27,11 @@ namespace MiniShogiMobile.ViewModels
             OkCommand.Subscribe(async () =>
             {
                 await GoBackAsync(new ChangePlayersCondition(Player1.CreatePlayer(PlayerType.Player1), Player2.CreatePlayer(PlayerType.Player2)));
+            }).AddTo(this.Disposable);
+            CancelCommand = new AsyncReactiveCommand();
+            CancelCommand.Subscribe(async () =>
+            {
+                await GoBackAsync();
             }).AddTo(this.Disposable);
         }
         public override void Prepare(ChangePlayersCondition parameter)

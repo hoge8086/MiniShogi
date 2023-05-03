@@ -56,7 +56,7 @@
         <StackLayout Grid.Row="1" Spacing="0" >
             <BoxView Style="{StaticResource HorizontalLine}" Background="{StaticResource AppControlDarkColor2}"/>
             <Grid Style="{StaticResource CommandListGrid}"
-                  ColumnDefinitions="*,*,*,*,*">
+                  ColumnDefinitions="*,*,*,*,*,*">
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Play.png}" 
                              Grid.Column="0"
                              Text="再開"
@@ -73,14 +73,13 @@
                              Grid.Column="3"
                              Text="進む"
                              Command="{Binding RedoCommand}"/>
-                <!--
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.ChangePlayer.png}" 
                              Grid.Column="4"
+                             Margin="-4,0,-4,0"
                              Text="対局者変更"
-                             Command="{Binding SaveCommand}"/>
-                -->
+                             Command="{Binding ChangePlayerCommand}"/>
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Floppy.png}" 
-                             Grid.Column="4"
+                             Grid.Column="5"
                              Text="保存"
                              Command="{Binding SaveCommand}"/>
             </Grid>

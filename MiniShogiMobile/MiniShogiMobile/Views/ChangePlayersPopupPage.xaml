@@ -18,7 +18,9 @@
                 <views:SelectPlayerView BindingContext="{Binding Player2}" PlayerColor="{StaticResource Player2Color}" PlayerTitle="プレイヤー2" HorizontalOptions="Center"/>
             </StackLayout>
             <BoxView Style="{StaticResource HorizontalLine}" BackgroundColor="{StaticResource AppControlDarkColor2}"/>
-            <Button Command="{Binding OkCommand}" Text="OK" Style="{StaticResource PopupPageButtonStyle}" />
+            <ctrl:OkCancelView
+                    CancelCommand="{Binding CancelCommand}"
+                    OkCommand="{Binding OkCommand}"/>
         </StackLayout>
     </Frame>
 </popups:PopupPage>

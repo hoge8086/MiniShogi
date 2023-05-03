@@ -52,6 +52,7 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand ResumeCommand { get; private set; }
         public AsyncReactiveCommand UndoCommand { get; private set; }
         public AsyncReactiveCommand RedoCommand { get; private set; }
+        public AsyncReactiveCommand ChangePlayerCommand { get; private set; }
 
         private CancellationTokenSource cancelWaiting;
 
@@ -114,26 +115,25 @@ namespace MiniShogiMobile.ViewModels
                             .AddTo(this.Disposable);
             ResumeCommand.Subscribe(async x =>
             {
-                bool doSave = await pageDialogService.DisplayAlertAsync("確認", "プレイヤーを変更しますか?", "はい", "いいえ");
-                if (doSave)
-                {
-                    var players = new ChangePlayersCondition(Game.HandsOfPlayer1.Player.Value, Game.HandsOfPlayer2.Player.Value);
-                    var result = await NavigateAsync<ChangePlayersPopupPageViewModel, ChangePlayersCondition, ChangePlayersCondition>(players);
-                    if (!result.Success)
-                        return;
-
-                    Game.HandsOfPlayer1.Player.Value = result.Data.Player1;
-                    Game.HandsOfPlayer2.Player.Value = result.Data.Player2;
-                    await AppServiceCallWithWaitAsync((gameService, cancelToken) =>
-                    {
-                        gameService.ChangePlayers(new List<Player> { result.Data.Player1, result.Data.Player2 });
-                    });
-                }
-
                 await AppServiceCallWithWaitAsync((gameService, cancelToken) =>
                 {
                     gameService.Resume(cancelToken);
                 });
+            }).AddTo(Disposable);
+
+            ChangePlayerCommand = ViewState.Select(state => state is ViewStateGameStudying)
+                            .ToAsyncReactiveCommand()
+                            .AddTo(this.Disposable);
+            ChangePlayerCommand.Subscribe(async x =>
+            {
+                var players = new ChangePlayersCondition(Game.HandsOfPlayer1.Player.Value, Game.HandsOfPlayer2.Player.Value);
+                var result = await NavigateAsync<ChangePlayersPopupPageViewModel, ChangePlayersCondition, ChangePlayersCondition>(players);
+                if (!result.Success)
+                    return;
+
+                Game.HandsOfPlayer1.Player.Value = result.Data.Player1;
+                Game.HandsOfPlayer2.Player.Value = result.Data.Player2;
+                App.GameService.ChangePlayers(new List<Player> { result.Data.Player1, result.Data.Player2 });
             }).AddTo(Disposable);
 
             UndoCommand = new[]{
