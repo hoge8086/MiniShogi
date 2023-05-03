@@ -7,13 +7,22 @@
              xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.KomaInfoPopupPage">
-    <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="400" HeightRequest="800">
-        <Grid BackgroundColor="white" RowDefinitions="*,Auto">
-            <views:KomaInfoView Grid.Row="0" BindingContext="{Binding KomaInfo}" />
-            <StackLayout Grid.Row="1">
-                <BoxView Style="{StaticResource HorizontalLine}" BackgroundColor="{StaticResource AppControlDarkColor2}"/>
-                <Button Text="OK" Style="{StaticResource PopupPageButtonStyle}" Command="{Binding OkCommand}"/>
-            </StackLayout>
-        </Grid>
+    <ctrl:BasePopupPage.Resources>
+        <Style TargetType="ctrl:BorderlessEntry">
+            <Setter Property="IsReadOnly" Value="True"/>
+        </Style>
+        <Style TargetType="ctrl:SwitchablePicker">
+            <Setter Property="IsReadOnly" Value="True"/>
+        </Style>
+        <Style TargetType="ctrl:TextbaseSwitch">
+            <Setter Property="IsReadOnly" Value="True"/>
+        </Style>
+    </ctrl:BasePopupPage.Resources>
+    <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center">
+        <StackLayout BackgroundColor="White">
+            <views:KomaInfoView Grid.Row="0" BindingContext="{Binding KomaInfo}"  WidthRequest="500" HeightRequest="500" />
+            <BoxView Style="{StaticResource HorizontalLine}" BackgroundColor="{StaticResource AppControlDarkColor2}"/>
+            <Button Text="OK" Style="{StaticResource PopupPageButtonStyle}" Command="{Binding OkCommand}"/>
+        </StackLayout>
     </Frame>
 </ctrl:BasePopupPage>

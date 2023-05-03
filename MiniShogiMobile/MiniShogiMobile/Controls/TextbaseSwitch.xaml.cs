@@ -18,6 +18,9 @@ namespace MiniShogiMobile.Controls
             var gr = new TapGestureRecognizer();
             gr.Tapped += (s, e) =>
             {
+                if (IsReadOnly)
+                    return;
+
                 IsToggled = !IsToggled;
             };
             this.GestureRecognizers.Add(gr);
@@ -81,6 +84,22 @@ namespace MiniShogiMobile.Controls
         {
             get { return (Color)GetValue(OffColorProperty); }
             set { SetValue(OffColorProperty, value); }
+        }
+        #endregion
+        #region IsReadOnly
+        public static readonly BindableProperty IsReadOnlyProperty = BindableProperty.Create(
+                                                                            nameof(IsReadOnly),
+                                                                            typeof(bool),
+                                                                            typeof(TextbaseSwitch),
+                                                                            false);
+ 
+        /// <summary>
+        /// 読み取り専用かどうか
+        /// </summary>
+        public bool IsReadOnly
+        {
+            get { return (bool)GetValue(IsReadOnlyProperty); }
+            set { SetValue(IsReadOnlyProperty, value); }
         }
         #endregion
     }

@@ -20,6 +20,9 @@ namespace MiniShogiMobile.Controls
 
         void OnItemTapped(object sender, EventArgs args)
         {
+            if (IsReadOnly)
+                return;
+
             var tappedGrid = sender as Grid;
             if (tappedGrid == null)
                 return;
@@ -66,5 +69,22 @@ namespace MiniShogiMobile.Controls
                 label.SetBinding(Label.TextProperty, binding);
             }
         }
+
+        #region IsReadOnly
+        public static readonly BindableProperty IsReadOnlyProperty = BindableProperty.Create(
+                                                                            nameof(IsReadOnly),
+                                                                            typeof(bool),
+                                                                            typeof(SwitchablePicker),
+                                                                            false);
+ 
+        /// <summary>
+        /// 読み取り専用かどうか
+        /// </summary>
+        public bool IsReadOnly
+        {
+            get { return (bool)GetValue(IsReadOnlyProperty); }
+            set { SetValue(IsReadOnlyProperty, value); }
+        }
+        #endregion
     }
 }
