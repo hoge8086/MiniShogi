@@ -39,6 +39,7 @@
                                             IsMarked="{Binding CanMove.Value}"
                                             IsHighlight="{Binding IsSelected.Value}"
                                             xct:TouchEffect.LongPressCommand="{Binding Path=BindingContext.ShowKomaInfoCommand, Source={x:Reference board}}"
+                                            xct:TouchEffect.LongPressCommandParameter="{Binding .}"
                                             xct:TouchEffect.Command="{Binding Path=BindingContext.MoveCommand, Source={x:Reference board}}"
                                             xct:TouchEffect.CommandParameter="{Binding .}">
                             </views:CellView>
