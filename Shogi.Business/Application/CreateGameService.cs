@@ -24,24 +24,9 @@ namespace Shogi.Business.Application
 
             if (GameTemplateRepository.FindAllName().Count == 0)
                 foreach (var temp in DefaultGame.DefaltGameTemplate)
-                    //GameTemplateRepository.Add(new GameFactory(KomaTypeRepository).Create(temp));
-                    GameTemplateRepository.Save(ResolveKomaTypes(temp));
+                    GameTemplateRepository.Save(temp);
         }
 
-        /// <summary>
-        /// [FIX:アプリケーションサービスではやりたくないので何とかする.TemplateとCreateTemplateCommandと分ける]
-        /// </summary>
-        /// <param name="template"></param>
-        private GameTemplate ResolveKomaTypes(GameTemplate template)
-        {
-            template.KomaTypes = template.KomaList.Select(x => {
-                var type =KomaTypeRepository.FindById(x.TypeId);
-                if (type == null)
-                    throw new System.Exception($"駒[{type.Id}]が存在しません.");
-                return type;
-            }).ToList();
-            return template;
-        }
 
         public void SaveGameTemplate(GameTemplate gameTemplate)
         {

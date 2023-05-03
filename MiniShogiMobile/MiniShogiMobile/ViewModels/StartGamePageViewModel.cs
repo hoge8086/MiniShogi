@@ -17,6 +17,7 @@ using Prism.Services;
 using Shogi.Business.Domain.Model.GameTemplates;
 using Reactive.Bindings.Extensions;
 using Prism.NavigationEx;
+using System.Reactive.Linq;
 
 namespace MiniShogiMobile.ViewModels
 {
@@ -49,17 +50,24 @@ namespace MiniShogiMobile.ViewModels
         public SelectPlayperViewModel Player1 { get; set; }
         public SelectPlayperViewModel Player2 { get; set; }
         public ReactiveProperty<SelectFirstTurnPlayer> FirstTurnPlayer { get; set; }
+        public ReadOnlyReactivePropertySlim<int> MaxThinkingDepth { get; set; }
+        public List<GameTemplate> GameTemplateList{ get; set; }
 
         public StartGamePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             GameNameList = new ObservableCollection<string>();
-            foreach (var name in App.GameService.GameTemplateRepository.FindAllName())
+            GameTemplateList = App.GameService.GameTemplateRepository.FindAll();
+            foreach (var name in GameTemplateList.Select(x => x.Name))
                 GameNameList.Add(name);
 
             GameName = new ReactiveProperty<string>(GameNameList.First());
             Player1 = new SelectPlayperViewModel(PlayerThinkingType.Human);
             Player2 = new SelectPlayperViewModel(PlayerThinkingType.AI, 5);
             FirstTurnPlayer = new ReactiveProperty<SelectFirstTurnPlayer>(SelectFirstTurnPlayer.Random);
+            MaxThinkingDepth = GameName
+                                .Select(x => GameTemplateList.First(y => y.Name == x).MaxThinkingDepth)
+                                .ToReadOnlyReactivePropertySlim()
+                                .AddTo(this.Disposable);
 
             PlayGameCommand = new AsyncReactiveCommand();
             PlayGameCommand.Subscribe(async () =>

@@ -143,14 +143,14 @@ namespace MiniShogiMobile.ViewModels
                             .AddTo(this.Disposable);
             ChangePlayerCommand.Subscribe(async x =>
             {
-                var players = new ChangePlayersCondition(Game.HandsOfPlayer1.Player.Value, Game.HandsOfPlayer2.Player.Value);
-                var result = await NavigateAsync<ChangePlayersPopupPageViewModel, ChangePlayersCondition, ChangePlayersCondition>(players);
+                var players = new ChangePlayersCondition(Game.HandsOfPlayer1.Player.Value, Game.HandsOfPlayer2.Player.Value, PlayingGame.GameTemplate.MaxThinkingDepth);
+                var result = await NavigateAsync<ChangePlayersPopupPageViewModel, ChangePlayersCondition, List<Player>>(players);
                 if (!result.Success)
                     return;
 
-                Game.HandsOfPlayer1.Player.Value = result.Data.Player1;
-                Game.HandsOfPlayer2.Player.Value = result.Data.Player2;
-                App.GameService.ChangePlayers(new List<Player> { result.Data.Player1, result.Data.Player2 });
+                Game.HandsOfPlayer1.Player.Value = result.Data[0];
+                Game.HandsOfPlayer2.Player.Value = result.Data[1];
+                App.GameService.ChangePlayers(result.Data);
             }).AddTo(Disposable);
 
             UndoCommand = new[]{

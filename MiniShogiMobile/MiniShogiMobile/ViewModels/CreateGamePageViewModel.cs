@@ -250,13 +250,16 @@ namespace MiniShogiMobile.ViewModels
             {
                 await this.CatchErrorWithMessageAsync(async () =>
                 {
-                    bool doSave = await pageDialogService.DisplayAlertAsync("確認", "作成を完了しますか?", "はい", "いいえ");
+                    GameTemplate.KomaList = CreateKomaList();
+                    GameTemplate.Name = GameTitle.Value;
+                    var usingKomaTypeIds = Game.GetAllKomaTypeIds();
+                    GameTemplate.KomaTypes = KomaTypes.Where(y => usingKomaTypeIds.Contains(y.Value.Id)).Select(y => y.Value).ToList();
+
+
+                    
+                    bool doSave = await pageDialogService.DisplayAlertAsync("確認", $"作成を完了しますか?\nAI対戦では最大{GameTemplate.MaxThinkingDepth}手読先までむことができます。", "はい", "いいえ");
                     if (doSave)
                     {
-                        GameTemplate.KomaList = CreateKomaList();
-                        GameTemplate.Name = GameTitle.Value;
-                        var usingKomaTypeIds = Game.GetAllKomaTypeIds();
-                        GameTemplate.KomaTypes = KomaTypes.Where(y => usingKomaTypeIds.Contains(y.Value.Id)).Select(y => y.Value).ToList();
 
                         App.CreateGameService.SaveGameTemplate(GameTemplate);
 

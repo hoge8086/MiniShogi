@@ -41,7 +41,7 @@
             <ctrl:StepperWithLabel Value="{Binding AIThinkDepth.Value}"
                                    UnitLabel="手"
                                    MinimumValue="1"
-                                   MaximumValue="10">
+                                   MaximumValue="{Binding Path=MaxThinkingDepth, Source={x:Reference self}}">
                 <ctrl:StepperWithLabel.Triggers>
                     <DataTrigger TargetType="ctrl:StepperWithLabel" Binding="{Binding PlayerType.Value, Mode=OneWay}" Value="{x:Static vm:PlayerThinkingType.Human}">
                         <Setter Property="IsEnabled" Value="False"/>

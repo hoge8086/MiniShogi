@@ -10,7 +10,8 @@
              xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.StartGamePage"
-             Title="対局設定">
+             Title="対局設定"
+             x:Name="self">
     <StackLayout VerticalOptions="FillAndExpand" Margin="10" Spacing="12">
         <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
             <Label Text="将棋盤の選択"
@@ -42,9 +43,11 @@
             </Frame>
         </StackLayout>
         <BoxView Style="{StaticResource HorizontalLine}"/>
-        <views:SelectPlayerView BindingContext="{Binding Player1}" PlayerColor="{StaticResource Player1Color}" PlayerTitle="プレイヤー1" HorizontalOptions="Center"/>
+        <views:SelectPlayerView BindingContext="{Binding Player1}" PlayerColor="{StaticResource Player1Color}" PlayerTitle="プレイヤー1" HorizontalOptions="Center"
+                                MaxThinkingDepth="{Binding BindingContext.MaxThinkingDepth.Value, Source={x:Reference self}}"/>
         <BoxView Style="{StaticResource HorizontalLine}"/>
-        <views:SelectPlayerView BindingContext="{Binding Player2}" PlayerColor="{StaticResource Player2Color}" PlayerTitle="プレイヤー2" HorizontalOptions="Center"/>
+        <views:SelectPlayerView BindingContext="{Binding Player2}" PlayerColor="{StaticResource Player2Color}" PlayerTitle="プレイヤー2" HorizontalOptions="Center"
+                                MaxThinkingDepth="{Binding BindingContext.MaxThinkingDepth.Value, Source={x:Reference self}}"/>
         <BoxView Style="{StaticResource HorizontalLine}"/>
         <StackLayout Spacing="6">
             <Label Text="先手" HorizontalOptions="Center"/>

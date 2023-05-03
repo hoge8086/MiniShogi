@@ -45,5 +45,16 @@ namespace MiniShogiMobile.Views
             set { SetValue(PlayerTitleProperty, value); }
         }
         #endregion
+
+        public static readonly BindableProperty MaxThinkingDepthProperty =
+            BindableProperty.Create(
+                nameof(MaxThinkingDepth), typeof(int), typeof(SelectPlayerView), 5);
+
+        public int MaxThinkingDepth
+        {
+            get { return (int)GetValue(MaxThinkingDepthProperty); }
+            set { SetValue(MaxThinkingDepthProperty, value); }
+        }
+
     }
 }

@@ -7,15 +7,18 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              Style="{StaticResource PopupPageStyle}"
-             x:Class="MiniShogiMobile.Views.ChangePlayersPopupPage">
+             x:Class="MiniShogiMobile.Views.ChangePlayersPopupPage"
+             x:Name="self">
     <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="400">
         <StackLayout BackgroundColor="white" >
             <StackLayout Padding="10">
                 <Label Text="プレイヤーの変更" HorizontalOptions="Center"/>
                 <BoxView Style="{StaticResource HorizontalLine}"/>
-                <views:SelectPlayerView BindingContext="{Binding Player1}" PlayerColor="{StaticResource Player1Color}" PlayerTitle="プレイヤー1" HorizontalOptions="Center"/>
+                <views:SelectPlayerView BindingContext="{Binding Player1}" PlayerColor="{StaticResource Player1Color}" PlayerTitle="プレイヤー1" HorizontalOptions="Center"
+                                        MaxThinkingDepth="{Binding BindingContext.MaxThinkingDepth.Value, Source={x:Reference self}}"/>
                 <BoxView Style="{StaticResource HorizontalLine}"/>
-                <views:SelectPlayerView BindingContext="{Binding Player2}" PlayerColor="{StaticResource Player2Color}" PlayerTitle="プレイヤー2" HorizontalOptions="Center"/>
+                <views:SelectPlayerView BindingContext="{Binding Player2}" PlayerColor="{StaticResource Player2Color}" PlayerTitle="プレイヤー2" HorizontalOptions="Center"
+                                        MaxThinkingDepth="{Binding BindingContext.MaxThinkingDepth.Value, Source={x:Reference self}}"/>
             </StackLayout>
             <ctrl:OkCancelView
                     CancelCommand="{Binding CancelCommand}"

@@ -1,5 +1,6 @@
 ﻿using Shogi.Business.Domain.Model.Games;
 using Shogi.Business.Domain.Model.Komas;
+using Shogi.Business.Domain.Model.Moves;
 using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
 using System.Collections.Generic;
@@ -60,11 +61,6 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         public List<KomaType> KomaTypes;
 
         public GameTemplate() : this("新しい将棋", 3, 4, 1, WinConditionType.Checkmate, new List<Koma>(), new ProhibitedMoves(), null) { }
-        private GameTemplate(string name, int width, int height, int territoryBoundary, WinConditionType winCondition, List<Koma> komaList, ProhibitedMoves prohibitedMoves, List<KomaType> komaTypes)
-        : this(name, width, height, territoryBoundary, winCondition, komaList, prohibitedMoves)
-        {
-            KomaTypes = komaTypes ?? new List<KomaType>();
-        }
 
         public GameTemplate(GameTemplate gameTemplate)
         {
@@ -79,7 +75,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             KomaTypes = gameTemplate.KomaTypes;
         }
 
-        public GameTemplate(string name, int width, int height, int territoryBoundary, WinConditionType winCondition, List<Koma> komaList, ProhibitedMoves prohibitedMoves)
+        public GameTemplate(string name, int width, int height, int territoryBoundary, WinConditionType winCondition, List<Koma> komaList, ProhibitedMoves prohibitedMoves, List<KomaType> komaTypes)
         {
             Id = Guid.NewGuid().ToString();
             Name = name;
@@ -89,6 +85,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             ProhibitedMoves = prohibitedMoves;
             WinCondition = winCondition;
             KomaList = komaList;
+            KomaTypes = komaTypes ?? new List<KomaType>();
         }
 
         public GameTemplate Clone()
@@ -108,7 +105,41 @@ namespace Shogi.Business.Domain.Model.GameTemplates
                         ProhibitedMoves,
                         KomaTypes);
         }
+
+        /// <summary>
+        /// どうぶつ将棋でComplexityを求めた値
+        /// </summary>
+        private readonly static int ComplexityOfAnimalShogi = 130;
+
+        /// <summary>
+        /// 探索の計算量の上限（どうぶつ将棋の6手読みを最大とする)
+        /// </summary>
+        private readonly static double MaxThinkingComplexityOfAnimalShogi = Math.Pow(ComplexityOfAnimalShogi, 6);
+        /// <summary>
+        /// とある局面での仮想的な着手可能手数
+        /// 全ての駒を自身の駒とし、半分が持ち駒、半分が盤上とする(盤上の駒は無限の広さの盤で動くことを想定)
+        /// </summary>
+        public int Complexity => ((Height * Width * KomaList.Count) + KomaList.Sum(x => KomaMobilityEvaluation.Evaluate(KomaTypes.First(y => y.Id == x.TypeId).Moves)));
+        public int MaxThinkingDepth => (int)Math.Log(MaxThinkingComplexityOfAnimalShogi, Complexity);
     }
 
+
+    public class KomaMobilityEvaluation
+    {
+        public static int Evaluate(KomaMoves moves)
+        {
+            int movablePositionCount = 0;
+            foreach(var move in moves.Moves)
+            {
+                var moveBase = move as KomaMoveBase;
+                if (moveBase != null && !moveBase.IsRepeatable)
+                    movablePositionCount += 1;
+
+                else if (moveBase != null && moveBase.IsRepeatable)
+                    movablePositionCount += 2;
+            }
+            return movablePositionCount;
+        }
+    }
 }
 
