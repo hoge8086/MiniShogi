@@ -4,9 +4,9 @@ using Xamarin.Forms;
 
 namespace MiniShogiMobile.Views
 {
-    public partial class ChangePlayersPopupPage : BasePopupPage
+    public partial class KomaInfoPopupPage : BasePopupPage
     {
-        public ChangePlayersPopupPage()
+        public KomaInfoPopupPage()
         {
             InitializeComponent();
         }

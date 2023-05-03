@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<popups:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ctrl:BasePopupPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
@@ -23,4 +23,4 @@
                     OkCommand="{Binding OkCommand}"/>
         </StackLayout>
     </Frame>
-</popups:PopupPage>
+</ctrl:BasePopupPage>

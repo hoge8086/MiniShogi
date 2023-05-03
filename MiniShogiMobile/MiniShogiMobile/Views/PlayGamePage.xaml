@@ -76,6 +76,10 @@
                              Grid.Column="2"
                              Text="進む"
                              Command="{Binding RedoCommand}"/>
+                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.RightArrow.png}" 
+                             Grid.Column="3"
+                             Text="駒情報"
+                             Command="{Binding ShowKomaInfoCommand}"/>
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.ChangePlayer.png}" 
                              Grid.Column="4"
                              Margin="-4,0,-4,0"

@@ -53,6 +53,7 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand UndoCommand { get; private set; }
         public AsyncReactiveCommand RedoCommand { get; private set; }
         public AsyncReactiveCommand ChangePlayerCommand { get; private set; }
+        public AsyncReactiveCommand<KomaTypeId> ShowKomaInfoCommand { get; private set; }
 
         private CancellationTokenSource cancelWaiting;
 
@@ -134,6 +135,13 @@ namespace MiniShogiMobile.ViewModels
                 Game.HandsOfPlayer1.Player.Value = result.Data.Player1;
                 Game.HandsOfPlayer2.Player.Value = result.Data.Player2;
                 App.GameService.ChangePlayers(new List<Player> { result.Data.Player1, result.Data.Player2 });
+            }).AddTo(Disposable);
+
+            ShowKomaInfoCommand = new AsyncReactiveCommand<KomaTypeId>();
+            ShowKomaInfoCommand.Subscribe(async x =>
+            {
+                 //await NavigateAsync<KomaInfoPopupPageViewModel, KomaType>(PlayingGame.Game.GetKomaType(x));
+                 await NavigateAsync<KomaInfoPopupPageViewModel, KomaType>(Shogi.Business.Domain.Model.GameTemplates.DefaultGame.KomaGin);
             }).AddTo(Disposable);
 
             UndoCommand = new[]{

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ctrl:BasePopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:views="clr-namespace:MiniShogiMobile.Views"
+             xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="MiniShogiMobile.Views.KomaInfoPopupPage">
+    <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="400" HeightRequest="800">
+        <Grid BackgroundColor="white" RowDefinitions="*,Auto">
+            <views:KomaInfoView Grid.Row="0" BindingContext="{Binding KomaInfo}" />
+            <StackLayout Grid.Row="1">
+                <BoxView Style="{StaticResource HorizontalLine}" BackgroundColor="{StaticResource AppControlDarkColor2}"/>
+                <Button Text="OK" Style="{StaticResource PopupPageButtonStyle}" Command="{Binding OkCommand}"/>
+            </StackLayout>
+        </Grid>
+    </Frame>
+</ctrl:BasePopupPage>
