@@ -248,6 +248,8 @@ namespace MiniShogiMobile.ViewModels
                 await StartAnimationOfKomaMoving?.Invoke(e.MoveCommand);
                 UpdateView();
                 await EndAnimationOfKomaMoving?.Invoke();
+                if(e.IsOteMove())
+                     await NavigateAsync<MessagePopupPageViewModel, string, object>("王手！");
             }).Wait();
         }
 

@@ -293,11 +293,16 @@ namespace Shogi.Business.Domain.Model.Games
 
         public bool DoOte(PlayerType player)
         {
+            return DoOte(player, State.GetBoardKomaList(player).ToArray());
+        }
+        public bool DoOte(PlayerType player, params Koma[] komas)
+        {
+            // [既にゲームが決着している場合は王手ではないとする]
             if (State.IsEnd)
-                throw new InvalidProgramException("すでに決着済みです.");
+                return false;
 
             // [MEMO:盤上の駒に重複はないのでDistinct()する必要はない]
-            var movablePositions = MovablePosition(State.GetBoardKomaList(player));
+            var movablePositions = MovablePosition(komas.ToList());
             var kingPosition = State.FindKingOnBoard(player.Opponent, KomaTypes).BoardPosition;
             return movablePositions.Contains(kingPosition);
         }

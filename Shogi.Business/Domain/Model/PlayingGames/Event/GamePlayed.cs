@@ -13,5 +13,11 @@ namespace Shogi.Business.Domain.Model.PlayingGames.Event
 
         public PlayingGame PlayingGame { get; }
         public MoveCommand MoveCommand { get; }
+
+        public bool IsOteMove()
+        {
+            var koma = PlayingGame.Game.State.FindBoardKoma(MoveCommand.ToPosition);
+            return PlayingGame.Game.DoOte(MoveCommand.Player, koma);
+        }
     }
 }
