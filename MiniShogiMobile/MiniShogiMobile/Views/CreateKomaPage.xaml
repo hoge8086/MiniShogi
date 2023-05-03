@@ -121,7 +121,7 @@
                             <StackLayout VerticalOptions="FillAndExpand" IsVisible="{Binding CanBePromoted.Value}">
                                 <ctrl:EntryWithLabel HorizontalOptions="FillAndExpand"
                                                      LabelText="表示名"
-                                                     Placeholder="頭一文字のみ表示"
+                                                     Placeholder="先頭一文字のみ表示"
                                                      EntryText="{Binding PromotedKoma.Value.Name.Value}"/>
                                 <Grid x:Name="board2" VerticalOptions="FillAndExpand">
                                     <ctrl:SquareCell2DGridControl MaxHeight="{Binding Path=Height,Source={x:Reference board2}}"
