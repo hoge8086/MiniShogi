@@ -17,7 +17,6 @@
                 <BoxView Style="{StaticResource HorizontalLine}"/>
                 <views:SelectPlayerView BindingContext="{Binding Player2}" PlayerColor="{StaticResource Player2Color}" PlayerTitle="プレイヤー2" HorizontalOptions="Center"/>
             </StackLayout>
-            <BoxView Style="{StaticResource HorizontalLine}" BackgroundColor="{StaticResource AppControlDarkColor2}"/>
             <ctrl:OkCancelView
                     CancelCommand="{Binding CancelCommand}"
                     OkCommand="{Binding OkCommand}"/>
