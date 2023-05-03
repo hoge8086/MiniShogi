@@ -3,6 +3,7 @@ using Prism.Modularity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -53,9 +54,15 @@ namespace MiniShogiMobile.Controls
         private void OnChangeCanExecute(object sender, EventArgs e)
         {
             if(this.Command == null || !this.Command.CanExecute(null))
+            {
                 this.Opacity = 0.3;
+                this.IsEnabled = false;
+            }
             else
+            {
                 this.Opacity = 1;
+                this.IsEnabled = true;
+            }
         }
 
         public static readonly BindableProperty SourceProperty =
@@ -91,5 +98,20 @@ namespace MiniShogiMobile.Controls
             get { return (Color)GetValue(TintColorProperty); }
             set { SetValue(TintColorProperty, value); }
         }
+
+        public static readonly BindableProperty IsEnabledProperty =
+            BindableProperty.Create(
+                nameof(IsEnabled), typeof(bool), typeof(ImageTextButton),
+                defaultValue: true);
+
+        /// <summary>
+        /// 読み取り専用
+        /// </summary>
+        public new bool IsEnabled
+        {
+            get { return (bool)GetValue(IsEnabledProperty); }
+            set { SetValue(IsEnabledProperty, value); }
+        }
+
     }
 }

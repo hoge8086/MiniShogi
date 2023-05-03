@@ -7,6 +7,7 @@
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:styles="clr-namespace:MiniShogiMobile.Styles"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
+             xmlns:vm="clr-namespace:MiniShogiMobile.ViewModels"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.PlayGamePage"
              Title="{Binding Title}"
@@ -58,19 +59,21 @@
             <Grid Style="{StaticResource CommandListGrid}"
                   ColumnDefinitions="*,*,*,*,*,*">
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Play.png}" 
+                             IsVisible="{Binding Source={RelativeSource Self}, Path=IsEnabled, Mode=OneWay}"
                              Grid.Column="0"
                              Text="再開"
                              Command="{Binding ResumeCommand}"/>
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Stop.png}" 
-                             Grid.Column="1"
+                             IsVisible="{Binding Source={RelativeSource Self}, Path=IsEnabled, Mode=OneWay}"
+                             Grid.Column="0"
                              Text="停止"
                              Command="{Binding StopCommand}"/>
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.LeftArrow.png}" 
-                             Grid.Column="2"
+                             Grid.Column="1"
                              Text="戻る"
                              Command="{Binding UndoCommand}"/>
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.RightArrow.png}" 
-                             Grid.Column="3"
+                             Grid.Column="2"
                              Text="進む"
                              Command="{Binding RedoCommand}"/>
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.ChangePlayer.png}" 
