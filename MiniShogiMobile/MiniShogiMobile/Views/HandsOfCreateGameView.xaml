@@ -27,7 +27,9 @@
                              <DataTemplate>
                                     <!--なぜかコマンドをHandKomaViewに入れると数字マークが出てるときにタッチでコマンドが起動しなくなるのでグリッドを用意-->
                                     <Grid xct:TouchEffect.Command="{Binding Source={RelativeSource AncestorType={x:Type views:HandsOfCreateGameView}}, Path=TapKomaCommand}"
-                                          xct:TouchEffect.CommandParameter="{Binding .}">
+                                          xct:TouchEffect.CommandParameter="{Binding .}"
+                                          xct:TouchEffect.LongPressCommand="{Binding Source={RelativeSource AncestorType={x:Type views:HandsOfCreateGameView}}, Path=KomaLongPressCommand}"
+                                          xct:TouchEffect.LongPressCommandParameter="{Binding .}">
                                         <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}"
                                                         WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
                                             <ctrl:HandKomaView.Triggers>

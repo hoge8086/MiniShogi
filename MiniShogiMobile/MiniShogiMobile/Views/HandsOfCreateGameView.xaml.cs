@@ -76,5 +76,18 @@ namespace MiniShogiMobile.Views
             get { return (bool)GetValue(IsHighlightProperty); }
             set { SetValue(IsHighlightProperty, value); }
         }
+
+        public static readonly BindableProperty KomaLongPressCommandProperty =
+            BindableProperty.Create(
+                nameof(KomaLongPressCommand), typeof(ICommand), typeof(PlayerWithHandsView),
+                defaultValue: new Command((obj) => {
+                    System.Diagnostics.Debug.WriteLine("CellView Tapped");
+                }));
+
+        public ICommand KomaLongPressCommand
+        {
+            get { return (ICommand)GetValue(KomaLongPressCommandProperty); }
+            set { SetValue(KomaLongPressCommandProperty, value); }
+        }
     }
 }

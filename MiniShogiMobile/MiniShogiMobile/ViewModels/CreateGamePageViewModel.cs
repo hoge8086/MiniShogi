@@ -37,6 +37,7 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand ChangeKomaCommand { get; set; }
         public AsyncReactiveCommand ReverseKomaCommand { get; set; }
         public AsyncReactiveCommand RotateKomaCommand { get; set; }
+        public AsyncReactiveCommand<BindableBase> ShowKomaInfoCommand { get; private set; }
         /// <summary>
         /// 選択中のCellViewModelかHandKomaViewModelのいずれかが入る
         /// </summary>
@@ -406,6 +407,21 @@ namespace MiniShogiMobile.ViewModels
                     };
                 });
             }).AddTo(this.Disposable);
+
+            ShowKomaInfoCommand = new AsyncReactiveCommand<BindableBase>();
+            ShowKomaInfoCommand.Subscribe(async cell =>
+            {
+                KomaTypeId komaTypeId = null;
+                if(cell is CellViewModel<KomaViewModel> boarCell)
+                    komaTypeId = boarCell.Koma.Value?.KomaTypeId.Value;
+                if (cell is HandKomaViewModel handCell)
+                    komaTypeId = handCell.KomaTypeId;
+
+                if (komaTypeId == null)
+                    return;
+
+                 await NavigateAsync<KomaInfoPopupPageViewModel, KomaType>(KomaTypes[komaTypeId]);
+            }).AddTo(Disposable);
         }
 
         private List<Koma> CreateKomaList()

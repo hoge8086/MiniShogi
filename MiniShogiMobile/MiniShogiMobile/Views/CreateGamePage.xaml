@@ -60,6 +60,7 @@
                                              Margin="0,8,0,8"
                                              Rotation="180"
                                              TapKomaCommand="{Binding Path=BindingContext.TapHandKomaCommand, Source={x:Reference board}}"
+                                             KomaLongPressCommand="{Binding Path=BindingContext.ShowKomaInfoCommand, Source={x:Reference board}}"
                                              IsHighlight="{Binding Path=BindingContext.CanMoveToPlayer2Komadai.Value, Source={x:Reference board}}"
                                              TapKomadaiHighlightCommand="{Binding Path=BindingContext.TapKomadaiCommand, Source={x:Reference board}}"
                                              AddKomaCommand="{Binding Path=BindingContext.AddHandKomaCommand, Source={x:Reference board}}"
@@ -82,6 +83,8 @@
                                 RelativeLayout.YConstraint="0"
                                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
                                 RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"
+                                xct:TouchEffect.LongPressCommand="{Binding Path=BindingContext.ShowKomaInfoCommand, Source={x:Reference board}}"
+                                xct:TouchEffect.LongPressCommandParameter="{Binding .}"
                                 xct:TouchEffect.Command="{Binding Path=BindingContext.TapCellCommand, Source={x:Reference board}}"
                                 xct:TouchEffect.CommandParameter="{Binding .}">
                                 <views:CellView.IsHighlight>
@@ -120,6 +123,7 @@
                 <views:HandsOfCreateGameView Grid.Column="1"
                                              Margin="0,8,0,8"
                                              TapKomaCommand="{Binding Path=BindingContext.TapHandKomaCommand, Source={x:Reference board}}"
+                                             KomaLongPressCommand="{Binding Path=BindingContext.ShowKomaInfoCommand, Source={x:Reference board}}"
                                              IsHighlight="{Binding Path=BindingContext.CanMoveToPlayer1Komadai.Value, Source={x:Reference board}}"
                                              TapKomadaiHighlightCommand="{Binding Path=BindingContext.TapKomadaiCommand, Source={x:Reference board}}"
                                              AddKomaCommand="{Binding Path=BindingContext.AddHandKomaCommand, Source={x:Reference board}}"
