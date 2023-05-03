@@ -60,10 +60,23 @@ namespace MiniShogiMobile.Controls
             BindableProperty.Create(nameof(UnitLabel), typeof(string), typeof(StepperWithLabel), defaultValue: string.Empty);
 
         public static readonly BindableProperty MinimumValueProperty =
-            BindableProperty.Create(nameof(MinimumValue), typeof(int), typeof(StepperWithLabel), defaultValue: 0);
+            BindableProperty.Create(nameof(MinimumValue), typeof(int), typeof(StepperWithLabel), defaultValue: 0, propertyChanged: OnMaxMinChanged);
 
         public static readonly BindableProperty MaximumValueProperty =
-            BindableProperty.Create(nameof(MaximumValue), typeof(int), typeof(StepperWithLabel), defaultValue: 10);
+            BindableProperty.Create(nameof(MaximumValue), typeof(int), typeof(StepperWithLabel), defaultValue: 10, propertyChanged: OnMaxMinChanged);
+        static void OnMaxMinChanged (BindableObject bindable, object oldValue, object newValue)
+        {
+            var view = bindable as StepperWithLabel;
+            if (view == null || newValue == oldValue)
+                return;
+
+            if (view.Value > view.MaximumValue)
+                view.Value = view.MaximumValue;
+
+            if (view.Value < view.MinimumValue)
+                view.Value = view.MinimumValue;
+            view.UpdateIsEnable();
+        }
 
         public int Value
         {
