@@ -4,7 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-
   <ItemGroup>
     <EmbeddedResource Include="azuki.ttf" />
     <EmbeddedResource Include="Images\AppTitle.png" />
@@ -22,6 +21,7 @@
     <EmbeddedResource Include="Images\EditKoma.png" />
     <EmbeddedResource Include="Images\Character1.png" />
     <EmbeddedResource Include="Images\Floppy.png" />
+    <EmbeddedResource Include="Images\Oute.png" />
     <EmbeddedResource Include="Images\ReverseKoma.png" />
     <EmbeddedResource Include="Images\RightArrow.png" />
     <EmbeddedResource Include="Images\Play.png" />
@@ -148,9 +148,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\LicensePage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\MessagePopupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\PlayerWithHandsView.xaml">

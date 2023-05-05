@@ -257,7 +257,7 @@ namespace MiniShogiMobile.ViewModels
 
 
                     
-                    bool doSave = await pageDialogService.DisplayAlertAsync("確認", $"作成を完了しますか?\nAI対戦では最大{GameTemplate.MaxThinkingDepth}手読先までむことができます。", "はい", "いいえ");
+                    bool doSave = await pageDialogService.DisplayAlertAsync("確認", $"作成を完了しますか?\nこの将棋のAI対戦では最大{GameTemplate.MaxThinkingDepth}手読先までむことができます。", "はい", "いいえ");
                     if (doSave)
                     {
 

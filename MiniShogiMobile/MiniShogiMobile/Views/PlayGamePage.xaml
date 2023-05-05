@@ -57,11 +57,18 @@
                                            ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"/>
             </StackLayout>
             <AbsoluteLayout x:Name="movingLayer" InputTransparent="True"/>
+            <StackLayout VerticalOptions="Center">
+                <Image Source="{utils:ImageResource MiniShogiMobile.Images.Oute.png}" IsVisible="{Binding IsOuteVisible.Value}">
+                    <Image.HeightRequest>
+                        <OnIdiom Phone="100" Tablet="150"/>
+                    </Image.HeightRequest>
+                </Image>
+            </StackLayout>
         </Grid>
         <StackLayout Grid.Row="1" Spacing="0" >
             <BoxView Style="{StaticResource HorizontalLine}" Background="{StaticResource AppControlDarkColor2}"/>
             <Grid Style="{StaticResource CommandListGrid}"
-                  ColumnDefinitions="*,*,*,*,*,*">
+                  ColumnDefinitions="*,*,*,*,*">
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Play.png}" 
                              IsVisible="{Binding Source={RelativeSource Self}, Path=IsEnabled, Mode=OneWay}"
                              Grid.Column="0"
@@ -80,17 +87,13 @@
                              Grid.Column="2"
                              Text="進む"
                              Command="{Binding RedoCommand}"/>
-                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.RightArrow.png}" 
-                             Grid.Column="3"
-                             Text="駒情報"
-                             Command="{Binding ShowKomaInfoCommand}"/>
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.ChangePlayer.png}" 
-                             Grid.Column="4"
+                             Grid.Column="3"
                              Margin="-4,0,-4,0"
                              Text="対局者変更"
                              Command="{Binding ChangePlayerCommand}"/>
                 <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.Floppy.png}" 
-                             Grid.Column="5"
+                             Grid.Column="4"
                              Text="保存"
                              Command="{Binding SaveCommand}"/>
             </Grid>

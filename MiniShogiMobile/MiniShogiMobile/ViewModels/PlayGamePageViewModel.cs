@@ -44,6 +44,7 @@ namespace MiniShogiMobile.ViewModels
         public PlayingGame PlayingGame { get; private set; }
         public ReactiveProperty<IViewState> ViewState { get; private set; }
         private ReactiveProperty<int> CurrentMoveCount;
+        public ReactiveProperty<bool> IsOuteVisible { get; private set; }
         public void ChangeState(IViewState state) => ViewState.Value = state;
         public GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel> Game { get; set; }
         public AsyncReactiveCommand<ISelectable> MoveCommand { get; private set; }
@@ -65,6 +66,7 @@ namespace MiniShogiMobile.ViewModels
             PlayingGame = null;
             ViewState = new ReactiveProperty<IViewState>(new ViewStateWaiting());
             CurrentMoveCount = new ReactiveProperty<int>();
+            IsOuteVisible = new ReactiveProperty<bool>(false);
             Game = new GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel>();
             MoveCommand = new AsyncReactiveCommand<ISelectable>();
             MoveCommand.Subscribe(async x =>
@@ -248,8 +250,12 @@ namespace MiniShogiMobile.ViewModels
                 await StartAnimationOfKomaMoving?.Invoke(e.MoveCommand);
                 UpdateView();
                 await EndAnimationOfKomaMoving?.Invoke();
-                if(e.IsOteMove())
-                     await NavigateAsync<MessagePopupPageViewModel, string, object>("王手！");
+                if (e.IsOteMove())
+                {
+                    IsOuteVisible.Value = true;
+                    await Task.Delay(650);
+                    IsOuteVisible.Value = false;
+                }
             }).Wait();
         }
 
