@@ -14,7 +14,7 @@ namespace Shogi.Business.Domain.Model.AI
         public override string ToString() => "AI (" + Depth.ToString() + "手読み)";
         [DataMember]
         public int Depth { get; set;}
-        private bool debug = true;
+        //private bool debug = true;
         private Evaluator evaluator = null;
 
         public NegaAlphaAI(int depth)
@@ -26,32 +26,32 @@ namespace Shogi.Business.Domain.Model.AI
             // MEMO:できればコンストラクタでやりたい
             evaluator = new LossAndGainOfKomaEvaluator(game);
 
-            if(debug)
-            {
-                System.Diagnostics.Debug.WriteLine("▽▽▽▽▽▽▽▽▽▽[探索開始]▽▽▽▽▽▽▽▽▽▽");
-                System.Diagnostics.Debug.WriteLine("深さ：" + Depth.ToString()) ;
-                System.Diagnostics.Debug.WriteLine("---------盤面------------") ;
-                System.Diagnostics.Debug.WriteLine(game.ToString()) ;
-                System.Diagnostics.Debug.WriteLine("手番：" + game.State.TurnPlayer.ToString()) ;
-                System.Diagnostics.Debug.WriteLine("---------[探索結果]------------") ;
-            }
+            //if(debug)
+            //{
+            //    System.Diagnostics.Debug.WriteLine("▽▽▽▽▽▽▽▽▽▽[探索開始]▽▽▽▽▽▽▽▽▽▽");
+            //    System.Diagnostics.Debug.WriteLine("深さ：" + Depth.ToString()) ;
+            //    System.Diagnostics.Debug.WriteLine("---------盤面------------") ;
+            //    System.Diagnostics.Debug.WriteLine(game.ToString()) ;
+            //    System.Diagnostics.Debug.WriteLine("手番：" + game.State.TurnPlayer.ToString()) ;
+            //    System.Diagnostics.Debug.WriteLine("---------[探索結果]------------") ;
+            //}
 
             // [MEMO:アルファベータ法は枝刈りを行うので複数の最善手を得られない?]
             var bestMove = Search(game, game.State.TurnPlayer, Depth, cancellation, progress);
 
-            if (debug)
-            {
+            //if (debug)
+            //{
 
-                System.Diagnostics.Debug.WriteLine("---------[ベスト手]------------") ;
-                var temp = bestMove.GameEvaluation.Game.Clone();
-                System.Diagnostics.Debug.WriteLine($"{temp.ToString()}");
-                while(temp.CanUndo(Game.UndoType.Undo))
-                {
-                    temp.Undo(Game.UndoType.Undo);
-                    System.Diagnostics.Debug.WriteLine($"{temp.ToString()}");
-                }
-                System.Diagnostics.Debug.WriteLine("△△△△△△△△△△[探索終了]△△△△△△△△△△");
-            }
+            //    System.Diagnostics.Debug.WriteLine("---------[ベスト手]------------") ;
+            //    var temp = bestMove.GameEvaluation.Game.Clone();
+            //    System.Diagnostics.Debug.WriteLine($"{temp.ToString()}");
+            //    while(temp.CanUndo(Game.UndoType.Undo))
+            //    {
+            //        temp.Undo(Game.UndoType.Undo);
+            //        System.Diagnostics.Debug.WriteLine($"{temp.ToString()}");
+            //    }
+            //    System.Diagnostics.Debug.WriteLine("△△△△△△△△△△[探索終了]△△△△△△△△△△");
+            //}
 
             return bestMove;
         }
@@ -108,10 +108,10 @@ namespace Shogi.Business.Domain.Model.AI
                     bestMove = new MoveEvaluation(moveCommands[i], eval);
                 }
 
-                if(debug)
-                {
-                    System.Diagnostics.Debug.WriteLine(string.Join("\n", new MoveEvaluation(moveCommands[i], eval))) ;
-                }
+                //if(debug)
+                //{
+                //    System.Diagnostics.Debug.WriteLine(string.Join("\n", new MoveEvaluation(moveCommands[i], eval))) ;
+                //}
 
                 progress?.Invoke(new ProgressRate(i+1, moveCommands.Count));
             }
@@ -120,13 +120,13 @@ namespace Shogi.Business.Domain.Model.AI
             return bestMove;
         }
 
-        private GameEvaluation SearchSub(Game game, PlayerType player, GameEvaluation alpha, GameEvaluation beta, int depth, CancellationToken cancellation)
+        private GameEvaluation SearchSub(Game game, PlayerType player, GameEvaluation alpha, GameEvaluation beta, int remainingDepth, CancellationToken cancellation)
         {
             cancellation.ThrowIfCancellationRequested();
 
-            if (game.State.IsEnd || depth <= 0) // [深さが最大に達したかゲームに決着がついた]
+            if (game.State.IsEnd || remainingDepth <= 0) // [深さが最大に達したかゲームに決着がついた]
             {
-                return evaluator.Evaluate(game, player);
+                return evaluator.Evaluate(game, player, remainingDepth);
             }
 
             var moveCommands = game.CreateAvailableMoveCommand();
@@ -152,7 +152,7 @@ namespace Shogi.Business.Domain.Model.AI
                 // [現在，既に自分は最低でもα値の手が存在するため，相手が相手にとって-α値より良い手を見つけても]
                 // [無意味となるため(自分はその手を指さないだけ)，-α値が相手の探索の上限となる．]
                 //var eval = -Search(gameTmp, player.Opponent, -beta, -alpha, depth - 1, null, cancellation);
-                var eval = SearchSub(gameTmp, player.Opponent, beta?.Reverse(), alpha?.Reverse(), depth - 1, cancellation).Reverse();
+                var eval = SearchSub(gameTmp, player.Opponent, beta?.Reverse(), alpha?.Reverse(), remainingDepth - 1, cancellation).Reverse();
 
                 // [最善手(MAX)を求める]
                 if((alpha == null) || (alpha.Value < eval.Value))

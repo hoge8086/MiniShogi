@@ -6,13 +6,20 @@ namespace Shogi.Business.Domain.Model.AI
 
     public class GameEvaluation
     {
+        /// <summary>
+        /// 現在の評価値
+        /// 詰みの状況でも最善手(最長手/最短手)を評価するため、MaxValueの値を超えることがある
+        /// </summary>
         public int Value { get; private set; }
+        /// <summary>
+        /// 勝ち／負けが確定したときの評価値
+        /// </summary>
         public int MaxValue { get; private set; }
         public Game Game { get; private set; }
         public PlayerType PlayerType { get; private set; }
 
-        public bool IsWining { get => Value == MaxValue; }
-        public bool IsLosing { get => Value == -MaxValue; }
+        public bool IsWining { get => Value >= MaxValue; }
+        public bool IsLosing { get => Value <= -MaxValue; }
 
         public GameEvaluation(int value, int maxValue, Game game, PlayerType player)
         {
@@ -25,14 +32,6 @@ namespace Shogi.Business.Domain.Model.AI
         public GameEvaluation Reverse()
         {
             return new GameEvaluation(-Value, MaxValue, Game, PlayerType?.Opponent);
-        }
-        public static GameEvaluation WiningEvaluation(int maxValue, Game game, PlayerType player)
-        {
-            return new GameEvaluation(maxValue, maxValue, game, player);
-        }
-        public static GameEvaluation LosingEvaluation(int maxValue, Game game, PlayerType player)
-        {
-            return WiningEvaluation(maxValue, game, player).Reverse();
         }
     }
 }

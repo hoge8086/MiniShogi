@@ -14,7 +14,7 @@ namespace Shogi.Business.Domain.Model.AI
             if (MaxEvaluationValue <= 0)
                 throw new InvalidProgramException("最大評価値がマイナスのためプログラム不正です.");
         }
-        public abstract GameEvaluation Evaluate(Game game, PlayerType player);
+        public abstract GameEvaluation Evaluate(Game game, PlayerType player, int remainingDepth);
 
         protected abstract int CalcMaxEvaluationValue(Game game);
         protected int MaxEvaluationValue { get; private set; }
@@ -27,14 +27,23 @@ namespace Shogi.Business.Domain.Model.AI
     public class LossAndGainOfKomaEvaluator : Evaluator
     {
         public LossAndGainOfKomaEvaluator(Game game) : base(game) { }
-        public override GameEvaluation Evaluate(Game game, PlayerType player)
+        /// <summary>
+        /// 評価値の計算
+        /// 負け／勝ちが確定した際も最善手(最長手/最短手)を指すように、手の深さを評価値に加えた評価を返す
+        /// 従って、評価値はMaxEvaluationValueの値を超えることがある
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="player"></param>
+        /// <param name="remainingDepth"></param>
+        /// <returns></returns>
+        public override GameEvaluation Evaluate(Game game, PlayerType player, int remainingDepth)
         {
             if(game.State.IsEnd)
             {
                 if (game.State.GameResult.Winner == player)
-                    return GameEvaluation.WiningEvaluation(MaxEvaluationValue, game, player);
+                    return WiningEvaluation();
                 else
-                    return GameEvaluation.LosingEvaluation(MaxEvaluationValue, game, player);
+                    return LosingEvaluation();
             }
 
             // [どうぶつ将棋だと勝敗判定にチェックメイトがないので、]
@@ -43,11 +52,11 @@ namespace Shogi.Business.Domain.Model.AI
             // [TODO:同様に入玉も考慮したほうが良い(次の手で入玉できる/されてしまうケース)]
             if (game.DoOte(player) && game.State.TurnPlayer == player)
             {
-                return GameEvaluation.WiningEvaluation(MaxEvaluationValue, game, player);
+                return WiningEvaluation();
             }
             if (game.DoOte(player.Opponent) && game.State.TurnPlayer == player.Opponent)
             {
-                return GameEvaluation.LosingEvaluation(MaxEvaluationValue, game, player);
+                return LosingEvaluation();
             }
 
             // [駒得基準の判定]
@@ -60,8 +69,24 @@ namespace Shogi.Business.Domain.Model.AI
             }
 
             return new GameEvaluation(evaluationValue, MaxEvaluationValue, game, player);
+
+            GameEvaluation WiningEvaluation()
+            {
+                // 勝ち確の場合は、最短手（残っている探索の深さが多い）ほど、評価が高い
+                return new GameEvaluation(MaxEvaluationValue + remainingDepth, MaxEvaluationValue, game, player);
+            }
+            GameEvaluation LosingEvaluation()
+            {
+                // 負け確の場合は、最短手（残っている探索の深さが多い）ほど、評価が低い
+                return new GameEvaluation(-MaxEvaluationValue - remainingDepth, MaxEvaluationValue, game, player);
+            }
         }
 
+        /// <summary>
+        /// 探索の深さは考慮しない最大の評価値(駒の損得の最大値)
+        /// </summary>
+        /// <param name="game"></param>
+        /// <returns></returns>
         protected override int CalcMaxEvaluationValue(Game game)
         {
             // TODO:王は取られたら負けなのでそれを差し引きたい(王の成りの考慮が必要?)
