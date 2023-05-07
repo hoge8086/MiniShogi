@@ -62,7 +62,9 @@ namespace Shogi.Business.Domain.Model.AI
             // [MEMO:手の偏りを防ぐためランダムソートする]
             moveCommands = moveCommands.OrderBy(i => System.Guid.NewGuid()).ToList();
 
-            var sorted = new List<MoveCommand>();
+            var priority1 = new List<MoveCommand>();
+            var priority2 = new List<MoveCommand>();
+            var remaining = new List<MoveCommand>();
             foreach(var move in moveCommands)
             {
                 // [価値の低い駒で価値の高い駒を取る場合は良い手]
@@ -71,11 +73,20 @@ namespace Shogi.Business.Domain.Model.AI
                 var toKoma = game.State.FindBoardKoma(move.ToPosition);
                 // MEMO:LossAndGainOfKomaEvaluatorの直接参照はよくないが、ここは駒の損得での判定のためある意味正しい
                 if (toKoma != null && LossAndGainOfKomaEvaluator.Evaluation(game.GetKomaType(fromKoma).Moves) < LossAndGainOfKomaEvaluator.Evaluation(game.GetKomaType(toKoma).Moves))
-                    sorted.Insert(0, move);
+                    priority1.Add(move);
+                // [成る手(なった場合に動きが増える場合)は良い手(成り捨ても上位に上がってしまうのは微妙だが)]
+                else if (move.DoTransform && LossAndGainOfKomaEvaluator.Evaluation(game.GetKomaType(fromKoma).Moves) < LossAndGainOfKomaEvaluator.Evaluation(game.GetKomaType(fromKoma).TransformedMoves))
+                    priority2.Add(move);
                 else
-                    sorted.Add(move);
+                    remaining.Add(move);
             }
-            return sorted;
+
+            var marged = new List<MoveCommand>();
+            marged.AddRange(priority1);
+            marged.AddRange(priority2);
+            marged.AddRange(remaining);
+
+            return marged;
         }
         private MoveEvaluation Search(Game game, PlayerType player, int depth, CancellationToken cancellation, Action<ProgressRate> progress)
         {
