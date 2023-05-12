@@ -22,8 +22,9 @@
                           WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
                         <!--プレイヤーアイコン-->
                         <ctrl:PlayerView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Color="Gray"
-                             xct:TouchEffect.Command="{Binding Source={RelativeSource AncestorType={x:Type views:PlayerWithHandsView}}, Path=TapPlayerCommand}"
-                             xct:TouchEffect.CommandParameter="{Binding Player.Value}">
+                             xct:TouchEffect.LongPressDuration="3000"
+                             xct:TouchEffect.LongPressCommand="{Binding Source={RelativeSource AncestorType={x:Type views:PlayerWithHandsView}}, Path=TapPlayerCommand}"
+                             xct:TouchEffect.LongPressCommandParameter="{Binding Player.Value}">
                             <ctrl:PlayerView.Triggers>
                                 <DataTrigger TargetType="ctrl:PlayerView" Binding="{Binding IsCurrentTurn.Value}" Value="True">
                                     <Setter Property="Color" Value="{Binding Path=PlayerColor, Source={x:Reference self}}"/>

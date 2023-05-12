@@ -94,7 +94,9 @@ namespace MiniShogiMobile.ViewModels
                  await NavigateAsync<KomaInfoPopupPageViewModel, KomaType>(PlayingGame.Game.GetKomaType(komaTypeId));
             }).AddTo(Disposable);
 
-            ShowPlayerEvaluationCommand = new AsyncReactiveCommand<Player>();
+            ShowPlayerEvaluationCommand = ViewState.Select(state => state is ViewStateGameStudying)
+                            .ToAsyncReactiveCommand<Player>()
+                            .AddTo(this.Disposable);
             ShowPlayerEvaluationCommand.Subscribe(async p =>
             {
                 var player = Game.GetHands(p.PlayerType);
