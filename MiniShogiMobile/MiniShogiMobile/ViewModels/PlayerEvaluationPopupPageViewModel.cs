@@ -7,6 +7,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using Shogi.Business.Domain.Model.AI;
 using Shogi.Business.Domain.Model.Games;
+using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,12 +22,15 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand UndoCommand { get; private set; }
         public AsyncReactiveCommand RedoCommand { get; private set; }
         private ReactiveProperty<int> CurrentMoveCount;
+        public ReactiveProperty<PlayerType> CurrentTurn { get; private set; }
+
         private int beginingMoveCount;
         public ReactiveProperty<string> Evaluation { get; private set; }
         public GameViewModel<CellViewModel<KomaViewModel>, HandsViewModel<HandKomaViewModel>, HandKomaViewModel> Game { get; set; }
         public PlayerEvaluationPopupPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
             CurrentMoveCount = new ReactiveProperty<int>();
+            CurrentTurn = new ReactiveProperty<PlayerType>();
             Evaluation = new ReactiveProperty<string>();
             Game = new GameViewModel<CellViewModel<KomaViewModel>, HandsViewModel<HandKomaViewModel>, HandKomaViewModel>();
             OkCommand = new AsyncReactiveCommand();
@@ -57,7 +61,6 @@ namespace MiniShogiMobile.ViewModels
         }
         public override void Prepare(GameEvaluation evaluation)
         {
-
             game = evaluation.Game.Clone();
             beginingMoveCount = game.Record.CurrentMovesCount - evaluation.Depth;
             UpdateView(game);
@@ -66,6 +69,7 @@ namespace MiniShogiMobile.ViewModels
         public void UpdateView(Game game)
         {
             Game.Update(game.Board.Height, game.Board.Width, game.State.KomaList);
+            CurrentTurn.Value = game.State.TurnPlayer;
             CurrentMoveCount.Value = game.Record.CurrentMovesCount;
         }
     }

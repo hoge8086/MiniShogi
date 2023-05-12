@@ -7,6 +7,7 @@
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
              prism:ViewModelLocator.AutowireViewModel="True"
+             x:Name="self"
              x:Class="MiniShogiMobile.Views.PlayerEvaluationPopupPage">
     <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center">
         <StackLayout BackgroundColor="White" Padding="0">
@@ -32,8 +33,13 @@
                         <!--プレイヤーアイコン-->
                         <ctrl:PlayerView
                             Grid.Column="1"
-                            Color="{StaticResource Player2Color}"
+                            Color="Gray"
                             WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
+                            <ctrl:PlayerView.Triggers>
+                                <DataTrigger TargetType="ctrl:PlayerView" Binding="{Binding BindingContext.CurrentTurn.Value, Source={x:Reference self}, Converter={StaticResource PlayerTypeToBoolConverter}, ConverterParameter=Player2}" Value="True">
+                                    <Setter Property="Color" Value="{StaticResource Player2Color}"/>
+                                </DataTrigger>
+                            </ctrl:PlayerView.Triggers>
                         </ctrl:PlayerView>
                         <!--駒台-->
                         <ctrl:KomadaiView Grid.Column="0"
@@ -92,8 +98,13 @@
                           VerticalOptions="EndAndExpand">
                         <!--プレイヤーアイコン-->
                         <ctrl:PlayerView Grid.Column="0"
-                                         Color="{StaticResource Player1Color}"
-                                         WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
+                             Color="Gray"
+                             WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
+                            <ctrl:PlayerView.Triggers>
+                                <DataTrigger TargetType="ctrl:PlayerView" Binding="{Binding BindingContext.CurrentTurn.Value, Source={x:Reference self}, Converter={StaticResource PlayerTypeToBoolConverter}, ConverterParameter=Player1}" Value="True">
+                                    <Setter Property="Color" Value="{StaticResource Player1Color}"/>
+                                </DataTrigger>
+                            </ctrl:PlayerView.Triggers>
                         </ctrl:PlayerView>
                         <!--駒台-->
                         <ctrl:KomadaiView Grid.Column="1"

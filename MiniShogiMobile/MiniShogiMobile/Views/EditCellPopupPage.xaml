@@ -28,7 +28,7 @@
                 <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                     <Label Text="駒の向き" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" />
                     <ctrls:TextbaseSwitch WidthRequest="100" HorizontalOptions="End"
-                                          IsToggled="{Binding EditingCell.Koma.Value.PlayerType.Value, Converter={StaticResource PlayerTypeToBoolConverter}}"
+                                          IsToggled="{Binding EditingCell.Koma.Value.PlayerType.Value, Converter={StaticResource PlayerTypeToBoolConverter}, ConverterParameter=Player1}"
                                           OnColor="{StaticResource Player2Color}"
                                           OnText="P2"
                                           OffColor="{StaticResource Player1Color}"

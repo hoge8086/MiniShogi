@@ -9,7 +9,10 @@ namespace MiniShogiMobile.Utils
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ((PlayerType)value == PlayerType.Player1);
+            if (value == null)
+                return false;
+            var player = parameter as string;
+            return ((PlayerType)value).ToString().Equals(player, StringComparison.OrdinalIgnoreCase);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
