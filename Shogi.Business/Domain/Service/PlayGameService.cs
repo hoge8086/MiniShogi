@@ -44,7 +44,8 @@ namespace Shogi.Business.Domain.Service
 
             try
             {
-                DomainEvents.Raise(new ComputerThinkingStarted(playingGame.TurnPlayer.PlayerType));
+                var cpu = playingGame.TurnPlayer.PlayerType;
+                DomainEvents.Raise(new ComputerThinkingStarted(cpu));
                 var move = playingGame.TurnPlayer.Computer.SelectMove(
                                             playingGame.Game,
                                             cancellation,
@@ -53,7 +54,7 @@ namespace Shogi.Business.Domain.Service
                                             });
                 playingGame.Game.Play(move.MoveCommand);
                 DomainEvents.Raise(new GamePlayed(playingGame.Clone(), move.MoveCommand));
-                DomainEvents.Raise(new ComputerThinkingEnded(playingGame.TurnPlayer.PlayerType, move.GameEvaluation));
+                DomainEvents.Raise(new ComputerThinkingEnded(cpu, move.GameEvaluation));
             }
             catch(OperationCanceledException ex)
             {

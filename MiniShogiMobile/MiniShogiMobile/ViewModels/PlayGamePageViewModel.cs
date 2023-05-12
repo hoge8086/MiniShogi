@@ -55,6 +55,7 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand RedoCommand { get; private set; }
         public AsyncReactiveCommand ChangePlayerCommand { get; private set; }
         public AsyncReactiveCommand<ISelectable> ShowKomaInfoCommand { get; private set; }
+        public AsyncReactiveCommand<Player> ShowPlayerEvaluationCommand { get; private set; }
 
         private CancellationTokenSource cancelWaiting;
 
@@ -91,6 +92,15 @@ namespace MiniShogiMobile.ViewModels
                     return;
 
                  await NavigateAsync<KomaInfoPopupPageViewModel, KomaType>(PlayingGame.Game.GetKomaType(komaTypeId));
+            }).AddTo(Disposable);
+
+            ShowPlayerEvaluationCommand = new AsyncReactiveCommand<Player>();
+            ShowPlayerEvaluationCommand.Subscribe(async p =>
+            {
+                var player = Game.GetHands(p.PlayerType);
+                if(player.GameEvaluation != null)
+                     await NavigateAsync<PlayerEvaluationPopupPageViewModel, GameEvaluation>(player.GameEvaluation);
+
             }).AddTo(Disposable);
 
             SaveCommand = ViewState.Select(state => !(state is ViewStateWaiting))
@@ -294,8 +304,8 @@ namespace MiniShogiMobile.ViewModels
                 // 次のCPUの進捗表示で一瞬100%が見えるので0%に戻す
                 player.ProgressOfComputerThinking.Value = 0.0;
 
-                if(endedEvent.GameEvaluation != null)   //キャンセルの場合はnull
-                    player.Evaluation.Value = $"{(int)(endedEvent.GameEvaluation.Value / (double)endedEvent.GameEvaluation.MaxValue * 100)} ({endedEvent.GameEvaluation.Value}/{endedEvent.GameEvaluation.MaxValue})";
+                if (endedEvent.GameEvaluation != null)   //キャンセルの場合はnull
+                    player.GameEvaluation = endedEvent.GameEvaluation;
             });
         }
 
@@ -417,7 +427,7 @@ namespace MiniShogiMobile.ViewModels
         public  ReadOnlyReactiveProperty<string> Name { get; }
         public  ReadOnlyReactiveProperty<bool> IsComputer { get; }
         public ReactiveProperty<double> ProgressOfComputerThinking { get; private set; } = new ReactiveProperty<double>();
-        public ReactiveProperty<string> Evaluation { get; private set; } = new ReactiveProperty<string>("-");
+        public GameEvaluation GameEvaluation { get; set; }
         public PlayerWithHandPlayingViewModel()
         {
             Player = new ReactiveProperty<Player>();

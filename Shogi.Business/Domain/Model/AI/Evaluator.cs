@@ -14,7 +14,7 @@ namespace Shogi.Business.Domain.Model.AI
             if (MaxEvaluationValue <= 0)
                 throw new InvalidProgramException("最大評価値がマイナスのためプログラム不正です.");
         }
-        public abstract GameEvaluation Evaluate(Game game, PlayerType player, int remainingDepth);
+        public abstract GameEvaluation Evaluate(Game game, PlayerType player, int remainingDepth, int maxDepth);
 
         protected abstract int CalcMaxEvaluationValue(Game game);
         protected int MaxEvaluationValue { get; private set; }
@@ -36,7 +36,7 @@ namespace Shogi.Business.Domain.Model.AI
         /// <param name="player"></param>
         /// <param name="remainingDepth"></param>
         /// <returns></returns>
-        public override GameEvaluation Evaluate(Game game, PlayerType player, int remainingDepth)
+        public override GameEvaluation Evaluate(Game game, PlayerType player, int remainingDepth, int maxDepth)
         {
             if(game.State.IsEnd)
             {
@@ -68,17 +68,17 @@ namespace Shogi.Business.Domain.Model.AI
                 evaluationValue += (player == koma.Player) ? movablePositionCount : -movablePositionCount;
             }
 
-            return new GameEvaluation(evaluationValue, MaxEvaluationValue, game, player);
+            return new GameEvaluation(evaluationValue, MaxEvaluationValue, game, player, maxDepth - remainingDepth);
 
             GameEvaluation WiningEvaluation()
             {
                 // 勝ち確の場合は、最短手（残っている探索の深さが多い）ほど、評価が高い
-                return new GameEvaluation(MaxEvaluationValue + remainingDepth, MaxEvaluationValue, game, player);
+                return new GameEvaluation(MaxEvaluationValue + remainingDepth, MaxEvaluationValue, game, player, maxDepth - remainingDepth);
             }
             GameEvaluation LosingEvaluation()
             {
                 // 負け確の場合は、最短手（残っている探索の深さが多い）ほど、評価が低い
-                return new GameEvaluation(-MaxEvaluationValue - remainingDepth, MaxEvaluationValue, game, player);
+                return new GameEvaluation(-MaxEvaluationValue - remainingDepth, MaxEvaluationValue, game, player, maxDepth - remainingDepth);
             }
         }
 

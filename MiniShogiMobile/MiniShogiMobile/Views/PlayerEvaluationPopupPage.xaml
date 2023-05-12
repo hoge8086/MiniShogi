@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ctrl:BasePopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
+             xmlns:utils="clr-namespace:MiniShogiMobile.Utils"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:views="clr-namespace:MiniShogiMobile.Views"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="MiniShogiMobile.Views.PlayerEvaluationPopupPage">
+    <Frame CornerRadius="8" Padding="0" VerticalOptions="Center" HorizontalOptions="Center">
+        <StackLayout BackgroundColor="White" Padding="0">
+            <StackLayout Padding="10,10,10,0">
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                    <Label Text="評価値：" VerticalTextAlignment="Center" HorizontalOptions="Center"/>
+                    <Label Text="{Binding Evaluation.Value}" VerticalTextAlignment="Center" HorizontalOptions="Center"/>
+                </StackLayout>
+                <BoxView HeightRequest="1" Style="{StaticResource HorizontalLine}"/>
+                <!--ゲーム-->
+                <StackLayout
+                    WidthRequest="500" HeightRequest="600"
+                    x:Name="gameField"
+                    Spacing="0"
+                    Margin="0"
+                    Grid.Column="1"
+                    Grid.Row="1">
+                    <!--プレイヤー2-->
+                    <Grid ColumnDefinitions="*,Auto"
+                        HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.15)'}"
+                        VerticalOptions="StartAndExpand"
+                        BindingContext="{Binding Game.HandsOfPlayer2}">
+                        <!--プレイヤーアイコン-->
+                        <ctrl:PlayerView
+                            Grid.Column="1"
+                            Color="{StaticResource Player2Color}"
+                            WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
+                        </ctrl:PlayerView>
+                        <!--駒台-->
+                        <ctrl:KomadaiView Grid.Column="0"
+                                          Margin="0,8,0,8"
+                                         HorizontalOptions="FillAndExpand"
+                                          VerticalOptions="FillAndExpand"
+                                          Rotation="180">
+                            <StackLayout Spacing="0" Orientation="Horizontal">
+                                <!--持ち駒-->
+                                <ScrollView Orientation="Horizontal"
+                                            HorizontalOptions="FillAndExpand"
+                                            VerticalOptions="FillAndExpand">
+                                    <StackLayout Orientation="Horizontal"
+                                                 HorizontalOptions="FillAndExpand"
+                                                 VerticalOptions="FillAndExpand"
+                                                 Spacing="0"
+                                                 BindableLayout.ItemsSource="{Binding Hands}">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}" WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </StackLayout>
+                                </ScrollView>
+                            </StackLayout>
+                        </ctrl:KomadaiView>
+                    </Grid>
+                    <!--盤-->
+                    <ctrl:SquareCell2DGridControl
+                        Margin="0,4,0,4"
+                        x:Name="board"
+                        VerticalOptions="Center"
+                        MaxHeight="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.7) - 8'}"
+                        MaxWidth="{Binding Source={x:Reference gameField}, Path=Width}"
+                        ItemsSource="{Binding Game.Board.Cells}">
+                        <ctrl:SquareCell2DGridControl.ItemTemplate>
+                            <ControlTemplate>
+                                <RelativeLayout BindingContext="{TemplateBinding BindingContext}">
+                                    <!--セル-->
+                                    <views:CellView
+                                        RelativeLayout.XConstraint="0"
+                                        RelativeLayout.YConstraint="0"
+                                        RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
+                                        RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}">
+                                    </views:CellView>
+                                </RelativeLayout>
+                            </ControlTemplate>
+                        </ctrl:SquareCell2DGridControl.ItemTemplate>
+                    </ctrl:SquareCell2DGridControl>
+                    <!--プレイヤー1-->
+                    <Grid ColumnDefinitions="Auto,*"
+                          HeightRequest="{Binding Source={x:Reference gameField}, Path=Height, Converter={StaticResource MathExpressionConverter}, ConverterParameter='floor(x * 0.15)'}"
+                          BindingContext="{Binding Game.HandsOfPlayer1}"
+                          VerticalOptions="EndAndExpand">
+                        <!--プレイヤーアイコン-->
+                        <ctrl:PlayerView Grid.Column="0"
+                                         Color="{StaticResource Player1Color}"
+                                         WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
+                        </ctrl:PlayerView>
+                        <!--駒台-->
+                        <ctrl:KomadaiView Grid.Column="1"
+                                          Margin="0,8,0,8"
+                                          HorizontalOptions="FillAndExpand"
+                                          VerticalOptions="FillAndExpand">
+                            <StackLayout Spacing="0" Orientation="Horizontal">
+                                <!--持ち駒-->
+                                <ScrollView Orientation="Horizontal"
+                                            HorizontalOptions="FillAndExpand"
+                                            VerticalOptions="FillAndExpand">
+                                    <StackLayout Orientation="Horizontal"
+                                                 HorizontalOptions="FillAndExpand"
+                                                 VerticalOptions="FillAndExpand"
+                                                 Spacing="0"
+                                                 BindableLayout.ItemsSource="{Binding Hands}">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <ctrl:HandKomaView Number="{Binding Num.Value}" DisplayName="{Binding Name}" WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </StackLayout>
+                                </ScrollView>
+                            </StackLayout>
+                        </ctrl:KomadaiView>
+                    </Grid>
+                </StackLayout>
+            </StackLayout>
+            <StackLayout  Orientation="Horizontal" HorizontalOptions="Center" Spacing="80" HeightRequest="50">
+                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.LeftArrow.png}" 
+                             Text="戻る"
+                             Command="{Binding UndoCommand}"/>
+                <ctrl:ImageTextButton Source="{utils:ImageResource MiniShogiMobile.Images.RightArrow.png}" 
+                             Text="進む"
+                             Command="{Binding RedoCommand}"/>
+            </StackLayout>
+            <BoxView Style="{StaticResource HorizontalLine}" BackgroundColor="{StaticResource AppControlDarkColor2}"/>
+            <Button Text="OK" Style="{StaticResource PopupPageButtonStyle}" Command="{Binding OkCommand}"/>
+        </StackLayout>
+    </Frame>
+</ctrl:BasePopupPage>

@@ -21,7 +21,9 @@
                           ColumnDefinitions="*,1.5*" RowDefinitions="1.5*,*" RowSpacing="0" ColumnSpacing="0"
                           WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
                         <!--プレイヤーアイコン-->
-                        <ctrl:PlayerView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Color="Gray">
+                        <ctrl:PlayerView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Color="Gray"
+                             xct:TouchEffect.Command="{Binding Source={RelativeSource AncestorType={x:Type views:PlayerWithHandsView}}, Path=TapPlayerCommand}"
+                             xct:TouchEffect.CommandParameter="{Binding Player.Value}">
                             <ctrl:PlayerView.Triggers>
                                 <DataTrigger TargetType="ctrl:PlayerView" Binding="{Binding IsCurrentTurn.Value}" Value="True">
                                     <Setter Property="Color" Value="{Binding Path=PlayerColor, Source={x:Reference self}}"/>
@@ -45,17 +47,6 @@
                         <ctrl:KomaView Grid.Row="1" Grid.Column="0"
                                        DisplayName="{Binding TurnType.Value, Converter={StaticResource EnumToDescriptionConverter}}"
                                        VerticalOptions="EndAndExpand"/>
-                        <!--
-                            <評価値>
-                            <Label Grid.Row="1"
-                                   HorizontalOptions="CenterAndExpand"
-                                   VerticalTextAlignment="Center"
-                                   VerticalOptions="CenterAndExpand"
-                                   FontSize="Micro"
-                                   TextColor="White"
-                                   Text="{Binding Evaluation.Value}">
-                            </Label>
-                        -->
                     </Grid>
                     <!--プログレスバー-->
                     <Grid HeightRequest="4">

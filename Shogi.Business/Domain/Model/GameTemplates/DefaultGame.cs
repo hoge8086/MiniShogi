@@ -244,7 +244,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         public static readonly List<GameTemplate> DefaltGameTemplate = new List<GameTemplate>()
         {
             new GameTemplate(
-                "どうぶつ将棋", 3, 4, 1, WinConditionType.TakeKingOrEnterOpponentTerritory,
+                "どうぶつしょうぎ", 3, 4, 1, WinConditionType.TakeKingOrEnterOpponentTerritory,
                 new List<Koma>()
                 {
                     new Koma(PlayerType.Player2, KomaKirin.Id, new OnBoard(new BoardPosition(0,0))),

@@ -18,20 +18,22 @@ namespace Shogi.Business.Domain.Model.AI
         public Game Game { get; private set; }
         public PlayerType PlayerType { get; private set; }
 
+        public int Depth { get; private set; }
         public bool IsWining { get => Value >= MaxValue; }
         public bool IsLosing { get => Value <= -MaxValue; }
 
-        public GameEvaluation(int value, int maxValue, Game game, PlayerType player)
+        public GameEvaluation(int value, int maxValue, Game game, PlayerType player, int depth)
         {
             MaxValue = maxValue;
             Value = value;
             Game = game;
             PlayerType = player;
+            Depth = depth;
         }
 
         public GameEvaluation Reverse()
         {
-            return new GameEvaluation(-Value, MaxValue, Game, PlayerType?.Opponent);
+            return new GameEvaluation(-Value, MaxValue, Game, PlayerType?.Opponent, Depth);
         }
     }
 }

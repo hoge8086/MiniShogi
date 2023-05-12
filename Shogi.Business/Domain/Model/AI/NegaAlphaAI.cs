@@ -137,7 +137,7 @@ namespace Shogi.Business.Domain.Model.AI
 
             if (game.State.IsEnd || remainingDepth <= 0) // [深さが最大に達したかゲームに決着がついた]
             {
-                return evaluator.Evaluate(game, player, remainingDepth);
+                return evaluator.Evaluate(game, player, remainingDepth, Depth);
             }
 
             var moveCommands = game.CreateAvailableMoveCommand();

@@ -26,6 +26,7 @@
                                            IsRotated="True"
                                            PlayerColor="{StaticResource Player2Color}"
                                            KomaLongPressCommand="{Binding Path=BindingContext.ShowKomaInfoCommand, Source={x:Reference self}}"
+                                           TapPlayerCommand="{Binding Path=BindingContext.ShowPlayerEvaluationCommand, Source={x:Reference self}}"
                                            ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"/>
                 <ctrl:SquareCell2DGridControl x:Name="board"
                                               VerticalOptions="CenterAndExpand"
@@ -54,6 +55,7 @@
                                            IsRotated="False"
                                            PlayerColor="{StaticResource Player1Color}"
                                            KomaLongPressCommand="{Binding Path=BindingContext.ShowKomaInfoCommand, Source={x:Reference self}}"
+                                           TapPlayerCommand="{Binding Path=BindingContext.ShowPlayerEvaluationCommand, Source={x:Reference self}}"
                                            ClickCommand="{Binding Path=BindingContext.MoveCommand, Source={x:Reference self}}"/>
             </StackLayout>
             <AbsoluteLayout x:Name="movingLayer" InputTransparent="True"/>
