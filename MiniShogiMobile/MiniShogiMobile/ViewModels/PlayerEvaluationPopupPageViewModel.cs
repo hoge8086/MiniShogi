@@ -62,7 +62,7 @@ namespace MiniShogiMobile.ViewModels
         public override void Prepare(GameEvaluation evaluation)
         {
             game = evaluation.Game.Clone();
-            beginingMoveCount = game.Record.CurrentMovesCount - evaluation.Depth;
+            beginingMoveCount = evaluation.BeginingMoveCount;
             UpdateView(game);
             Evaluation.Value = $"{(int)(evaluation.Value / (double)evaluation.MaxValue * 100)} ({evaluation.Value}/{evaluation.MaxValue})";
         }
