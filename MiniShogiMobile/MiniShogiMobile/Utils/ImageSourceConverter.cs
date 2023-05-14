@@ -12,9 +12,9 @@ namespace MiniShogiMobile.Utils
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (!(value is string))
+            if (value == null || !(value is string))
             {
-                return default(ImageSource);
+                return null;
             }
 
             //以下だとUWPでエラーになる。

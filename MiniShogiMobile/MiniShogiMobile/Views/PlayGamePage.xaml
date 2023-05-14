@@ -60,7 +60,12 @@
             </StackLayout>
             <AbsoluteLayout x:Name="movingLayer" InputTransparent="True"/>
             <StackLayout VerticalOptions="Center">
-                <Image Source="{utils:ImageResource MiniShogiMobile.Images.Oute.png}" IsVisible="{Binding IsOuteVisible.Value}">
+                <Image Source="{Binding PopupImagePath.Value, Converter={utils:ImageSourceConverter}}" IsVisible="False">
+                    <Image.Triggers>
+                        <DataTrigger TargetType="Image" Binding="{Binding PopupImagePath.Value, Converter={StaticResource IsNotNullConverter}}" Value="True">
+                            <Setter Property="IsVisible" Value="True"/>
+                        </DataTrigger>
+                    </Image.Triggers>
                     <Image.HeightRequest>
                         <OnIdiom Phone="100" Tablet="150"/>
                     </Image.HeightRequest>

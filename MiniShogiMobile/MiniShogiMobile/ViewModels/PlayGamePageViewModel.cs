@@ -44,7 +44,7 @@ namespace MiniShogiMobile.ViewModels
         public PlayingGame PlayingGame { get; private set; }
         public ReactiveProperty<IViewState> ViewState { get; private set; }
         private ReactiveProperty<int> CurrentMoveCount;
-        public ReactiveProperty<bool> IsOuteVisible { get; private set; }
+        public ReactiveProperty<string> PopupImagePath{ get; private set; }
         public void ChangeState(IViewState state) => ViewState.Value = state;
         public GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel> Game { get; set; }
         public AsyncReactiveCommand<ISelectable> MoveCommand { get; private set; }
@@ -67,7 +67,7 @@ namespace MiniShogiMobile.ViewModels
             PlayingGame = null;
             ViewState = new ReactiveProperty<IViewState>(new ViewStateWaiting());
             CurrentMoveCount = new ReactiveProperty<int>();
-            IsOuteVisible = new ReactiveProperty<bool>(false);
+            PopupImagePath = new ReactiveProperty<string>();
             Game = new GameViewModel<CellPlayingViewModel, PlayerWithHandPlayingViewModel, HandKomaPlayingViewModel>();
             MoveCommand = new AsyncReactiveCommand<ISelectable>();
             MoveCommand.Subscribe(async x =>
@@ -248,7 +248,8 @@ namespace MiniShogiMobile.ViewModels
                 // MEMO:初手がCPUだと描画が完了する前に手を指してしまい?、
                 // 移動用駒が最大化して表示されてしまうため少し待ちを入れる.(CPU側もWait()してるので処理も止まる)
                 // 条件: どうぶつ将棋、CPU(4手) vs CPU(4手)、先手:2P
-                await Task.Delay(100);
+                await PopupImageAsync("MiniShogiMobile.Images.Start.png");
+                //await Task.Delay(100);
             }).Wait();
         }
 
@@ -264,9 +265,7 @@ namespace MiniShogiMobile.ViewModels
                 await EndAnimationOfKomaMoving?.Invoke();
                 if (e.IsOteMove())
                 {
-                    IsOuteVisible.Value = true;
-                    await Task.Delay(650);
-                    IsOuteVisible.Value = false;
+                    await PopupImageAsync("MiniShogiMobile.Images.Oute.png");
                 }
             }).Wait();
         }
@@ -366,6 +365,12 @@ namespace MiniShogiMobile.ViewModels
             DomainEvents.RemoveHandler<GamePlayed>(OnGamePlayed);
 
             return await NavigationService.GoBackToRootAsync();
+        }
+        private async Task PopupImageAsync(string imagePath)
+        {
+            PopupImagePath.Value = imagePath;
+            await Task.Delay(650);
+            PopupImagePath.Value = null;
         }
     }
 

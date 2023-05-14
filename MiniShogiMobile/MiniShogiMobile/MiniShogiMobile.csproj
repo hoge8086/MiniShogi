@@ -27,6 +27,7 @@
     <EmbeddedResource Include="Images\Play.png" />
     <EmbeddedResource Include="Images\Plus.png" />
     <EmbeddedResource Include="Images\RotateKoma.png" />
+    <EmbeddedResource Include="Images\Start.png" />
     <EmbeddedResource Include="Images\Stop.png" />
     <EmbeddedResource Include="Resources\Licenses.xml" />
     <EmbeddedResource Include="Resources\private_setting.json" />
