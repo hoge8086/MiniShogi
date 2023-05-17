@@ -62,11 +62,23 @@ namespace Shogi.Business.Domain.Model.AI
             // [駒得基準の判定]
             int evaluationValue = 0;
 
+            //var playerMobablePositions = game.MovablePosition(game.State.GetBoardKomaList(game.State.TurnPlayer));
+            //var opponetMobablePositions = game.MovablePosition(game.State.GetBoardKomaList(game.State.TurnPlayer.Opponent));
+            //int valueOfFreeKoma = 0;
+
             foreach(var koma in game.State.KomaList)
             {
                 int movablePositionCount = Evaluation(koma.IsTransformed ? game.GetKomaType(koma).TransformedMoves : game.GetKomaType(koma).Moves);
                 evaluationValue += (player == koma.Player) ? movablePositionCount : -movablePositionCount;
+                //if(koma.IsOnBoard && koma.Player == game.State.TurnPlayer.Opponent && playerMobablePositions.Contains(koma.BoardPosition) && !opponetMobablePositions.Contains(koma.BoardPosition))
+                //{
+                //    var val = koma.IsTransformed ? movablePositionCount + Evaluation(game.GetKomaType(koma).TransformedMoves) : movablePositionCount * 2;
+                //    if (val > valueOfFreeKoma)
+                //        valueOfFreeKoma = val;
+                //}
             }
+
+            //evaluationValue = player == game.State.TurnPlayer ? valueOfFreeKoma : -valueOfFreeKoma;
 
             return new GameEvaluation(evaluationValue, MaxEvaluationValue, game, player, beginingMoveCount);
 

@@ -136,9 +136,13 @@ namespace Shogi.Business.Domain.Model.AI
         {
             cancellation.ThrowIfCancellationRequested();
 
-            if (game.State.IsEnd || (game.Record.CurrentMovesCount - beginingMoveCount)  >= Depth) // [深さが最大に達したかゲームに決着がついた]
+            if (game.State.IsEnd) // [ゲームに決着がついた]
             {
                 return evaluator.Evaluate(game, player, beginingMoveCount, Depth);
+            }
+            if ((game.Record.CurrentMovesCount - beginingMoveCount) >= Depth) // [深さが最大に達した]
+            {
+                return SearchSubForEachTaking(game, player, alpha, beta, beginingMoveCount, 5, cancellation);
             }
 
             var moveCommands = game.CreateAvailableMoveCommand();
@@ -152,7 +156,7 @@ namespace Shogi.Business.Domain.Model.AI
 
             // [αβ法は良い手の順に探索を行うと最も効率が良い]
             moveCommands = SortByBetterMove(moveCommands, game);
-            moveCommands = CutffByHeuristic(moveCommands);
+            //moveCommands = CutffByHeuristic(moveCommands);
 
 
             // [全ての子ノードを展開し，再帰的に評価]
@@ -178,11 +182,76 @@ namespace Shogi.Business.Domain.Model.AI
             return alpha;
         }
 
-        private List<MoveCommand> CutffByHeuristic(List<MoveCommand> moveCommands)
+        private GameEvaluation SearchSubForEachTaking(Game game, PlayerType player, GameEvaluation alpha, GameEvaluation beta, int beginingMoveCount, int remainingDepth, CancellationToken cancellation)
         {
-            // ヒューリスティックにより枝狩りを行う
-            // 例えば、駒の損得だけであれば、最後の1手で駒を打つ手は評価が変わらないので、どれか一つに枝狩りしても問題ないはず
-            return moveCommands;
+            cancellation.ThrowIfCancellationRequested();
+
+            if (game.State.IsEnd || remainingDepth <= 0) // [深さが最大に達したかゲームに決着がついた]
+            {
+                return evaluator.Evaluate(game, player, beginingMoveCount, Depth);
+            }
+
+            var moveCommands = new List<MoveCommand>();
+            var allMoveCommands = game.CreateAvailableMoveCommand();
+            // [相手の手を取る手]
+            var takeKomaMoveCommands = allMoveCommands
+                                        .Where(move => move is BoardKomaMoveCommand)
+                                        .Where(move => game.State.FindBoardKoma(move.ToPosition) != null)
+                                        .ToList();
+            moveCommands.AddRange(takeKomaMoveCommands);
+
+            // [相手の取る手から逃げる手]
+            //var opponentMovablePosition = game.MovablePosition(game.State.GetBoardKomaList(game.State.TurnPlayer.Opponent));
+            //var escpaeKomaMoveCommands = allMoveCommands
+            //                            .Where(move => move is BoardKomaMoveCommand)
+            //                            .Where(move => opponentMovablePosition.Contains(((BoardKomaMoveCommand)move).FromPosition))
+            //                            .Where(move => game.State.FindBoardKoma(move.ToPosition) == null)
+            //                            .ToList();
+            //moveCommands.AddRange(escpaeKomaMoveCommands);
+
+            if(moveCommands.Count == 0)
+            {
+                return evaluator.Evaluate(game, player, beginingMoveCount, Depth);
+            }
+
+            // [αβ法は良い手の順に探索を行うと最も効率が良い]
+            //moveCommands = SortByBetterMove(moveCommands, game);
+            //moveCommands = CutffByHeuristic(moveCommands);
+
+
+            // [全ての子ノードを展開し，再帰的に評価]
+            for(int i=0; i<moveCommands.Count; i++)
+            {
+                var gameTmp = game.Clone().PlayWithoutCheck(moveCommands[i]);
+
+                // [現在，既に自分は最低でもα値の手が存在するため，相手が相手にとって-α値より良い手を見つけても]
+                // [無意味となるため(自分はその手を指さないだけ)，-α値が相手の探索の上限となる．]
+                //var eval = -Search(gameTmp, player.Opponent, -beta, -alpha, depth - 1, null, cancellation);
+                var eval = SearchSubForEachTaking(gameTmp, player.Opponent, beta?.Reverse(), alpha?.Reverse(), beginingMoveCount, remainingDepth - 1, cancellation).Reverse();
+
+                // [最善手(MAX)を求める]
+                if((alpha == null) || (alpha.Value < eval.Value))
+                    alpha = eval;		// [α値の更新]
+
+                // [MEMO:枝刈りした場合、最善手と同じ評価値を返しているのでα値と同じ値が返っても、]
+                // [最善手ではないので注意(相手側がより最善の手があるので)]
+                if((alpha != null && beta != null) && (alpha.Value >= beta.Value)){
+                    return alpha;
+                }
+            }
+
+            // [取る手で負けになるのであれば、取る前の盤面で評価]
+            if(alpha.IsLosing)
+                return evaluator.Evaluate(game, player, beginingMoveCount, Depth);
+
+            return alpha;
         }
+
+        //private List<MoveCommand> CutffByHeuristic(List<MoveCommand> moveCommands)
+        //{
+        //    // ヒューリスティックにより枝狩りを行う
+        //    // 例えば、駒の損得だけであれば、最後の1手で駒を打つ手は評価が変わらないので、どれか一つに枝狩りしても問題ないはず
+        //    return moveCommands;
+        //}
     }
 }
