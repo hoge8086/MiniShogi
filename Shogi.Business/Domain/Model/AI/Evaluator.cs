@@ -14,7 +14,7 @@ namespace Shogi.Business.Domain.Model.AI
             if (MaxEvaluationValue <= 0)
                 throw new InvalidProgramException("最大評価値がマイナスのためプログラム不正です.");
         }
-        public abstract GameEvaluation Evaluate(Game game, PlayerType player, int beginingMoveCount, int maxDepth);
+        public abstract GameEvaluation Evaluate(Game game, int beginingMoveCount, int maxDepth);
 
         protected abstract int CalcMaxEvaluationValue(Game game);
         protected int MaxEvaluationValue { get; private set; }
@@ -36,11 +36,11 @@ namespace Shogi.Business.Domain.Model.AI
         /// <param name="player"></param>
         /// <param name="remainingDepth"></param>
         /// <returns></returns>
-        public override GameEvaluation Evaluate(Game game, PlayerType player, int beginingMoveCount, int maxDepth)
+        public override GameEvaluation Evaluate(Game game, int beginingMoveCount, int maxDepth)
         {
             if(game.State.IsEnd)
             {
-                if (game.State.GameResult.Winner == player)
+                if (game.State.GameResult.Winner == game.State.TurnPlayer)
                     return WiningEvaluation();
                 else
                     return LosingEvaluation();
@@ -50,13 +50,9 @@ namespace Shogi.Business.Domain.Model.AI
             // [最後の読みで玉の捨て身で相手の駒をとることが可能になってしまい]
             // [1手浅い読みになってしまうのでここで評価する]
             // [TODO:同様に入玉も考慮したほうが良い(次の手で入玉できる/されてしまうケース)]
-            if (game.DoOte(player) && game.State.TurnPlayer == player)
+            if (game.DoOte(game.State.TurnPlayer))
             {
                 return WiningEvaluation();
-            }
-            if (game.DoOte(player.Opponent) && game.State.TurnPlayer == player.Opponent)
-            {
-                return LosingEvaluation();
             }
 
             // [駒得基準の判定]
@@ -69,7 +65,7 @@ namespace Shogi.Business.Domain.Model.AI
             foreach(var koma in game.State.KomaList)
             {
                 int movablePositionCount = Evaluation(koma.IsTransformed ? game.GetKomaType(koma).TransformedMoves : game.GetKomaType(koma).Moves);
-                evaluationValue += (player == koma.Player) ? movablePositionCount : -movablePositionCount;
+                evaluationValue += (game.State.TurnPlayer == koma.Player) ? movablePositionCount : -movablePositionCount;
                 //if(koma.IsOnBoard && koma.Player == game.State.TurnPlayer.Opponent && playerMobablePositions.Contains(koma.BoardPosition) && !opponetMobablePositions.Contains(koma.BoardPosition))
                 //{
                 //    var val = koma.IsTransformed ? movablePositionCount + Evaluation(game.GetKomaType(koma).TransformedMoves) : movablePositionCount * 2;
@@ -80,17 +76,17 @@ namespace Shogi.Business.Domain.Model.AI
 
             //evaluationValue = player == game.State.TurnPlayer ? valueOfFreeKoma : -valueOfFreeKoma;
 
-            return new GameEvaluation(evaluationValue, MaxEvaluationValue, game, player, beginingMoveCount);
+            return new GameEvaluation(evaluationValue, MaxEvaluationValue, game, game.State.TurnPlayer, beginingMoveCount);
 
             GameEvaluation WiningEvaluation()
             {
                 // 勝ち確の場合は、最短手（残っている探索の深さが多い）ほど、評価が高い
-                return new GameEvaluation(MaxEvaluationValue + CalcRemainingDepth(), MaxEvaluationValue, game, player, beginingMoveCount);
+                return new GameEvaluation(MaxEvaluationValue + CalcRemainingDepth(), MaxEvaluationValue, game, game.State.TurnPlayer, beginingMoveCount);
             }
             GameEvaluation LosingEvaluation()
             {
                 // 負け確の場合は、最短手（残っている探索の深さが多い）ほど、評価が低い
-                return new GameEvaluation(-MaxEvaluationValue - CalcRemainingDepth(), MaxEvaluationValue, game, player, beginingMoveCount);
+                return new GameEvaluation(-MaxEvaluationValue - CalcRemainingDepth(), MaxEvaluationValue, game, game.State.TurnPlayer, beginingMoveCount);
             }
             int CalcRemainingDepth()
             {

@@ -37,7 +37,7 @@ namespace Shogi.Business.Domain.Model.AI
             //}
 
             // [MEMO:アルファベータ法は枝刈りを行うので複数の最善手を得られない?]
-            var bestMove = Search(game, game.State.TurnPlayer, Depth, cancellation, progress);
+            var bestMove = Search(game, Depth, cancellation, progress);
 
             //if (debug)
             //{
@@ -88,7 +88,7 @@ namespace Shogi.Business.Domain.Model.AI
 
             return marged;
         }
-        private MoveEvaluation Search(Game game, PlayerType player, int depth, CancellationToken cancellation, Action<ProgressRate> progress)
+        private MoveEvaluation Search(Game game, int depth, CancellationToken cancellation, Action<ProgressRate> progress)
         {
             MoveEvaluation bestMove = null;
 
@@ -111,7 +111,7 @@ namespace Shogi.Business.Domain.Model.AI
             for(int i=0; i<moveCommands.Count; i++)
             {
                 var gameTmp = game.Clone().PlayWithoutCheck(moveCommands[i]);
-                var eval = SearchSub(gameTmp, player.Opponent, beta?.Reverse(), alpha?.Reverse(), beginingMoveCount, cancellation).Reverse();
+                var eval = SearchSub(gameTmp, beta?.Reverse(), alpha?.Reverse(), beginingMoveCount, cancellation).Reverse();
 
                 // [最善手(MAX)を求める]
                 if((alpha == null) || (alpha.Value < eval.Value))
@@ -132,17 +132,19 @@ namespace Shogi.Business.Domain.Model.AI
             return bestMove;
         }
 
-        private GameEvaluation SearchSub(Game game, PlayerType player, GameEvaluation alpha, GameEvaluation beta, int beginingMoveCount, CancellationToken cancellation)
+        private GameEvaluation SearchSub(Game game, GameEvaluation alpha, GameEvaluation beta, int beginingMoveCount, CancellationToken cancellation)
         {
             cancellation.ThrowIfCancellationRequested();
 
             if (game.State.IsEnd) // [ゲームに決着がついた]
             {
-                return evaluator.Evaluate(game, player, beginingMoveCount, Depth);
+                return evaluator.Evaluate(game, beginingMoveCount, Depth);
             }
             if ((game.Record.CurrentMovesCount - beginingMoveCount) >= Depth) // [深さが最大に達した]
             {
-                return SearchSubForEachTaking(game, player, alpha, beta, beginingMoveCount, 5, cancellation);
+                return evaluator.Evaluate(game, beginingMoveCount, Depth);
+                // [タダでとれる駒を評価するため、2手先まで取り合いを評価する]
+                //return SearchSubForEachTaking(game, null, null, beginingMoveCount, 2, cancellation);
             }
 
             var moveCommands = game.CreateAvailableMoveCommand();
@@ -156,7 +158,6 @@ namespace Shogi.Business.Domain.Model.AI
 
             // [αβ法は良い手の順に探索を行うと最も効率が良い]
             moveCommands = SortByBetterMove(moveCommands, game);
-            //moveCommands = CutffByHeuristic(moveCommands);
 
 
             // [全ての子ノードを展開し，再帰的に評価]
@@ -167,7 +168,7 @@ namespace Shogi.Business.Domain.Model.AI
                 // [現在，既に自分は最低でもα値の手が存在するため，相手が相手にとって-α値より良い手を見つけても]
                 // [無意味となるため(自分はその手を指さないだけ)，-α値が相手の探索の上限となる．]
                 //var eval = -Search(gameTmp, player.Opponent, -beta, -alpha, depth - 1, null, cancellation);
-                var eval = SearchSub(gameTmp, player.Opponent, beta?.Reverse(), alpha?.Reverse(), beginingMoveCount, cancellation).Reverse();
+                var eval = SearchSub(gameTmp, beta?.Reverse(), alpha?.Reverse(), beginingMoveCount, cancellation).Reverse();
 
                 // [最善手(MAX)を求める]
                 if((alpha == null) || (alpha.Value < eval.Value))
@@ -182,14 +183,30 @@ namespace Shogi.Business.Domain.Model.AI
             return alpha;
         }
 
-        private GameEvaluation SearchSubForEachTaking(Game game, PlayerType player, GameEvaluation alpha, GameEvaluation beta, int beginingMoveCount, int remainingDepth, CancellationToken cancellation)
+        /// <summary>
+        /// 駒の取り合いを評価する
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="alpha"></param>
+        /// <param name="beta"></param>
+        /// <param name="beginingMoveCount"></param>
+        /// <param name="remainingDepth"></param>
+        /// <param name="cancellation"></param>
+        /// <returns></returns>
+        private GameEvaluation SearchSubForEachTaking(Game game, GameEvaluation alpha, GameEvaluation beta, int beginingMoveCount, int remainingDepth, CancellationToken cancellation)
         {
             cancellation.ThrowIfCancellationRequested();
+            var currentEval = evaluator.Evaluate(game, beginingMoveCount, Depth);
 
             if (game.State.IsEnd || remainingDepth <= 0) // [深さが最大に達したかゲームに決着がついた]
             {
-                return evaluator.Evaluate(game, player, beginingMoveCount, Depth);
+                return currentEval;
             }
+
+            // [駒を取ることにより自身の評価が低くなるのであれば、その手は指さなくてよいため、現在の盤名を評価に加える]
+            // [例：価値の高い駒を捨てて、価値の低い駒を取る]
+            if (alpha == null || alpha.Value < currentEval.Value)
+                alpha = currentEval;
 
             var moveCommands = new List<MoveCommand>();
             var allMoveCommands = game.CreateAvailableMoveCommand();
@@ -199,6 +216,8 @@ namespace Shogi.Business.Domain.Model.AI
                                         .Where(move => game.State.FindBoardKoma(move.ToPosition) != null)
                                         .ToList();
             moveCommands.AddRange(takeKomaMoveCommands);
+
+            // [MEMO:探索量を減らすため、取った手が王手の場合、王の逃げる手を評価していないため、それ以上探索は進まない]
 
             // [相手の取る手から逃げる手]
             //var opponentMovablePosition = game.MovablePosition(game.State.GetBoardKomaList(game.State.TurnPlayer.Opponent));
@@ -211,12 +230,9 @@ namespace Shogi.Business.Domain.Model.AI
 
             if(moveCommands.Count == 0)
             {
-                return evaluator.Evaluate(game, player, beginingMoveCount, Depth);
+                return evaluator.Evaluate(game, beginingMoveCount, Depth);
             }
 
-            // [αβ法は良い手の順に探索を行うと最も効率が良い]
-            //moveCommands = SortByBetterMove(moveCommands, game);
-            //moveCommands = CutffByHeuristic(moveCommands);
 
 
             // [全ての子ノードを展開し，再帰的に評価]
@@ -226,8 +242,7 @@ namespace Shogi.Business.Domain.Model.AI
 
                 // [現在，既に自分は最低でもα値の手が存在するため，相手が相手にとって-α値より良い手を見つけても]
                 // [無意味となるため(自分はその手を指さないだけ)，-α値が相手の探索の上限となる．]
-                //var eval = -Search(gameTmp, player.Opponent, -beta, -alpha, depth - 1, null, cancellation);
-                var eval = SearchSubForEachTaking(gameTmp, player.Opponent, beta?.Reverse(), alpha?.Reverse(), beginingMoveCount, remainingDepth - 1, cancellation).Reverse();
+                var eval = SearchSubForEachTaking(gameTmp, beta?.Reverse(), alpha?.Reverse(), beginingMoveCount, remainingDepth - 1, cancellation).Reverse();
 
                 // [最善手(MAX)を求める]
                 if((alpha == null) || (alpha.Value < eval.Value))
@@ -240,18 +255,7 @@ namespace Shogi.Business.Domain.Model.AI
                 }
             }
 
-            // [取る手で負けになるのであれば、取る前の盤面で評価]
-            if(alpha.IsLosing)
-                return evaluator.Evaluate(game, player, beginingMoveCount, Depth);
-
             return alpha;
         }
-
-        //private List<MoveCommand> CutffByHeuristic(List<MoveCommand> moveCommands)
-        //{
-        //    // ヒューリスティックにより枝狩りを行う
-        //    // 例えば、駒の損得だけであれば、最後の1手で駒を打つ手は評価が変わらないので、どれか一つに枝狩りしても問題ないはず
-        //    return moveCommands;
-        //}
     }
 }
