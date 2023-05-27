@@ -243,6 +243,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
 
         public static readonly List<GameTemplate> DefaltGameTemplate = new List<GameTemplate>()
         {
+#if DEBUG
             new GameTemplate(
                 "どうぶつしょうぎ", 3, 4, 1, WinConditionType.TakeKingOrEnterOpponentTerritory,
                 new List<Koma>()
@@ -258,7 +259,20 @@ namespace Shogi.Business.Domain.Model.GameTemplates
                 },
                 new ProhibitedMoves(false, false, false, false),
                 new List<KomaType>(){KomaKirin, KomaRaion, KomaZou, KomaHiyoko}),
-
+#endif
+            new GameTemplate(
+                "3三将棋", 3, 3, 1, WinConditionType.Checkmate,
+                new List<Koma>()
+                {
+                    new Koma(PlayerType.Player2, KomaOu.Id, new OnBoard(new BoardPosition(2,0))),
+                    new Koma(PlayerType.Player2, KomaHu.Id, InHand.State),
+                    new Koma(PlayerType.Player2, KomaGin.Id, InHand.State),
+                    new Koma(PlayerType.Player1, KomaOu.Id, new OnBoard(new BoardPosition(0,2))),
+                    new Koma(PlayerType.Player1, KomaHu.Id, InHand.State),
+                    new Koma(PlayerType.Player1, KomaGin.Id, InHand.State),
+                },
+                new ProhibitedMoves(true, true, true, true),
+                new List<KomaType>(){KomaOu, KomaGin, KomaHu}),
             new GameTemplate(
                 "5五将棋", 5, 5, 1, WinConditionType.Checkmate,
                 new List<Koma>()
