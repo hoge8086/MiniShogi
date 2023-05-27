@@ -26,7 +26,8 @@ namespace Shogi.Business.Domain.Model.Moves
             BoardPosition position,
             Board board,
             BoardPositions turnPlayerKomaPositions,
-            BoardPositions opponentKomaPositions)
+            BoardPositions opponentKomaPositions,
+            bool kiki = false)
         {
             BoardPositions positions = new BoardPositions();
             foreach(var move in Moves)
@@ -37,7 +38,8 @@ namespace Shogi.Business.Domain.Model.Moves
                                         position as BoardPosition,
                                         board,
                                         turnPlayerKomaPositions,
-                                        opponentKomaPositions));
+                                        opponentKomaPositions,
+                                        kiki));
             }
             return positions;
         }

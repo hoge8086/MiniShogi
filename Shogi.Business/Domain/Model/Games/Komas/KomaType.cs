@@ -40,12 +40,13 @@ namespace Shogi.Business.Domain.Model.Komas
             bool isTransformed,
             Board board,
             BoardPositions turnPlayerKomaPositions,
-            BoardPositions opponentKomaPositions)
+            BoardPositions opponentKomaPositions,
+            bool kiki = false)
         {
             if(isTransformed)
-                return TransformedMoves.GetMovableBoardPositions(player, position, board, turnPlayerKomaPositions, opponentKomaPositions);
+                return TransformedMoves.GetMovableBoardPositions(player, position, board, turnPlayerKomaPositions, opponentKomaPositions, kiki);
             else
-                return Moves.GetMovableBoardPositions(player, position, board, turnPlayerKomaPositions, opponentKomaPositions);
+                return Moves.GetMovableBoardPositions(player, position, board, turnPlayerKomaPositions, opponentKomaPositions, kiki);
         }
 
         public override string ToString()

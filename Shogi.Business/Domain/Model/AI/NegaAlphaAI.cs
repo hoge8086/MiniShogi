@@ -72,10 +72,10 @@ namespace Shogi.Business.Domain.Model.AI
                 var fromKoma = game.FindFromKoma(move);
                 var toKoma = game.State.FindBoardKoma(move.ToPosition);
                 // MEMO:LossAndGainOfKomaEvaluatorの直接参照はよくないが、ここは駒の損得での判定のためある意味正しい
-                if (toKoma != null && LossAndGainOfKomaEvaluator.Evaluation(game.GetKomaType(fromKoma).Moves) < LossAndGainOfKomaEvaluator.Evaluation(game.GetKomaType(toKoma).Moves))
+                if (toKoma != null && LossAndGainOfKomaEvaluator.EvaluateMoves(game.GetKomaType(fromKoma).Moves) < LossAndGainOfKomaEvaluator.EvaluateMoves(game.GetKomaType(toKoma).Moves))
                     priority1.Add(move);
                 // [成る手(なった場合に動きが増える場合)は良い手(成り捨ても上位に上がってしまうのは微妙だが)]
-                else if (move.DoTransform && LossAndGainOfKomaEvaluator.Evaluation(game.GetKomaType(fromKoma).Moves) < LossAndGainOfKomaEvaluator.Evaluation(game.GetKomaType(fromKoma).TransformedMoves))
+                else if (move.DoTransform && LossAndGainOfKomaEvaluator.EvaluateMoves(game.GetKomaType(fromKoma).Moves) < LossAndGainOfKomaEvaluator.EvaluateMoves(game.GetKomaType(fromKoma).TransformedMoves))
                     priority2.Add(move);
                 else
                     remaining.Add(move);
@@ -184,78 +184,5 @@ namespace Shogi.Business.Domain.Model.AI
         }
 
         /// <summary>
-        /// 駒の取り合いを評価する
-        /// </summary>
-        /// <param name="game"></param>
-        /// <param name="alpha"></param>
-        /// <param name="beta"></param>
-        /// <param name="beginingMoveCount"></param>
-        /// <param name="remainingDepth"></param>
-        /// <param name="cancellation"></param>
-        /// <returns></returns>
-        private GameEvaluation SearchSubForEachTaking(Game game, GameEvaluation alpha, GameEvaluation beta, int beginingMoveCount, int remainingDepth, CancellationToken cancellation)
-        {
-            cancellation.ThrowIfCancellationRequested();
-            var currentEval = evaluator.Evaluate(game, beginingMoveCount, Depth);
-
-            if (game.State.IsEnd || remainingDepth <= 0) // [深さが最大に達したかゲームに決着がついた]
-            {
-                return currentEval;
-            }
-
-            // [駒を取ることにより自身の評価が低くなるのであれば、その手は指さなくてよいため、現在の盤名を評価に加える]
-            // [例：価値の高い駒を捨てて、価値の低い駒を取る]
-            if (alpha == null || alpha.Value < currentEval.Value)
-                alpha = currentEval;
-
-            var moveCommands = new List<MoveCommand>();
-            var allMoveCommands = game.CreateAvailableMoveCommand();
-            // [相手の手を取る手]
-            var takeKomaMoveCommands = allMoveCommands
-                                        .Where(move => move is BoardKomaMoveCommand)
-                                        .Where(move => game.State.FindBoardKoma(move.ToPosition) != null)
-                                        .ToList();
-            moveCommands.AddRange(takeKomaMoveCommands);
-
-            // [MEMO:探索量を減らすため、取った手が王手の場合、王の逃げる手を評価していないため、それ以上探索は進まない]
-
-            // [相手の取る手から逃げる手]
-            //var opponentMovablePosition = game.MovablePosition(game.State.GetBoardKomaList(game.State.TurnPlayer.Opponent));
-            //var escpaeKomaMoveCommands = allMoveCommands
-            //                            .Where(move => move is BoardKomaMoveCommand)
-            //                            .Where(move => opponentMovablePosition.Contains(((BoardKomaMoveCommand)move).FromPosition))
-            //                            .Where(move => game.State.FindBoardKoma(move.ToPosition) == null)
-            //                            .ToList();
-            //moveCommands.AddRange(escpaeKomaMoveCommands);
-
-            if(moveCommands.Count == 0)
-            {
-                return evaluator.Evaluate(game, beginingMoveCount, Depth);
-            }
-
-
-
-            // [全ての子ノードを展開し，再帰的に評価]
-            for(int i=0; i<moveCommands.Count; i++)
-            {
-                var gameTmp = game.Clone().PlayWithoutCheck(moveCommands[i]);
-
-                // [現在，既に自分は最低でもα値の手が存在するため，相手が相手にとって-α値より良い手を見つけても]
-                // [無意味となるため(自分はその手を指さないだけ)，-α値が相手の探索の上限となる．]
-                var eval = SearchSubForEachTaking(gameTmp, beta?.Reverse(), alpha?.Reverse(), beginingMoveCount, remainingDepth - 1, cancellation).Reverse();
-
-                // [最善手(MAX)を求める]
-                if((alpha == null) || (alpha.Value < eval.Value))
-                    alpha = eval;		// [α値の更新]
-
-                // [MEMO:枝刈りした場合、最善手と同じ評価値を返しているのでα値と同じ値が返っても、]
-                // [最善手ではないので注意(相手側がより最善の手があるので)]
-                if((alpha != null && beta != null) && (alpha.Value >= beta.Value)){
-                    return alpha;
-                }
-            }
-
-            return alpha;
-        }
     }
 }

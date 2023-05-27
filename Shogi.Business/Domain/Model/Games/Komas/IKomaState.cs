@@ -13,7 +13,8 @@ namespace Shogi.Business.Domain.Model.Komas
             PlayerType player,
             Board board,
             BoardPositions playerKomaPositions,
-            BoardPositions opponentPlayerKomaPositions);
+            BoardPositions opponentPlayerKomaPositions,
+            bool kiki = false);
         IKomaState ToBoard(BoardPosition toPosition, bool doTransform);
 
     }
@@ -31,7 +32,8 @@ namespace Shogi.Business.Domain.Model.Komas
             PlayerType player,
             Board board,
             BoardPositions playerKomaPositions,
-            BoardPositions opponentPlayerKomaPositions)
+            BoardPositions opponentPlayerKomaPositions,
+            bool kiki = false)
         {
             // [手駒なら空き位置のどこでも置ける]
             var positions = board.Positions;
@@ -86,7 +88,8 @@ namespace Shogi.Business.Domain.Model.Komas
             PlayerType player,
             Board board,
             BoardPositions playerKomaPositions,
-            BoardPositions opponentPlayerKomaPositions)
+            BoardPositions opponentPlayerKomaPositions,
+            bool kiki = false)
         {
             return komaType.GetMovableBoardPositions(
                                         player,
@@ -94,7 +97,8 @@ namespace Shogi.Business.Domain.Model.Komas
                                         IsTransformed,
                                         board,
                                         playerKomaPositions,
-                                        opponentPlayerKomaPositions);
+                                        opponentPlayerKomaPositions,
+                                        kiki);
         }
 
         public override string ToString()

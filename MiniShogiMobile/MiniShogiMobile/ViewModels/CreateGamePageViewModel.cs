@@ -10,6 +10,7 @@ using Prism.NavigationEx;
 using Prism.Services;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using Shogi.Business.Domain.Model.AI;
 using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.GameTemplates;
 using Shogi.Business.Domain.Model.Komas;
@@ -255,9 +256,15 @@ namespace MiniShogiMobile.ViewModels
                     var usingKomaTypeIds = Game.GetAllKomaTypeIds();
                     GameTemplate.KomaTypes = KomaTypes.Where(y => usingKomaTypeIds.Contains(y.Value.Id)).Select(y => y.Value).ToList();
 
-
-                    
+#if DEBUG
+                    // 評価値の表示デバッグ用
+                    var game = new GameFactory().Create(GameTemplate, PlayerType.Player1);
+                    var evaluator = new LossAndGainOfKomaEvaluator(game);
+                    var eval = evaluator.Evaluate(game, 0, 0);
+                    bool doSave = await pageDialogService.DisplayAlertAsync("確認", $"作成を完了しますか?\nこの将棋のAI対戦では最大{GameTemplate.MaxThinkingDepth}手読先までむことができます。(評価値：{eval.Value})", "はい", "いいえ");
+#else
                     bool doSave = await pageDialogService.DisplayAlertAsync("確認", $"作成を完了しますか?\nこの将棋のAI対戦では最大{GameTemplate.MaxThinkingDepth}手読先までむことができます。", "はい", "いいえ");
+#endif
                     if (doSave)
                     {
 

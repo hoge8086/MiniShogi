@@ -191,12 +191,33 @@ namespace Shogi.Business.Domain.Model.Games
         {
             return CreateAvailableMoveCommand(State.GetKomaListDistinct(player));
         }
-        public BoardPositions MovablePosition(List<Koma> komaList)
+        public BoardPositions MovablePosition(List<Koma> komaList, bool kiki = false)
         {
             var movablePositions = new BoardPositions();
             foreach (var koma in komaList)
-                movablePositions = movablePositions.Add(MovablePosition(koma));
+                movablePositions = movablePositions.Add(MovablePosition(koma, kiki));
             return movablePositions;
+        }
+        /// <summary>
+        /// 移動可能な位置とその位置に移動できる駒の一覧を取得する
+        /// </summary>
+        /// <param name="komaList"></param>
+        /// <param name="kiki"></param>
+        /// <returns></returns>
+        public Dictionary<BoardPosition, List<Koma>> GetKomaMovablePosition(List<Koma> komaList, bool kiki = false)
+        {
+            var dic = new Dictionary<BoardPosition, List<Koma>>();
+            foreach (var koma in komaList)
+            {
+                var movablePositions = MovablePosition(koma, kiki);
+                foreach(var pos in movablePositions.Positions)
+                {
+                    if(!dic.ContainsKey(pos))
+                        dic.Add(pos, new List<Koma>());
+                    dic[pos].Add(koma);
+                }
+            }
+            return dic;
         }
         public List<MoveCommand> CreateAvailableMoveCommand(List<Koma> komaList)
         {
@@ -206,13 +227,14 @@ namespace Shogi.Business.Domain.Model.Games
             return moveCommandList;
         }
 
-        public BoardPositions MovablePosition(Koma koma)
+        public BoardPositions MovablePosition(Koma koma, bool kiki = false)
         {
             return koma.GetMovableBoardPositions(
                             GetKomaType(koma),
                             Board,
                             State.BoardPositions(koma.Player),
-                            State.BoardPositions(koma.Player.Opponent));
+                            State.BoardPositions(koma.Player.Opponent),
+                            kiki);
         }
 
         public List<MoveCommand> CreateAvailableMoveCommand(Koma koma)

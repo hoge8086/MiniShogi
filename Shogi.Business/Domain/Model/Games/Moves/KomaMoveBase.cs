@@ -23,7 +23,8 @@ namespace Shogi.Business.Domain.Model.Moves
             BoardPosition position,
             Board board,
             BoardPositions turnPlayerKomaPositions,
-            BoardPositions opponentKomaPositions)
+            BoardPositions opponentKomaPositions,
+            bool kiki = false)
         {
             var positions = new BoardPositions();
 
@@ -39,11 +40,16 @@ namespace Shogi.Business.Domain.Model.Moves
                 if (!board.Positions.Contains(toPos))
                     break;
 
-                // [自分の駒に当たったら移動不可]]
-                if (turnPlayerKomaPositions.Contains(toPos))
+                // [自分の駒に当たったら移動不可]
+                if (turnPlayerKomaPositions.Contains(toPos) && !kiki)
                     break;
 
                 positions = positions.Add(toPos);
+
+                // [利きの場合は自身の駒を含めて、それ以上の移動は不可]
+                if (kiki)
+                    break;
+
 
                 // [繰り返し不可な駒は1マスしか移動不可]
                 if (!IsRepeatable)

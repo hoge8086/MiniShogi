@@ -47,14 +47,16 @@ namespace Shogi.Business.Domain.Model.Komas
             KomaType komaType,
             Board board,
             BoardPositions playerKomaPositions,
-            BoardPositions opponentPlayerKomaPositions)
+            BoardPositions opponentPlayerKomaPositions,
+            bool kiki = false)
         {
             return State.GetMovableBoardPositions(
                                         komaType,
                                         Player,
                                         board,
                                         playerKomaPositions,
-                                        opponentPlayerKomaPositions);
+                                        opponentPlayerKomaPositions,
+                                        kiki);
         }
         public BoardPosition BoardPosition => (State as OnBoard)?.Position;
         public bool IsOnBoard => State is OnBoard;

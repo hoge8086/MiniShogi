@@ -3,6 +3,10 @@ using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
 using Shogi.Business.Domain.Model.Moves;
 using System.Linq;
+using System.Collections.Generic;
+using Shogi.Business.Domain.Model.Komas;
+using IsTransformed = System.Boolean;
+
 
 namespace Shogi.Business.Domain.Model.AI
 {
@@ -26,7 +30,33 @@ namespace Shogi.Business.Domain.Model.AI
     /// </summary>
     public class LossAndGainOfKomaEvaluator : Evaluator
     {
-        public LossAndGainOfKomaEvaluator(Game game) : base(game) { }
+        // 駒の評価値を事前評価(計算量削減のためのキャッシュ)
+        Dictionary<(KomaTypeId, IsTransformed), int> KomaEvaluations;
+        public LossAndGainOfKomaEvaluator(Game game) : base(game)
+        {
+            KomaEvaluations = new Dictionary<(KomaTypeId, IsTransformed), int>();
+            foreach(var komaType in game.KomaTypes)
+            {
+                KomaEvaluations.Add((komaType.Id, false), EvaluateMoves(komaType.Moves));
+                if(komaType.CanBeTransformed)
+                    KomaEvaluations.Add((komaType.Id, true), EvaluateMoves(komaType.TransformedMoves));
+            }
+        }
+        /// <summary>
+        /// 駒の価値
+        /// </summary>
+        /// <param name="koma"></param>
+        /// <param name="onBoard">ボード上の価値として評価するか？(falseの場合は手持ちとしての価値)</param>
+        /// <returns></returns>
+        int EvaluateKoma(Koma koma, bool onBoard)
+        {
+            if(onBoard)
+                return KomaEvaluations[(koma.TypeId, koma.IsTransformed)];
+
+            return KomaEvaluations[(koma.TypeId, false)];
+        }
+
+
         /// <summary>
         /// 評価値の計算
         /// 負け／勝ちが確定した際も最善手(最長手/最短手)を指すように、手の深さを評価値に加えた評価を返す
@@ -58,23 +88,52 @@ namespace Shogi.Business.Domain.Model.AI
             // [駒得基準の判定]
             int evaluationValue = 0;
 
-            //var playerMobablePositions = game.MovablePosition(game.State.GetBoardKomaList(game.State.TurnPlayer));
-            //var opponetMobablePositions = game.MovablePosition(game.State.GetBoardKomaList(game.State.TurnPlayer.Opponent));
-            //int valueOfFreeKoma = 0;
+            var playerKomaMobablePositions = game.GetKomaMovablePosition(game.State.GetBoardKomaList(game.State.TurnPlayer));
+            var opponetMobablePositions = game.MovablePosition(game.State.GetBoardKomaList(game.State.TurnPlayer.Opponent), true);
+
+            // [手番のプレイヤーが取ることのできる駒の価値]
+            int takenKomaEval = 0;
 
             foreach(var koma in game.State.KomaList)
             {
-                int movablePositionCount = Evaluation(koma.IsTransformed ? game.GetKomaType(koma).TransformedMoves : game.GetKomaType(koma).Moves);
-                evaluationValue += (game.State.TurnPlayer == koma.Player) ? movablePositionCount : -movablePositionCount;
-                //if(koma.IsOnBoard && koma.Player == game.State.TurnPlayer.Opponent && playerMobablePositions.Contains(koma.BoardPosition) && !opponetMobablePositions.Contains(koma.BoardPosition))
-                //{
-                //    var val = koma.IsTransformed ? movablePositionCount + Evaluation(game.GetKomaType(koma).TransformedMoves) : movablePositionCount * 2;
-                //    if (val > valueOfFreeKoma)
-                //        valueOfFreeKoma = val;
-                //}
+                // [駒の持ち主に応じて、駒の価値を加算]
+                evaluationValue += (game.State.TurnPlayer == koma.Player) ? EvaluateKoma(koma, true) : -EvaluateKoma(koma, true);
+
+                // [以下、手番のプレイヤーが取ることのできる駒の価値を考慮する]
+
+                // [その駒を手番のプレイヤーがタダで取ることができる場合]
+                if(koma.IsOnBoard && koma.Player == game.State.TurnPlayer.Opponent && playerKomaMobablePositions.Keys.Contains(koma.BoardPosition) && !opponetMobablePositions.Contains(koma.BoardPosition))
+                {
+                    // [取ったときの価値を計算: 相手は盤上の駒がなくなり、自身は手持ちに駒が増える]
+                    var val = EvaluateKoma(koma, true) + EvaluateKoma(koma, false);
+
+                    // [取る手は一手しか指せないので他の取る手より価値が高ければ更新]
+                    if (val > takenKomaEval)
+                        takenKomaEval = val;
+                }
+
+                // [その駒を手番のプレイヤーが取ることができるが、相手に取り返される場合]
+                if(koma.IsOnBoard && koma.Player == game.State.TurnPlayer.Opponent && playerKomaMobablePositions.Keys.Contains(koma.BoardPosition) && opponetMobablePositions.Contains(koma.BoardPosition))
+                {
+                    // [手番のプレイヤーがその位置に移動できる最も価値の低い駒を探す]
+                    var lowerEvalKoma = playerKomaMobablePositions[koma.BoardPosition].MinBy(x => EvaluateKoma(x, false));
+
+                    // [取り返される駒より、取る駒の方が価値が高ければ取る]
+                    if ((EvaluateKoma(lowerEvalKoma, false) < EvaluateKoma(koma, false)) ||
+                        (EvaluateKoma(lowerEvalKoma, false) == EvaluateKoma(koma, false) && EvaluateKoma(lowerEvalKoma, true) < EvaluateKoma(koma, true)))
+                    {
+                        // [取ったときの価値を計算: 相手は盤上の駒がなくなり、自身は手持ちに駒が増える、自分も盤上の駒がなくなり、相手は手持ちに駒が増える]
+                        var val = EvaluateKoma(koma, true) + EvaluateKoma(koma, false) -  EvaluateKoma(lowerEvalKoma, true) - EvaluateKoma(lowerEvalKoma, false);
+
+                        // [取る手は一手しか指せないので他の取る手より価値が高ければ更新]
+                        if (val > takenKomaEval)
+                            takenKomaEval = val;
+                    }
+                }
             }
 
-            //evaluationValue = player == game.State.TurnPlayer ? valueOfFreeKoma : -valueOfFreeKoma;
+            // [取る手を評価に加える]
+            evaluationValue += takenKomaEval;
 
             return new GameEvaluation(evaluationValue, MaxEvaluationValue, game, game.State.TurnPlayer, beginingMoveCount);
 
@@ -109,12 +168,12 @@ namespace Shogi.Business.Domain.Model.AI
                 var komaType = game.GetKomaType(koma.TypeId);
                 // 成りがある駒の場合で、成りの方が評価値が高ければ成りの評価値を採用
                 return System.Math.Max(
-                    Evaluation(komaType.Moves),
-                    komaType.CanBeTransformed ? Evaluation(komaType.TransformedMoves) : 0);
+                    EvaluateMoves(komaType.Moves),
+                    komaType.CanBeTransformed ? EvaluateMoves(komaType.TransformedMoves) : 0);
             });
         }
 
-        public static int Evaluation(KomaMoves moves)
+        public static int EvaluateMoves(KomaMoves moves)
         {
             int movablePositionCount = 0;
             foreach(var move in moves.Moves)
@@ -130,5 +189,14 @@ namespace Shogi.Business.Domain.Model.AI
         }
     }
 
+    public static class Ext {
+        public static T MinBy<T, U>(this IEnumerable<T> xs, Func<T, U> key) where U : IComparable<U> {
+            return xs.Aggregate((a, b) => key(a).CompareTo(key(b)) < 0 ? a : b);
+        }
+
+        public static T MaxBy<T, U>(this IEnumerable<T> xs, Func<T, U> key) where U : IComparable<U> {
+            return xs.Aggregate((a, b) => key(a).CompareTo(key(b)) > 0 ? a : b);
+        }
+    }
 
 }
