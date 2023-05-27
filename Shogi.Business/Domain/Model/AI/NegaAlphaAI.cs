@@ -1,10 +1,12 @@
 ﻿using Shogi.Business.Domain.Model.Games;
 using Shogi.Business.Domain.Model.PlayerTypes;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Shogi.Business.Domain.Model.AI
 {
@@ -37,7 +39,8 @@ namespace Shogi.Business.Domain.Model.AI
             //}
 
             // [MEMO:アルファベータ法は枝刈りを行うので複数の最善手を得られない?]
-            var bestMove = Search(game, Depth, cancellation, progress);
+            //var bestMove = Search(game, Depth, cancellation, progress);
+            var bestMove = SearchParallel(game, Depth, cancellation, progress);
 
             //if (debug)
             //{
@@ -128,6 +131,61 @@ namespace Shogi.Business.Domain.Model.AI
                 progress?.Invoke(new ProgressRate(i+1, moveCommands.Count));
             }
 
+
+            return bestMove;
+        }
+        private MoveEvaluation SearchParallel(Game game, int depth, CancellationToken cancellation, Action<ProgressRate> progress)
+        {
+            MoveEvaluation bestMove = null;
+
+            GameEvaluation alpha = null;
+            GameEvaluation beta = null;
+            int beginingMoveCount = game.Record.CurrentMovesCount;
+
+            cancellation.ThrowIfCancellationRequested();
+
+            if (game.State.IsEnd || depth <= 0)
+                throw new System.InvalidOperationException("すでに決着がついているため手の探索は不正です.");
+
+            var moveCommands = game.CreateAvailableMoveCommand();
+
+            // [αβ法は良い手の順に探索を行うと最も効率が良い]
+            moveCommands = SortByBetterMove(moveCommands, game);
+
+
+            var lockObj = new Object();
+            int searchedMoveCount = 0;
+
+            // [全ての子ノードを展開し，再帰的に評価]
+            try
+            {
+                // [各手の探索を並立処理]
+                Parallel.ForEach(
+                    moveCommands,
+                    new ParallelOptions() {  MaxDegreeOfParallelism = 4},
+                    (move =>
+                    {
+                        var gameTmp = game.Clone().PlayWithoutCheck(move);
+                        var eval = SearchSub(gameTmp, beta?.Reverse(), alpha?.Reverse(), beginingMoveCount, cancellation).Reverse();
+
+                        lock (lockObj)
+                        {
+                            // [最善手(MAX)を求める]
+                            if ((alpha == null) || (alpha.Value < eval.Value))
+                            {
+                                alpha = eval;   // [α値の更新]
+                                bestMove = new MoveEvaluation(move, eval);
+                            }
+                            // [進捗の表示]
+                            searchedMoveCount++;
+                            progress?.Invoke(new ProgressRate(searchedMoveCount, moveCommands.Count));
+                        }
+                    }
+                ));
+            }catch(AggregateException ex) when(ex.InnerExceptions.Any(x => x is OperationCanceledException))
+            {
+                throw new OperationCanceledException("思考を中断しました", ex);
+            }
 
             return bestMove;
         }

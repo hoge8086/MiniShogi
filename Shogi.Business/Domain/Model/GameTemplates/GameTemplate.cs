@@ -114,7 +114,7 @@ namespace Shogi.Business.Domain.Model.GameTemplates
         /// <summary>
         /// 探索の計算量の上限（どうぶつ将棋の6手読みを最大とする)
         /// </summary>
-        private readonly static double MaxThinkingComplexityOfAnimalShogi = Math.Pow(ComplexityOfAnimalShogi, 6);
+        private readonly static double MaxThinkingComplexityOfAnimalShogi = Math.Pow(ComplexityOfAnimalShogi, 7);
         /// <summary>
         /// とある局面での仮想的な着手可能手数
         /// 全ての駒を自身の駒とし、半分が持ち駒、半分が盤上とする(盤上の駒は無限の広さの盤で動くことを想定)
