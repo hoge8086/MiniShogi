@@ -13,7 +13,7 @@ namespace MiniShogiMobile.ViewModels
 {
 
     // MEMO:NavigationViewModelのResultは本来いらないが、Resultを指定しないと呼び出し元で待機しないので、仕方なくつける(要NavigationViewModelの改善)
-    public class CreateKomaPageViewModel : NavigationViewModel<KomaTypeId, bool>
+    public class CreateKomaPageViewModel : NavigationViewModel<KomaTypeId, KomaTypeId>
     {
         public AsyncReactiveCommand<CellForCreateKomaViewModel> ChangeMoveCommand { get; set; }
         public AsyncReactiveCommand SaveCommand { get; set; }
@@ -50,8 +50,9 @@ namespace MiniShogiMobile.ViewModels
                         if (!doDelete)
                             return;
                     }
-                    App.CreateGameService.KomaTypeRepository.Replace(KomaInfo.CreateKomaTypeFromBoard(), OldKomaType);
-                    await GoBackAsync(true);
+                    var komaType = KomaInfo.CreateKomaTypeFromBoard();
+                    App.CreateGameService.KomaTypeRepository.Replace(komaType, OldKomaType);
+                    await GoBackAsync(komaType.Id);
                 });
             });
         }

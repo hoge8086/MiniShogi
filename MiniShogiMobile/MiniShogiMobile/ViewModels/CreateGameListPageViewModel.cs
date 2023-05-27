@@ -96,7 +96,9 @@ namespace MiniShogiMobile.ViewModels
             // 駒
             KomaTypeIdList = new ObservableCollection<KomaTypeId>();
             SelectedKomaTypeId = new ReactiveProperty<KomaTypeId>();
-            UpdateKomaList();
+            var komaTypeList = App.CreateGameService.KomaTypeRepository.FindAll().Select(x => x.Id);
+            foreach (var komaType in komaTypeList)
+                KomaTypeIdList.Add(komaType);
 
             CreateKomaCommand = new AsyncReactiveCommand();
             CreateKomaCommand.Subscribe(async () =>
@@ -106,8 +108,9 @@ namespace MiniShogiMobile.ViewModels
                     bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "新規作成しますか?", "はい", "いいえ");
                     if (doDelete)
                     {
-                        await NavigateAsync<CreateKomaPageViewModel, KomaTypeId, bool>(null);
-                        UpdateKomaList();
+                        var result = await NavigateAsync<CreateKomaPageViewModel, KomaTypeId, KomaTypeId>(null);
+                        if(result.Success)
+                            KomaTypeIdList.Add(result.Data);
                     }
                 });
             }).AddTo(this.Disposable);
@@ -119,9 +122,13 @@ namespace MiniShogiMobile.ViewModels
                     bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "編集しますか?", "はい", "いいえ");
                     if (doDelete)
                     {
-                        // MEMO:戻り値(bool)は使わないが、登録の完了を待つ必要があるため、bool値を持たせる。(戻り値を指定しないとPrism.NavigationExが待たないため)
-                        await NavigateAsync<CreateKomaPageViewModel, KomaTypeId, bool>(SelectedKomaTypeId.Value);
-                        UpdateKomaList();
+                        var result = await NavigateAsync<CreateKomaPageViewModel, KomaTypeId, KomaTypeId>(SelectedKomaTypeId.Value);
+                        if (result.Success)
+                        {
+                            var index = KomaTypeIdList.IndexOf(SelectedKomaTypeId.Value);
+                            KomaTypeIdList[index] = result.Data;
+                            SelectedKomaTypeId.Value = null;
+                        }
                     }
                 });
             }).AddTo(this.Disposable);
@@ -134,8 +141,8 @@ namespace MiniShogiMobile.ViewModels
                     if (doDelete)
                     {
                         App.CreateGameService.KomaTypeRepository.RemoveById(SelectedKomaTypeId.Value);
+                        KomaTypeIdList.Remove(SelectedKomaTypeId.Value);
                         SelectedKomaTypeId.Value = null;
-                        UpdateKomaList();
                     }
                 });
             }).AddTo(this.Disposable);
@@ -147,19 +154,12 @@ namespace MiniShogiMobile.ViewModels
                     bool doDelete = await pageDialogService.DisplayAlertAsync("確認", "コピーしますか?", "はい", "いいえ");
                     if (doDelete)
                     {
-                        App.CreateGameService.CopyKomaType(SelectedKomaTypeId.Value);
-                        UpdateKomaList();
+                        var copied = App.CreateGameService.CopyKomaType(SelectedKomaTypeId.Value);
+                        KomaTypeIdList.Add(copied);
                     }
                 });
             }).AddTo(this.Disposable);
 
-        }
-        private void UpdateKomaList()
-        {
-            var komaList = App.CreateGameService.KomaTypeRepository.FindAll().ToDictionary(x => x.Id);
-            KomaTypeIdList.Clear();
-            foreach (var koma in komaList.Keys)
-                KomaTypeIdList.Add(koma);
         }
     }
 }
