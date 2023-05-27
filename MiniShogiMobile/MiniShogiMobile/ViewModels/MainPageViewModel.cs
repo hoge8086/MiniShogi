@@ -27,6 +27,13 @@ namespace MiniShogiMobile.ViewModels
             StartGameCommand = new AsyncReactiveCommand();
             StartGameCommand.Subscribe(async () =>
             {
+                var gameList = App.GameService.GameTemplateRepository.FindAll();
+                if(gameList.Count <= 0)
+                {
+                    await PageDialogService.DisplayAlertAsync("エラー", "作成されたゲームがありません。ゲームを作成してください。", "OK");
+                    return;
+                }
+
                 await NavigateAsync<StartGamePageViewModel>();
             }).AddTo(Disposable);
 

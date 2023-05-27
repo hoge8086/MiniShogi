@@ -32,6 +32,9 @@ namespace MiniShogiMobile.ViewModels
             OkCommand = new AsyncReactiveCommand();
             OkCommand.Subscribe(async () =>
             {
+                if(SelectedKomaTypeId.Value == null)
+                    await GoBackAsync();
+
                 await GoBackAsync(SelectedKomaTypeId.Value);
 
             }).AddTo(this.Disposable);
