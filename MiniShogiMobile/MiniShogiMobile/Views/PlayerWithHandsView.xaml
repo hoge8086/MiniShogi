@@ -22,6 +22,7 @@
                           WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
                         <!--プレイヤーアイコン-->
                         <ctrl:PlayerView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Color="Gray"
+                             Source="MiniShogiMobile.Images.Character1.png"
                              xct:TouchEffect.LongPressDuration="3000"
                              xct:TouchEffect.LongPressCommand="{Binding Source={RelativeSource AncestorType={x:Type views:PlayerWithHandsView}}, Path=TapPlayerCommand}"
                              xct:TouchEffect.LongPressCommandParameter="{Binding Player.Value}">
@@ -29,6 +30,13 @@
                                 <DataTrigger TargetType="ctrl:PlayerView" Binding="{Binding IsCurrentTurn.Value}" Value="True">
                                     <Setter Property="Color" Value="{Binding Path=PlayerColor, Source={x:Reference self}}"/>
                                 </DataTrigger>
+                                <MultiTrigger TargetType="ctrl:PlayerView">
+                                    <MultiTrigger.Conditions>
+                                        <BindingCondition Binding="{Binding IsCurrentTurn.Value}" Value="True"/>
+                                        <BindingCondition Binding="{Binding Source={RelativeSource AncestorType={x:Type views:PlayGamePage}}, Path=BindingContext.ViewState.Value, Converter={StaticResource IsTypeOfConverter}, ConverterParameter={x:Type vm:ViewStateGameStudying}}" Value="False"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Source" Value="MiniShogiMobile.Images.Character1_Thinking.png"/>
+                                </MultiTrigger>
                             </ctrl:PlayerView.Triggers>
                         </ctrl:PlayerView>
                         <!--名前-->

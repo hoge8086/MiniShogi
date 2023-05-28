@@ -8,6 +8,7 @@
     <EmbeddedResource Include="azuki.ttf" />
     <EmbeddedResource Include="Images\AppTitle.png" />
     <EmbeddedResource Include="Images\ChangeKoma.png" />
+    <EmbeddedResource Include="Images\Character1_Thinking.png" />
     <EmbeddedResource Include="Images\Collapse.png" />
     <EmbeddedResource Include="Images\Expand.png" />
     <EmbeddedResource Include="Images\LeftArrow.png" />

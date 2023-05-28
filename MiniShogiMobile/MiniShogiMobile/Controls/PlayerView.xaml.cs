@@ -30,5 +30,18 @@ namespace MiniShogiMobile.Controls
             set { SetValue(ColorProperty, value); }
         }
         #endregion
+        #region Source
+        public static readonly BindableProperty SourceProperty = BindableProperty.Create(
+                                                                            nameof(Source),
+                                                                            typeof(string),
+                                                                            typeof(PlayerView),
+                                                                            "MiniShogiMobile.Images.Character1.png");
+ 
+        public string Source
+        {
+            get { return (string)GetValue(SourceProperty); }
+            set { SetValue(SourceProperty, value); }
+        }
+        #endregion
     }
 }
