@@ -4,11 +4,14 @@ using Shogi.Business.Domain.Model.Komas;
 using Shogi.Business.Domain.Model.Moves;
 using Shogi.Business.Domain.Model.PlayerTypes;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Shogi.Business.Domain.Model.GameTemplates
 {
     public class DefaultGame
     {
+#if DEBUG
+        #region どうぶつ将棋
         public static readonly KomaType KomaHiyoko = new KomaType(
             new KomaTypeId("🐥", "🐓", KomaTypeKind.AsHu),
             new KomaMoves(new List<IKomaMove>()
@@ -62,7 +65,63 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             }
             ),
             null);
-
+        #endregion
+#endif
+        #region どうぶつ将棋2
+        public static readonly KomaType KomaHiyoko2 = new KomaType(
+            new KomaTypeId("🐥", "🐓", KomaTypeKind.AsHu),
+            new KomaMoves(new List<IKomaMove>()
+            {
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+            }),
+            new KomaMoves(new List<IKomaMove>()
+            {
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
+            }
+            ));
+        public static readonly KomaType KomaZou2 = new KomaType(
+            new KomaTypeId("🐘", KomaTypeKind.None),
+            new KomaMoves(new List<IKomaMove>()
+            {
+                new KomaMoveBase(new RelativeBoardPosition(1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
+            }
+            ),
+            null);
+        public static readonly KomaType KomaKirin2 = new KomaType(
+            new KomaTypeId("🦒", KomaTypeKind.None),
+            new KomaMoves(new List<IKomaMove>()
+            {
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
+            }
+            ),
+            null);
+        public static readonly KomaType KomaRaion2 = new KomaType(
+            new KomaTypeId("🦁", KomaTypeKind.AsKing),
+            new KomaMoves(new List<IKomaMove>()
+            {
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
+            }
+            ),
+            null);
+        #endregion
         public static readonly KomaType KomaHu = new KomaType(
             new KomaTypeId("歩", "と", KomaTypeKind.AsHu),
             new KomaMoves(new List<IKomaMove>()
@@ -207,6 +266,64 @@ namespace Shogi.Business.Domain.Model.GameTemplates
                 new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
                 new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
             }));
+        #region トランプ将棋
+        public static readonly KomaType KomaJoker = new KomaType(
+            new KomaTypeId("🤡", KomaTypeKind.AsKing),
+            new KomaMoves(new List<IKomaMove>()
+            {
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
+            }
+            ),
+            null);
+        public static readonly KomaType KomaSupade = new KomaType(
+            new KomaTypeId(Regex.Unescape(@"\u2660\uFE0F"), KomaTypeKind.None),
+            new KomaMoves(new List<IKomaMove>()
+            {
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 1)),
+            }
+            ),
+            null);
+        public static readonly KomaType KomaHeart = new KomaType(
+            new KomaTypeId(Regex.Unescape(@"\u2665\uFE0F"), KomaTypeKind.None),
+            new KomaMoves(new List<IKomaMove>()
+            {
+                new KomaMoveBase(new RelativeBoardPosition(1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+            }
+            ),
+            null);
+        public static readonly KomaType KomaDiamond = new KomaType(
+            new KomaTypeId(Regex.Unescape(@"\u2666\uFE0F"), KomaTypeKind.None),
+            new KomaMoves(new List<IKomaMove>()
+            {
+                new KomaMoveBase(new RelativeBoardPosition(0, -1)),
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
+            }
+            ),
+            null);
+        public static readonly KomaType KomaClub = new KomaType(
+            new KomaTypeId(Regex.Unescape(@"\u2663\uFE0F"), KomaTypeKind.None),
+            new KomaMoves(new List<IKomaMove>()
+            {
+                new KomaMoveBase(new RelativeBoardPosition(0, 1)),
+                new KomaMoveBase(new RelativeBoardPosition(1, 0)),
+                new KomaMoveBase(new RelativeBoardPosition(-1, 0)),
+            }
+            ),
+            null);
+        #endregion
 
         public static readonly KomaType KomaGod = new KomaType(
             new KomaTypeId("神", KomaTypeKind.None),
@@ -238,7 +355,14 @@ namespace Shogi.Business.Domain.Model.GameTemplates
             KomaRaion,
             KomaZou,
             KomaHiyoko,
-            //KomaGod,
+            KomaJoker,
+            KomaSupade,
+            KomaHeart,
+            KomaDiamond,
+            KomaClub,
+#if DEBUG
+            KomaGod,
+#endif
         };
 
         public static readonly List<GameTemplate> DefaltGameTemplate = new List<GameTemplate>()
@@ -260,6 +384,38 @@ namespace Shogi.Business.Domain.Model.GameTemplates
                 new ProhibitedMoves(false, false, false, false),
                 new List<KomaType>(){KomaKirin, KomaRaion, KomaZou, KomaHiyoko}),
 #endif
+            new GameTemplate(
+                "どうぶつしょうぎ2", 3, 3, 1, WinConditionType.TakeKingOrEnterOpponentTerritory,
+                new List<Koma>()
+                {
+                    new Koma(PlayerType.Player2, KomaRaion2.Id, new OnBoard(new BoardPosition(2,0))),
+                    new Koma(PlayerType.Player2, KomaKirin2.Id, new OnBoard(new BoardPosition(1,0))),
+                    new Koma(PlayerType.Player2, KomaZou2.Id, new OnBoard(new BoardPosition(2,1))),
+                    new Koma(PlayerType.Player2, KomaHiyoko2.Id, InHand.State),
+                    new Koma(PlayerType.Player1, KomaRaion2.Id, new OnBoard(new BoardPosition(0,2))),
+                    new Koma(PlayerType.Player1, KomaKirin2.Id, new OnBoard(new BoardPosition(1,2))),
+                    new Koma(PlayerType.Player1, KomaZou2.Id, new OnBoard(new BoardPosition(0,1))),
+                    new Koma(PlayerType.Player1, KomaHiyoko2.Id, InHand.State),
+                },
+                new ProhibitedMoves(false, false, false, false),
+                new List<KomaType>(){KomaKirin2, KomaRaion2, KomaZou2, KomaHiyoko2}),
+            new GameTemplate(
+                "トランプ将棋", 4, 4, 1, WinConditionType.Checkmate,
+                new List<Koma>()
+                {
+                    new Koma(PlayerType.Player2, KomaJoker.Id, new OnBoard(new BoardPosition(3,0))),
+                    new Koma(PlayerType.Player2, KomaSupade.Id, new OnBoard(new BoardPosition(3,1))),
+                    new Koma(PlayerType.Player2, KomaDiamond.Id, new OnBoard(new BoardPosition(2,0))),
+                    new Koma(PlayerType.Player2, KomaClub.Id, new OnBoard(new BoardPosition(1,0))),
+                    new Koma(PlayerType.Player2, KomaHeart.Id, new OnBoard(new BoardPosition(0,0))),
+                    new Koma(PlayerType.Player1, KomaJoker.Id, new OnBoard(new BoardPosition(0,3))),
+                    new Koma(PlayerType.Player1, KomaSupade.Id, new OnBoard(new BoardPosition(0,2))),
+                    new Koma(PlayerType.Player1, KomaDiamond.Id, new OnBoard(new BoardPosition(1,3))),
+                    new Koma(PlayerType.Player1, KomaClub.Id, new OnBoard(new BoardPosition(2,3))),
+                    new Koma(PlayerType.Player1, KomaHeart.Id, new OnBoard(new BoardPosition(3,3))),
+                },
+                new ProhibitedMoves(false, false, false, true),
+                new List<KomaType>(){KomaJoker, KomaSupade, KomaHeart, KomaDiamond, KomaClub}),
             new GameTemplate(
                 "3三将棋", 3, 3, 1, WinConditionType.Checkmate,
                 new List<Koma>()
