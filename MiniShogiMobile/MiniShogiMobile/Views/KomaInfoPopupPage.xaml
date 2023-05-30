@@ -4,7 +4,6 @@
              xmlns:prism="http://prismlibrary.com"
              xmlns:ctrl="clr-namespace:MiniShogiMobile.Controls"
              xmlns:views="clr-namespace:MiniShogiMobile.Views"
-             xmlns:popups="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MiniShogiMobile.Views.KomaInfoPopupPage">
     <ctrl:BasePopupPage.Resources>

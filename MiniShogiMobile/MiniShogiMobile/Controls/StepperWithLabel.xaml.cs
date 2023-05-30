@@ -39,6 +39,13 @@ namespace MiniShogiMobile.Controls
 
         private void UpdateIsEnable()
         {
+            if (IsReadOnly)
+            {
+                plusButton.IsEnabled = false;
+                minusButton.IsEnabled = false;
+                return;
+            }
+
             if (Value >= MaximumValue || !IsEnabled)
                 plusButton.IsEnabled = false;
             else
@@ -111,6 +118,19 @@ namespace MiniShogiMobile.Controls
         {
             get { return (bool)GetValue(IsEnabledProperty); }
             set { SetValue(IsEnabledProperty, value); }
+        }
+
+        public static readonly BindableProperty IsReadOnlyProperty = BindableProperty.Create(
+                                                                            nameof(IsReadOnly),
+                                                                            typeof(bool),
+                                                                            typeof(StepperWithLabel),
+                                                                            true,
+                                                                            propertyChanged: OnIsEnabledChanged);
+ 
+        public bool IsReadOnly
+        {
+            get { return (bool)GetValue(IsReadOnlyProperty); }
+            set { SetValue(IsReadOnlyProperty, value); }
         }
     }
 }

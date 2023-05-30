@@ -12,6 +12,7 @@ using Shogi.Business.Domain.Model.AI;
 using Shogi.Business.Domain.Model.AI.Event;
 using Shogi.Business.Domain.Model.Boards;
 using Shogi.Business.Domain.Model.Games;
+using Shogi.Business.Domain.Model.GameTemplates;
 using Shogi.Business.Domain.Model.Komas;
 using Shogi.Business.Domain.Model.Players;
 using Shogi.Business.Domain.Model.PlayerTypes;
@@ -53,6 +54,7 @@ namespace MiniShogiMobile.ViewModels
         public AsyncReactiveCommand ResumeCommand { get; private set; }
         public AsyncReactiveCommand UndoCommand { get; private set; }
         public AsyncReactiveCommand RedoCommand { get; private set; }
+        public AsyncReactiveCommand ShowRuleCommand { get; private set; }
         public AsyncReactiveCommand ChangePlayerCommand { get; private set; }
         public AsyncReactiveCommand<ISelectable> ShowKomaInfoCommand { get; private set; }
         public AsyncReactiveCommand<Player> ShowPlayerEvaluationCommand { get; private set; }
@@ -197,6 +199,14 @@ namespace MiniShogiMobile.ViewModels
                     PlayingGame = App.GameService.GetCurrentPlayingGame();
                     UpdateView();
                 });
+            }).AddTo(Disposable);
+
+            ShowRuleCommand = ViewState.Select(state => state is ViewStateGameStudying)
+                            .ToAsyncReactiveCommand()
+                            .AddTo(this.Disposable);
+            ShowRuleCommand.Subscribe(async x =>
+            {
+                await NavigateAsync<GameRulePopupPageViewModel, GameTemplate>(PlayingGame.GameTemplate);
             }).AddTo(Disposable);
         }
 

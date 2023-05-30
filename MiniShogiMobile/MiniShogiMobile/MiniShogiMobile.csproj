@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Rule.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="azuki.ttf" />
     <EmbeddedResource Include="Images\AppTitle.png" />
     <EmbeddedResource Include="Images\ChangeKoma.png" />
@@ -28,6 +32,7 @@
     <EmbeddedResource Include="Images\Play.png" />
     <EmbeddedResource Include="Images\Plus.png" />
     <EmbeddedResource Include="Images\RotateKoma.png" />
+    <EmbeddedResource Include="Images\Rule.png" />
     <EmbeddedResource Include="Images\Start.png" />
     <EmbeddedResource Include="Images\Stop.png" />
     <EmbeddedResource Include="Resources\Licenses.xml" />
@@ -138,6 +143,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\EditGameSettingsPopupPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\GameRulePopupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\HandsOfCreateGameView.xaml">
