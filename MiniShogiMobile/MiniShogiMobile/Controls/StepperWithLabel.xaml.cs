@@ -124,7 +124,7 @@ namespace MiniShogiMobile.Controls
                                                                             nameof(IsReadOnly),
                                                                             typeof(bool),
                                                                             typeof(StepperWithLabel),
-                                                                            true,
+                                                                            false,
                                                                             propertyChanged: OnIsEnabledChanged);
  
         public bool IsReadOnly
